@@ -1,0 +1,12 @@
+LIBRARY     keydll
+
+DESCRIPTION 'KeyKit Low-level callback for MIDI Input'
+
+CODE        FIXED
+DATA        FIXED
+
+HEAPSIZE    2048
+
+EXPORTS
+	KeySetupDll		@2
+	KeyTimerFunc		@3

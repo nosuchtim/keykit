@@ -1,0 +1,52 @@
+Running keykit:
+    KeyKit v6.0 and later requires Amiga DOS 2.04 (version 37 of the libraries)
+    or later to work on the Amiga.  Assign keykit: to the top level directory.
+
+Building it:
+    If you have SAS/C you can just run "smake protos all" to build keykit.  There
+    is a copy of rexxglue.o in mdep/amiga/rexxlib/rexxglue.o that you will need
+    to access the arexx library routines if you don't already have a rexxglue.o
+    or the appropriate library pragma's.  Copy it to lib: if you find that you need it.
+
+Environment variables:
+    The following are recognized by keykit.
+
+    KEYWINDOW	-	When running from the WB, this is the window to open for
+			messages.
+    KEYPRIORITY	-	The priority that keykit runs at.  Setting to 1 or more makes
+			keykit a bit smoother on a busy system.
+    KEYROOT	-	The root directory for keykit to use.
+    KEYCOLORS	-	The number of colors to allocate the screen to use.
+    KEYPATH	-	The path for searching for keykit files.
+    KEYINVERSE	-	white on black display instead of black on white.
+    KEYDISPLAY	-	The display ID to use for OpenScreenTags().
+
+AREXX Support:
+    The file, amiga.k, contains some keykit code that is the start of an AREXX
+    server interface to allow keykit and Bars&Pipes to work together.  I still
+    have a bit of work to do on the B&P tool that will talk to keykit.  But, there
+    is ample support to create any kind of Rexx Server you want (like a kiosk or
+    Juke Box).  Copy it to liblocal/postrc.k (if you don't already have one) or
+    copy it into lib/amiga.k and then rebuild keylib.k with keylib.  Change the
+    postrc function name to something else and call it from postrc.k if you want
+    to play around with the AREXX stuff.
+
+AMIGA device support:
+    There is a start at an amiga device level I/O facility also implemented
+    through the generalized fifo interface.  It is really not functional yet, so
+    don't try it unless you want to work on it.  It's purpose is to provide a
+    way to talk to more than one SERIAL/MIDI port.  But, there is currently
+    code in there for quite a few popular devices just for the heck of it
+    (console.device and printer.device are of particular interest to me).
+
+Other stuff:
+    Please let me know where you have problems with this version.  The keykit
+    screen is a public screen named KeyKit that you can boot other applications
+    onto.  Currently, keykit does not try to use another public screen.  There
+    are several things like this which I wanted to defer till it was working
+    well.  If you need it to work on another screen let me know and I'll reprioritize
+    that functionality.
+
+-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+Gregg Wonderly
+gregg.g.wonderly@att.com

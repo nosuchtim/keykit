@@ -1,0 +1,176 @@
+Collection = [
+	0=
+		["name"="One beat",
+		"phrase"=',l96'],
+	1=
+		["name"="fusion 1",
+		"phrase"='co1d24v85c10 f+v99,dv71,f+v99,f+v85,d,f+,f+v99,cv71,dt216,f+v99,cv71,dv85,cv\
+71t336 fv85,fv71'],
+	2=
+		["name"="fusion 2",
+		"phrase"='do1d24v85c10 f+v99,cv71 f+v85,dv29,dv85,c f+v99,dv29,f+v99,cv71 f+v85,dt216 \
+f+v99,f+v85,b-v99,dv85,dv29,cv85 fv71,dv15'],
+	3=
+		["name"="fusion 3",
+		"phrase"='co1d24v85c10 f+v99,dv71,f+v85,dv57,c+v85 f+v99,cv71,f+v85,cv57,cv85 f+v99,f+\
+v85t240,c+v71,cv85 f+v99,b-v85t336,l384'],
+	4=
+		["name"="fusion 4",
+		"phrase"='co1d24v85c10 f+v99,e-o2v85t48,f+o1v71,c dv85 f+v99,e-o2v85,f+o1,dv43 f+v71,c\
+v85 f+v99,b-v85,f+v71,c b-v99,dv85 f+v99,cv57 dv43 e-o2v85,co1v71 f+v85,f+v71\
+'],
+	5=
+		["name"="fusion 5",
+		"phrase"='co1d24v85c10 f+v113,f+v85,d,f+,cv71,f+v85,dv71,cv57 f+v113,cv85,f+,f+t264,cv\
+71 f+v113,b-v85,dv71 f+v113,cv85'],
+	6=
+		["name"="fusion 6",
+		"phrase"='co1d24v85c10 e-o2v99,e-v85,do1v71,e-o2v85,co1v71,e-o2v99,co1v57t168 e-o2v85,\
+co1,e-o2v99,do1v71,e-o2v85,co1v71,b-v85 e-o2,e-v99 a-v71,co1v57 f+v99 a-o2v57\
+'],
+	7=
+		["name"="fusion 7:1",
+		"phrase"='co1d16v85c10 f+v99,b-v85t64,f+v99t96,f+v71t128,f+v85t160,dv71t192,ct224 b-v8\
+5,dt288 f+v99,f+v85t352,l384'],
+	8=
+		["name"="fusion 7:2",
+		"phrase"='co1d16v85c10 e-o2v99,do1v15t32,b-v85t64,f+v1t96 e-o2v85,f+o1v71t128,f+v85t16\
+0,dv71t192 e-o2v99,co1v71t224 b-v85,dv15t256,dv85t288 f+v1 e-o2v85,do1v15t320\
+,f+v85t352,l384'],
+	9=
+		["name"="fusion 8",
+		"phrase"='co1d16v85c10 f+v99,dv15t32,cv57t64 f+v85,cv71t96 dv85 f+v99,f+v85t128,cv57t1\
+60 f+v85,cv71t192 f+v99,dv15t224,cv57t256 f+v85,cv127t288 dv85 f+v99,dv15t320\
+,cv57t352 dv29 f+v85,dv43'],
+	10=
+		["name"="fusion 9",
+		"phrase"='co1d16v85c10 c+ f+v113 a-o2v85,co1v71t32 f+v85,c+t64 f+v99,c+v85t96 a-o2,do1\
+v71t128 f+v113,f+v85t160,c+t192 f+v99 a-o2v85,c+o1t256 dv71 f+v113,f+v85t288 \
+a-o2,c+o1t320 f+ do2v71,do1v15t352 a-o2v85,do1v29'],
+	11=
+		["name"="fusion fill",
+		"phrase"='do1d12v85c10,dv15t48 f+v99,dv71t72,dt120,cv85t144 f+v99,cv71t168,dt216,f+v99\
+t240,cv71t264 dv43,dv29,dv85,cv71t336 c+o2v85,co1v57t360,l384'],
+	12=
+		["name"="fusion 11a",
+		"phrase"='co1d32v71c10 f+v113,cv43t64 f+v85,d,f+,dv57,cv71 f+v113,cv43t256 f+v85,dv57,\
+dv85t352 b-'],
+	13=
+		["name"="fusion 11b",
+		"phrase"='f+o1d32v113c10,cv71t64 f+v85,d,f+,dv57,cv71 f+v113,cv43t256 f+v85,cv71 f+v11\
+3,dv85,f+'],
+	14=
+		["name"="fusion 12a",
+		"phrase"='co1d32v71c10 f+v113,dd16v15,d,cd32v43 f+v85,dv71,f+v85,dv15,cv71 f+v113,dd16\
+v15,d,cd32v43 f+v85,dv15,dv71t352 b-v85'],
+	15=
+		["name"="fusion 12b",
+		"phrase"='f+o1d32v113c10,dd16v15,d,cd32v71 f+v85,dv71,f+v85,dv15,cv71 f+v113,dd16v15,d\
+,cd32v43 f+v85,cv71 f+v113,dv71,f+v85'],
+	16=
+		["name"="fusion 13a",
+		"phrase"='co1d16v85c10 c+v43 f+v99,f+v85t32,cv43 dv85,dv71 f+,c+v85,cv71 f+v99,c+v43t1\
+28 f+v71,dv85,dv71 f+v85,c+,cv71 f+v99,c+v43t224 f+v85,cv43t256 f+v71,c+v85,b\
+-,f+t320,c+t368'],
+	17=
+		["name"="fusion 13b",
+		"phrase"='co1d16v85c10 f+v99,f+v85t32,d,f+v71,c+v85,cv71 f+v99,f+v71t128,dv85,dv71 f+v\
+85,c+,c f+v99,cv43,f+v85,cv43,c c+v71 f+,c+v57,dv85 b-v99,c+v71t320 f+v99,c+v\
+85t352 f+v99,l384'],
+	18=
+		["name"="fusion 7/4 1a",
+		"phrase"='co1d48v85c10 f+v99 c+o2v85,do1v29,cv71 f+v85,cv57 f+v71,dv85,dv29,cv71 f+v85\
+,dv29,cv85 f+v99,dv15,f+v85,cv57 f+v71,dv85,f+'],
+	19=
+		["name"="fusion 7/4 1b",
+		"phrase"='co1d48v85c10 f+v99,cv71t96 f+v85,cv57 f+v71,dv85,dv29,cv71 f+v85,dv29,cv85 b\
+-,dv15,dv29,cv57 b-v85,d,dv29'],
+	20=
+		["name"="fusion 13/4 1:1",
+		"phrase"='co1v85c10 dd48v71 e-o2v99,co1d96v71t96 e-o2d48,e-v57,co1d96 e-o2d48v71,co1d9\
+6t288 e-o2d48,e-v57,co1d96v85 dd48v71 e-o2v99,co1d96v71t480 e-o2d48,co1d96v57\
+t576 e-o2d48v71,e-v57,co1d96v85 dd48v71 e-o2v99,co1d96v71t768 e-o2d48,co1d96v\
+57t864 e-o2d48,e-v71,co1d96v85 dd48v71 e-o2v99,co1d96v71t1056 e-o2d48,co1d96v\
+57t1152 e-o2d48v71'],
+	21=
+		["name"="fusion 13/4 1:2",
+		"phrase"='co1v85c10 dd48v71 e-o2v99,co1d96v71t96 e-o2d48,e-v57,co1d96 e-o2d48v71,co1d9\
+6t288 e-o2d48,e-v57,co1d96v85 dd48v71 e-o2v99,co1d96v71t480 e-o2d48,co1d96v57\
+t576 e-o2d48v71,e-v57,co1d96v85 dd48v71 e-o2v99,co1d96v71t768 e-o2d48,co1d96v\
+57t864 e-o2d48,e-v71,co1d96v85 dd48v71 e-o2v99,co1d96v71t1056 e-o2d48,co1d96v\
+57t1152 e-o2d48v71'],
+	22=
+		["name"="fusion 13/4 1:3",
+		"phrase"='co1v85c10 dd48 e-o2v99,e-v71t96,do1v57 e-o2,do1 e-o2v71,e-t288,co1v57 e-o2,c\
+o1d96v85 dd48v71 e-o2v99,e-v71t480,do1v57,d e-o2v71,co1v57 e-o2,co1d96v85 dd4\
+8v71 e-o2v99,e-v71t768,do1v57,d e-o2,co1 e-o2v71,co1d96v85 dd48v71 e-o2v99,e-\
+v71t1056,do1v57,cd96 dd48 e-o2v71'],
+	23=
+		["name"="fusion 13/4 1:4",
+		"phrase"='co1v85c10 dd48 e-o2v99,e-v71t96,do1v57 e-o2,do1 e-o2v71,e-t288,co1v57 e-o2,c\
+o1d96v85 dd48v71 e-o2v99,e-v71t480,do1v57,d e-o2v71,co1v57 e-o2,co1d96v85 dd4\
+8v71 e-o2v99,e-v71t768,do1v57,d e-o2,co1 e-o2v71,co1d96v85 dd48v71 e-o2v99,e-\
+v71t1056,do1v57,cd96 dd48 e-o2v71'],
+	24=
+		["name"="fusion 13/4 1:2",
+		"phrase"='co1v85c10 dd48 e-o2v99,e-v71t96,do1v57 e-o2,do1 e-o2v71,e-t288,co1v57 e-o2,c\
+o1d96v85 dd48v71 e-o2v99,e-v71t480,do1v57,d e-o2v71,co1v57 e-o2,co1d96v85 dd4\
+8v71 e-o2v99,e-v71t768,do1v57,d e-o2,co1 e-o2v71,co1d96v85 dd48v71 e-o2v99,e-\
+v71t1056,do1v57,cd96 dd48 e-o2v71'],
+	25=
+		["name"="fusion 13/4 1:3",
+		"phrase"='co1v85c10 dd48 f+v99,b-v85t96,dv29,d f+v85,f+v99t288,cv57 f+v71,cd96v85 dd48\
+v71 b-v85,f+v99t480,dv29,d f+v99,cv57 f+v71,cd96v85 dd48v71 b-v85,f+v99t768,d\
+v29,d f+v71,cv57 f+v99,cd96v85 dd48v71 b-v85,f+v99t1056,dv29,cd96v57 dd48v29 \
+f+v99'],
+	26=
+		["name"="fusion 13/4 1:4",
+		"phrase"='co1v85c10 b-d48 a-o2 ao3v71,a-o2,c+o1v15 e-v71 f+v99 a-o2v57,c+o1v43 f+v71,f\
++v99 a-o2v71,c+o1v15t288 e-v71 f+v99,cv57 c+v43 f+v71,cd96v85 b-d48 a-o2 ao3v\
+71,f+o1v99t480 ao3v57,a-o2,c+o1v15 e-v71 f+v99 a-o2v43,co1v57 c+v43 f+v71 a-o\
+2,co1d96v85 b-d48 a-o2v99 ao3v71,a-o2,f+o1v99 a-o2v57 ao3,c+o1v15t864 e-v71 f\
++,cv57 c+v43 f+v99,cd96v85 b-d48 ao3v71,f+o1v99t1056 ao3v57,co1d96t1152 c+d48\
+v15 f+v99 a-o2,c+o1v43'],
+	27=
+		["name"="fusion waltz 1a",
+		"phrase"='co1d16v85c10 e- f+v113 e-o2v99 a-v85,do1v71t32,dv15t64 e-v71,c+t96 e-o2v99 a\
+-v85,do1v71t160 e-,dv15t192 f+v113 e-o2v99 a-v85,do1v15t256 e-v71 do2 e- a-,l\
+288'],
+	28=
+		["name"="fusion waltz 1b",
+		"phrase"='do1d16v71c10 e-v85 e-o2v99,c+o1v71t64 e-o2 a-,do1v15t96 e-v85 f+v113 e-o2v99\
+,do1v71t128 bv85,bv71t160 a-o2,e-o1v85t192 e-o2v99,do1v71t224 fv85,ct256 dv15\
+ fv71 e-o2 a-,do1v29'],
+	29=
+		["name"="fusion waltz 2a",
+		"phrase"='co1d24v85c10 f+v99,dv15,f+v85,f+v99,dv71,f+v85,f+v99,f+t192,dv71t240 f+v85,d\
+v15 f+v71'],
+	30=
+		["name"="fusion waltz 2b",
+		"phrase"='co1d24v85c10 f+v99,dv29 f+v57,f+v71,f+v99,dv71 f+v85,f+v99t144,cv57 f+v71,d \
+f+v99,f+v57,dv71 f+v85,dv15'],
+	31=
+		["name"="fusion bossa 1",
+		"phrase"='co1d24v85c10 c+ fv71 f+v99 f+o2 ao3v71,f+o1 a-o2v57 ao3,f+o1v85 do2v71 a-v29\
+,co1v57 c+v71 f+v99 ao3v71,co1 f+ do2 a-v57 ao3,f+o1v85 a-o2v29,c+o1v85 fv71 \
+f+v99 f+o2 ao3v71,co1v57 f f+v71 a-o2v57 ao3,co1v85 f+ a-o2v29,f+o1v71 do2,c+\
+o1 f+v99 f+o2 ao3v71,co1v57 f+v71 do2v57 a- ao3,co1v71 b-v85 do2v71 a-v29,c+o\
+1v85 f+v99 ao3v71,fo1 b-v85 a-o2v57 ao3,co1 f f+v99 a-o2v29'],
+	32=
+		["name"="fusion bossa fill",
+		"phrase"='co1d24v71c10 c+v85 f+v99,f+v71,dv29 f+v85,d b-v99,f+,b-,cv71 c+v85 f+,c+v29,\
+cv71 f+v99 do2v71,do1v29 f+v71,dv85 fv71,ct288 dv99 f+,f+v71,c+o2v85,do1'],
+	33=
+		["name"="fusion bossa 2",
+		"phrase"='co1d24v85c10 dv71 e-v99 e-o2v113 f+v99 a-v57 ao3v71,e-o2 ao3v57,c+o1v71 e-o2\
+v85 a-v71,co1v57 dv29 e-v85 e-o2v113 a-v29 ao3v71,co1 c+ e-o2 ao3v57,e-o2v85 \
+a-v71,do1 e-v99 e-o2v113 f+v99 a-v57 ao3v71,co1v57 d e-o2v71 ao3v57,co1v85 e-\
+o2 a-v71,c+o1 e-o2 a-v29,do1 e-v85 e-o2v113 f+v99 ao3v71,co1v57 c+ e-o2v71 ao\
+3v57,co1v71 c+ e-o2v85 a-v71,e-o1v99 e-o2v113 a-v57 ao3v71,do1 e-o2v85 ao3v57\
+,co1 d e-o2v71 a-'],
+	34=
+		["name"="fusion calypso",
+		"phrase"='co1d24v85c10 e-o2v99,e-v71t48,do1v85t96 f+v113 e-o2v71,do1v29,e-o2v85,do1v29\
+,cv85 e-o2v99 a-v71,co1v57t240 b-v99 a-o2v85,a-v29,co1v71 c+v85 f+v113,c+v71,\
+cv85,dv43']
+]

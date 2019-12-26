@@ -1,0 +1,34 @@
+.TH MIDI 7
+.SH SYNOPSIS
+/dev/midi
+.SH DESCRIPTION
+/dev/midi controls a MIDI interface.
+Data read from and written to /dev/midi is pure MIDI data.
+Reading is always non-blocking, returning immediately if
+no input is available.
+A static number of system buffers is allocated for MIDI input when
+/dev/midi is first opened, forming a large circular buffer in which new MIDI
+input overwrites the oldest MIDI input (which may still be unread).
+Ioctl commands are:
+.P
+ioctl(fd,MIDIRESET)
+.IP
+Reset the interface, flushing all pending MIDI input and output.
+The MIDI clock time is reset to 0.
+.P
+ioctl(fd,MIDITHRU)
+.IP
+Turn ``thru'' mode
+on.  This is a mode in which MIDI input is routed directly to
+MIDI output, and no MIDI input can be read from /dev/midi until
+a MIDIRESET is done.
+.P
+ioctl(fd,MIDITIMERESET)
+.IP
+Reset the MIDI clock time to 0.
+.P
+ioctl(fd,MIDITIME,arg)
+.IP
+Get the MIDI clock time (relative to the last time a MIDITIMERESET
+was done) in milliseconds.
+arg is a pointer to a long, into which the value is written.

@@ -1,0 +1,75 @@
+# utilisé par KeyKit si ACPATCHES == 2
+#  ... pour la composition à la mandoline
+
+------- PERCUS --	70	0
+
+Xylo				70	0
+Wooden Xylo			70 	3
+
+Tubular Chords		70	6
+RevCymb 1			70	10
+RevCymb 2			70	11
+Orch. Battery		42	0
+
+Sake Bell			70	15
+
+Celesta				70	20 
+Marimba				70	22
+Glockenspiel		70	30
+Zuckerdosendeckel	71	0
+Vibes				70	25
+Jaw Harp			22	0
+Gong				70	70
+CymballRoll/Crash	70	72
+Steel Drums			76	0
+Tubular Bells Glide	74	16
+
+Tamburas			72	10
+Tamb/tabla			72	0
+Tabla				70	50
+TalkDrum 1			70	52
+TalkDrum 2			70	53
+Bata Drums			70	54
+Baya Suwuk			70	55
+Udu Tones			70	56
+Kalimba				70	23
+
+----- MANDOLIN --	53	0
+
+Mandolin			53	0
+Soft Tremolo		53	13
+Mandolin Wind		53	12
+Octave Mandolin		53	5
+Mixed Sweep			53	10
+Trem Oct Sweep		53	11
+
+------- CORDES --	51	100
+
+PianoWT 			20 	0 
+
+Bass Hit			30	102
+Bass Pluck			30	103 
+
+
+
+------- VENTS --	61	0
+
+PanPipes 			11 	0 
+Flute				12	0
+Flute 2 			10	73
+
+Alto Sax			61	0
+Bari Sax			62	0
+Tenor Sax			63	0
+Trumpet Soft		64	0
+Trumpet Hard 		64	1
+Trumpet Doiks		64	3
+Trumpet F&D			64	9
+Trumpet Wah			65	3
+
+
+
+
+
+
+

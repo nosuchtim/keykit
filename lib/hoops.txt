@@ -1,0 +1,30 @@
+#
+# HOOPS
+#
+# Summary of keyboard characters that do things
+
+	Y	info
+	R	record start/stop
+	T	tap
+	U	up 1 channel
+	D	down 1 channel
+	E	reset everything
+
+# The following characters all apply to current channel
+
+	I	punch in/out
+	N	nudge forward
+	B	nudge backward
+	M	mute
+	A	addbeat
+	S	subbeat
+	F	shuffle
+	C	copy current channel to new channel
+	P	purge/clear contents of current channel
+
+	Q then H	quantize current channel to half-pulses
+	Q then P	quantize current channel to whole-pulses
+	Q then Q	quantize current channel to quarter-pulses
+
+	X then Q	quit
+

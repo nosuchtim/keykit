@@ -1,0 +1,21 @@
+Hi Burton,
+     Here is a description of the changes I made.
+
+- By adding "..\users\beerma" to the Keypath value in the liblocal\prerc.k
+  file, your code is automatically loaded.  So, all you need to do is
+  start keykit and type "WaterLilies()" to run it.
+
+- All the old versions of your code are in the "old" sub-directory.
+  Because the names of the function (burton1) was the same in all of the
+  files, it caused confusion.
+
+- I'm assuming that WaterLilies.k contained the most recent version.
+
+- I put the "utility" functions (like lookandkill) into a util.k
+  file.
+
+- The function in WaterLilies.k is now named WaterLilies()  (Upper and
+  lower-case is significant.)
+
+
+    ...Tim...

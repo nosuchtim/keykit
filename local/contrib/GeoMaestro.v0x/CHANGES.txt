@@ -1,0 +1,10 @@
+
+GéoMaestro v1.0
+---------------
+
+This is a pre-version ! Wait for the release of KeyKit 6.6b !
+
+
+
+GéoMaestro home page:
+http://perso.infonie.fr/hepta/GM/GM0.html

@@ -1,0 +1,67 @@
+<tool name="Ginsu" class="wginsu">
+The
+<b>Ginsu</b>
+tool is a visual-connection-of-realtime-components thing.
+Ginsu is capable of
+some simple delays, scale adjusting, and channel remapping.
+<blankline/>
+Here's how you use Ginsu.  First, bring up several instances of Ginsu.
+Use the "Connect" button on one to drag a line over to the other.  You've
+now connected them.  (Pressing the Connect button and *not* dragging it
+will show you the current connections.)  You'll see that the "1" "1" buttons
+on the two tools have changed to "1" "&gt;" and "&lt;" and "1".   Those buttons
+reflect the current "input" and "output" of each Ginsu.  The "1" means
+"channel 1", and "&gt;" means the output is connected to some other tool,
+and "&lt;" means the input is connected to some other tool.
+<blankline/>
+Now, play something on channel 1, on your midi controller.  You should
+hear your synth playing normally - the first Ginsu tool is grabbing everything
+on channel 1, sending it to the second Ginsu tool, which then sends it
+out to channel 1.  Both Ginsu's are set to do "Nothing". 
+<blankline/>
+Now, use the "Nothing" button on the *second* Ginsu and select "Delay".
+The contents of that Ginsu tool should change to show a "Quarter" button.
+That Ginsu tool is now a "delay line".  Play something on channel 1,
+and it will be delayed for a quarter note (inside the second Ginsu tool)
+before being sent to the output.
+<blankline/>
+Now, create a third instance of Ginsu, and connect the first Ginsu tool to
+it.  The first Ginsu tool should now be connected to two other Ginsu tools -
+anything received by the first Ginsu tool will be sent to both of the
+other Ginsu tools.   Now, change the third Ginsu tool from Nothing to "Delay",
+and set it's delay value to, say, "Sixteenth".  Play something on channel
+1 and you should hear two copies of whatever you play, one delayed by a quarter
+note, and one delayed by a sixteenth.
+<blankline/>
+Now, in the first Ginsu tool, use the "Ginsu" menu button to select
+"Echo Input -> On".   Now, it will echo everything it receives, so you'll be
+able to hear what you play, immediately, as well as the two delayed copies.
+<blankline/>
+The "1" button menus can be used to change either the input channel
+(on the first Ginsu tool) or the output channel (on the other two 
+Ginsu tools).
+<blankline/>
+If you actually follow these instructions, you should now understand
+how Ginsu works from the outside.  
+<blankline/>
+Internally, Ginsu works as follows.  Each item under the "Nothing"
+menu (currently, these items are "Delay", "Ornament", "Delay Continuous",
+"Scadjust", and "Filter") is implemented by a separate "proc" tool.
+These "proc" tools implement both the GUI part (e.g. the "Delay" 
+value button) as well as the processing part (the realtime delay).
+The source code for these tools is in lib/procs.k.   Use the "Delay"
+one as an example - it is "ptool_delay".  The GUI code in these tools
+should be familiar to anyone who's done a KeyKit tool.  What's
+unique about these tools is that they all have "process()" methods which
+Ginsu uses to process realtime messages.  The process() method takes a
+MIDI message as input, and returns a MIDI message.  It must handle 
+individual note-on's and note-off's (i.e. it won't be getting complete
+notes, so processing isn't quite as convenient as it might appear,
+depending on what you want to do).
+<blankline/>
+To add a new processing tool to the Ginsu tool, just implement a ptool_* class
+using ptool_delay as an example, and then add that item to the array that
+is initialized in proc_list() at the top of lib/procs.k.
+New processing tools don't have to be in lib/procs.k, you can put them
+in a separate file. 
+</tool>

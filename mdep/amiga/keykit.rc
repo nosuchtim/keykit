@@ -1,0 +1,60 @@
+#
+#	Copyright 1996 AT&T Corp.  All rights reserved.
+#
+
+# Sample Amiga startup
+
+Keypath = ";keykit:local;keykit:lib;keykit:mymusic;keykit:music"
+Musicpath = "keykit:mymusic;keykit:music"
+
+eval "Ano=ano()"
+eval "Resetall=resetall()"
+Met.input = "Met.k"
+Verbose = 1
+Meton = 1
+Autoexpand = 0
+Temposched = 0
+
+function fake_play(a) {
+	print "If you had MIDI, that would have sent ",sizeof(a)," notes."
+	Last = a
+}
+
+function real_play(a, x,reala) {
+	metsched()	# If Meton is set, schedule a crude rhythm
+	temposet()	# Let '>', '<' and other keys adjust tempo 
+	if ( Autoexpand )
+		a = expand(a)
+	Last = a	# save it now, before text notes are removed
+	x = textnote(a)
+	if ( Temposched )
+		temposch(x)	# schedule tempo changes
+	if (sizeof(x) > 0)
+		a -= x		# get rid of text notes
+	sched(stop,a.length+1b/4)
+	realtime(a)
+	# If the playing of phrase a is interrupted, notes may be
+	# hanging, so we always send an all-notes-off message.
+	# However, we don't want that to wipe out the Recorded phrase.
+	saverec = Record
+	Record = 0
+	realtime(Ano)
+	Record = saverec
+}
+
+playfunc(real_play)
+
+
+# more Amiga stuff...
+#define gsystem(c) _g=Graphics;graphics(0);system(c);if(_g)graphics()
+
+# miscellaneous stuff
+#define thru 		_throwaway=realin()
+#define avail		print coreleft()
+#define loop(p)		sched(p,0,p.length)
+#define quit		exit()
+#define bpm(n)		tempo(60000000/(n))
+
+# channel 1 local on/off
+#define on		realtime('xb07a7f')
+#define off		realtime('xb07a00')

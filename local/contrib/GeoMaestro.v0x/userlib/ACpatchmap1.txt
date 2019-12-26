@@ -1,0 +1,157 @@
+# utilisé par KeyKit si ACPATCHES == 1
+#  correspond à une (petite) partie des instruments de artisanale.acp
+
+------- PERCUS --	70	0
+
+Xylo				70	0
+Wooden Xylo			70 	3
+
+Tubular Chords		70	6
+RevCymb 1			70	10
+RevCymb 2			70	11
+Orch. Battery		42	0
+
+Sake Bell			70	15
+
+Celesta				70	20 
+Marimba				70	22
+Glockenspiel		70	30
+Zuckerdosendeckel	71	0
+Vibes				70	25
+Jaw Harp			22	0
+Gong				70	70
+CymballRoll/Crash	70	72
+Steel Drums			76	0
+Tubular Bells Glide	74	16
+
+Tamburas			72	10
+Tamb/tabla			72	0
+Tabla				70	50
+TalkDrum 1			70	52
+TalkDrum 2			70	53
+Bata Drums			70	54
+Baya Suwuk			70	55
+Udu Tones			70	56
+Kalimba				70	23
+
+
+
+------- CORDES --	51	100
+
+Harpsichord 		21 	0 
+PianoWT 			20 	0 
+Grand Piano			20	20
+
+Viola 				50 	0 
+Violin 				50 	10 
+Concerto			50	15
+
+Mandolin			53	0
+Harpe Celtique		50	50
+Harpe Clarsach		50	51
+Koto				50	34
+Santur				50	33
+Harp Glisses		50	51
+Big Gliss Loop		50	63
+
+Nylon Guitar		51	100
+Acoustic Guitar		51	72
+Guitarra Flamenca 	51 	25 
+EGuitar 			52 	11
+12 Cordes			51	1 
+
+Contrabass 			50 	20 
+Yamaha Bass			30	5
+SlapBass 			30 	6 
+JazzBass 			30 	10
+Bass Hit			30	102
+Bass Pluck			30	103 
+
+ArcoStr Lo			54	0
+ArcoStr Hi			54	1
+
+Cister				55	11
+Dudy				55	20
+Ud					55	31
+
+Sitar 1				50	3
+Sitar 2				50	5
+Sitar 3				72	2
+Sitar 4 			72	3
+Sarod				72	4
+
+
+------- VENTS --	61	0
+
+PanPipes 			11 	0 
+Flute				12	0
+Flute 2 			10	73
+
+Alto Sax			61	0
+Bari Sax			62	0
+Tenor Sax			63	0
+Trumpet Soft		64	0
+Trumpet Hard 		64	1
+Trumpet Doiks		64	3
+Trumpet F&D			64	9
+Trumpet Wah			65	3
+
+Tuba				60	0
+Trombone			66	2
+Recorder			60	13
+English Horn		60	30
+Accordeon			60	5
+
+Church Organ		60	19
+
+
+
+------- VOIX --		81	0
+
+Choral Aahhs		81	0
+Octave Aahs			81	1
+Soul Aahhs			82	0
+Soul Aahhctaves		82	9
+Soul Oohhs			83	0
+Soul Oohhctaves		82	9
+
+
+-- SYNTHS --		93	0
+
+Moogbass			90	10
+Minimoog			91	0
+.. moog 11			91	11
+
+Classic OB			93	0
+.. OB 2				93	1
+.. OB II			93	2
+.. OB 3				93	3
+B3 fast				97	0
+.. B3 mid			97	5
+.. B3 (24)			97	24
+B3 slow				97	100
+.. B3 mid			97	105
+.. B3 (124)			97	124
+Blade Runner		90	30
+Voice of Heaven		90	28
+Elka				90	8
+Snocorium			90	15
+Universe			90	26
+MAZPAD Granuleux	90	1
+MAZPAD Guitare		90	2
+MAZPAD Lent			90	3
+MAZPAD Souffle		90	6
+
+Ambient 0			95	0
+Ambient 2			95	2
+Ambient 10			95	10
+Ambient 11			95	11
+
+
+-------(Autres)--	101	10
+
+PhlappyBass			101	10
+
+
+
+

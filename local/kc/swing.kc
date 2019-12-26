@@ -1,0 +1,209 @@
+Collection = [
+	0=
+		["name"="One beat",
+		"phrase"=',l96'],
+	1=
+		["name"="shuffle 1:1",
+		"phrase"='co1d32v99c10 f+,f+d33v85t64,dd32t96 f+v99,f+d33v85t160,cd32t192 f+v99,f+d33v\
+85t256,dd32v99t288 f+,f+d33v85t352,l384'],
+	2=
+		["name"="shuffle 1:2",
+		"phrase"='co1d32v99c10 f+,f+d33v85t64,dd32t96 f+v99,cd33v85t160 f+,cd32v99t192 f+,cv85\
+t256 f+d33,dd32v99t288 f+,f+d33v85t352,l384'],
+	3=
+		["name"="shuffle 1:3",
+		"phrase"='co1d32v99c10 f+,cv85t64 f+d33,dd32v99t96 f+,dv85t160 f+d33,cd32v99t192 f+,cv\
+85t256 f+d33,dd32t288 f+v99,f+d33v85t352,l384'],
+	4=
+		["name"="shuffle 1:4",
+		"phrase"='co1d32v99c10 f+,cv85t64 f+d33,dd32t96 f+v99,cd33v85t160 f+,cd32v99t192 f+,f+\
+d33v85t256,dd32v99t288 f+,dv85t352 f+d33,l384'],
+	5=
+		["name"="shuffle 1:5",
+		"phrase"='co1d32v99c10 f+,cv85t64 f+d33,dd32t96 f+v99,cd33v85t160 f+,cd32v99t192 f+,cv\
+85t256 f+d33,dd32v99t288 f+,f+d33v85t352,l384'],
+	6=
+		["name"="shuffle 1:6",
+		"phrase"='co1d32v99c10 f+,cv85t64 f+d33,dd32t96 f+v99,cv85t160 f+d33,f+d32v113t192,cv8\
+5t256 f+d33,dd32v99t288 f+,f+d33v85t352,l384'],
+	7=
+		["name"="shuffle 1:7",
+		"phrase"='co1d32v99c10 f+,cv85t64 f+d33,dd32t96 f+v99,f+d33v85t160,cd32t192 f+v99,f+d3\
+3v85t256,dd32t288 f+v99,cd33,cv85t352 f+,l384'],
+	8=
+		["name"="shuffle 2a",
+		"phrase"='co1d32v71c10 f+v99,f+d33v71t64,dd32v85t96 f+,cd33v57t160 f+v71,cd32t192 f+v9\
+9,f+d33v71t256,dd32t288 f+v85 f+o2v99,f+o1d33v71t352,l384'],
+	9=
+		["name"="shuffle 2b",
+		"phrase"='f+o1d32v99c10,cv71t64 f+d33,dd32v85t96 f+,cd33v57t160 f+v71,cd32t192 f+v99,f\
++d33v71t256,dd32t288 f+v85 f+o2v99,b-o1v85t352'],
+	10=
+		["name"="shuffle 3a",
+		"phrase"='co1d32v85c10 f+d33v99,f+v71t32,f+t64,dd32v85t96 f+d33,f+v71t128,cd32v57t160 \
+f+d33v71,f+v99t192,f+v71t224,f+t256,dd32t288 f+d33v85,f+v71t320,ct352 f+,l384\
+'],
+	11=
+		["name"="shuffle 3b",
+		"phrase"='co1d32v71c10 f+d33v99,f+v71t32,f+t64,dd32v85t96 f+d33,f+v71t128,cd32v57t160 \
+f+d33v71,f+v99t192,f+d32v71t224,b-v85,dv71 f+v85,cd33v71t352 f+,l384'],
+	12=
+		["name"="shuffle 4a",
+		"phrase"='co1d32v85c10 f+v99,f+d33v85t64 ao3v71,f+o1d32v99t96 ao3v85,do1v29,cv71 f+d33\
+v85 ao3d32v71,do1v85 f+v99,f+d33v85t256 ao3v71,f+o1d32v99t288 ao3v85,co1v71t3\
+52 f+d33v85 ao3d32v71,l384'],
+	13=
+		["name"="shuffle 4b",
+		"phrase"='f+o1d32v99c10,f+d33v85t64 ao3v71,co1d32t96 f+v99 ao3v85,f+o1d33t160 ao3d32v7\
+1,do1v85 f+v99,f+d33v85t256 ao3v71,f+o1d32v99t288 ao3d33v85,av57t320,co1v71t3\
+52 f+v85 ao3d32v71,l384'],
+	14=
+		["name"="shuffle 5:1",
+		"phrase"='co1d32v85c10 e-o2,co1v71t96 dv85 f+v99 e-o2v85,co1d33v57t160 e-o2v71,co1d32v\
+85t192 e-o2,co1v71t288 dv85 f+v99 do2v71 e-v85,co1d33v57t352 do2d32 e-d33v71,\
+l384'],
+	15=
+		["name"="shuffle 5:2",
+		"phrase"='co1d32v85c10 e-o2,e-d33v71t64,co1d32t96 dv85 f+v113 e-o2v85,co1d33v57t160 e-\
+o2v71,co1d32v85t192 e-o2,e-d33v71t256,co1d32t288 dv85 f+v113 do2v57 e-v85,co1\
+d33v57t352 do2d32 e-d33v71,l384'],
+	16=
+		["name"="shuffle 6:1",
+		"phrase"='co1d32v85c10 dv71 f+v99 do2v71 e-v85,do1d33v15t64,cd32v71t96 dv85 f+v99 do2v\
+57 e-v85,co1t192 dv71 f f+v99 e-o2v85,do1d33v15t256 fv71 e-o2,co1d32t288 dv85\
+ fv71 b- e-o2v85,co1d33v57t352 dv15 fd32v71 e-o2d33,l384'],
+	17=
+		["name"="shuffle 6:2",
+		"phrase"='co1d33v85c10 dd32v29 f+v113 do2v71 e-v99,co1d33v43,cv57t64 dv15 do2v57,co1d3\
+2v71t96 dv85 b- do2 e-v99,do1d33v15t160,cd32v85t192 dv29 fv71 f+v113 e-o2v99,\
+co1d33v71t256 dv15 fv57,cd32v71t288 dv85 f b- e-o2v99,do1d33v15t352,l384'],
+	18=
+		["name"="shuffle 7a",
+		"phrase"='co1d33v85c10 e-o2d32,co1d33v71,cv57t64 e-o2d32v71,co1d33v85 dd32,cd33v71 e-o\
+2,co1v57t160 e-o2,co1v85t192 e-o2d32,co1d33v71,cv57t256 e-o2d32v71,co1d33v85 \
+dd32,cd33v71 e-o2,co1v57t352 e-o2,l384'],
+	19=
+		["name"="shuffle 7b",
+		"phrase"='co1d33v85c10 e-o2d32,co1d33v71,cv57t64 e-o2d32v71,co1d33v85 dd32,cd33v71 e-o\
+2,co1v57t160 e-o2,co1v85t192 e-o2d32,co1d33v71,cv57t256 e-o2d32v71,co1d33v85 \
+dd32,cd33v71 e-o2d32,co1d33v57 dd32v85,l384'],
+	20=
+		["name"="shuffle 7c",
+		"phrase"='co1d33v85c10 e-o2d32,co1d33v71,cv57t64 e-o2d32v71,co1d33v85 d,cv71t128 dv57,\
+ct160 dd32v71,cd33v85 f+d32v113,cd33v71 b-d32v85,cd33v57 f+d32v113,cd33v85 dd\
+32 b-,cd33v71 f+d32v113,cv57 dv85 b-'],
+	21=
+		["name"="shuffle 1:1",
+		"phrase"='co1d32v99c10 f+,f+d33v85t64,dd32t96 f+v99,f+d33v85t160,cd32t192 f+v99,f+d33v\
+85t256,dd32v99t288 f+,f+d33v85t352,l384'],
+	22=
+		["name"="shuffle fill 1",
+		"phrase"='co1d32v99c10 f+,cv85t64 f+d33,dd32v99t96 f+,dv85t160 f+,do2d33v99,dt224,dd32\
+v85t256,co1,cd33v99t352,l384'],
+	23=
+		["name"="shuffle fill 2",
+		"phrase"='co1d32v85c10 f+v99,dv85t96 f+v99,do2d33v85t160,dv99t192,dv85t224,dd32v99t256\
+,do1,bd33v85,bd32v99t352'],
+	24=
+		["name"="shuffle fill 3",
+		"phrase"='co1d32v99c10 f+,cv85t64 f+d33,dd32t96 f+v99,f+v85t160,dd33 do2v99,do1v71t224\
+ do2v85,do1t256 do2d32v99,do1d33v85 fv99,dv71t320 fv85,dd32t352 f'],
+	25=
+		["name"="shuffle fill 4a",
+		"phrase"='co1d32v99c10 f+,f+t96,ct160 f+d33v85,f+d32v99t192,f+t288,f+d33v85t352,l384'],
+	26=
+		["name"="shuffle fill 4a",
+		"phrase"='co1d32v99c10 f+,f+t96,ct160 f+d33v85,f+d32v99t192,f+t288,f+d33v85t352,l384'],
+	27=
+		["name"="shuffle fill 4b:1",
+		"phrase"='co1d32v99c10 f+,do2d33t96,dv85t128,dd32v99t160,co1d33,cv85t224,cd32v99t256,d\
+d33v85t320,dd32v99t352'],
+	28=
+		["name"="shuffle fill 4b:2",
+		"phrase"='co1d32v99c10 f+,do2d33t96,dd32v85t128,co1d33,cd32v99t192,cv85t256,dd33t320,d\
+d32v99t352'],
+	29=
+		["name"="swing 1",
+		"phrase"='co1d32v99c10 f+,dv85t96 f+v99,f+d33v85t160,cd32t192 f+v99,dv85t288 f+v99,f+d\
+33v85t352,l384'],
+	30=
+		["name"="swing 2",
+		"phrase"='co1d32v99c10 f+,f+t96,dv85t160 f+d33,f+d32v99t192,f+t288,cd33v85t352 f+,l384\
+'],
+	31=
+		["name"="swing 3",
+		"phrase"='co1d32v99c10 f+,dv85t64,f+v99,cv85t160 f+d33,f+d32v99t192,f+t288,f+d33v85t35\
+2,l384'],
+	32=
+		["name"="swing 4",
+		"phrase"='f+o1d32v99c10,f+t96,dv85t160 f+d33,f+d32v99t192,dv85t256,f+v99,cv85t352 f+d3\
+3,l384'],
+	33=
+		["name"="swing 5",
+		"phrase"='co1d32v85c10 f+v99,dv85t64,f+v99,cv85t160 f+d33,f+d32v99t192,f+t288,f+d33v85\
+t352,l384'],
+	34=
+		["name"="swing 6",
+		"phrase"='co1d32v85c10 f+v99,f+t96,dv85t160 f+d33,f+d32v99t192,dv85t288 f+v99,f+d33v85\
+t352,l384'],
+	35=
+		["name"="swing 7a",
+		"phrase"='co1d16v99c10 f+,cv85t48 f+,dt96 f+v99,f+v85t144,f+d17t176,cd16v99t192 f+,f+v\
+85t240,dt288 f+v99,f+d17v85t320,cd16t336 f+v99,f+d17v85t368,l384'],
+	36=
+		["name"="swing 7b",
+		"phrase"='co1d16v99c10 f+,f+v85t48,f+d17t80,dd16t96 f+v99,cv71t128,f+v85,c,cv99t192 f+\
+,cv85t240 f+,f+d17t272,dd16t288 f+v99,f+d17v85t320,f+d16v99t336,f+v85t368'],
+	37=
+		["name"="swing 8:1",
+		"phrase"='e-o2d16v85c10,f+o1v113t96 e-o2v99,e-v85t192,c+o1t288 f+v113 e-o2v99,l384'],
+	38=
+		["name"="swing 8:2",
+		"phrase"='e-o2d16v85c10,f+o1v113t96 e-o2v99,e-v85t160,e-t192,c+o1t288 f+v113 e-o2v99,l\
+384'],
+	39=
+		["name"="swing hi-hat 9a",
+		"phrase"='b-o1d16v99c10,f+t64,b-v85t160,b-v99t192,f+t256,b-v85t352,l384'],
+	40=
+		["name"="swing hi-hat 9b",
+		"phrase"='b-o1d16v99c10,f+t64,b-v85t160,f+v99t192,b-v85t256,l384'],
+	41=
+		["name"="swing fill 1",
+		"phrase"='co1d32v85c10 e-o2,do1t96 e-o2,co1v71t160 e-o2d33,e-d32v85t192,do1v71t256,e-o\
+2v85,do1v71t352 e-o2'],
+	42=
+		["name"="swing fill 2",
+		"phrase"='e-o2d32v85c10,do1v71t64,e-o2v85,do1d33v71t160 e-o2,do1d32v85t192 e-o2,co1t28\
+8 e-o2,e-v71t352'],
+	43=
+		["name"="swing fill 3",
+		"phrase"='do1d32v85c10 e-o2,co1v71t64,e-o2v85,co1d33v71t160 e-o2,co1d32v85t192 e-o2,do\
+1t288 e-o2,co1d33v71t352 e-o2d32,l384'],
+	44=
+		["name"="swing fill 4",
+		"phrase"='e-o2d32v85c10,co1d33v71t64,cd32v85t96 e-o2,e-d33v71t160,do1d32v85t192 e-o2,c\
+o1v71t256,dv85 e-o2,co1d33v71t352 dd17 e-o2d32,do1d16v85t368,l384'],
+	45=
+		["name"="swing fill 5",
+		"phrase"='f+o1d32v99c10,f+t96,f+d33v85t160,cd32v99t192 f+,dd33v85,dd32v71t256,cv85 f+v\
+99,dd33v85,dd32v71t352 f+v85'],
+	46=
+		["name"="swing fill 6:1",
+		"phrase"='do1d32v85c10 f+,do2v71,bo1d33,f+d32v85t96 b,f+d33v71t160,dd32v85t192 f+,do2v\
+71,bo1d33,f+d32v85t288 b,f+v71t352'],
+	47=
+		["name"="swing fill 6:2",
+		"phrase"='f+o1d32v85c10,dt96 f+,do2v71,f+o1d33 b,f+d32v85t192 b,f+t288,f+v71t352'],
+	48=
+		["name"="swing fill 6:3",
+		"phrase"='f+o1d32v85c10,dv71,do2,f+o1v85 bd33,bd32v71t128,f+d33,f+d32v85t192,dv71,do2,\
+f+o1v85 bd33,bd32v71t320,f+'],
+	49=
+		["name"="swing fill 6:4",
+		"phrase"='f+o1d32v85c10,dv71t64,f+v85 do2,bo1d33v57,f+v71t160 bd32,f+v85,dv71t256,f+v8\
+5 do2,bo1d33v57,dd32v71t352 f+ b'],
+	50=
+		["name"="swing fill end",
+		"phrase"='co1d32v85c10 c+o2,do1t96 e-o2,co1v71t160 e-o2d33,e-d32v85t192,co1v71t256,dv8\
+5 e-o2,e-v71t352']
+]

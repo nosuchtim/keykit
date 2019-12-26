@@ -1,0 +1,15 @@
+# Summary of typo characters
+
+control-I	info
+control-R	record start/stop
+control-N	nudge forward
+control-B	nudge backward
+control-M	mute
+control-T	tap
+control-E	reset
+control-A	addbeat
+control-S	subbeat
+control-F	shuffle
+control-C	copy
+
+control-X then Q	quit

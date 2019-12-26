@@ -1,0 +1,218 @@
+Collection = [
+	0=
+		["name"="One beat",
+		"phrase"=',l96'],
+	1=
+		["name"="afrocuban 1",
+		"phrase"='co1d24v85c10 dv71,do2t48,co1t96 dv85 f+v113,dv71t144,cv85t192 f,fv71t240,cv8\
+5t288 f f+v113,dv85t336,l384'],
+	2=
+		["name"="afrocuban 2",
+		"phrase"='co1d16v85c10 dv71 e-o2v85,e-v71t32,do1v15t64,cv71t96 f+ e-o2v85,do1v71t128,e\
+-o2t160,co1v85t192 dv71 do2v85 e-,dv29t224,do1t256 do2v71 e-,co1t288 fv85 f+v\
+71 e-o2v85,do1v71t320 fv29 e-o2v71,fo1t352,l384'],
+	3=
+		["name"="afrocuban 3",
+		"phrase"='co1d24v85c10 f+v99,f+v85t48,cv71 do2,do1d25 f+d24v99,dv29,f+v85,ct192 f+v99,\
+f+v85t240,dv29,cv71 f f+v99,dd25v71t336 f+d24v85,dv29'],
+	4=
+		["name"="afrocuban 4",
+		"phrase"='co1d24v85c10 dv43 f+v99 a-o2v85,a-d25v71t48,do1v29t72 f+v85 a-o2d24,co1v57 d\
+v71 e-v85 f+v99,a-o2v71,f+o1d25v85t168 a-o2v57,co1d24v71t192 f+v99 a-o2v85,c+\
+o1v71,a-o2,c+o1v57 f+d25v85,cd24v57t288 f+v99 a-o2v85,c+o1v71,a-o2d25v85,c+o1\
+d24v57t360 f+d25v85 a-o2v71,l384'],
+	5=
+		["name"="afrocuban 5",
+		"phrase"='co1d24v85c10 b,dd25v71t48 f+v99,dd24v57t72 f+v85 do2,co1v71,dd25,dd24v57t144\
+ f+d25v99,f+d24v85t168,c do2v71,f+o1d25v99t240 do2d24v57,f+o1v85,cv71 f,fd25v\
+85t336 f+v99,fd24v57t360 f+v85'],
+	6=
+		["name"="afrocuban 6",
+		"phrase"='fo1d24v85c10 a-o2 e-o3,e-o1v71t48 e-o3 av85,fo1d25v57,fd24v71t96 a-o2d25v85 \
+e-o3v71,a-o2d24t120 e-o3v85,e-o1 ao3v71,e-,fo1v85 a-o2,e-o3d25v71,e-o1d24t240\
+ e-o3v85 a,fo1d25v57,fd24v71t288 a-o2v85 e-o3v71,e-o1v85t336 a-o2v71 eo3v85 a\
+v71,l384'],
+	7=
+		["name"="afrocuban 7",
+		"phrase"='e-o1d16v71c10 fv85 a-o2 eo3 av99,ev57t32 av71,et64 av85,e-o1t96 fv71 a-o2 eo\
+3 av99,ev57t160 av71,e-o1v85t192 f eo3v71,a-o2v85t224 e-o3v57 av85,e-o1t288 f\
+v71 eo3,a-o2v85t320 e-o3v57 av85,l384'],
+	8=
+		["name"="afrocuban fill 1",
+		"phrase"='co1d24v85c10 f+v99,f+d25v71t48,f+v57t72,dd24v85t96 f+v99,f+v71t144,cv85t192 \
+f+v99 do2v71,co1t240 dv29 f+d25v71 do2d24,f+o1d25v57,dd24v85t288 f+v99,cv71t3\
+36 dd25v29 f+d24v71,dv57 fv71'],
+	9=
+		["name"="afrocuban fill 2",
+		"phrase"='co1d24v85c10 f+v99 a-o2v71,a-d25t48,do1d24t72 f+d25v85 a-o2d24v71,f+o1v113,a\
+-o2v85,do1v71,a-o2d25,do1d24v85t192 a-o2,bo1d25v71t240,bd24v57t264,dd25v43 do\
+2d24v71,do1v29,fv71,cd25v85,l384'],
+	10=
+		["name"="afrocuban fill 3",
+		"phrase"='co1d24v85c10 d,dd25v15t48,dd24v71t72,do2d25v29,dd24v71t120,dv29t168,fo1v85,f\
++v99t240,b-v85t288,f+v99,dd25v57,dd24v29t360'],
+	11=
+		["name"="afrocuban fill 4",
+		"phrase"='co1d24v85c10 c+v29 f+d25v99,f+d24v113t24,dv57,dv71t96 b-v99,f+,cv71t168 c+d2\
+5v43,c+d24v85t192,dd25v71t240,dv29t264,dd24v85t288 f+d25v99,f+t312,dd24v71t33\
+6 f+d25v99,cd24v71t360 f+v113'],
+	12=
+		["name"="afrocuban 11:1",
+		"phrase"='e-d25v71c10,e-d24v57t24,f+o2v99 eo3v71,e-d25t96,e-d24v57t120,f+o2v99 eo3v71,\
+e-d25t192,e-d24v57t216,e-v71t264,f+o2d25v99t336,f+d24v113t360'],
+	13=
+		["name"="afrocuban 11:2",
+		"phrase"='co1d24v71c10 e-o3d25,e-d24v57t24,c+o1v71 f+o2v99 eo3v71,e-d25t96,e-d24v57t12\
+0,c+o1v71 f+o2v99 eo3v71,co1t192 e-o3d25,e-d24v57t216,c+o1v71t264 e-o3,a-o2d2\
+5t312,f+v99t336 a-d24v71,c+o1 f+o2v113'],
+	14=
+		["name"="afrocuban 12:1",
+		"phrase"='do2d24v85c10,e-o1v71,ao3v85,e-,do2 ao3,e-v71,av57,do2v71,fo1v85 a-o2d25 eo3d\
+24 a,a-o2v71,e-o1d25v85 fd24v71,e-,do2d25v85,e-o1d24v71t312 do2 a-v85,l384'],
+	15=
+		["name"="afrocuban 12:2",
+		"phrase"='c+o1d25v85c10 do2d24,c+o1v71 e-,a-o2v85 ao3,c+o1 e-o3,do2 a-v71 ao3v85,c+o1v\
+71 e-o3,a-o2v85 ao3v57,c+o1d25v85 do2d24v71,c+o1 fv85 a-o2d25v57 eo3d24v85 a,\
+a-o2v71,c+o1v85 e-d25 fd24v71,e- a-o2v57,dd25v85,c+o1v71t312 e-d24 do2 a-v85,\
+c+o1d25v57,c+v85t360,l384'],
+	16=
+		["name"="afrocuban 13:1",
+		"phrase"='c+o1d16v85c10 f+v113 a-o2v99,c+o1v85t64 a-o2,f+o1v113t96,a-o2v85t128,c+o1t16\
+0 a-o2v71,f+o1v113t192,c+v85t224 a-o2,c+o1t288 f+v113 a-o2v99,a-v85t352,l384'],
+	17=
+		["name"="afrocuban 13:2",
+		"phrase"='c+o1d16v85c10 f f+v113 a-o2v99,c+o1v85t64 a-o2,f+o1v113t96,bv71t128 a-o2v85,\
+c+o1t160 a-o2v71,f+o1v113t192,c+v85t224 do2 a-,dv71t256,c+o1v85t288 f+v113 bv\
+85 a-o2v99,bo1v71t352 a-o2v85,l384'],
+	18=
+		["name"="afrocuban 13:3",
+		"phrase"='c+o1d16v85c10 f f+v113 a-o2v99 ao3,c+o1v85t64 a-o2 ao3v71,f+o1v113t96 ao3v99\
+,bo1v71t128 a-o2v85,c+o1t160 a-o2v71 ao3v85,f+o1v113t192,c+v85t224 do2 a- ao3\
+v99,do2v71t256 ao3,c+o1v85t288 f+v113 bv85 a-o2v99 ao3,bo1v71t352 a-o2v85 ao3\
+v71,l384'],
+	19=
+		["name"="afrocuban 14:1",
+		"phrase"='co1d16v85c10 f+v99 a-o2v85,a-v71t64,f+o1v99t96,do2v71t128 a-,dv85t160 a-,f+o\
+1v99t192,a-o2v71t224,f+o1v99t288 a-o2v85,fo1v71t320,ct352 fv85 a-o2v71,l384'],
+	20=
+		["name"="afrocuban 14:2",
+		"phrase"='co1d16v85c10 f+v99 a-o2v85,c+o1v71t64 a-o2,f+o1v99t96,a-o2v71t128,dv85t160 a\
+-,f+o1v99t192,c+v71t224 a-o2,f+o1v99t288 a-o2v85,fo1v71t320,fv85t352 a-o2v71,\
+l384'],
+	21=
+		["name"="afrocuban 14:3",
+		"phrase"='co1d16v85c10 f+v99 a-o2v85,c+o1v71t64 a-o2,f+o1v99t96,do2v71t128 a-,dv85t160\
+ a-,co1t192 f+v99,cv71t224 c+ a-o2,f+o1v99t288 a-o2v85,fo1v71t320,cv57t352 fv\
+85 a-o2v71,l384'],
+	22=
+		["name"="afrocuban 14:4",
+		"phrase"='co1d16v85c10 b-v99 a-o2v85,c+o1v71t64 f+v99 a-o2v71,f+o1v99t96,do2v71t128 a-\
+,f+o1v99t160 do2v85 a-,co1t192 f+v99,cv71t224 c+ a-o2,f+o1v99t256,f+t288 a-o2\
+v85,fo1v71t320 b-v99,cv57t352 fv85 f+v99 a-o2v71,l384'],
+	23=
+		["name"="afrocuban 15:1",
+		"phrase"='co1d16v85c10 f+v113,cv71t32 f+v85,f+v99t64,dv71t128 f+v113,f+v85t160,f+v99t1\
+92,dv71t256 f+v113,f+v85t288,f+v99t320 do2v71,l384'],
+	24=
+		["name"="afrocuban 15:2",
+		"phrase"='co1d16v85c10 f+v113 a-o2v85,co1v71t32 f+v85,f+v99t64,a-o2v85t96,do1v71t128 f\
++v113,f+v85t160,f+v99t192 a-o2v85,do1v71t256 f+v113,f+v85t288 a-o2,f+o1v99t32\
+0 do2v71,l384'],
+	25=
+		["name"="afrocuban 15:3",
+		"phrase"='co1d16v85c10 c+ f+v113 a-o2v85,co1v71t32 f+v85,c+t64 f+v99,c+v85t96 a-o2,do1\
+v71t128 f+v113,f+v85t160,c+t192 f+v99 a-o2v85,c+o1t256 dv71 f+v113,f+v85t288 \
+a-o2,c+o1t320 f+ do2v71,do1d17v15t352 a-o2d16v85,do1v29'],
+	26=
+		["name"="afrocuban 16:1",
+		"phrase"='fo1d16v85c10 a-o2v99,e-o1v85t64,a-o2v99t96,a-v71t128,a-v85t160,dt192,e-o1t22\
+4 fv71,do2v85t288 a-v99,dv71t352 a-v85,l384'],
+	27=
+		["name"="afrocuban 16:2",
+		"phrase"='fo1d16v85c10 a-o2v99 ao3,av71t32,e-o1v85t64 ao3v99,a-o2t96 ao3,a-o2v71t128 a\
+o3,a-o2v85t160 ao3,do2t192 ao3v99,e-o1v85t224 fv71 ao3,av85t256,do2t288 a-v99\
+ ao3,av71t320,do2t352 a-v85 ao3v99,l384'],
+	28=
+		["name"="afrocuban 16:3",
+		"phrase"='co1d16v85c10 f+v99,b-v85t64,f+v99t96,f+v71t128,f+v85t160,dv71t192,ct224 b-v8\
+5,dt288 f+v99,f+v85t352,l384'],
+	29=
+		["name"="afrocuban 16:4",
+		"phrase"='co1d16v85c10 e-o2v99,do1v15t32,b-v85t64,f+v1t96 e-o2v85,f+o1v71t128,f+v85t16\
+0,dv71t192 e-o2v99,co1v71t224 b-v85,dv15t256,dv85t288 f+v1 e-o2v85,do1v15t320\
+,f+v85t352,l384'],
+	30=
+		["name"="afrocuban 17:1",
+		"phrase"='co1d16v85c10 f+v99,f+v71t32,ct64 b-v99,f+v71t96,f+v99t128,f+t160,dv85t192,f+\
+v99t224,f+v71t256,f+v99t288,f+v71t320,ct352 f+v99,l384'],
+	31=
+		["name"="afrocuban 17:2a",
+		"phrase"='co1d16v85c10 f+v99,f+v71t32,b-v99t64,cv85t96 f+v71,f+v99t128,f+t160,dv85t192\
+,f+v99t224,f+v71t256,f+v99t288,f+v71t320,f+v99t352,l384'],
+	32=
+		["name"="afrocuban 17:2b",
+		"phrase"='f+o1d16v113c10,cv85t32,ct64 f+v99,f+v113t96,cv85t128,ct160 f+v99,dv85t192,f+\
+v99t224,b-v85t256,f+v99t288,f+v71t320,f+v99t352,l384'],
+	33=
+		["name"="afrocuban 17:3a",
+		"phrase"='co1d16v85c10 f+v99,f+v71t32,ct64 f+v99,dv71t96,f+v99t128,f+t160,cv85t192 f+v\
+71,ct224 f+v99,f+v71t256,dt288,f+t320,ct352 f+v99,l384'],
+	34=
+		["name"="afrocuban 17:3b",
+		"phrase"='co1d16v85c10 f+v99,f+v71t32,ct64 f+v99,dv71t96,f+v99t128,f+t160,f+v71t192,ct\
+224 b-v85,dv71t288 f+v85,f+v71t320,f+v99t352,l384'],
+	35=
+		["name"="afrocuban 20a",
+		"phrase"='e-d24v85c10 a,e-v57t48 a,e-o1v85t96 do2v71 a-v99 eo3v85 a,e-v57t144 a,e-v43t\
+192 av85,e-o1v71t240 a-o2v99 eo3v85 av57,fo1v85t288 e-o3v57 av85,e-o1t336 fv5\
+7 e-o3v43 av57,l384'],
+	36=
+		["name"="afrocuban 20b",
+		"phrase"='a-o2d24v99c10 eo3v43 av85,e-t48 av57,e-o1v85t96 do2v71 e-o3v43 av85,a-o2v71t\
+144 eo3v85 av57,e-v43t192 av85,e-o1v99t240 a-o2v57 e-o3v85 av57,fo1v85t288 a-\
+o2v99 eo3v43 av85,e-o1t336 fv57 e-o3v85 av57,l384'],
+	37=
+		["name"="afrocuban 21a",
+		"phrase"='fo1d24v85c10 eo3 a,fo1v57t48 eo3d25v85 ad24v43,ed25,do2d24v57t96 a-v85 eo3v5\
+7 av85,fo1t144 ao3v43,fo1t192 e-o3 av85,fo1v57t240 e-o3v85 av43,do2v85t288 a-\
+v57 ao3v85,fo1v57t336 a-o2v85 e-o3v43 a,l384'],
+	38=
+		["name"="afrocuban 21b",
+		"phrase"='fo1d24v85c10 eo3 a,fo1v57t48 eo3d25v85 ad24v43,ed25,do2d24v57t96 a-v85 eo3v5\
+7 av85,fo1t144 eo3v43 a,e-o1t192 do2v57 a-v85 e-o3v43 ev57 av85,e-o1t240 do2v\
+57 a-v43 e-o3v85 ev43 a,e-o1t288 do2v85 a-v57 e-o3v43 ev57 av85,l384'],
+	39=
+		["name"="afrocuban 22a",
+		"phrase"='c+o1d24v71c10 f+v113,cv71t48 f+v99,c+v71t96 f+v113,f+v99t144,c+v71t192 f+d25\
+v113,f+v85t216,cd24v71t240 f+v99,c+v71t288 f+v113,f+v99t336,l384'],
+	40=
+		["name"="afrocuban 22b",
+		"phrase"='c+o1d24v71c10 f+v113,cv71t48 f+v99,c+v71t96 f+v113,f+v99t144,c+v71t192 f+d25\
+v113,cv71t216 f+v85,cd24t240 f+v99,c+v71t288 f+v113,b-v99t336,l384'],
+	41=
+		["name"="afrocuban 23a",
+		"phrase"='co1d24v85c10 c+v71 f+d25v113,f+v71t24,f+v85t48,f+v71t72 do2d13,dv85t84,co1d2\
+4v71t96 c+v85 f+d25v113 do2v99,f+o1v71t120 do2d24v85,fo1d25v43 f+v85,fd24v57t\
+168 f+d25v71,cd24v85t192 c+v71 f+d25v113,f+d24v71t216,b-v85,f+d25v71 do2d13,d\
+v85t276,co1d24v71t288 c+v85 f+d25v113 do2v99,f+o1d24v113t312 do2v85,fo1d25v43\
+ b-d24v85,fv57'],
+	42=
+		["name"="afrocuban 23b",
+		"phrase"='co1d24v85c10 c+v71 f+d25v113,f+v85t24,f+v99t48,f+v85t72 do2d13v71,dv85t84,co\
+1d24v71t96 c+v85 f+d25v113 do2v99,f+o1d24v85t120 do2,fo1d25v43 b-d24v85,fv57,\
+cv85 c+v71 f+d25v113,f+v85t216,f+v99t240,f+v85t264 do2d13v71,dv85t276,co1d24v\
+71t288 c+v85 f+d25v113 do2v99,f+o1d24v113t312 do2v85,c+o1d12v71 fd25v43 b-d24\
+v99 c+o2d12v85,c+o1t360 fd24v57'],
+	43=
+		["name"="afrocuban 24a",
+		"phrase"='co1d24v85c10 f+d25v99 eo3d24v71,f+o1d25 e-o3d24,f+o1d25v85 a-o2,f+o1v71t72 a\
+-o2d24 e-o3d25v57,co1d24v71t96 f+d25v99 e-o3v71,f+o1d24t120 e-o3v57,a-o2d25v8\
+5 eo3d24v71,f+o1d25 a-o2d24,co1v85 f+d25v99,f+v71t216,f+v85t240 a-o2,f+o1v71t\
+264 a-o2d24,co1 f+d25v99,f+d24v71t312,b-v85 a-o2d25 eo3d24v71,a-o2'],
+	44=
+		["name"="afrocuban 24b",
+		"phrase"='co1d24v85c10 f+d25v99 eo3d24v71,f+o1d25 e-o3d24,f+o1d25v85 a-o2,f+o1v71t72 a\
+-o2d24 e-o3d25v57,co1d24v71t96 f+d25v99 e-o3v71,f+o1d24t120 e-o3v57,a-o2d25v8\
+5 eo3d24v71,f+o1d25 a-o2d24,co1v85 f+d25v99,f+v71t216 a-o2d24v99,f+o1d25v85,f\
++v71t264 a-o2d24v99,co1v71 e-v99 f+,dv85t336 f+d25v99,f+v85t360,l384']
+]

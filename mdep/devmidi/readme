@@ -1,0 +1,25 @@
+This is a minimal device driver that provides a /dev/midi that
+talks to an MPU-compatible MIDI hardware interface.  This should
+run unchanged on the following systems:
+
+	System V 3.2
+	SCO Open Desktop 1.0 (a derivative of SVR3.2)
+
+and should be fairly portable to other System
+V-based systems.  To install, invoke (as root):
+
+     Install
+
+The hardware interrupt # and address will be requested interactively.
+Included in this directory are testread.c and testwrite.c programs
+that can be used to exercise the device.  See midi.7 for more info.
+
+Make sure that the address you specify is not also used by other
+devices in your system.  For example, ISC's version of UNIX
+uses address 0x330 for the Adaptec SCSI controller, so you'd want
+to avoid using that address.  Some MIDI interfaces don't let you
+change anything, but the MusicQuest MIDI interface is a good
+MPU-compatible MIDI controller that allows you to change both the
+IRQ and address.
+
+                                Tim Thompson = tjt@twitch.att.com

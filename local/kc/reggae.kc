@@ -1,0 +1,130 @@
+Collection = [
+	0=
+		["name"="One beat",
+		"phrase"=',l96'],
+	1=
+		["name"="reggae 1",
+		"phrase"='co1d24v85c10 f+v113,f+t96,cv85t192 dv99 f+v113,f+t288,l384'],
+	2=
+		["name"="reggae 2",
+		"phrase"='co1d24v71c10 f+v99,dv71t48 f+d25v85,f+v71t72,cd24t96 f+v99,dv71t144 f+d25v85\
+,f+v71t168,cd24t192 f+v99,dv71t240 f+d25v85,f+v71t264,cd24t288 f+v99,dv71t336\
+ f+d25v85,f+v71t360,l384'],
+	3=
+		["name"="reggae 3a",
+		"phrase"='co1d24v85c10 b-,f+v113t96,cv85t192 dv99 f+v113,b-v85t288,l384'],
+	4=
+		["name"="reggae 3b",
+		"phrase"='co1d24v85c10 b-,f+v113t96,cv85t192 dv99 f+v113,do2v71t240,fo1t288 b-v85,fv57\
+t336,l384'],
+	5=
+		["name"="reggae 4a",
+		"phrase"='co1d24v85c10,f+v71t48,dv85t96,f+v71t144,cv85t192,f+v71t240,dv85t288,f+v71t33\
+6,l384'],
+	6=
+		["name"="reggae 4b",
+		"phrase"='f+o1d24v85c10t48,cv71t96 dv85,f+t144,cv71t240 f+v85,dt288,f+t336,l384'],
+	7=
+		["name"="reggae 5a",
+		"phrase"='co1d24v99c10,f+v85t48,c,d,f+d25v99t144,f+d24v85t168,f+t240,c,d,f+d25v99t336,\
+f+d24v85t360'],
+	8=
+		["name"="reggae 5b",
+		"phrase"='co1d24v99c10,f+v85t48,c,d,f+d25v99t144,f+d24v85t168,cd25v99,cd24v85t216,f+,c\
+,d,f+d25v99t336,f+d24v85t360'],
+	9=
+		["name"="reggae 6a",
+		"phrase"='f+o1d24v113c10,f+v99t48,f+v113t96,f+v99t144,ct192 c+ f+v113,f+v99t240,f+v113\
+t288,f+v99t336,l384'],
+	10=
+		["name"="reggae 6b",
+		"phrase"='co1d24v85c10 f+v113,f+v99t48,cv85t96 f+v113,f+v99t144,ct192 c+ f+v113,f+v99t\
+240,cv85t288 f+v113,f+v99t336,l384'],
+	11=
+		["name"="reggae 6c",
+		"phrase"='co1d24v85c10 f+v113,f+v99t48,f+v113t96,f+v99t144,ct192 c+ f+v113,f+v99t240,f\
++v113t288,f+v99t336,l384'],
+	12=
+		["name"="reggae 7a",
+		"phrase"='f+o1d32v113c10,f+d33v99t64,f+d32v113t96,f+d33v99t160,cd32t192 c+ f+v113,f+d3\
+3v99t256,f+d32v113t288,f+d33v99t352,l384'],
+	13=
+		["name"="reggae 7b",
+		"phrase"='co1d32v85c10 f+v113,f+d33v99t64,cd32v85t96 f+v113,f+d33v99t160,cd32t192 d f+\
+v113,f+d33v99t256,cd32v85t288 f+v113,f+d33v99t352,l384'],
+	14=
+		["name"="reggae 7c",
+		"phrase"='co1d32v85c10 f+v113,f+d33v99t64,f+d32v113t96,f+d33v99t160,cd32t192 d f+v113,\
+f+d33v99t256,f+d32v113t288,f+v99t352'],
+	15=
+		["name"="reggae 8a",
+		"phrase"='f+o1d16v99c10t48,f+v71t80,c c+,f+v99t144,b-d17v71t176,b-d16v85t192,f+v99t240\
+,f+v71t272,c c+,f+v99t336,l384'],
+	16=
+		["name"="reggae 8b",
+		"phrase"='f+o1d16v99c10t48,c+v71t80 f+,c,f+v99t144,b-d17v71t176,b-d16v85t192,f+v99t240\
+,f+v71t272,c c+,l384'],
+	17=
+		["name"="reggae 9a",
+		"phrase"='f+o1d25v99c10t48,f+t72,cd24v71t96 f+d25v57,f+t120,f+v99t144,f+t168,f+v57t192\
+,f+t216,f+v99t240,f+t264,cd24v57t288 dv71 f+v57,f+d25v99t336,f+t360,l384'],
+	18=
+		["name"="reggae 9b",
+		"phrase"='f+o1d25v57c10,f+t24,f+v99t48,f+t72,cd24v71t96 f+d25v57,f+t120,f+v99t144,f+t1\
+68,f+d24v57t192,f+d25v99t240,f+t264,cd24v57t288 dv71 f+d25v57,f+t312,f+d24v99\
+t336,dv85 b-'],
+	19=
+		["name"="reggae 10a",
+		"phrase"='co1d24v57c10 b-v85,cv57t96 f+v113,f+t144,cv71t192 dv85,f+t240,cv57t288 f+v11\
+3,f+t336,l384'],
+	20=
+		["name"="reggae 10b",
+		"phrase"='co1d24v57c10 f+v85,f+t48,cv57t96 f+v113,f+t144,cv71t192 dv85,f+t240,cv57t288\
+ f+d33v99,f+t320,f+d32v113t352'],
+	21=
+		["name"="reggae 11 pickup",
+		"phrase"='c+o1d16v99c10t192,c+t224,c+t256,c+d17t288,c+v85t304,c+v99t320,c+d16v85t336,l\
+384'],
+	22=
+		["name"="reggae 11",
+		"phrase"='f+o1d16v99c10,f+d17t32,f+d16t48,f+d17t80,cd16t96 c+ d f+,f+d17t128,f+d16t144\
+,f+d17t176,f+d16t192,f+d17t224,f+d16t240,f+d17t272,cd16t288 c+ d f+,f+d17t320\
+,f+d16t336,b-t368'],
+	23=
+		["name"="reggae 11 fill 1",
+		"phrase"='f+o1d16v85c10,c+v99t208,c+v85t240,c+v99t272,c+v85t304,c+v99t336,dv113t368'],
+	24=
+		["name"="reggae 11 fill 2",
+		"phrase"='f+o1d16v85c10,do2v99t192,dv85t272,fo1v99t336,fv113t368'],
+	25=
+		["name"="reggae 12 pickup",
+		"phrase"='do1d13v85c10t252,dv57t264,dv71t276,dd12v85t288,dv71t312,dv85t336,l384'],
+	26=
+		["name"="reggae 12a",
+		"phrase"='co1d24v85c10 f+d25,f+v113t24,f+v85t48,f+v113t72,cd24v99t96 f+d25v85,f+v113t1\
+20,f+v85t144,f+v113t168,cd24v85t192 f+d25,f+v113t216,f+v85t240,f+v113t264,dd2\
+4v99t288 f+d25v85,f+v113t312,f+v85t336,f+v113t360,l384'],
+	27=
+		["name"="reggae 12b",
+		"phrase"='co1d24v85c10 f+d25,f+v113t24,f+v85t48,f+v113t72,dd24v99t96 f+d25v85,f+v113t1\
+20,f+v85t144,f+v113t168,cd24v85t192 f+d25,f+v113t216,f+v85t240,f+v113t264,dd2\
+4v99t288 f+d25v85,f+v113t312,f+v85t336,f+v113t360,l384'],
+	28=
+		["name"="reggae 12c",
+		"phrase"='co1d24v85c10 f+d25,f+v113t24,f+v85t48,f+v113t72,dd24v99t96 f+d25v85,f+v113t1\
+20,f+v85t144,f+v113t168,cd24v85t192 f+d25,f+v113t216,f+v85t240,cd24t264 f+d25\
+v113,dd24v99t288 f+d25v85,f+v113t312,f+v85t336,f+d24v113t360'],
+	29=
+		["name"="reggae 13 pickup",
+		"phrase"='do2d13v85c10t168,dd12v71t180,co1,bd13v85t216,bd12v71t228,cv85,fd13v99t264,fd\
+12v71t276,cv99,fv85t312,fv99t336,l384'],
+	30=
+		["name"="reggae 13a",
+		"phrase"='f+o1d12v99c10,b-t48,ct96 c+ d f+v113,b-v99t144,f+t192,b-t240,ct288 c+ d f+v1\
+13,b-v99t336,l384'],
+	31=
+		["name"="reggae 13b",
+		"phrase"='f+o1d12v85c10,f+t24,f+v113t48,f+d13v99t72,f+v85t84,cd12v99t96 c+ d f+,f+v85t\
+120,f+v113t144,f+v85t168,f+t192,f+t216,f+v113t240,f+d13v99t264,f+v85t276,cd12\
+v99t288 c+ d f+,f+v85t312,f+v113t336,f+v85t360,l384']
+]

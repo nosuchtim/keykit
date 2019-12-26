@@ -1,0 +1,52 @@
+----------------------------------------------------------------------------
+
+Running KeyKit for FreeBSD
+
+To run, just unpack the tar file, and set the following shell variables
+(this example assumes that /usr/local/src/key62a is where you've unpacked it):
+
+	export KEYROOT=/usr/local/src/key62a
+	export KEYPATH=$KEYROOT/liblocal:$KEYROOT/lib
+	export MIDIDEVICE=/dev/midi00
+
+Then execute $KEYROOT/bin/key
+
+The FreeBSD version of KeyKit defaults to using the midi device asociated with
+/dev/midi00.  If you think you want to change this, then "cat /dev/sndstat"
+to see what hardware is mapped to which devices on your system.  If you do
+want a different device, you can set the environment variable MIDIDEVICE.
+
+----------------------------------------------------------------------------
+
+Compiling KeyKit for FreeBSD
+
+Follow the steps below to build KeyKit for FreeBSD.  If you have
+the binaries, you don't have to build anything, but you
+still need to set the environment variables described above.
+
+Compiling KeyKit for FreeBSD
+
+1) cd mdep/freebsd and copy the 'flip' utility to a directory in your PATH.
+   This utility converts DOS text files with carriage returns to FreeBSD
+   newline format, and is needed because "make" and "gcc" will choke on
+   DOS style text files.
+
+2) If you want to change the default MIDIDEVICE, you can edit file midi.c,
+   and change the #define of MIDIDEVICE to the midi device you wish to use.
+   Best idea is probably to avoid this, though, and control it through
+   the environment variable described above.
+
+3) cd ../.. and manually flip the top-level makefile by typing:
+   flip -u makefile
+
+4) Edit the makefile and set MK to 'make' rather than 'nmake'.
+
+5) Type "make install_fbsd_x" to do the build 
+
+6) optional: you can also "make install_fbsd_stdio" to build a text-only
+   version of the software and then "make regress_stdio" to run
+   regression tests.
+
+	Warren Toomey
+	wkt@cs.adfa.oz.au
+	11th October 1997

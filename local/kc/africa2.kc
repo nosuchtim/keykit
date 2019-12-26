@@ -1,0 +1,207 @@
+Collection = [
+	0=
+		["name"="One beat",
+		"phrase"=',l96'],
+	1=
+		["name"="africa 30a",
+		"phrase"='fo1d16v85c10 ao3,e-t64,e-o1t96 do2v57 a-v85 ao3v71,av85t160,at192,do2t256 e-\
+o3v71,e-o1v85t288 fv57 a-o2v71 eo3 a,a-o2v85t352 ao3,l384'],
+	2=
+		["name"="africa 30b",
+		"phrase"='fo1d16v85c10 eo3v71 av85,et64,e-o1t96 do2 a-v71 eo3 av85,ev57t160 av71,et192\
+ av85,do2v57t256 e-o3v85,e-o1t288 fv57 a-o2v71 e-o3v57 av85,a-o2t352 ao3v71,l\
+384'],
+	3=
+		["name"="africa 31a",
+		"phrase"='fo1d24v99c10 ao3v85,e-o1t96 do2v57 a-v85 eo3v71 a,do2v43t168 ao3d25v57,fo1d2\
+4t192 ao3v85,e-o1t288 do2v99 a-v71 eo3v85 av57,do2t360 a-v85 ao3d25v57,l384'],
+	4=
+		["name"="africa 31b",
+		"phrase"='fo1d24v85c10 eo3 av71,ad25v43t72,e-o1d24v85t96 do2 a-v71 eo3v43 av71,ad25v43\
+t168,e-d24v85t192 av71,e-d25v29t264 av43,e-o1d24v85t288 fv57 a-o2v85 e-o3v43 \
+av71,fo1d25v85t360 a-o2d24 e-o3v57 ad25v43,l384'],
+	5=
+		["name"="africa 32a",
+		"phrase"='fo1d16v113c10 e-o3v85 a,e-v29t32 av43,e-v71t64 av85,e-o1v71t96 do2v57 a-v71 \
+e-o3v85 av43,e-v29t128 av85,e-v71t160 av43,fo1v57t192 eo3v85 a,e-o1t288 do2v1\
+13 a-v99 e-o3v57 av71,do2t352 a- e-o3v85 a,l384'],
+	6=
+		["name"="africa 32b",
+		"phrase"='do2d16v113c10 e-o3v85 a,e-v29t32 av43,e-v71t64 av85,e-o1v71t96 fv57 a-o2v71 \
+e-o3v85 av43,av85t128,av43t160,do2v57t192 eo3v85 a,e-o1t288 fv113 do2v57 a-v9\
+9 e-o3v57 av71,e-v29t320,do2v71t352 a- e-o3v85 a,l384'],
+	7=
+		["name"="africa 33a",
+		"phrase"='fo1d16v85c10 ao3,do2t64 e-o3v29 av43,e-v71t96 av85,fo1v71t160 e-o3v85 av43,d\
+o2v85t192 e-o3v29 av85,av43t256,fo1v85t288 eo3 a,a-o2t352 e-o3v29 av43,l384'],
+	8=
+		["name"="africa 33b",
+		"phrase"='do2d16v85c10 e-o3v43 av85,do2v71t64 a-v85 eo3v71 av43,fo1v85t96 a-o2v71 e-o3\
+v29 av85,do2v57t160,fo1v85t192 ao3,do2t256 e-o3v29 av43,e-v71t288 av85,fo1v71\
+t352 e-o3v85 av43,l384'],
+	9=
+		["name"="africa 34a",
+		"phrase"='fo1d16v85c10 a-o2v57 e-o3v71 av99,e-v43t32 a,a-o2v85t64 e-o3v57 av85,e-o1t96\
+ do2v71 eo3 av43,do2v57t128 a-v43 eo3 av85,ev57t160 av43,c+o1v85t192 e-o3v57 \
+av99,at224,c+o1v85t256 e-o3 av43,e-o1v85t288 f ao3v99,c+o1v85t320 a-o2v57 e-o\
+3 av43,a-o2v57t352 ao3v99,l384'],
+	10=
+		["name"="africa 34b",
+		"phrase"='fo1d16v85c10 a-o2v57 e-o3v71 av99,do2v57t32 ao3v43,a-o2v85t64 e-o3v57 av85,e\
+-o1t96 do2v71 eo3 av43,do2v57t128 a-v43 eo3 av85,ev57t160 av43,c+o1v85t192 a-\
+o2v43 e-o3v57 av99,c+o1v57t224 ao3v43,c+o1v85t256 e-o3 av99,e-o1v85t288 f ao3\
+v99,c+o1v85t320 a-o2v57 e-o3 av43,c+o1v57t352 do2v71 a-v57 ao3v99,l384'],
+	11=
+		["name"="africa 35a",
+		"phrase"='bo1d24v85c10 ao3d25,ad24v57t24,e-o1v71t96 do2v43 a-v71,bo1v99t144 ao3v57,bo1\
+v71t192 ao3v85,e-o1v71t288 do2v85 a-v71,bo1v43t336 ao3v57,l384'],
+	12=
+		["name"="africa 35b",
+		"phrase"='bo1d24v85c10 ao3d25,ad24v57t24,e-o1v71t96 do2v43 a-v71,fo1v99t144 ao3v57,bo1\
+v71t192 ao3v85,e-o1v71t288 do2v85 a-v71,fo1v43t336 ao3d25v57,at360,l384'],
+	13=
+		["name"="africa 36a",
+		"phrase"='co1d16v85c10 c+ fv99 f+ bv85 f+o2 a-v99,f+o1d17v71t32 f+o2v43,f+o1d16v85t48 \
+f+o2d17v71,f+v43t64,f+o1v71t80 f+o2v57 a-v85,co1d16v71t96 c+v85 f+v99 f+o2v85\
+ a-v99,f+o1d17v71t128 f+o2v43,f+o1d16v85t144 f+o2d17v71,f+v43t160,f+o1v71t176\
+ f+o2v57 a-v85,co1d16t192 c+v71 f+v99 f+o2v85 a-v99,f+o1d17v71t224 f+o2v43,f+\
+o1d16v85t240 f+o2d17v71,f+v43t256,f+o1v71t272 f+o2v57 a-v85,co1d16v71t288 c+v\
+85 f+v99 f+o2v85 a-v99,f+o1d17v71t320 f+o2v43,f+o1d16v85t336 f+o2d17v71,f+v43\
+t352,b-o1d16v99t368 f+o2d17v57 a-v85,l384'],
+	14=
+		["name"="africa 36b",
+		"phrase"='co1d16v85c10 c+ f+v99 f+o2v85 a-v99,f+o1d17v71t32 f+o2v43,f+o1d16v85t48 f+o2\
+d17v71,f+v43t64,f+o1v71t80 f+o2v57 a-v85,co1d16v71t96 c+v85 f+v99 f+o2v85 a-v\
+99,f+o1d17v71t128 f+o2v43,f+o1d16v85t144 f+o2d17v71,f+v43t160,b-o1d16v99t176 \
+f+o2d17v57 a-v85,co1d16t192 c+v71 f+v99 f+o2v85 a-v99,f+o1d17v71t224 f+o2v43,\
+f+o1d16v85t240 f+o2d17v71,f+v43t256,f+o1v71t272 f+o2v57 a-v85,co1d16v71t288 c\
++v85 f+v99 f+o2v85 a-v99,f+o1d17v71t320 f+o2v43,f+o1d16v85t336 f+o2d17v71,f+v\
+43t352,fo1v99t368 b-d16 bd17v85 f+o2v57 a-v85,l384'],
+	15=
+		["name"="africa 37a",
+		"phrase"='co1d32v113c10 fd33v85 do2v99 a-d32v113 eo3d33v85 ad32v99,fo1d33v57 do2v71 eo\
+3v57,fo1d32v29t64 do2d33v85 a-v71 eo3d32v29 ad33v71,c+o1d17v85t80,c+d32v71t96\
+ bv85 do2v99 a-v113 e-o3v85 av99,bo1v29t160 do2v99 a-d33v71 e-o3d32v29 ad33v7\
+1,fo1v85t192 a-o2d32v113 eo3d33v85 ad32v99,fo1d33v57 do2v29 eo3v57,fo1d32v29t\
+256 do2d33v71 a-d32v99 eo3v29 ad33v71,c+o1d17v85t272,c+d32v71t288 bv85 do2v99\
+ e-o3v85 av99,a-o2d33,bo1d32v29t352 do2d33v85 a-v113 e-o3d32v29 ad33v71,l384'],
+	16=
+		["name"="africa 37b",
+		"phrase"='fo1d33v85c10 do2v99 a-d32v113 eo3d33v85 ad32v99,fo1d33v57 do2v71 eo3v57,fo1d\
+32v29t64 do2d33v85 a-v71 eo3d32v29 ad33v71,c+o1d17v85t80,c+d32v71t96 bv85 do2\
+v99 a-v113 e-o3v85 av99,bo1v29t160 do2v99 a-d33v71 e-o3d32v29 ad33v71,fo1v85t\
+192 a-o2d32v113 eo3d33v85 ad32v99,fo1d33v57 do2v29 eo3v57,fo1d32v29t256 do2d3\
+3v71 a-d32v99 eo3v29 ad33v71,co1d17v99t272 c+v85,cd32v113t288 c+v71 bv85 do2v\
+99 e-o3v85 av99,a-o2d33,bo1d32v29t352 do2d33v85 a-v113 e-o3d32v29 ad33v71,l38\
+4'],
+	17=
+		["name"="africa 38a",
+		"phrase"='co1d32v99c10 f f+v113 e-o2v85 a-v99 eo3,f+o1t64 do2v71 f+v113,a-d9v99t88,co1\
+d32v85t96 bv99 e-o2v85 a-v99,f+o1 do2d33v71,dd32t160 e-d33 a-v85,co1d32t192 f\
++v113 bv99 e-o2v85 f+v113 a-v99,f+o1t256 do2v71 e- a-v85,co1 bv99,f+ do2d33v7\
+1 e-d32v85 f+v113 a-v85,dv71 eo3d33v99,l384'],
+	18=
+		["name"="africa 38b",
+		"phrase"='co1d32v99c10 f f+v113 e-o2v85 a-v99 eo3,f+o1t64 do2v71 f+v113,co1v85 bv99 e-\
+o2v85 a-v99,f+o1 do2d33v71,dd32t160 e-d33 a-v85,eo3d9v99t184,co1d32v85t192 f+\
+v113 bv99 e-o2v85 f+v113 a-v99 eo3,f+o1t256 do2d33v71 e-d32 a-v85 e-o3,co1v99\
+ b do2d33v85,f+o1d32v99t320 do2d33v71 e-d32v85 f+v113 a-v85,dv99 eo3d33,a-o2d\
+9t376,l384'],
+	19=
+		["name"="africa 39a",
+		"phrase"='co1d24v99c10 fv85 a-o2d25v113 eo3d24v99,a-o2v71,co1 bv85 eo3d25v71,a-o2v85t7\
+2 eo3d24v71,do2v85 a-d25v71,a-v85t120 eo3,bo1d24t144 a-o2d25v113 e-o3d24v71 e\
+v99,a-o2d25v85,a-v71t192 e-o3d24v85,a-o2d25v99,co1d24v71t240 bv85 a-o2d25v71 \
+e-o3,a-o2v85t264 e-o3d24,do2 a-v113,co1v85 e-o3v71,bo1v85 eo3v99,a-o2d25v71,l\
+384'],
+	20=
+		["name"="africa 39b",
+		"phrase"='co1d24v99c10 fv85 a-o2d25v113 eo3d24v99,a-o2d25v85,co1d24v71t48 bv85 a-o2d25\
+v71 eo3,a-o2v99t72 eo3d24,do2v85 a-d25v71,a-v85t120 eo3,e-d9v71t128,e-t136,bo\
+1d24v85t144 a-o2d25v113 e-o3d24v99 e,a-o2d25v85,a-v71t192 e-o3d24v85,a-o2d25v\
+99,co1d24v71t240 bv85 a-o2d25v71 e-o3,a-o2v85t264 e-o3d24,do2 a-v113,co1v85 e\
+-o3d25,bo1d24t336 e-o3v71,a-o2d25 eo3,l384'],
+	21=
+		["name"="africa 39c",
+		"phrase"='co1d24v99c10 fv85 a-o2d25v113 eo3d24v99,a-o2d25v85,co1d24v71t48 bv85 a-o2d25\
+v71 eo3,a-o2v99t72 eo3d24v85,do2 a-d25v71,a-v85t120 eo3v99,bo1d24v85t144 a-o2\
+d25v113 e-o3d24v71 ev85,a-o2d25,a-v71t192 e-o3d24v85,a-o2d25v113,co1d24v71t24\
+0 bv85 a-o2d25v71 e-o3,a-o2v99t264 e-o3d24v85,do2 a-v113,co1v85 e-o3v71,bo1v8\
+5 a-o2d25v71 eo3d24v99,a-o2d25,l384'],
+	22=
+		["name"="africa 39d",
+		"phrase"='co1d24v99c10 fv85 a-o2d25v113 eo3d24v99,a-o2d25v71,co1d24t48 bv85 a-o2d25 eo\
+3v71,a-o2v113t72 eo3d24v99,do2v85 a-d25v71,a-v85t120 eo3,bo1d24t144 a-o2d25v1\
+13 eo3d24v99,a-o2d25v71,a-v85t192 eo3d17v99,ev85t208,a-o2d25v113t216,eo3d17v7\
+1t224,co1d24t240 bv85 a-o2d25v71 eo3d17v99,e-v71t256 ev85,a-o2d25v99t264,e-o3\
+d17v71t272 e,do2d24v85t288 a-d25v113 e-o3d17v85 ev99,e-v71t304 e,a-o2d25v85t3\
+12,e-o3d17v71t320 ed16,co1d24 bv85 a-o2d25v71 e-o3d17v99,e-v85t352,a-o2d25v11\
+3t360,e-o3d16v99t368,l384'],
+	23=
+		["name"="africa 40a",
+		"phrase"='co1d12v85c10 e-v99 fv71 do2v99 a-v85,f+v71t36,bo1v85,f+o2v99t84,dv85,f+v71t1\
+32 e-o3d13v99,e-o1d12v85t144 bv71 e-o3,f+o2v99t180,dv71,f+t228,e-o1 fv85 e-o3\
+v71,f+o2v99t276,e-o1v85 do2v71 e-o3,f+o2t324,co1v85 bv71 a-o2v85,f+v99t372'],
+	24=
+		["name"="africa 40b",
+		"phrase"='e-o1d12v71c10 f do2v99,f+v71t36,e-o1v85 bv71,f+o2v99t84,dv71,f+t132 e-o3d13v\
+99,e-o1d12v71t144 b e-o3,f+o2v99t180,e-o1v85 do2v71,f+t228,e-o1v85 f e-o3v71,\
+f+o2v99t276,dv71 e-o3,f+o2t324,co1v85 e-v71 b a-o2v85 e-o3v71,f+o2v99t372'],
+	25=
+		["name"="africa 40c",
+		"phrase"='e-o1d12v71c10 f do2v99,f+v71t36,e-o1v85 bv71,f+o2v99t84,dv85,f+v71t132 e-o3d\
+13v99,e-o1d12v71t144 b e-o3,f+o2v99t180,e-o1v85 do2v71,f+t228,fo1v85 e-o3v71,\
+f+o2v99t276,dv71 e-o3,f+o2t324,co1v99 e-v71 bv85 a-o2 e-o3,a-o2v99t360,f+'],
+	26=
+		["name"="africa 41a",
+		"phrase"='co1d24v71c10 e- e-o3v85,ed25v99,co1d24v71t48 c+v57 do2v71 eo3,e-v85,co1v71 e\
+- do2v85 eo3d17v99,ev71t112,ev85t128,c+o1d24v57t144 do2v99 eo3d25v71,ed24v85t\
+168,e-o1v71 do2 e-o3v85,ed25v99,c+o1d24v57t240 do2v99 eo3v71,e-v85,e-o1v71 fv\
+99 eo3d17,ev71t304,ev85t320,co1d24t336 c+v57 fv71 eo3d16,ev85t368'],
+	27=
+		["name"="africa 41b",
+		"phrase"='co1d24v71c10 e- e-o3v85,co1v71t48 c+v57 do2d17v85 eo3d24v99,do2d9v71t64,dd8v\
+85t72 e-o3d24,co1v71 e- do2,c+o1v57t144 do2v99 e-o3v85,e-o1v71t192 do2v85 eo3\
+d9v99,ev71t200,ed17v99t208,e-d24v85t216,ed17v71t224,c+o1d24v57t240 do2v99 eo3\
+d25v85,ed24t264,e-o1v71 fv99 e-o3v85,ed25v71,co1d24v85t336 c+v57 fv71 eo3d25v\
+99,ed24v85t360'],
+	28=
+		["name"="africa 41c",
+		"phrase"='co1d24v71c10 e- e-o3v85,co1v71t48 c+v57 do2d17v85 eo3d24v99,do2d9v71t64,dd8v\
+85t72 e-o3d24,co1v71 e- do2,c+o1v57t144 do2v99 e-o3v85,e-o1v71t192 do2v85 eo3\
+d9v99,ev71t200,ed17v99t208,e-d24v85t216,ed17v71t224,c+o1d24v57t240 do2v99 eo3\
+d25v85,ed24t264,e-o1v71 fv99 e-o3v85,ed25v71,co1d24v85t336 c+d25v71 e-d24v85 \
+fv71 e-o3d25v99 e,c+o1d24v85t360 e-o3d25v113 ed24v85,l384'],
+	29=
+		["name"="africa 42a",
+		"phrase"='co1d24v85c10 f+d25v99 eo3d24v71,f+o1d25 e-o3d24,f+o1d25v85 a-o2,f+o1v71t72 a\
+-o2d24 e-o3d25v57,co1d24v71t96 f+d25v99 e-o3v71,f+o1d24t120 e-o3v57,a-o2d25v8\
+5 eo3d24v71,f+o1d25 a-o2d24,co1v85 f+d25v99,f+v71t216,f+v85t240 a-o2,f+o1v71t\
+264 a-o2d24,co1 f+d25v99,f+d24v71t312,b-v85 a-o2d25 eo3d24v71,a-o2'],
+	30=
+		["name"="africa 42b",
+		"phrase"='co1d24v85c10 f+d25v99 eo3d24v71,f+o1d25 e-o3d24,f+o1d25v85 a-o2,f+o1v71t72 a\
+-o2d24 e-o3d25v57,co1d24v71t96 f+d25v99 e-o3v71,f+o1d24t120 e-o3v57,a-o2d25v8\
+5 eo3d24v71,f+o1d25 a-o2d24,co1v85 f+d25v99,f+v71t216 a-o2d24v99,f+o1d25v85,f\
++v71t264 a-o2d24v99,co1v71 e-v99 f+,dv85t336 f+d25v99,f+v85t360,l384'],
+	31=
+		["name"="africa 43a",
+		"phrase"='co1d24v85c10 fv99 f+d25v113 bd24v85 a-o2d25 e-o3d24 e ad25v99,f+o1v85t24 a-o\
+2v71 ao3v85,f+o1v71t48 a-o2v15 eo3v85 ad24v43,f+o1d25v113 bd24v85 a-o2d25v15 \
+eo3v71,co1d24v85t96 f+d25v113 a-o2v85 eo3v15 av99,f+o1v85t120 bd24v15 a-o2d25\
+v71 eo3v15 av85,f+o1v71t144 a-o2v15 eo3v85 av43,f+o1v85t168 a-o2v15 eo3v71 av\
+29,co1d24v85t192 f+d25v113 bd24v15 a-o2d25v85 eo3v15 av99,f+o1v71t216 a-o2 eo\
+3 ad24v85,f+o1d25 a-o2d24v15 eo3v85,f+o1d25v113 bd24v85,c f+d25v113 a-o2v85 e\
+o3v15 av99,f+o1v85t312 a-o2d24v71 eo3 ad25v85,f+o1v71t336 e-o3v85 av43,f+o1v8\
+5t360 e-o3d24 ed25v71 av29,l384'],
+	32=
+		["name"="africa 43b",
+		"phrase"='co1d24v85c10 fv99 f+d25v113 bd24v71 a-o2d25v85 eo3d24 ad25v99,f+o1v57t24 a-o\
+2v71 ao3d24v85,f+o1d25v71 bv85 a-o2d24v15,f+o1d25v113 bd24v71 eo3d25 av43,co1\
+d24v85t96 f+d25v113 a-o2v85 eo3 av99,f+o1v71t120 a-o2 eo3 av85,f+o1v57t144 a-\
+o2v15 eo3d24v85 ad25v43,f+o1v71t168 a-o2v15 ao3v29,co1d24v85t192 f+d25v113 bd\
+24v85 a-o2d25 e-o3 ed24 ad25v99,f+o1v71t216 do2 a- e-o3 av85,f+o1v57t240 do2v\
+85 a-v15 e-o3v85 av43,f+o1v113t264 do2v99 a-v15 e-o3v99 av29,co1d24v113t288 f\
++d25 do2d24 a-d25v85 e-o3d24v113 ad25v99,f+o1v71t312 a-o2d24 ao3d25,f+o1v57t3\
+36 bv99 ao3v71,f+o1t360 bv85 ao3v99,l384']
+]

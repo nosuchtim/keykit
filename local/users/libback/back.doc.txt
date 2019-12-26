@@ -1,0 +1,124 @@
+Backing Generator for Keykit v1    
+                                                 Simon Blakely 1998
+
+This file contains the documentation for the Backing Generator for 
+Keykit.
+
+The Backing Generator generates a backing track from predefined style 
+track. This may be a midi track or keykit phrase. Styles may include 
+drum tracks. Midi or phrase tracks may also be layered over the 
+generated style. The system has a variety of commands to provide the 
+needed functionality.
+
+Chords
+
+Chords are specified by a note (in keykit note format) followed by a 
+"." then a chord type (maj, min etc), followed by a "-" and a beat 
+count. Optionally a beat offset may be specified by a "+" followed by 
+the offset.
+
+ie   note.type-count+offset
+     f+.min7-4+4 is a f#min7 chord played for 4 beats,                  using beats 4-8 of the style.
+     e.maj-2     is a emaj chord played for 2 beats,
+                 using whichever 2 beats of the style 
+                 are appropriate to its position in the 
+                 song.
+
+Chord offsets are used primarily for effect and only apply for the 
+beats specified.
+
+The defined chord types are 
+     maj 7th maj7 6th min min6 min7 minM7 sus4 7sus4
+     7aug aug dim7 dim
+
+
+Commands
+
+Backing Generator commands are used to control many aspects of the 
+generated output. All commands start with "x"
+
+The basic commands are as follows
+
+tempo -
+xt=120	 this sets the tempo to 120 crochet beats per minute
+xt=80-16 this changes the tempo from the current value to 80 
+         over the next 16 beats
+
+beat -
+xb=4/4   this defines the beat as 4 crochet beats per  bar. 
+         this should be correctly defined for the 
+         style definition. using different time 
+         signatures can give higher beat resolution
+         ie 8/8 is the same as 4/4 but twice the beat resolution
+
+rest -
+x-=4     this defines a 4 beat rest.
+
+offset -
+xo=4     this offsets the style on a global basis. this
+         is used to counter the effect of a 4-beat 
+         count-in, or to shift the start of a
+         verse/chorus to the start of a style.
+
+The following sections deal with the phrase and style commands. These 
+commands have subcommands, and each will be dealt with individually.
+
+style subcommands-
+
+load, add
+xsl=
+xsa=
+    m{afile.mid}<1|2>Name:1-s,2-s,7-d,8-d
+    m{afile.mid}<1|2>Name
+    p{afile.k}<1|1>Name
+    p{afile.k}<1|1>Name:1-d
+
+        the load command loads a new style. this
+        deletes the current styles and drum tracks.
+        the add command adds additional styles.
+        a phrase can have only one track (1). a midi
+        style can have multiple tracks. midi track 0 is 
+        always ignored (it is the tempo track). all
+        channel information is stripped from the tracks.
+        each midi track is assigned a name created from 
+        Name-tracknum ie "Name-1", "Name-2". These names
+        are used to modify tracks. tracks are defined as 
+        style (s) or drum (d). the default assignments
+        are "1-s,2-s,3-s,4-s,5-s,6-s,7-d,8-d" for midi
+        and "1-s" for phrases. the index info in <>
+        defines how a style is extracted from a library.
+        the first number is the index, the second is the 
+        size (in bars). thus <2|2> defines bars 2-4 of 
+        the midi file. <2|3> defines bars 3-6.
+
+remove
+xsr=TRACK-1,TRACK-2
+        remove tracks.
+
+modify
+xsm=Track:p-xx,v-xx,k-kitcommand
+        modify a track 
+        p changes the patch number
+        v changes the volume
+        k modifies the style track with one of the
+          following commands
+               reverse      reverse the track
+               double       double the track
+               revpitch     reverse the pitch order
+               upoctave     move up an octave
+               dnoctave     move down an octave
+               step         move notes to beat divisions
+               even         make all notes even
+               swap         swap every two notes 
+               shuffle      swap halves
+               echo         echo notes (adds 1 bar)
+               firsthalf    use first half
+               secondhalf   use second half
+
+phrase subcommands
+
+xpl=p{phrase file path}<pitchshift>name:1-s
+    m{midi file path}<pitchshift>name:1-s,2-d... 
+        phrases are loaded into tracks. identification
+        is similar to style tracks. a pitchshift may be
+        applied.

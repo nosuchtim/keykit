@@ -1,0 +1,14 @@
+-
+Gawk           # pattern scanning and processing language
+Gawk [option…] [-f program-file…] [ -- ] file… < file > output ≥ errors
+Gawk [option…] [ -- ] program-text file… < file > output ≥ errors
+     -Ffs                   # use fs for the input field separator
+     -v var=val             # assign the value val, to the variable var
+     -f program-file        # read AWK program source from file
+     -a                     # use AWK style regular expressions
+     -e                     # use egrep(1) style regular expressions
+     -m                     # Use MPW style regular expressions
+     -c                     # run in compatibility mode
+     -C                     # print short version of the GNU copyright
+     -V                     # print version information
+     --                     # signal the end of options

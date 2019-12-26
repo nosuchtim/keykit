@@ -1,0 +1,188 @@
+<tool name="Typo" class="typo">
+The
+<b>typo</b>
+tool is an interactive instrument controlled entirely from
+the typing keyboard.  You start it up by typing "typo()"
+in the console.  From then on, the typing keyboard will be
+completely taken-over by typo(), and will be played
+like an instrument.  To exit from typo(), you press control-X and then Q.
+<blankline/>
+When playing typo(), the letter keys (A-Z) are the ones that
+actually play notes, chords, and phrases.
+When the shift key is pressed, the things played by the
+letter keys will be recorded - but they will only be recorded *while*
+the shift key is pressed.
+<blankline/>
+The number keys will switch between channels - e.g. pressing 2
+will switch to channel 2.  Pressing 0 will switch to channel 10 (drums).
+<blankline/>
+When the control key is pressed, the letter keys then become "command"
+keys.  Most of the command keys then require additional keys to be
+pressed for the actual operation.  For example, when you press control-X,
+you then (after releasing control-X) press Q in order to quit.
+<blankline/>
+When you first start, the letter keys will be assigned to a new-agey scale.
+You may hear a snare
+drum on channel 10, keeping a beat.  To change the drum pattern,
+press control-D (D for drum) and then press "r" (r for random) - 
+it will generate a new (algorithmic) drum pattern and start repeating it.
+If you don't like the pattern it produces, just press control-D and R to
+generate a new one.
+<blankline/>
+Now start pressing the letters, to get a feel for what the notes are.
+When you're ready to start recording a loop of notes, hold down the
+shift key, and start pressing the letters (in time with the drum
+pattern).  When you want to start looping the notes, release the
+shift key and press the RETURN key.  The first note you played
+(after the shift key was held down) will be the first note of the loop.
+The length of the loop will be determined by the time between the first note
+you record and the time at which you press the RETURN key.
+The loop time will be quantized to the length of the
+drum pattern.
+<blankline/>
+When you have a loop going (i.e. after recording something and hitting
+RETURN), switch to a different channel by pressing one
+of the number keys (e.g. "2").  Set your synthesizer to produce a
+different sound on channel 2, and play with the notes.  When you're
+ready to add to the looped notes, hold down the SHIFT key and
+play the notes - whatever you play when the SHIFT key is pressed
+will be added to the looped phrase.
+<blankline/>
+The length of a loop is determined by the first thing you record
+in it (i.e. the first time you press RETURN after recording something).
+All additional notes you add, on different channels, will not change
+the loop length.  To completely clear a loop - delete everything
+and forget the loop length - press DEL.  You can then start recording
+again and press RETURN to set a new loop length.
+<blankline/>
+The loop you are constructing is "pattern 1".  To switch to a different
+pattern, press control-P (P for pattern) and then a number (say, 2).
+The current pattern will stop playing, and pattern 2 (currently blank)
+will start playing - you should hear only the initial snare drum beat.
+Go through the same process of changing the drum pattern (if you want)
+and adding some melodic notes to the pattern.  When you have another
+pattern you like, you can return to pattern 1 by
+pressing control-P,1 .  You have 10 patterns (number keys 0-9) to play with.
+<blankline/>
+The command control-A lets you "assign" different notes/chords/phrases
+to the letters A-Z.  For example, control-A,K,N assigns a "newage"
+scale to the notes.  Control-A,K,M assigns a "melodic minor" scale.
+<blankline/>
+You can change the pitch offset of everything being played by
+pressing control-O (o for offset) and then pressing a letter (a-z).
+The letter 'm' corresponds to 0 offset, and letters above and below 'm'
+correspond to pitch offsets above and below 0.  To return to the
+original offset, press control-O,M .
+<blankline/>
+If you get any "stuck" notes, you can press the END key to send an
+"all-notes-off" message, at any time.
+<blankline/>
+If you want to assign a different note or chord to a letter,
+press that note or chord on your MIDI controller, and then
+press control-G (g for grab) and then the letter to which you want
+to assign that note or chord.  In other words, to assign a C chord
+to the letter a, you would press the C chord on your MIDI controller,
+then press control-G,A .  
+<blankline/>
+If you have a file containing music, and you want to assign the
+notes and chords in that piece of music to the letters, you can
+press control-A (A for assign), and then press "M" (M for midi file).
+You will get an "Open" dialog box, and you can select a MIDI file
+whose initial few bars will be assigned to the letters (in the
+order QAZWSXEDCRFVTGBYHNUJMIKOLP).
+<blankline/>
+<hr/>
+<font class="big">
+<b>Summary of typo key mappings</b>
+</font>
+<blankline/>
+<font class="small">
+Most things involve a control-character followed by another character.
+Occasionally a third character is needed to complete the operation
+(e.g. when setting a scale).  In all of the descriptions below, upper-case
+characters are shown for clarity, but the shift key does not need to
+be held unless explicitly noted).
+</font>
+<blankline/>
+<table class="small">
+<tr bgcolor="#ffcc99"><td valign="top" width="25%">control-D</td><td colspan="2">Drums</td></tr>
+<tr><td></td><td>0-9</td><td>Drum patterns</td></tr>
+<tr><td></td><td>R</td><td>generated 2-measure pattern</td></tr>
+<tr><td></td><td>T</td><td>generated 1-measure pattern</td></tr>
+<tr bgcolor="#ffcc99"><td valign="top">control-M</td><td colspan="2">Switch Mode</td></tr>
+<tr><td></td><td>L</td><td>Looper</td></tr>
+<tr><td></td><td>R</td><td>Repeater</td></tr>
+<tr bgcolor="#ffcc99"><td valign="top">control-O</td><td colspan="2">Offset</td></tr>
+<tr><td></td><td>A-Z</td><td>Offset value (M is 0 offset)</td></tr>
+<tr bgcolor="#ffcc99"><td valign="top">control-N</td><td colspan="2">Pan</td></tr>
+<tr><td></td><td>L</td><td>Left</td></tr>
+<tr><td></td><td>R</td><td>Right</td></tr>
+<tr><td></td><td>C</td><td>Center</td></tr>
+<tr bgcolor="#ffcc99"><td valign="top">control-Q</td><td colspan="2">Quantize already-recorded notes</td></tr>
+<tr><td></td><td>H</td><td>Half</td></tr>
+<tr><td></td><td>Q</td><td>Quarter</td></tr>
+<tr><td></td><td>E</td><td>Eight</td></tr>
+<tr><td></td><td>S</td><td>Sixteenth</td></tr>
+<tr><td></td><td>T</td><td>Thirtysecond</td></tr>
+<tr><td></td><td>N</td><td>None (1 click)</td></tr>
+<tr bgcolor="#ffcc99"><td valign="top">control-P</td><td colspan="2">Pattern, switch between patterns</td></tr>
+<tr><td></td><td>0-9</td></tr>
+<tr bgcolor="#ffcc99"><td valign="top">control-A</td><td colspan="2">Assign things to the keys</td></tr>
+<tr><td></td><td>M</td><td>Midi file</td></tr>
+<tr><td></td><td>K</td><td>Scale</td></tr>
+<tr><td></td><td>O</td><td>Ornament</td></tr>
+<tr><td></td><td>C</td><td>Chord</td></tr>
+<tr><td></td><td>I</td><td>Inversions</td></tr>
+<tr><td></td><td>B</td><td>BeatStep algorithm</td></tr>
+<tr><td></td><td>P</td><td>Random choice from patterns</td></tr>
+<tr><td></td><td>W</td><td>Write file of assignments</td></tr>
+<tr><td></td><td>R</td><td>Read file of assignments</td></tr>
+<tr><td></td><td>A</td><td>Copy current channel's assignments to All channels</td></tr>
+<tr><td></td><td>Y</td><td>(followed by 0-9) Copy current channel's assignments to 1 chan</td></tr>
+<tr bgcolor="#ffcc99"><td valign="top">control-F</td><td colspan="2">File, read/write all settings</td></tr>
+<tr><td></td><td>R</td><td>Read</td></tr>
+<tr><td></td><td>W</td><td>Write</td></tr>
+<tr bgcolor="#ffcc99"><td valign="top">control-S</td><td colspan="2">Sound</td></tr>
+<tr><td></td><td>A</td><td>Random from All patches</td></tr>
+<tr><td></td><td>R</td><td>Random from selected patches</td></tr>
+<tr><td></td><td>S</td><td>Random from selected patches</td></tr>
+<tr><td></td><td>H</td><td>Random from "hard" patches</td></tr>
+<tr><td></td><td>B</td><td>Random from "bass" patches</td></tr>
+<tr><td></td><td>C</td><td>Random from "perCussive" patches</td></tr>
+<tr><td></td><td>V</td><td>Random from "vocal" patches</td></tr>
+<tr><td></td><td>D</td><td>Random from "drum" patches</td></tr>
+<tr><td></td><td>P</td><td>Random from "pad" patches</td></tr>
+<tr><td></td><td>D</td><td>Random from "drum" patches</td></tr>
+<tr bgcolor="#ffcc99"><td valign="top">control-T</td><td colspan="2">Transitions</td></tr>
+<tr><td></td><td>0-9</td><td>Fixed transition sequences</td></tr>
+<tr bgcolor="#ffcc99"><td valign="top">control-X</td><td colspan="2">Xecute</td></tr>
+<tr><td></td><td>Q</td><td>Quit</td></tr>
+<tr><td></td><td>T</td><td>Timer start/restart</td></tr>
+<tr bgcolor="#ffcc99"><td valign="top">control-L</td><td colspan="2">Length</td></tr>
+<tr><td></td><td>D</td><td>Double</td></tr>
+<tr><td></td><td>H</td><td>Half</td></tr>
+<tr bgcolor="#ffcc99"><td valign="top">control-W</td><td colspan="2">Warp</td></tr>
+<tr><td></td><td>W</td><td>Reset (i.e. remove) warp</td></tr>
+<tr><td></td><td>F</td><td>Fractal</td></tr>
+<tr><td></td><td>E</td><td>Echoes</td></tr>
+<tr><td></td><td>H</td><td>Comb in half</td></tr>
+<tr><td></td><td>S</td><td>Spaces</td></tr>
+<tr><td></td><td>T</td><td>Stutter</td></tr>
+<tr><td></td><td>A</td><td>Warp applys to all channels</td></tr>
+<tr><td></td><td>C</td><td>Warp applys to current channel</td></tr>
+<tr bgcolor="#ffcc99"><td valign="top">control-G</td><td colspan="2">Grab</td></tr>
+<tr><td></td><td>A-Z</td><td>Assign grabbed note/chord/phrase to letter A-Z</td></tr>
+<tr bgcolor="#ffcc99"><td valign="top">&gt; and &lt;</td><td colspan="2">Increase and Decrease (Hold down &gt; and &lt; while pressing these)</td></tr>
+<tr><td></td><td>V</td><td>Velocity (on played notes)</td></tr>
+<tr><td></td><td>L</td><td>Loudness (volume controller)</td></tr>
+<tr><td></td><td>B</td><td>Brightness</td></tr>
+<tr><td></td><td>O</td><td>Octave</td></tr>
+<tr><td></td><td>E</td><td>Expression (expression controller)</td></tr>
+<tr><td></td><td>R</td><td>Reverb amount</td></tr>
+<tr><td></td><td>T</td><td>Reverb time</td></tr>
+<tr><td></td><td>C</td><td>Chorus amount</td></tr>
+<tr bgcolor="#ffcc99"><td valign="top">END</td><td colspan="2">All-Notes-OFF</td></tr>
+<tr bgcolor="#ffcc99"><td valign="top">BACKSPACE</td><td colspan="2">Erase all recorded notes on current channel</td></tr>
+<tr bgcolor="#ffcc99"><td valign="top">DEL</td><td colspan="2">Completely reset current pattern</td></tr>
+</table>
+</tool>

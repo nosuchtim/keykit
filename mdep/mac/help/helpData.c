@@ -1,0 +1,22 @@
+HELPSTRUCT helpData [] = {
+	{{""Introduction""},	{1}},
+	{{""Bang""},	{2}},
+	{{""Blocks""},	{3}},
+	{{""Bounce""},	{4}},
+	{{""Chord"},	{5}},
+	{{""Comment""},	{6}},
+	{{""Console""},	{7}},
+	{{""Controller""},	{8}},
+	{{""Echo""},	{9}},
+	{{""Group""},	{10}},
+	{{""Kboom""},	{11}},
+	{{""Markov"},	{12}},
+	{{""Mouse"},	{13}},
+	{{""Parameters""},	{14}},
+	{{""Prog"},	{15}},
+	{{""Riff""},	{16}},
+	{{""RiffRaff""},	{17}},
+	{{""Tempo""},	{18}},
+	{{""Volume""},	{19}},
+	{{""},		{0}}
+};

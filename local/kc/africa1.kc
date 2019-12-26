@@ -1,0 +1,202 @@
+Collection = [
+	0=
+		["name"="One beat",
+		"phrase"=',l96'],
+	1=
+		["name"="bembe 1:1",
+		"phrase"='fo1d16v71c10 bv57 do2v85 a-v99 ao3v85,fo1t32 do2v71,bo1v85t64 a-o2v71 ao3,fo\
+1t96 do2v85 ao3,fo1t128 bv57 do2v71 a-,fo1v85t160 a-o2v99 ao3v71,fo1t192 bv57\
+ do2v85 ao3,fo1t224 do2v71 a-v99 ao3v71,bo1v85t256,fv71t288 do2v85 a-v71 ao3,\
+fo1v85t320 bv57 do2v71 ao3v85,fo1t352 a-o2v99 ao3v71,l384'],
+	2=
+		["name"="bembe 1:2",
+		"phrase"='fo1d16v71c10 bv57 do2v85 a-v99 ao3v85,e-o1t32 f do2v71,bo1v85t64 a-o2v71 ao3\
+,fo1t96 do2v85 ao3,e-o1t128 f bv57 do2v71 a-,fo1v85t160 a-o2v99 ao3v71,fo1t19\
+2 bv57 do2v85 ao3,e-o1t224 f do2v71 a-v99 ao3v71,bo1v85t256,fv71t288 do2v85 a\
+-v71 ao3,e-o1v85t320 f bv57 do2v71 ao3v85,e-o1v99t352 fv85 a-o2v99 ao3v71,l38\
+4'],
+	3=
+		["name"="songo 1a",
+		"phrase"='c+o1d24v71c10,dv85t96,ct144,c+t192,dv71t240,dt336,l384'],
+	4=
+		["name"="songo 1b",
+		"phrase"='c+o1d24v85c10,dv71t48,dv57t96,cv85t144,c+v71t192,dt240,dv85t336,l384'],
+	5=
+		["name"="songo 2a",
+		"phrase"='co1d24v71c10 a-o2,c+o1v85t96,ct144,a-o2v71t192,c+o1v57t240,c+v71t336,l384'],
+	6=
+		["name"="songo 2b",
+		"phrase"='a-o2d24v71c10,c+o1t48,c+v57t96,cv85t144,a-o2v71t192,c+o1t240,c+v85t336,l384'],
+	7=
+		["name"="songo 3a",
+		"phrase"='a-o2d24v99c10,do1v85t96,ct144,a-o2t192,do1v71t240,cv85t288,dv99t336,l384'],
+	8=
+		["name"="songo 3b",
+		"phrase"='a-o2d24v99c10,do1v85t48,dv71t96,cv85t144,a-o2t192,do1v99t240,cv85t288,dv99t3\
+36,l384'],
+	9=
+		["name"="songo 4a",
+		"phrase"='a-o2d24v85c10,do1t96,bv71t144,a-o2v85t192,do1v29t240,cv85t288 c+v57,cv29t336\
+ c+v71,l384'],
+	10=
+		["name"="songo 4b",
+		"phrase"='a-o2d24v85c10,do1v29t48,dt96,cv85t144 b-,f+v99t192 a-o2v85,f+o1t240 bv71,ft2\
+88,c+v85t336,l384'],
+	11=
+		["name"="african 1",
+		"phrase"='fo1d24v85c10 ao3d25v99,av71t24,av85t48,fo1d24v71t72 ao3d25,e-o1d24v85t96 do2\
+ e-o3v71 ad25v99,av71t120,a-o2d24t144 ao3d25v85,av71t168,fo1d24v85t192 ao3d25\
+v99,a-o2d24v71t216 ao3d25,av85t240,fo1d24v71t264 e-o3 ad25,e-o1d24v85t288 do2\
+ eo3v71 ad25v99,av71t312,av85t336,av71t360,l384'],
+	12=
+		["name"="african 2",
+		"phrase"='fo1d24v71c10 eo3 av85,ad25v71t48,fo1d24v57t72 eo3 ad25,e-o1d24v85t96 do2v71 \
+a-v85 e-o3v71 av85,av71t144,fo1d25t192 eo3 av85,fo1d24v57t216 eo3 ad25,av71t2\
+40,av57t264,e-o1d24v85t288 do2v71 a-d25v85 e-o3d24v71 ad25v85,a-o2d24v71t312 \
+ao3d25v57,av71t336,av57t360,l384'],
+	13=
+		["name"="african 3",
+		"phrase"='fo1d24v85c10 eo3 ad25v99,av71t24,ed24t48 ad25v85,av71t72,e-o1d24v99t96 do2d2\
+5v85 a-d24 e-o3d25v71 av99,do2d24v71t120 e-o3v57 ad25v71,av85t144,av71t168,fo\
+1d24v85t192 eo3v71 ad25v99,av71t216,av85t240,fo1v71t264 eo3d24v57 ad25v71,e-o\
+1d24v99t288 fv85 a-o2 e-o3 ad25v99,av71t312,e-o1d24v85t336 fv71 a-o2 e-o3d25 \
+av85,e-d24v57t360 ad25v71,l384'],
+	14=
+		["name"="african 4",
+		"phrase"='do2d24v85c10 a-v99 eo3v85 ad25v99,av71t24,av85t48,do2d24v71t72 ao3d25,e-o1d2\
+4v99t96 fv85 a-o2 eo3v71 ad25v99,av71t120,fo1d24t144 e-o3d25 av85,e-v57t168 a\
+v71,do2d24v85t192 a-v99 e-o3v85 ad25v99,av71t216,av85t240,do2d24v71t264 ao3d2\
+5,e-o1d24v99t288 fv85 a-o2 eo3v71 ad25v99,av71t312,fo1d24t336 e-o3d25 av85,e-\
+d24v57t360 ad25v71,l384'],
+	15=
+		["name"="african 5",
+		"phrase"='fo1d24v85c10 e-o3d25 ad24v99,e-d25v57,e-v71t48 ad24v85,e-v57,e-o1v99 do2v85 \
+a- eo3v71 av99,ad25v85t144,av71t168,fo1d24v85t192 e-o3 ad25v99,ad24v71t216,e-\
+d25,e-d24v57t264,e-o1v85 do2 a-v99 eo3v71 av99,do2v71t336 a- ao3v85,l384'],
+	16=
+		["name"="african 6",
+		"phrase"='do2d25v85c10 e-o3 av99,do2v57t24 e-o3v29 av71,do2t48 e-o3v43 av85,do2d24v57t\
+72 e-o3v29 ad25v71,e-o1d24v99t96 fv85 a-o2v113 eo3d25v57 av99,ev29t120 av71,e\
+v85t144 a,a-o2d24v99t168 eo3v29 ad25v71,e-v57t192 av99,do2v57t216 a-v71 e-o3v\
+29 av71,do2d24t240 a-v99 e-o3d25v85 a,e-d24v29t264 ad25v71,e-o1d24v85t288 f a\
+-o2v99 eo3d25v57 av99,ev29t312 av71,e-o1d24t336 f a-o2 eo3d25v85 a,ed24v29t36\
+0 ad25v71,l384'],
+	17=
+		["name"="african 7",
+		"phrase"='fo1d24v85c10 a-o2v99 e-o3d25v85 ad24v99,e-v57,ed25v71 ad24,ev57,e-o1v99 do2v\
+71 a- e-o3 av85,av71t144,fo1t192 a-o2v85 e-o3 av99,ev71t240 a,e-d25v57,do2d24\
+v85t288 a-v71 e-o3 av85,ev71t336 a,do2 e-o3d25v57,l384'],
+	18=
+		["name"="african 8",
+		"phrase"='fo1d24v85c10 eo3v71 ad25v99,av71t24,av85t48,av71t72,e-o1d24v99t96 do2d25v85 \
+a-d24 e-o3v71 av99,do2v71,ao3v85,fo1t192 eo3d25v71 av99,ed24v57t216 ad25v71,f\
+o1d24t240 ao3d25v85,av71t264,e-o1d24v85t288 do2d25 a-v99 e-o3v71 ad24v99,do2v\
+71 a- e-o3v57,av85,l384'],
+	19=
+		["name"="african 9",
+		"phrase"='fo1d24v85c10 a-o2v99 eo3v85 av99,fo1v71t48 eo3v57 av71,e-o1v85t96 do2 a- e-o\
+3v71 av85,av71t144,e-o1v85 e-o3v57,fo1v85 a-o2v99 eo3v85 av99,e-v57,fo1d25v71\
+ eo3 ad24,fo1v85 eo3v57,e-o1v85 do2v71 a-v85 e-o3v71 av85,ev57,av71,e-v57'],
+	20=
+		["name"="african 10",
+		"phrase"='fo1d24v85c10 a-o2v99 e-o3v85 ev57 av99,ad25v85t48,av71t72,e-o1d24v99t96 do2v\
+71 a-v85 e-o3v57 ev85 av99,ad25v85t144,av71t168,fo1d24v85t192 a-o2d25v99 e-o3\
+v85 ad24v99,a-o2v71 e-o3v57,ad25v85,av71t264,e-o1d24v99t288 do2v85 a- eo3 av9\
+9,e-o1v71t336 do2 ao3d25v85,av71t360,l384'],
+	21=
+		["name"="african 11",
+		"phrase"='fo1d24v71c10 a-o2v85 eo3 a,e-v57,fo1 a-o2v71 eo3 a,e-o1v99t96 do2v71 a-v85 e\
+-o3 a,do2v57t144 ao3v71,a-o2d25v85 e-o3d24v71,fo1 a-o2 eo3d25v85 ad24,ed25v43\
+,fo1d24v57t240 a-o2v85 eo3d25v57 ad24v71,ev43,e-o1v85 do2v71 a-v85 e-o3 a,do2\
+v57t336 e-o3v71 a,l384'],
+	22=
+		["name"="african 12",
+		"phrase"='fo1d24v85c10 a-o2 e-o3v71 av85,a-o2v71t48 e-o3d25v57 ad24v71,e-d25v43,e-o1d2\
+4v99t96 do2v71 a-v85 e-o3v71 av85,e-d25v57t144 av71,e-v43t168 av57,fo1d24v85t\
+192 a-o2 e-o3v71 av85,e-d25v57t240 av71,do2t264 a-v85 e-o3d24v43 ad25v57,do2v\
+85t288 a-d24v71 eo3d25 ad24v85,do2v71 eo3d25v57,fo1v85t336 eo3v71,fo1t360 eo3\
+d24v85,l384'],
+	23=
+		["name"="african 13",
+		"phrase"='fo1d24v85c10 a-o2 eo3 a,e-v43,fo1v71 a-o2d25v57 eo3d24 av71,a-o2d25v85 e-o3d\
+24,e-o1 do2d25 a-d24v57 eo3 av85,do2v71 e-o3v43,a-o2d25v85 eo3d24 av71,a-o2d2\
+5v57 e-o3d24,fo1v85 a-o2 eo3 a,e-d25v43,fo1d24v71t240 a-o2d25v57 e-o3d24 av71\
+,a-o2d25v85 eo3d24,do2d25 a-d24v57 e-o3d25 ad24v85,do2v71 e-o3v43,a-o2d25v85 \
+eo3 ad24v71,a-o2d25v57 eo3,l384'],
+	24=
+		["name"="african 14",
+		"phrase"='fo1d24v85c10 a-o2d25 e-o3 ad24,a-o2v71 e-o3v57,e-o1v85 eo3v71 ad25,a-o2d24v8\
+5t72 e-o3 ad25v57,do2d24v85t96 eo3v57 av85,a-o2v71 e-o3d25v57,e-o1d24v71t144 \
+e-o3v85 ad25v71,do2d24t168 a-v85 eo3d25v57 a,fo1d24v85t192 eo3v71 av85,a-o2v7\
+1 e-o3v85,e-o1 eo3v57 ad25v71,a-o2d24v85t264 e-o3v57 ad25,do2d24v85t288 eo3 a\
+,a-o2d25v71 e-o3v57,e-o1d24v71t336 a-o2v85 e-o3 ad25v71,do2d24t360 ao3d25v57,\
+l384'],
+	25=
+		["name"="african 15",
+		"phrase"='fo1d25v85c10 eo3 av99,fo1d24v71t24 eo3v57 av71,a-o2d25v99,fo1v85t72 a-o2d24 \
+eo3v71 ad25,fo1d24t96 ao3v99,ev85,e-o1d25 f a-o2v71,e-o1d24v85t168 fv71 a-o2 \
+eo3d25v57,ev85t192,fo1t216 eo3d24v57,fo1v71 a-o2d25v99,dv71t264 a-d24v85,fo1 \
+do2d25,dd24v71t312,e-o1d25v85 a-o2v71,e-o1d24v85t360 do2 a-v71'],
+	26=
+		["name"="african 16",
+		"phrase"='a-o2d24v85c10 ao3v99,e-o1v85t48 do2d25 ao3,do2d24v71t72 ao3d25,av99t96,e-o1d\
+24v85t120 ao3d25v71,fo1v85t144 eo3v71 av85,fo1d24v71t168 a-o2 eo3v85 ad25v71,\
+do2v85t192 ao3v99,e-o1d24v85t216 do2v71 a- ao3d25,av85t240,e-o1d24t264 do2 ao\
+3d25v71,av99t288,do2d24v85t312 eo3d25v71 a,ed24v85t336 ad25,do2d24t360 ao3d25\
+v71,l384'],
+	27=
+		["name"="african 17",
+		"phrase"='fo1d24v85c10 a-o2d25 ao3d24v99,a-o2v71 eo3v57,av85,fo1t96 a-o2 ao3v99,ev57,e\
+-o1v85t168 f a-o2d25v71,a-d24v85t192 ao3d25v99,ed24v57t216 ad25v71,av85t240,e\
+d24v57t264 ad25v71,ad24v99t288,do2d25v57,dd24v85t336 ao3,l384'],
+	28=
+		["name"="african 18",
+		"phrase"='e-d16v85c10 a,av43t32,a-o2v85t64 ao3,e-o1v71t96 do2v99 eo3v57 av43,a-o2v71t1\
+28 ao3v85,et160 av43,a-o2v85t192 ao3,av43t224,av85t256,e-o1v71t288 fv99 a-o2v\
+57 e-o3v85 a,av43t320,a-o2v85t352 e-o3v71 av85,l384'],
+	29=
+		["name"="african 19",
+		"phrase"='c+o1d16v57c10 do2v99 e-o3v85 a,av29t32,c+o1t64 a-o2v85 e-o3v57,c+o1v99t96 e-\
+v71 fv57 e-o3 av85,a-o2v71t128 ao3v29,c+o1t160 e-o3v71,c+o1v57t192 fv99 a-o2v\
+85 eo3v71 av85,fo1v57t224 eo3v43,c+o1v29t256 bv99 eo3v57 av43,c+o1v57t288 e-v\
+71 bv57 a-o2 e-o3v85 a,do2v99t320 e-o3v43,c+o1v99t352 do2v57 a-v85 e-o3v57 av\
+43,l384'],
+	30=
+		["name"="african 20",
+		"phrase"='do2d24v99c10 ao3d25v71,av29t24,e-o1d24v85t48 ao3d25v71,av29t72,fo1d24v57t96 \
+e-o3 ad25v71,av29t120,fo1d24v99t144 a-o2v71 ao3d25,av29t168,e-o1d24v71t192 do\
+2v57 a-v85 ao3d25v71,av29t216,e-o1d24v85t240 do2v99 ao3d25v71,av29t264,e-o1d2\
+4v99t288 fv57 a-o2v71 e-o3v85 ad25v71,av29t312,av71t336,av29t360,l384'],
+	31=
+		["name"="african 21a",
+		"phrase"='co1d24v85c10 f+,c+v71t48 f+v113,cv71t96 f+v85,c+t144 f+v113,cv85t192 f+,c+v7\
+1t240 f+v113,cv71t288 f+v85,c+t336 f+v113,l384'],
+	32=
+		["name"="african 21b",
+		"phrase"='co1d24v85c10 f+,c+v71t48 f+v113,cv71t96 f+v85,c+t144 f+v113,cv85t192 f+,c+v7\
+1t240,f+v113,cv71,f+v85,c+ b-v99,l384'],
+	33=
+		["name"="african 22a",
+		"phrase"='do2d24v85c10 eo3 a,ev43t48,do2v57 ao3d25,e-o1d24v113t96 fv85 a-o2 e-o3d25 ad\
+24,e-v43,a-o2v57 eo3d25,ed24v85t168,do2 e-o3d25v43 ad24v85,e-v57,ed25v85,do2d\
+24v57t264 eo3v43 ad25v57,e-o1d24v99t288 a-o2v85 e-o3d25v57 ad24v85,e-,a-o2v57\
+ eo3d25v43,ev57t360,l384'],
+	34=
+		["name"="african 22b",
+		"phrase"='do2d24v85c10 eo3d25 ad24,ed25v57,ev43t48,do2d24v57t72 eo3 ad25,e-o1d24v99t96\
+ fv85 a-o2 e-o3 a,a-o2v57t144,eo3v85 ad25v57,e-o1d24v113t192 do2v85 e-o3d25v4\
+3 ad24v85,e-v57,ed25v85,do2d24v57t264 eo3d25v43 av57,e-o1d24v99t288 fv85 a-o2\
+ eo3v57 av85,e-d25,a-o2d24v57t336 e-o3v43,fo1v99 eo3d25v57 a,l384'],
+	35=
+		["name"="african 23a",
+		"phrase"='fo1d24v71c10 ao3v85,fo1v57t48 ao3,e-o1v99t96 do2v71 a-v85 e-o3 a,av57t144,do\
+2 e-o3,fo1v71 eo3v43 av85,e-,fo1v57 ao3,ed25,e-o1d24v99t288 do2v71 a- eo3v85 \
+a,a-o2t336 ao3v57,l384'],
+	36=
+		["name"="african 23b",
+		"phrase"='fo1d24v85c10 eo3 ad25,av29t24,fo1d24v57t48 ao3d25v43,av57t72,e-o1d24v99t96 d\
+o2v85 a- e-o3v43 ad25v85,av29t120,av57t144,do2d24t168 e-o3v85 ad25v43,fo1d24t\
+192 eo3 ad25v85,e-d24v43t216 ad25v29,fo1v85t240 eo3 av57,fo1d24v43t264 eo3 ad\
+25,e-o1d24v99t288 do2v85 a-v71 e-o3v85 ad25,fo1d24v43t312 eo3 ad25v29,a-o2d24\
+v85t336 ao3d25v57,e-d24v43t360 ad25,l384']
+]

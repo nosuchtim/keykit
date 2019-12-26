@@ -1,0 +1,42 @@
+#LSB		low		dmin	 	vmin		instrument	
+#	n		hig		dmax		vmax
+#	|	|	|	|	|	|	|	|
+
+
+
+# Drums Indian Ensemble
+
+72	3	0	60	.long		20	80	Low Sitar (excellentes basses très rugueuses !)  
+
+
+# Pianos:
+
+20	0	19	35	.long		20	100	WT Grand
+
+
+# Basses:
+
+#30	5	48	65	.long		.		Yamaha Fingered Bass (click...)
+30	6	46	89	.long		20	80	Yamaha Slap Bass
+#30	22	39	64	.long		.		Rick_sub
+
+# Cordes:
+
+50	20	19	50	.long		20	80	Contrebasse
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

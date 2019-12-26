@@ -1,0 +1,23 @@
+#
+# This file defines the list of tools in the Tools menu.
+# The "trackable" word, if present, indicates that a tool can also
+# be used within the tracks of the Group tool.
+#
+# NOTE: use colons to separate the fields.
+
+# Test:wellipse
+
+Blocks:wblocks:trackable
+Chords:wchord
+Controller:wcontrol
+Echo:wecho
+Group:wgroup:trackable
+Kboom:wkboom2:trackable
+Mouse Matrix:wmatrix
+Parameters:wparam
+Port Enabler:wportpick
+Port Map:wportmap1
+Riff:wriff:trackable
+RiffNames:wriffnames:trackable
+Tempo:wtempo:trackable
+Volume:wvol

@@ -1,0 +1,40 @@
+Set KEYHOME "Macintosh HD:Work:Jack:Code:Music:key65e:"
+Set DIR {KEYHOME}mdep:mac:help:
+
+#Set HELPFILEVERSION 0x0600
+#Set HELPFILEVERSIONSTRING 6.5a
+Set HOWI 256
+Set HOWT 256
+Set HOWG 256
+Set HOWC 256
+Set HOWA 256
+Set APPLNAME	KeyKit
+Set APPLICATION	{DIR}{APPLNAME}
+Set HOWRESFILE	{DIR}HoWRez.English.r
+Set APPLRESFILE {APPLICATION}.help
+
+#Set HELPFILE	hacking
+#Set HELPFILE	keylib
+#Set HELPFILE	keyvar
+#Set HELPFILE	language
+# These produce usable results...
+Set HELPFILE	tools
+#Set HELPFILE	tutorial
+Set HELPSOURCE	{KEYHOME}doc:{HELPFILE}.src
+Set HELPOUT		{DIR}{HELPFILE}.doc
+Set APPLRESFILE {HELPFILE}.help
+
+Gawk -c -f {DIR}help.awk < {HELPSOURCE} > {HELPOUT}
+
+{DIR}wrap -r 335 -p < {HELPOUT} | ¶
+	{DIR}cvrt -o {APPLRESFILE} -w 345 -h 12 ¶
+	-i {HOWI} -t {HOWT} -g {HOWG} -c {HOWC}
+
+Rez -t 'HoW!' -c 'HoW?' ¶
+#	-d version={HELPFILEVERSION} ¶
+#	-d versionString=¶"{HELPFILEVERSIONSTRING}¶" ¶
+	-d HoWi={HOWI} -d HoWt={HOWT} -d HoWg={HOWG} -d HoWc={HOWC} -d HoWa={HOWA} ¶
+	-d application=¶"{APPLNAME}¶" {HOWRESFILE} -a -o {APPLRESFILE}
+
+#Echo "include ¶"`echo ¶`Directory¶``{HELPPICTSFILE}¶";" | ¶
+#	Rez Dev:StdIn -a -o {APPLRESFILE}

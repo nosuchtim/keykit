@@ -1,0 +1,355 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
+<HTML>
+<HEAD>
+   <TITLE>Untitled</TITLE>
+   <META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=ISO-8859-1">
+   <META NAME="GENERATOR" CONTENT="Mozilla/4.0b1 (Win95; I) [Netscape]">
+</HEAD>
+<BODY TEXT="#000000" BGCOLOR="#FFFFFF" LINK="#FF0000" VLINK="#800080" ALINK="#0000FF">
+
+<H1>KeyKit - <FONT SIZE=+1>Musical Fun with Windows, Tasks, and Objects</FONT></H1>
+
+<DT><FONT SIZE=+1>&nbsp;</FONT></DT>
+
+<DT><FONT SIZE=+1>A viewgraph-style description of KeyKit.</FONT></DT>
+
+<DT>
+<HR WIDTH="100%"></DT>
+
+<H1>What is it?</H1>
+
+<UL>
+<LI><FONT SIZE=+1>Programming language - interpreted, multi-tasking, graphics,
+object-oriented</FONT>&nbsp;</LI>
+
+<LI><FONT SIZE=+1>Specialized for MIDI algorithmic and realtime manipulation,
+&quot;phrase&quot; data type, realtime scheduling</FONT>&nbsp;</LI>
+
+<LI><FONT SIZE=+1>Multi-window graphical user interface, pull-off menus
+and buttons, tools include multi-track editor, drum pattern editor</FONT>&nbsp;</LI>
+
+<LI><FONT SIZE=+1>Entire user interface and all tools written in KeyKit
+and provided as source code in library, easily customized and extended</FONT>&nbsp;</LI>
+</UL>
+
+<P>
+<HR WIDTH="100%"></P>
+
+<H1>Reason for Being</H1>
+
+<UL>
+<LI><FONT SIZE=+1>Hacking - fun, programming, normal music composition,
+algorithmic music&nbsp;</FONT></LI>
+
+<LI><FONT SIZE=+1>learning - OS's, device drivers, graphics, user interface
+design, OO&nbsp;</FONT></LI>
+
+<LI><FONT SIZE=+1>personal and programmer-centric, not commercial, although
+current version is complete enough for non-programmers&nbsp;</FONT></LI>
+</UL>
+
+<P>
+<HR WIDTH="100%"></P>
+
+<H1>Development History</H1>
+
+<UL>
+<LI><FONT SIZE=+1>1.0 - BASIC-like&nbsp;</FONT></LI>
+
+<LI><FONT SIZE=+1>2.0 - realtime&nbsp;</FONT></LI>
+
+<LI><FONT SIZE=+1>3.0 - grammer, rewrite, fast enough to avoid built-ins&nbsp;</FONT></LI>
+
+<LI><FONT SIZE=+1>4.0 - graphics&nbsp;</FONT></LI>
+
+<LI><FONT SIZE=+1>5.0 - first multi-window attempts, multi-tasking, fifos,
+tools using tasks/fifos&nbsp;</FONT></LI>
+
+<LI><FONT SIZE=+1>6.0 - object-oriented, multi-window interface rewritten,
+pull-off menus/buttons&nbsp;</FONT></LI>
+</UL>
+
+<P>
+<HR WIDTH="100%"></P>
+
+<H1>Development machines</H1>
+
+<UL>
+<LI><FONT SIZE=+1>Atari ST, PC (286), UNIX (386, X11), Windows NT, Win95&nbsp;</FONT></LI>
+
+<LI><FONT SIZE=+1>Ported at various times to: Atari ST, DOS, UNIX PC, Mac,
+Amiga, SVR3, SVR4, SunOS, NeXT, X Windows, SGI, Amdahl, VAX, 5620, Plan
+9, Windows 3.1/NT/95&nbsp;</FONT></LI>
+</UL>
+
+<P>
+<HR WIDTH="100%"></P>
+
+<H1>Language Features</H1>
+
+<UL>
+<LI><FONT SIZE=+1>Inspired by awk&nbsp;</FONT></LI>
+
+<LI><FONT SIZE=+1>Variables need not be declared&nbsp;</FONT></LI>
+
+<LI><FONT SIZE=+1>No semicolons&nbsp;</FONT></LI>
+
+<LI><FONT SIZE=+1>#define, #include&nbsp;</FONT></LI>
+
+<LI><FONT SIZE=+1>The usual control structures and expressions&nbsp;</FONT></LI>
+</UL>
+
+<P>
+<HR WIDTH="100%"></P>
+
+<H1>Phrase data type</H1>
+
+<UL>
+<LI><FONT SIZE=+1>Time-ordered list of MIDI &quot;notes&quot; - can be
+system-exclusives, isolated note-on, isolated note-off, or full note with
+duration&nbsp;</FONT></LI>
+
+<LI><FONT SIZE=+1>Constant value syntax<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <FONT FACE="Courier New,Courier">ph
+= 'c e g'&nbsp;&nbsp;&nbsp;&nbsp; # ph is a c major triad<BR>
+</FONT>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <FONT FACE="Courier New,Courier">ph
+= 'dc2,e,f'&nbsp;&nbsp; # ph is an arpeggio, channel 2&nbsp;</FONT></FONT></LI>
+
+<LI><FONT SIZE=+1>Structure-like manipulation of attributes :<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <FONT FACE="Courier New,Courier">ph.dur
+= 1b&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; # all note durations = 1 beat<BR>
+</FONT>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <FONT FACE="Courier New,Courier">ph.pitch
++= 12&nbsp;&nbsp; # transposed up an octave&nbsp;</FONT></FONT></LI>
+</UL>
+
+<P>
+<HR WIDTH="100%"></P>
+
+<H1>Phrase and Note Attributes</H1>
+
+<UL>
+<LI><FONT SIZE=+1>pitch (0-127)</FONT>&nbsp;</LI>
+
+<LI><FONT SIZE=+1>vol(0-127)</FONT>&nbsp;</LI>
+
+<LI><FONT SIZE=+1>chan (1-16)</FONT>&nbsp;</LI>
+
+<LI><FONT SIZE=+1>dur (in clicks)</FONT>&nbsp;</LI>
+
+<LI><FONT SIZE=+1>time (in clicks, relative to beginning of phrase)</FONT>&nbsp;</LI>
+
+<LI><FONT SIZE=+1>type (NOTE, NOTEON, NOTEOFF, MIDIBYTES, PROGRAM, PRESSURE,
+etc.)</FONT>&nbsp;</LI>
+
+<LI><FONT SIZE=+1>length (of phrase, independent of notes in it)</FONT>&nbsp;</LI>
+
+<LI><FONT SIZE=+1>attrib (string, arbitrary meaning)</FONT>&nbsp;</LI>
+
+<LI><FONT SIZE=+1>flags (integer, arbitrary meaning, bit 1 == picked)&nbsp;</FONT></LI>
+</UL>
+
+<P>
+<HR WIDTH="100%"></P>
+
+<H1>Phrase Operations</H1>
+
+<UL>
+<LI><FONT SIZE=+1>Serial concatenation<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+<FONT FACE="Courier New,Courier">ph = ph1 + ph2</FONT></FONT><FONT FACE="Courier New,Courier">&nbsp;</FONT></LI>
+
+<LI><FONT SIZE=+1>Parallel merging<BR>
+<FONT FACE="Courier New,Courier">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+ph = ph1 | ph2</FONT></FONT><FONT FACE="Courier New,Courier">&nbsp;</FONT></LI>
+
+<LI><FONT SIZE=+1>Removing notes<BR>
+<FONT FACE="Courier New,Courier">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+ph = ph1 - ph2</FONT></FONT><FONT FACE="Courier New,Courier">&nbsp;</FONT></LI>
+
+<LI><FONT SIZE=+1>Matching notes<BR>
+<FONT FACE="Courier New,Courier">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+ph = ph1 &amp; ph2</FONT></FONT><FONT FACE="Courier New,Courier">&nbsp;</FONT></LI>
+
+<LI><FONT SIZE=+1>Nth note<BR>
+<FONT FACE="Courier New,Courier">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+ph = ph1 % n</FONT></FONT><FONT FACE="Courier New,Courier">&nbsp;</FONT></LI>
+</UL>
+
+<P>
+<HR WIDTH="100%"></P>
+
+<H1>Phrase Operations - the &quot;select&quot;</H1>
+
+<DT><TT><FONT FACE="Courier New,Courier"><FONT SIZE=+1>&nbsp;&nbsp;&nbsp;&nbsp;
+ph = ph1 { ??.pitch &gt; 60 }</FONT></FONT></TT></DT>
+
+<DT><TT><FONT FACE="Courier New,Courier"><FONT SIZE=+1>&nbsp;&nbsp;&nbsp;&nbsp;
+ph = ph1 { ??.dur &gt; 1b }</FONT></FONT></TT></DT>
+
+<DT><TT><FONT FACE="Courier New,Courier"><FONT SIZE=+1>&nbsp;&nbsp;&nbsp;&nbsp;
+ph = ph1 { isonbeat(??,4b) }</FONT></FONT></TT></DT>
+
+<DT><TT><FONT FACE="Courier New,Courier"><FONT SIZE=+1>&nbsp;&nbsp;&nbsp;&nbsp;
+ph = ph1 { ??.number &lt; 4 }</FONT></FONT></TT></DT>
+
+<DT><TT><FONT FACE="Courier New,Courier"><FONT SIZE=+1>&nbsp;&nbsp;&nbsp;&nbsp;
+ph = ph1 { rand(3)==0 }</FONT></FONT></TT></DT>
+
+<DT><TT><FONT FACE="Courier New,Courier"><FONT SIZE=+1>&nbsp;&nbsp;&nbsp;&nbsp;
+ph = ph1 { isinscale(??,scale) }</FONT></FONT></TT></DT>
+
+<DT><TT><FONT FACE="Courier New,Courier"><FONT SIZE=+1>&nbsp;&nbsp;&nbsp;&nbsp;
+ph = ph - ph { ??.type == MIDIBYTES }</FONT></FONT></TT></DT>
+
+<DT><TT><FONT FACE="Courier New,Courier"><FONT SIZE=+1>&nbsp;</FONT></FONT></TT></DT>
+
+<DT>
+<HR WIDTH="100%"></DT>
+
+<H1>Phrase Operations - Looping</H1>
+
+<UL>
+<DT><TT><FONT FACE="Courier New,Courier"><FONT SIZE=+1># randomize volume
+of each note and</FONT></FONT></TT></DT>
+
+<DT><TT><FONT FACE="Courier New,Courier"><FONT SIZE=+1># construct a new
+phrase with the result</FONT></FONT></TT></DT>
+
+<DT><TT><FONT FACE="Courier New,Courier"><FONT SIZE=+1>r = ''</FONT></FONT></TT></DT>
+
+<DT><FONT FACE="Courier New,Courier"><FONT SIZE=+1><TT>for ( nt in ph )
+{</TT>&nbsp;</FONT></FONT></DT>
+
+<DT><FONT FACE="Courier New,Courier"><FONT SIZE=+1><TT>&nbsp;&nbsp;&nbsp;&nbsp;
+nt.vol += rand(10)</TT>&nbsp;</FONT></FONT></DT>
+
+<DT><FONT FACE="Courier New,Courier"><FONT SIZE=+1><TT>&nbsp;&nbsp;&nbsp;&nbsp;
+r = r | nt # or r |= nt</TT>&nbsp;</FONT></FONT></DT>
+
+<DT><TT><FONT FACE="Courier New,Courier"><FONT SIZE=+1>}</FONT></FONT></TT></DT>
+
+<DT><TT><FONT FACE="Courier New,Courier"><FONT SIZE=+1># randomize volume
+of each note, in-place</FONT></FONT></TT></DT>
+
+<DT><TT><FONT FACE="Courier New,Courier"><FONT SIZE=+1>for ( n=0; n&lt;sizeof(ph);
+n++ )</FONT></FONT></TT></DT>
+
+<DT><TT><FONT FACE="Courier New,Courier"><FONT SIZE=+1>ph%n.vol += rand(10)</FONT></FONT></TT></DT>
+</UL>
+
+<DT><TT><FONT FACE="Courier New,Courier"><FONT SIZE=+1>&nbsp;</FONT></FONT></TT></DT>
+
+<DT>
+<HR WIDTH="100%"></DT>
+
+<H1>Function values, In-line Functions</H1>
+
+<DT><FONT FACE="Courier New,Courier"><FONT SIZE=+1><TT>&nbsp;&nbsp; function
+major(k) {return(k|transpose(k,4)|transpose(k,7));}</TT>&nbsp;</FONT></FONT></DT>
+
+<DT><FONT FACE="Courier New,Courier"><FONT SIZE=+1><TT>&nbsp;&nbsp; function
+minor(k) { return(k|transpose(k,3)|transpose(k,7));}</TT>&nbsp;</FONT></FONT></DT>
+
+<DT><FONT FACE="Courier New,Courier"><FONT SIZE=+1><TT>&nbsp;&nbsp; function
+randchord() {</TT>&nbsp;</FONT></FONT></DT>
+
+<DT><TT><FONT FACE="Courier New,Courier"><FONT SIZE=+1>&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+if ( rand(2) == 0 ) return(major) else return(minor)</FONT></FONT></TT></DT>
+
+<DT><TT><FONT FACE="Courier New,Courier"><FONT SIZE=+1>&nbsp;&nbsp; }</FONT></FONT></TT></DT>
+
+<DT><FONT FACE="Courier New,Courier"><FONT SIZE=+1><TT>&nbsp;&nbsp; f =
+randchordtype()</TT>&nbsp;</FONT></FONT></DT>
+
+<DT><TT><FONT FACE="Courier New,Courier"><FONT SIZE=+1>&nbsp;&nbsp; f('c')</FONT></FONT></TT></DT>
+
+<DT><TT><FONT FACE="Courier New,Courier"><FONT SIZE=+1>&nbsp;&nbsp; randchordtype()('c')</FONT></FONT></TT></DT>
+
+<H2><FONT SIZE=+1>Instead of return(major), you could use an in-line function:</FONT></H2>
+
+<DT><TT><FONT FACE="Courier New,Courier"><FONT SIZE=+1>&nbsp;&nbsp; return
+(function ? (k){return(k|transpose(k,4)|transpose(k,7));})&nbsp;</FONT></FONT></TT></DT>
+
+<DT>
+<HR WIDTH="100%"></DT>
+
+<H1>Other Language Features</H1>
+
+<UL>
+<LI><FONT SIZE=+1>Variable arguments -<FONT FACE="Courier New,Courier">
+<TT>… </TT>, <TT>nargs()</TT>, <TT>argv()</TT>, <TT>varg()</TT>&nbsp;</FONT></FONT></LI>
+
+<LI><FONT SIZE=+1>Fifos&nbsp;</FONT></LI>
+
+<LI><FONT SIZE=+1>Objects&nbsp;</FONT></LI>
+
+<LI><FONT SIZE=+1>Graphics - primitive elements are:<BR>
+lines, rectangles, text, windows,<BR>
+phrase windows, menus&nbsp;</FONT></LI>
+</UL>
+
+<P>
+<HR WIDTH="100%"></P>
+
+<H1>Tasks and I/O</H1>
+
+<UL>
+<LI><FONT SIZE=+1>All tasks are time-shared evenly, interleaved at the
+interpreted instruction level</FONT>&nbsp;</LI>
+
+<LI><FONT SIZE=+1>Scheduled MIDI output events are tasks as well, but performance
+can't be degraded by other tasks</FONT>&nbsp;</LI>
+
+<LI><FONT SIZE=+1>MIDI input is always being recorded, available in a global
+variable for easy and immediate processing</FONT>&nbsp;</LI>
+
+<LI><FONT SIZE=+1>MIDI, mouse, and console input events can be read from
+special fifos</FONT>&nbsp;</LI>
+
+<LI><FONT SIZE=+1>Reading a fifo (with no data waiting) blocks a task</FONT>&nbsp;</LI>
+
+<LI><FONT SIZE=+1>lock() and unlock() used for exclusion and synchronization</FONT>&nbsp;</LI>
+</UL>
+
+<P>
+<HR WIDTH="100%"></P>
+
+<H1>KeyKit - the GUI</H1>
+
+<UL>
+<LI><FONT SIZE=+1>Completely implemented with KeyKit code, even pull-off
+menus, dragging of windows, etc.&nbsp;</FONT></LI>
+
+<LI><FONT SIZE=+1>Tools framework allows all tools to be manipulated consistently
+for resizing, saving/restoring state, copying&nbsp;</FONT></LI>
+</UL>
+
+<P>
+<HR WIDTH="100%"></P>
+
+<H1>The GUI Tools</H1>
+
+<P><FONT SIZE=+1>Bang, Blocks, Bounce, Chord Palette, Console, Controller,
+Echo, Group, Kboom, Loopy, Markov Maker, Mouse Matrix, Parameters, Peer,
+Prog Change, Riff, RiffRaff, Sectionalize, Tempo, Volume&nbsp;</FONT></P>
+
+<P>
+<HR WIDTH="100%"></P>
+
+<H1>Documentation</H1>
+
+<UL>
+<LI><FONT SIZE=+1>Tutorial&nbsp;</FONT></LI>
+
+<LI><FONT SIZE=+1>Tools reference manual&nbsp;</FONT></LI>
+
+<LI><FONT SIZE=+1>Hacking the user interface&nbsp;</FONT></LI>
+
+<LI><FONT SIZE=+1>Language reference manual&nbsp;</FONT></LI>
+</UL>
+
+<P>
+<HR WIDTH="100%"></P>
+
+</BODY>
+</HTML>

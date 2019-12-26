@@ -1,0 +1,9 @@
+LIBRARY     keydll
+
+HEAPSIZE    2048
+
+EXPORTS
+	KeySetupDll		@2
+	KeyTimerFunc		@3
+	midiInputHandler	@4
+	midiOutputHandler	@5

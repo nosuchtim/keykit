@@ -1,0 +1,132 @@
+void
+drawclipped(Kwind *w,Phrasep p,long sclicks,long eclicks,int spitch,int epitch,int sx,int sy,int ex,int ey)
+{
+	int x1, y1, x2, y2;
+	Noteptr n;
+	int pitch;
+	long lasts = MAXCLICKS, laste = MAXCLICKS;
+	int yhigh, lastx1, lastx2, denom, isnote;
+	long s, e;
+	long ndrawn = 0;
+	Krect cliprect;
+	int dochancolors = 0;
+	int color;
+	int f;
+
+	/* If Chancolormap array is not empty, get the channel colors */
+	if ( *Chancolors != 0 ) {
+		dochancolors = 1;
+		setupchancolors();
+	}
+
+	cliprect = makerect(sx,sy,ex,ey);
+
+	if ( p == NULL )
+		return;
+
+	/* removal of loop constants in computation of y values */
+	yhigh = Disporigy + SHOWYHIGH;
+	denom = w->showhigh - w->showlow;
+	if ( denom == 0 )
+		return;
+
+	setnotecolor((Noteptr)NULL,-1);
+
+	for ( n=firstnote(p); n!=NULL ; n=nextnote(n)) {
+
+		f = flagsof(n) & FLG_PICK;
+
+		isnote = ntisnote(n);
+
+		e = endof(n);
+		s = timeof(n);
+		if ( isnote != 0 && e < sclicks && s < sclicks )
+			continue;
+		if ( s > eclicks )
+			break;	/* assumption that notes are sorted by time */
+
+		/* because this is done a lot, code below is essentially an */
+		/* in-line expansion of drawnt() and ntbox().  Can you say */
+		/* premature optimization?  */
+
+		/* avoid using clktox if possible */
+		if ( s != lasts ) {
+			x1 = lastx1 = clktox(s);
+			lasts = s;
+		}
+		else
+			x1 = lastx1;
+
+		if ( e != laste ) {
+			x2 = lastx2 = clktox(e);
+			laste = e;
+		}
+		else
+			x2 = lastx2;
+
+		if ( dochancolors ) {
+			// %16 to be robust
+			color = chancolors[chanof(n) % 16]; 
+		} else {
+			color = -1;
+		}
+
+		if ( ! isnote ) {
+			if ( x1 > ex || x1 < sx )
+				continue;
+			/* channel color if unpicked, otherwise pick color */
+			if ( dochancolors == 1 && f == 0 )
+				setnotecolor(n,color);
+			else
+				setnotecolor(n,-1);
+			drawnonnt(w,n,&cliprect);
+			continue;
+		}
+
+		/* a normal note */
+		pitch = pitchof(n);
+		if ( pitch < spitch || pitch > epitch )
+			continue;
+		y1 = yhigh - (int)(((long)pitch*Dispdy)/denom);
+		y2 = yhigh - (int)(((long)(pitch-1)*Dispdy)/denom);
+
+		if ( y2 > y1 )
+			y2--;
+
+		if ( x2 > x1 ) {
+			if ( --x2 > x1 )
+				--x2;
+		}
+
+		if ( x1 > ex || x2 < sx )
+			continue;
+		if ( y1 > ey || y2 < sy )
+			continue;
+		if ( x1 < sx )
+			x1 = sx;
+		if ( y1 < sy )
+			y1 = sy;
+		if ( x2 > ex )
+			x2 = ex;
+		if ( y2 > ey )
+			y2 = ey;
+		if ( dochancolors == 1 && f == 0 )
+			setnotecolor(n,color);
+		else
+			setnotecolor(n,-1);
+		mdep_boxfill(x1,y1,x2,y2);
+		if ( *Volstem ) {
+			y1 = pitchtoy(w,(int)pitchof(n));
+			y2 = pitchtoy(w,(int)pitchof(n)+(int)(*Volstemsize));
+			y2 = y1 - (y1-y2)*(int)volof(n)/128;
+			mdep_line(x1,y1,x1,y2);
+		}
+		if ( ndrawn++ > *Drawcount ) {
+			ndrawn = 0;
+			chkinput();
+			chkoutput();
+		}
+	}
+	if ( *Colornotes )
+		mdep_color(Forecolor);
+}

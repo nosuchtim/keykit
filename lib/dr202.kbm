@@ -1,0 +1,15 @@
+# This is a setup for the kboom() function when using the dr202 drummap
+chan 10
+Kick_1 36
+Kick_2 35
+Snare_1 38
+Snare_2 40
+Closed_HH 42
+Open_HH 46
+Ride 51
+Crash 49
+Hit_1 50
+Hit_2 47
+Hit_3 43
+Perc_1 60
+Perc_2 61

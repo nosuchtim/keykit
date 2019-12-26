@@ -1,0 +1,8 @@
+#waltz test
+xb=3/4
+xt=85
+xsl=m{all3a.mid}<6|2>Waltz
+x-=1
+xo=1
+c.maj-6 f.maj-3 g.maj-3
+c.maj-6 f.maj-3 g.maj-3

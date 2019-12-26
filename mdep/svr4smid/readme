@@ -1,0 +1,20 @@
+This is a minimal device driver that provides a /dev/smid that
+talks to an MPU-compatible MIDI hardware interface.  This version
+is streams-based.  It has been run on System V Release 4 (both
+an AT&T version and the ESIX 4.0.3 version).  It is not known
+how easily it will port to SVR3 systems.  To install, invoke (as root):
+
+     ./Install
+
+The hardware interrupt # and address will be requested interactively.
+Included in this directory are testread.c and testwrite.c programs.
+
+Make sure that the address you specify is not also used by other
+devices in your system.  For example, ISC's version of UNIX
+uses address 0x330 for the Adaptec SCSI controller, so you'd want
+to avoid using that address.  Some MIDI interfaces don't let you
+change anything, but the MusicQuest MIDI interface is a good
+MPU-compatible MIDI controller that allows you to change both the
+IRQ and address.
+
+                                Tim Thompson = tjt@blink.att.com

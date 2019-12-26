@@ -1,0 +1,2084 @@
+<document name="KeyKit Language Reference" title="Language Reference Manual" var="KEYKITVERSION">
+<titleend/>
+<headercontents name="Introduction" key="intro"/>
+<headercontents name="Statements" key="statements"/>
+<headercontents name="Variables and Data Types" key="variables"/>
+<headercontents name="Constants" key="constants"/>
+<headercontents name="Expressions" key="expressions"/>
+<headercontents name="Phrase Operators" key="phraseops"/>
+<headercontents name="Note and Phrase Attributes" key="phraseattributes"/>
+<headercontents name="Type Conversions" key="types"/>
+<headercontents name="Looping and Conditions" key="looping"/>
+<headercontents name="Functions" key="functions"/>
+<headercontents name="Variable Arguments" key="varargs"/>
+<headercontents name="Function Loading" key="funcloading"/>
+<headercontents name="Variable Control" key="varcontrol"/>
+<headercontents name="Fifos" key="fifos"/>
+<headercontents name="Tasks" key="tasks"/>
+<headercontents name="Printing" key="printing"/>
+<headercontents name="Writing and Reading Phrase Files" key="phrasefiles"/>
+<headercontents name="Realtime" key="realtime"/>
+<headercontents name="MIDI Output" key="midioutput"/>
+<headercontents name="MIDI Input" key="midiinput"/>
+<headercontents name="Synchronization" key="sync"/>
+<headercontents name="Realtime Variables" key="realtimevars"/>
+<headercontents name="Objects" key="objects"/>
+<headercontents name="Object Definition and Creation" key="objcreation"/>
+<headercontents name="Inheritance and Children" key="inheritance"/>
+<headercontents name="Default Methods" key="methods"/>
+<headercontents name="Graphical Features" key="graphics"/>
+<headercontents name="Windows" key="windows"/>
+<headercontents name="Window Objects" key="windowobjects"/>
+<headercontents name="Phrase Window Objects" key="phraseobjects"/>
+<headercontents name="Menu Window Objects" key="menuobjects"/>
+<headercontents name="Built-In Functions" key="builtins"/>
+<headercontents name="Acknowledgments" key="acknowledgments"/>
+<header1 name="Introduction" key="intro"/>
+<keyword name="introduction"/>
+<font face="Courier">KeyKit</font> is a programming language for manipulating and generating music.
+It was written to support algorithmic and interactive experimentation with
+music composition and MIDI-compatible equipment.
+The data types are character strings, integers, floating-point numbers,
+musical phrases, arrays, functions, and objects.
+The language was originally inspired by and has many similarities
+to awk - variables need not be declared, user-defined functions
+can have arguments and return values of any type, and arrays are associative.
+Objects can be used to encapsulate data and methods,
+and object methods can be inherited and delegated.
+KeyKit is multi-tasking, a feature of critical importance for
+a responsive and flexible realtime system.  Any number of tasks can run
+simultaneously, interleaved at a low level and sharing a common global
+variable space.  MIDI input is continuously recorded, and MIDI output
+can be scheduled in realtime while other tasks are running.
+Fifos are used for all I/O and inter-task communication.
+A multi-window graphical interface provides a piano-roll representation
+of music with pop-up menus for invoking actions.
+KeyKit programs can freely intermix graphics, mouse actions,
+MIDI I/O, and console I/O.  This is a reference manual for
+Version 8.0hack var="KEYKITVERSION"/> of the KeyKit language, necessarily terse in an attempt to be complete.
+<blankline/>
+A primary goal of KeyKit has been to build a highly extensible system,
+therefore the built-in capabilities of the KeyKit language are
+intentionally minimal.  The default user-defined function library
+contains KeyKit code for an extensive multi-window
+sequencer-like environment with
+sliders, buttons, and other tools for creating and editing MIDI music.
+A separate reference manual and tutorial describe this user interface.
+This document describes only those capabilities that are
+actually built into the KeyKit language.
+<blankline/>
+If you're just getting started with KeyKit, this is not the document
+you want to read first.
+<header1 name="Statements" key="statements"/>
+<keyword name="statements"/>
+Each KeyKit statement takes one of the following forms:
+<blankline/>
+<pre>
+<indent amount="+0.5i"/>
+<i>variable</i>  <i>assignment-operator</i>  <i>expr</i>
+<br/>
+<font face="Courier">if ( <i>condition</i> ) <i>statement</i> <i>[</i> else <i>statement</i> <i>]</i></font>
+<br/>
+<font face="Courier">while ( <i>condition</i> ) <i>statement</i></font>
+<br/>
+<font face="Courier">for ( <i>statement</i> ; <i>condition</i> ; <i>statement</i> ) <i>statement</i></font>
+<br/>
+<font face="Courier">for ( <i>variable</i> in <i>array-name-or-phrase-expr</i> ) <i>statement</i></font>
+<br/>
+<font face="Courier">function <i>&#123;</i> <i>name</i> | ? <i>&#125;</i> <i>[</i> ( <i>arguments</i> ) <i>]</i> &#123; <i>statement(s)</i> </font>&#125;
+<br/>
+<font face="Courier">task <i>expr</i> ( <i>arguments</i> )</font>
+<br/>
+<font face="Courier">class <i>name</i> &#123; method <i>name</i> (<i>arguments</i> ) &#123;<i>...</i>&#125; ... &#125;</font>
+<br/>
+<font face="Courier">new <i>name</i> ( <i>arguments</i> )</font>
+<br/>
+<font face="Courier">return ( <i>[ expr ]</i> )</font>
+<br/>
+<font face="Courier">break</font>
+<br/>
+<font face="Courier">continue</font>
+<br/>
+<font face="Courier">#define <i>name</i> (<i>args</i> ) <i>value</i></font>
+<br/>
+<font face="Courier">#include <i>"filename"</i></font>
+<br/>
+<font face="Courier">#library <i>"filename" function-name</i></font>
+<br/>
+<font face="Courier">eval <i>string-expr</i></font>
+<br/>
+<font face="Courier">delete <i>array-element-or-object</i></font>
+<br/>
+<font face="Courier">undefine <i>variable</i></font>
+<br/>
+<font face="Courier">readonly <i>variable</i></font>
+<br/>
+<font face="Courier">global <i>variable</i></font>
+<br/>
+</pre>
+<indent amount="-0.5i"/>
+<blankline/>
+<keyword name="syntax"/>
+Semicolons and newlines are statement
+separators unless escaped with a backslash.
+Statements can be grouped with braces or a comma.
+Conditions are expected to be numeric expressions; 0 is false, non-0 is true.
+<keyword name="comments"/>
+Any word beginning with <font face="Courier">#</font> (except <font face="Courier">#define </font>and <font face="Courier">#include</font>) is the
+start of a comment; all input until the end of that line is ignored.
+Most binary operators have operator-assignment versions (<font face="Courier">+=</font>, <font face="Courier">-=</font>, etc.).
+Increment (<font face="Courier">++</font>) and decrement (<font face="Courier">--</font>) operators are available in
+both pre- and post- forms.
+<keyword name="#define"/>
+<keyword name="#include"/>
+The <font face="Courier">#define</font> and <font face="Courier">#include</font> statements
+operate as in the C preprocessor, including the ability to have
+macros with arguments.  The substitution of arguments into a macro's
+value occurs even inside quoted strings.
+<header1 name="Variables and Data Types" key="variables"/>
+<keyword name="variables"/>
+<keyword name="types"/>
+Variable names must begin with an alphabetic character, and if it is
+an upper-case character, the variable is global.
+The type of a variable is determined by whatever value is currently assigned to it,
+and can be changed at any time.
+There are 7 data types: strings, integers, floating-point numbers,
+musical phrases, arrays, functions, and objects.
+<blankline/>
+Any variable that is not global (either implicitly, because it starts with
+an upper-case character, or explicitly, because of a <font face="Courier">global</font> statement
+or function) automatically becomes a local variable in
+the function in which it is encountered.  Previous versions of KeyKit
+required that you "declare" local variables by including them as extra
+arguments in the parameter list of a function (as in <font face="Courier">awk</font>).  This is
+no longer required.  So, local variables are created merely by using them.
+<blankline/>
+<keyword name="phrases"/>
+<keyword name="clicks"/>
+<b>Phrases</b>
+are ordered collections of notes.
+Note durations and times are expressed in units of
+<i>clicks;</i>>
+there are normally 96 clicks in each beat,
+although this can be changed.
+Associated with each note
+is a pitch (0 to 127), duration (in clicks),
+volume (0 to 127), MIDI channel (1 to 16),
+and a time (in clicks relative to the beginning of the phrase).
+Notes in a phrase are sorted by time, type, pitch, channel, and volume.
+<blankline/>
+<keyword name="arrays"/>
+<keyword name="arrays"/>
+Arrays are associative - array indicies can be strings as well as numbers.
+A musical phrase can be used as an array index, but it is
+converted to a string in the process.
+The expression <font face="Courier">[]</font> creates an empty array.
+<keyword name="initialization"/>
+The contents of an array can be initialized with a list of
+<i>index</i>=<i>value</i> expressions inside the square brackets.
+For example, the expression <font face="Courier">[0='c',4='e',7='g']</font> produces an
+array with 3 elements whose index values are 0, 4, and 7.
+<blankline/>
+<keyword name="pointers"/>
+<keyword name="arguments"/>
+Array values can be manipulated much like any other data value, but it
+is important to understand that
+array values have pointer semantics - i.e. an array value does not
+contain the contents of an array, it
+<b>points</b>
+to the contents of an array.
+For example, arguments to functions are passed "by value", but since an
+array value is really a pointer, passing an array to a function is
+essentially passing the contents
+of the array by reference - any changes to the array elements will
+be reflected outside the function.  Copying an array value to
+another variable merely makes a copy of the pointer - both values refer
+to the same array.
+<blankline/>
+<keyword name="expressions"/>
+Any expression whose type is an array value can precede the square-bracket
+notation used to refer to individual array elements.  For example,
+if a function <font face="Courier">foo()</font> returns an array value, the expression
+<font face="Courier">foo()[0]</font> could be used to refer to one of its elements.
+Multi-dimensional arrays are merely arrays whose elements are arrays:
+<pre>
+a = []
+a["foo"] = [0="hello",1="world"]
+print(a["foo"][1])                 # Prints "world".
+b = [[0=0,1=1],[0=1,1=0]]          # Creates 2-d array.
+</pre>
+<header1 name="Constants" key="constants"/>
+<keyword name="phrases"/>
+<keyword name="constants"/>
+<keyword name="constants"/>
+String constants are enclosed in double-quotes, e.g. <font face="Courier">"hello"</font>,
+and the usual escape sequences (e.g. <font face="Courier">&#092;n</font>,
+<font face="Courier">&#092;t</font>, <font face="Courier">&#092;b</font>, <font face="Courier">&#092;r</font>) can be
+used within them.
+As a convenience,
+a <font face="Courier">b</font> (beat) suffix on an integer number automatically
+multiplies by the
+number of clicks in a beat, which is 96 by default.
+For example, <font face="Courier">2b</font> is equivalent to <font face="Courier">192</font>.
+<blankline/>
+<keyword name="notes"/>
+<keyword name="attributes"/>
+<keyword name="attributes"/>
+<keyword name="attribute"/>
+<keyword name="channel"/>
+<keyword name="volume"/>
+<keyword name="velocity"/>
+<keyword name="duration"/>
+<keyword name="octave"/>
+Phrase constants are enclosed
+in single-quotes, and consist of note expressions separated by commas
+and/or white space (these two types of separators are not equivalent,
+see below).
+A note expression must start with one
+of the following:
+<indent amount="+0.5i"/>
+<listitem name="a,b,c,d,e,f,g"/>
+a normal note
+<listitem name="p#"/>
+a normal note, where <i>#</i> is the MIDI pitch number
+<listitem name="r"/>
+a rest
+<indent amount="-0.5i"/>
+which may be followed in any order by these modifiers:
+<indent amount="+0.5i"/>
+<listitem name="+"/>
+(sharp) or <font face="Courier">-</font> (flat)
+<listitem name="o"/>
+and an octave number (-2 to 8)
+<listitem name="v"/>
+and a volume (0 to 127)
+<listitem name="d"/>
+and a duration (in clicks)
+<listitem name="c"/>
+and a channel (1 to 16)
+<listitem name="t"/>
+and a starting time (in clicks relative to the beginning of phrase)
+<listitem name="`"/>
+and an attribute value (terminated with another grave quote)
+<indent amount="-0.5i"/>
+Some of the modifiers don't make sense (but are not disallowed)
+for some note expressions, for example the <font face="Courier">r</font>est 
+and <font face="Courier">p</font>itch
+expressions will
+ignore the <font face="Courier">o</font>ctave modifier.
+If any of these modifiers is omitted from a note expression, its
+value defaults
+to the value of that modifier for the
+previous note.  For example, all the notes in the
+phrase <font face="Courier">'ao2v90,b,f,d'</font> would be in
+the 2nd octave and have a volume of 90.
+At the beginning of each constant phrase, the default values are:
+octave 3, volume 63, duration 96 (the number of clicks in a beat), channel 1.
+<blankline/>
+The separator between notes in a phrase constant
+determines the default starting time of the next note.
+A comma separator (possibly surrounded by white space) sets the default
+starting time to the end of the previous previous note.  Hence
+the phrase <font face="Courier">'e,f,g'</font> is equivalent
+to <font face="Courier">'et0,ft96,gt192'</font>.  If there is no comma separator (ie. only
+white space) between notes, the
+default starting time will be the starting time of the previous note, so
+the phrase <font face="Courier">'c e g'</font> is a chord, equivalent to <font face="Courier">'ct0,et0,gt0'</font>.
+Naturally, an explicit <font face="Courier">t</font>ime modifier on a note will
+override the default starting time implied by the separator.
+<blankline/>
+As a convenience,
+the <font face="Courier">o</font> preceding positive octave numbers can be omitted,
+e.g. <font face="Courier">b4</font> is b in the 4th octave.
+Negative octave numbers
+<b>must</b>
+be specified with the <font face="Courier">o</font>, to avoid
+ambiguity with the <font face="Courier">-</font> used for flats.
+<blankline/>
+Normally, the length of a phrase constant is equal to the ending time
+of the last note.  The length can be explicitly set by
+using an <font face="Courier">l</font> (lower-case L) followed by the length in clicks.
+E.g. <font face="Courier">'a,b,c,l96'</font> would have a length of 96 clicks (even though
+some of the notes extend beyond that).
+<blankline/>
+<keyword name="bytes"/>
+<keyword name="messages"/>
+<keyword name="messages"/>
+A phrase constant can include arbitrary
+MIDI bytes by using <font face="Courier">x</font> followed by hex characters.  For example, the
+constant <font face="Courier">'xb07b00'</font> would be a phrase consisting of a 3-byte MIDI
+message - an all-notes-off for channel 1.  MIDI byte messages can also
+include a <font face="Courier">t</font>ime modifier if timing
+of the message is important.  For example, <font face="Courier">'xfe,xfet24'</font> is a
+phrase containing
+2 single-byte messages, the second one occurring at click number 24.
+MIDI bytes can be combined with normal notes
+in the same constant phrase, e.g. <font face="Courier">'e,f,g,xc005,a,b'</font> is a phrase that
+contains a program change command in the middle of several normal notes.
+<blankline/>
+<keyword name="notes"/>
+As a convention for embedding arbitrary
+textual information
+in a MIDI message, a KeyKit phrase constant can contain
+a string enclosed in double quotes, e.g. <font face="Courier">'a,b,"hello world",c,d'</font>.
+This type of note is called a
+<b>"text note."</b>
+It is turned into a system-exclusive message, beginning with
+the bytes <font face="Courier">f0</font>, <font face="Courier">00</font>, <font face="Courier">7f</font>, followed by the
+ASCII characters of the string, and ending with the byte <font face="Courier">f7</font>.
+<blankline/>
+A normal note implies two MIDI messages, a note-on and
+a note-off.  In some cases, you may want only the note-on or note-off.
+These can be specified with an initial <font face="Courier">+</font> (for note-on) or <font face="Courier">-</font> (for
+note-off).  For
+example, <font face="Courier">'+a,-at96'</font> is equivalent (in terms of MIDI output)
+to <font face="Courier">'a'</font>.
+<header1 name="Expressions" key="expressions"/>
+<keyword name="expressions"/>
+<keyword name="operators"/>
+<keyword name="+,-,*,/,%,etc."/>
+<keyword name="==,!=,etc."/>
+<keyword name="modulo"/>
+<keyword name="~~"/>
+<keyword name="concatenation"/>
+Expressions can make use of the following operators, listed
+in order of increasing priority:
+<br/>
+<indent amount="+0.5i"/>
+<listitem name="&amp;&amp; ||"/>
+and, or
+<listitem name="| &amp; ^"/>
+bit-wise or, and, xor
+<listitem name="== != &amp;lt; &amp;gt; &amp;lt;= &amp;gt;= ~~"/>
+equal to, not equal to, etc.
+<listitem name="&amp;lt;&amp;lt; &amp;gt;&amp;gt;"/>
+left shift, right shift
+<listitem name="+ -"/>
+addition, subtraction
+<listitem name="* / %"/>
+multiplication, division, modulo
+<listitem name="- ! ~"/>
+unary minus, not, one's complement
+<indent amount="-0.5i"/>
+If two strings are combined with the <font face="Courier">+</font> operator, the result is
+the concatenation of the strings.  If two strings are
+compared with a relational operator (e.g. <font face="Courier">== != &amp;lt;= </font>),
+an ASCII string comparison is done.
+The <font face="Courier">~~</font> relational operator can be thought of as a "contains" operator
+- the result is true if the first operand contains a substring that matches the
+second operand, a regular expression.
+<blankline/>
+<keyword name="comparison"/>
+If two phrases are
+compared with a relational operator, all of their notes are used
+in the comparison.  Two notes are equal only if all of their attributes
+(pitch, duration, channel, volume, type) are equal.
+<header1 name="Phrase Operators" key="phraseops"/>
+<keyword name="operators"/>
+<keyword name="concatenation"/>
+<keyword name="manupiluation"/>
+Phrases can be manipulated with the following operators:
+<list>
+<listitem name="phrase + phrase"/>
+The result is the concatenation
+of the 2 phrases in series, using the length (NOT the ending time
+of the last note) of the first phrase
+as the starting time of the second phrase.
+<listitem name="phrase | phrase"/>
+The result is the merging of
+the 2 phrases in parallel, and the length is
+the maximum of the 2 lengths.
+<listitem name="phrase - phrase"/>
+The result is a copy of the first phrase, after removing all notes
+that match notes in the second phrase.
+<listitem name="phrase &amp; phrase"/>
+The result contains all notes in the first phrase
+that exactly match notes in the second phrase.
+<listitem name="phrase % number"/>
+The result is a single-note phrase containing the <i>n</i>-th note
+of the first operand, where <i>n</i> is the value of the second operand.
+For example, <font face="Courier">'a,b,c'%2</font> would be equal to <font face="Courier">'bt96'</font>.
+Notice that the original time of the note is retained.
+This operator can also be used on the left-hand side of an assignment
+(e.g. <font face="Courier">ph%2='c'</font> )
+to replace (or delete, if the right-hand side is the null phrase, <font face="Courier">''</font> )
+a single note of a phrase.
+<listitem name="phrase &#123; condition &#125;"/>
+The result of this operation (referred to as a <i>select</i>),
+is a phrase containing all notes for which the given
+condition is true.  The condition is repeatedly evaluated, with
+the special token <font face="Courier">??</font> being replaced with each note in the original
+phrase.  For example, <font face="Courier">'c,d,e,f,g'&#123;??.pitch&amp;gt;'e'&#125;</font>
+would be equal to <font face="Courier">'ft288,g'</font>.
+</list>
+<header1 name="Note and Phrase Attributes" key="phraseattributes"/>
+<keyword name="attributes"/>
+<keyword name="attributes"/>
+<keyword name="pitch"/>
+<keyword name="volume"/>
+<keyword name="channel"/>
+<keyword name="duration"/>
+<keyword name="time"/>
+<keyword name="clicks"/>
+<keyword name="attrib"/>
+<keyword name="flags"/>
+Attributes of phrases and the notes within them
+can be manipulated with a syntax reminiscent of
+C structure elements.  For example, <font face="Courier">'c'.pitch</font>
+is equivalent to 60, the MIDI pitch value for that note.
+The valid attributes are:
+<list>
+<listitem name="pitch"/>
+MIDI pitch value (0-127).
+<listitem name="vol"/>
+MIDI volume value (0-127).
+<listitem name="chan"/>
+MIDI channel number (1-16).
+<listitem name="dur"/>
+Note duration, in clicks.
+<listitem name="time"/>
+The starting time of a note,
+in clicks, relative to the beginning
+of the phrase in which it resides.
+<listitem name="length"/>
+The length of a phrase, in clicks.  This attribute is
+independent of the duration and placement of notes within
+the phrase.  It's primary use is
+in the semantics of the <i>phrase+phrase</i> operation; the starting
+time of the second phrase is the <font face="Courier">length </font>of the first phrase.
+<listitem name="type"/>
+This attribute of a note indicates what type it is (for example, whether it's
+a note or a sysex message).  The possible values are pre-defined constant
+values, and a list is given below.
+<listitem name="number"/>
+Within the conditional expression of a <i>select</i> operation,
+this attribute can be used to refer to the position (starting
+at 1) of a
+note within the <i>select</i>ed phrase.  For example,
+the expression <font face="Courier">'a,b,c'&#123;??.number&amp;gt;2&#125;</font> is equivalent to <font face="Courier">'c'</font>.
+<listitem name="attrib"/>
+This string-valued attribute of a note can be used to
+store arbitrary user-defined information.  To save memory, this feature
+may not be enabled on all versions of KeyKit.
+<listitem name="flags"/>
+This integer-valued attribute of a note can be used to
+store arbitrary user-defined information.  By convention, the lowermost
+bit of this integer is used to identify <i>picked</i> notes in
+the graphical interface of KeyKit.
+</list>
+<keyword name="NOTE"/>
+<keyword name="NOTEON"/>
+<keyword name="NOTEOFF"/>
+<keyword name="CHANPRESSURE"/>
+<keyword name="CONTROLLER"/>
+<keyword name="PROGRAM"/>
+<keyword name="PRESSURE"/>
+<keyword name="PITCHBEND"/>
+<keyword name="SYSEX"/>
+<keyword name="SYSEXTEXT"/>
+<keyword name="POSITION"/>
+<keyword name="SONG"/>
+<keyword name="CLOCK"/>
+<keyword name="STARTSTOPCONT"/>
+<keyword name="MIDIBYTES"/>
+Here is the list of possible values for the <font face="Courier">.type</font> attribute:
+<list>
+<listitem name="NOTE"/>
+a normal note, implying a MIDI note-on <i>and</i> note-off
+<listitem name="NOTEON"/>
+a note-on only, e.g. '+a'
+<listitem name="NOTEOFF"/>
+a note-off only, e.g. '-a'
+<listitem name="CHANPRESSURE"/>
+a channel pressure message
+<listitem name="CONTROLLER"/>
+a controller message
+<listitem name="PROGRAM"/>
+a program change message
+<listitem name="PRESSURE"/>
+a pressure message
+<listitem name="PITCHBEND"/>
+a pitch bend message
+<listitem name="SYSEX"/>
+a system exclusive message
+<listitem name="SYSEXTEXT"/>
+a system exclusive "text note" (see above)
+<listitem name="POSITION"/>
+a song position pointer message
+<listitem name="SONG"/>
+a song message
+<listitem name="CLOCK"/>
+a clock message
+<listitem name="STARTSTOPCONT"/>
+a start, stop, or continue message
+<listitem name="MIDIBYTES"/>
+an unrecognized sequence of MIDI bytes
+</list>
+The value of an attribute for a multi-note phrase is
+the average of the attribute values of the individual
+notes.  When used on the left-hand
+side of an assignment, an attribute expression changes
+all notes in the phrase.  For example, <font face="Courier">x='a,b,c' ; x.vol = 60</font>
+would set the volume of all 3 notes.  Increment, decrement, and
+operator-assignment statements work on each note independently.
+For example, <font face="Courier">x='c,d,e'; x.pitch += 2; print(x)</font> would
+produce <font face="Courier">'d,e,f+'</font>.  However, the right-hand side is only
+evaluated once.  For example, <font face="Courier">x='c,d,e'; x.pitch += rand(4); </font>would
+add the same random value to the pitch of each note.
+An attribute of a single note within
+a phrase can be obtained and set by using the <font face="Courier">%</font> operator.  For
+example, <font face="Courier">x='c,ed12'; x itch=x  itch; print(x)</font> would
+produce <font face="Courier">'e,ed12'</font>.
+<header1 name="Type Conversions" key="types"/>
+<keyword name="conversions"/>
+<keyword name="conversions"/>
+When used in numeric expressions, strings are converted to
+numbers.
+A musical phrase (constant or variable) can also be used in a
+numeric expression -
+its value is the pitch value (0 to 127) of its first note
+or, if it's a non-NOTE note (e.g. <font face="Courier">PROGRAM</font> or <font face="Courier">MIDIBYTES</font>),
+the value of its first byte.
+<blankline/>
+Explicit conversion to a particular type can be done with a built-in function
+whose name is the same as the type (similar in style to C++).  For example,
+<font face="Courier">string(4+5)</font> is equivalent to <font face="Courier">"9"</font>, <font face="Courier">integer(4.9)</font> is
+equivalent to <font face="Courier">4</font>, <font face="Courier">float("9"+"."+"9")</font> is equivalent to <font face="Courier">9.9</font>,
+and <font face="Courier">phrase( "'a" + ",b'" )</font> is equivalent to <font face="Courier">'a,b'</font>.  Note that
+when converting a string to a phrase, the value of the string must
+contain the surrounding single quotes.  And, a phrase converted
+to a string will contain surrounding single quotes.  Strings converted
+to integers can be interpreted as hexidecimal if they include an initial "0x",
+for example <font face="Courier">integer("0x40")</font> is equivalent to <font face="Courier">64</font>.
+<header1 name="Looping and Conditions" key="looping"/>
+<keyword name="looping"/>
+<keyword name="arrays"/>
+<keyword name="phrases"/>
+<keyword name="conditions"/>
+As in <font face="Courier">awk</font>, the  for(<i>var</i>  in  <i>array</i>)  construct
+iterates over the current set of indicies for an array.  Since arrays
+are associative, the values assigned to <i>var</i> are always strings,
+although if the original index value was a phrase, it can easily
+be converted back into a phrase with a type conversion: <font face="Courier">phrase(<i>var</i>)</font>.
+The similar  <font face="Courier">for(<i>var</i>  in  <i>phrase</i>)</font>  construct can
+be used to iterate
+over the notes in a phrase; the value of <i>var</i> becomes a
+single-note phrase, once for each note in <i>phrase</i>.
+<blankline/>
+As in <font face="Courier">awk</font>,
+the  <font face="Courier">if(<i>string-expression</i>  in  <i>array</i>)</font>  construct can be
+used to test whether a particular array element exists,
+without having the side effect of creating the array element.  
+A similar
+construct using phrase
+expressions, <font face="Courier">if(<i>phrase-expression</i>  in  <i>phrase-expression</i>)</font>,
+is true if each note in the first phrase is included anywhere
+in the second phrase.
+Only pitch is relevant in this test; time, volume, channel, and
+duration are ignored.
+<header1 name="Functions" key="functions"/>
+<keyword name="functions"/>
+<keyword name="values"/>
+<keyword name="functions"/>
+User-defined functions can have arguments and return values of any type.
+The name of a function is actually a normal variable whose value
+can be considered a pointer to the contents of the function.
+This function pointer can be manipulated like any other value - for example
+it can be used as a function argument or return value.
+Any expression whose type is a function pointer can be used to call the
+function, by following the expression with parenthesis.
+This code illustrates:
+<pre>
+# These functions expect a single note as an argument,
+# and return a chord based on it.
+function major(k) &#123; return(k|transpose(k,4)|transpose(k,7)) &#125;
+function minor(k) &#123; return(k|transpose(k,3)|transpose(k,7)) &#125;
+# The return value of randchord() will be a function pointer.
+function randchord() &#123;
+     if ( rand(2) == 0 )    # True 500f the time.
+          return(major)
+     else
+          return(minor)
+&#125;
+f = randchord()
+f('c')               # Plays either 'c' major or 'c' minor.
+randchord()('c')     # Ditto.
+</pre>
+<keyword name="expressions"/>
+A function definition can actually be used in an expression - its value is
+the new function's pointer value.  So, the <font face="Courier">return(major)</font> statement
+above could actually be written as:
+<pre>
+return( function major(k)&#123;return(k|transpose(k,4)|transpose(k,7))&#125; )
+</pre>
+An "in-line" function doesn't need a specific name - a <font face="Courier">?</font>
+can be used instead, and a unique function name will be substituted for it.
+So, another variation would be:
+<pre>
+return( function ? (k) &#123;return(k|transpose(k,4)|transpose(k,7))&#125; )
+</pre>
+<header1 name="Variable Arguments" key="varargs"/>
+<keyword name="arguments"/>
+<keyword name="arguments"/>
+<keyword name="nargs()"/>
+<keyword name="varg()"/>
+<keyword name="argv()"/>
+<keyword name="..."/>
+There are several mechanisms for handling a variable
+number of function arguments.  First,
+the built-in <font face="Courier">argv()</font> function lets you grab individual arguments
+by position, and <font face="Courier">nargs()</font> tells you how many arguments there are:
+<pre>
+function add(...) &#123;
+        sum = 0
+        for ( n=0; n&amp;lt;nargs(); n++ )
+                sum += argv(n)
+        return(sum)
+&#125;
+</pre>
+The special token <font face="Courier">...</font> can be used in an argument list to represent
+a variable number of arguments, and can actually be "passed" in the argument
+list of another function call:
+<pre>
+function compute(sign,...) &#123;
+        sum = add(...)
+        return(sum * sign)
+&#125;
+</pre>
+Arguments can be packed into an array by giving
+two parameters to <font face="Courier">argv()</font>.  For example, the array returned
+by <font face="Courier">argv(3,10)</font> would contain the values of <font face="Courier">argv(3)</font> up to (but not
+including) <font face="Courier">argv(10)</font>.
+Such an array can then be "unpacked" to create an argument list, by using
+<font face="Courier">varg()</font>.  This lets you store a list
+of arguments in a single value (the array), to be used later:
+<pre>
+function savecall(f,...) &#123;
+        # save a function and argument list
+        Callfunc = f
+        Callargs = argv(1,nargs())
+&#125;
+function docall() &#123;
+        # call the function we saved, with the saved argument list
+        Callfunc(varg(Callargs))
+&#125;
+</pre>
+<header1 name="Function Loading" key="funcloading"/>
+<keyword name="loading"/>
+<keyword name="#library"/>
+The <font face="Courier">#library</font> statement is used to specify the file that contains
+the definition of a function.  By convention, each directory of the
+<font face="Courier">Keypath</font> should contain a file named <font face="Courier">keylib.k</font> which
+contains <font face="Courier">#library</font> statements for all of the functions defined by
+the files in that directory.  When KeyKit encounters a reference
+to an undefined function, it will automatically read the <font face="Courier">keylib.k</font>
+files in order to find the file that defines the function.
+<header1 name="Variable Control" key="varcontrol"/>
+<keyword name="control"/>
+<keyword name="undefine"/>
+<keyword name="global"/>
+<keyword name="onchange"/>
+<keyword name="readonly"/>
+The statement "<font face="Courier">undefine</font> <i>variable</i>" causes the specified variable
+or function name to become undefined.
+This is usually used to force the re-loading of a function after its
+source file has changed.
+The statement "<font face="Courier">global</font> <i>variable</i>" forces the specified variable to
+be considered global.  There is also a function <font face="Courier">global()</font> that can
+be used to do the same thing in an expression.  This is often used
+when you want to use a function name as a value and the function
+is not yet defined, since otherwise it would be considered a new local variable.
+The statement "<font face="Courier">readonly</font> <i>variable</i>" causes
+the specified variable to become readonly - any subsequent attempts to
+change its value will fail.  This can be used to protect
+important functions or variables.   The <font face="Courier">onchange()</font> function
+can be used to automatically call a function whenever
+the value of a specified variable is changed.  The <font face="Courier">readonly</font>
+and <font face="Courier">onchange</font> features of KeyKit have not been used
+very much - they may be deleted someday, unless a good use is found for them.
+<header1 name="Fifos" key="fifos"/>
+<keyword name="fifos"/>
+<keyword name="fifos"/>
+<keyword name="data"/>
+<keyword name="put()"/>
+<keyword name="get()"/>
+<keyword name="open()"/>
+<keyword name="close()"/>
+<keyword name="fifosize()"/>
+Fifos are used for a variety
+of purposes within KeyKit.  A fifo is a first-in-first-out queue
+of arbitrary KeyKit data values (including array and function pointers).
+Data values sent to a fifo need not be of the same type.  A fifo is created
+by the <font face="Courier">open()</font> function, data is inserted with the <font face="Courier">put()</font>
+function, and data is retrieved with the <font face="Courier">get()</font> function.
+The <font face="Courier">put()</font> function never blocks - an arbitrary number of data
+items can be collected in the queue before they are retrieved.
+The <font face="Courier">fifosize()</font> function can be used to see how many unread
+items are in a fifo.
+The <font face="Courier">get()</font> function will block if there are no items in the fifo.
+<blankline/>
+<keyword name="fifo"/>
+<keyword name="fifo"/>
+<keyword name="fifo"/>
+<keyword name="Consolefifo"/>
+<keyword name="Mousefifo"/>
+<keyword name="Midiinfifo"/>
+Special fifos are used to
+communicate with the console, mouse, and MIDI.  These fifos are automatically
+opened when KeyKit is booted, and their values are available in
+the global variables <font face="Courier">Consolefifo</font>, <font face="Courier">Mousefifo</font>, and <font face="Courier">Midiinfifo</font>.
+For example, this code
+monitors and prints console input:
+<pre>
+for (;;)
+        print(get(Consolefifo))
+</pre>
+The Consolefifo will return each character typed on the console as
+a separate string.  Another special fifo is the Midiinfifo:
+<pre>
+for (;;)
+        print(get(Midiinfifo))
+</pre>
+Each item read from Midiinfifo will be a single note-on,
+note-off, or MIDI sysex message.  Complete notes will not be
+seen - if you want to process complete notes, you
+should make use of the <font face="Courier">Recorded</font> variable (described later)
+that collects all MIDI input.  In fact, most processing of MIDI input
+should be done by using the <font face="Courier">Recorded</font> variable, to avoid the
+inefficiency of processing each note separately.
+<blankline/>
+<keyword name="events"/>
+<keyword name="state"/>
+The Mousefifo can be read to detect changes in the mouse state:
+<pre>
+for (;;) &#123;
+        m = get(Mousefifo)
+        print("Mouse button state = ", m["button"])
+        print("Mouse x,y position = ", m["x"], ",", m["y"])
+&#125;
+</pre>
+As this example shows, the value received from the Mousefifo is
+an array - the subscripts of its elements
+are <font face="Courier">"button"</font>, <font face="Courier">"x"</font>, and <font face="Courier">"y"</font>.
+Fifos are also the mechanism by which files are read:
+<pre>
+f = open("/etc/passwd")
+for ( n=1; (v=get(f)) != Eof; n++ )
+        print("line ",n," is ",v)
+close(f)
+</pre>
+<keyword name="files"/>
+<keyword name="pipes"/>
+Values obtained from a file-reading fifo are normally strings that
+contain entire lines from the file.  The special value <font face="Courier">Eof</font> is
+returned when the end of the file is reached.
+If you want to read individual characters (i.e. bytes) rather than entire
+lines, you can use
+the <font face="Courier">fifoctl()</font> function to declare that the fifo should be
+handled in "binary" mode:
+<pre>
+f = open("/unix","r")
+fifoctl(f,"type","b")	# turn on "binary" mode for reading fifo f
+for ( nc=0; get(f) != Eof; nc++ ) ;
+close(f)
+if ( nc &amp;gt; 500000 ) print("Too big.")
+</pre>
+File fifos are opened for reading by default, but can also be
+opened for writing, by using the "w" flag:
+<pre>
+f = open("/tmp/debug","w")
+put(f,"hello world&#092;n");
+close(f)
+</pre>
+Fifos reading from pipes can (on those systems where pipes are supported)
+be created by adding a third argument:
+<pre>
+f = open("pwd","r","pipe")
+pwd = get(f)
+close(f)
+print("The current directory is ",pwd)
+</pre>
+Writing to a pipe can be done as follows:
+<pre>
+f = open("lp","w","pipe")
+put(f,"This should appear on the printer&#092;n")
+close(f)
+</pre>
+<keyword name="fifos"/>
+Finally, if <font face="Courier">open()</font> is given no arguments at all, it creates a generic
+fifo that can be used for inter-task communication.
+<header1 name="Tasks" key="tasks"/>
+<keyword name="tasks"/>
+<keyword name="statement"/>
+<keyword name="tasks"/>
+<keyword name="multi-tasking"/>
+<keyword name="realtime"/>
+KeyKit is multi-tasking.  Any number of tasks can be executed simultaneously,
+and their execution is interleaved along with realtime I/O at a very
+fine-grained level.  Tasks are
+relatively cheap (in terms of execution and space overhead) to create and use.
+It is expected that dozens, if not hundreds, of tasks will be alive
+at any given time - however, most of them will be blocked on a fifo,
+and when blocked or sleeping a task imposes no overhead.
+All tasks have access to the same global variables.
+A new task is created by invoking a function
+with the <font face="Courier">task</font> statement.  The following example shows the
+creation of a task that continuously monitors MIDI input:
+<pre>
+# Play a chord whenever a note below a given pitch is seen.
+# The 'chordfunc' parameter should be a function value,
+# which is called to generate the chord.
+function autochord(chordfunc,limit) &#123;
+    while ( (n=get(Midiinfifo)) != Eof ) &#123;
+        if ( n.pitch &amp;lt; limit )
+            realtime(chordfunc(n),0)  # play the chord via MIDI output
+    &#125;
+&#125;
+function major(nt) &#123;
+    return ( nt | transpose(nt,4) | transpose(nt,7) )
+&#125;
+task autochord(major,64)   # a C chord will be played whenever
+                           # anything below pitch 64 is seen
+print("Play away...")
+</pre>
+After the <font face="Courier">autochord()</font> function was invoked as a <font face="Courier">task</font>,
+it would continue on in the background,
+and the "<font face="Courier">Play away...</font>" message would be immediately printed.  From then
+on, any time a note below pitch 64 was seen on MIDI input, a major chord
+corresponding to that note would be generated.
+The <font face="Courier">realtime()</font> function used in this example will play a phrase
+via MIDI output - it will be described in more detail later.
+<blankline/>
+Tasks that are blocked, either waiting for a message on a fifo or
+waiting for a specific time, impose no overhead.  The <font face="Courier">task</font>
+statement returns an integer value which is a task id - this value
+can be given to the <font face="Courier">kill()</font> function when you want to terminate the task:
+<pre>
+tid = task autochord(major,64)
+kill(tid)
+</pre>
+Communication and synchronization between tasks is typically done through fifos,
+since a <font face="Courier">get()</font> on a fifo will block until there is something to read.
+The <font face="Courier">wait()</font> function can be used to wait until a particular task
+is finished, and the <font face="Courier">sleeptill()</font> function will wait until a particular
+(absolute) time is reached.  These concepts are demonstrated by
+the example below, which creates an interactive mode in which
+pressing keys on either the console or MIDI keyboard generates chords.
+<pre>
+# A utility function for continuously
+# forwarding messages from one fifo to another.
+function fifoforward(fromfifo,tofifo) &#123;
+    for ( ;; )
+        put(tofifo,get(fromfifo))
+&#125;
+# Generate chords in response to messages received on fifo 'f'
+function chordfifo(f) &#123;
+    for ( ;; ) &#123;
+        m = get(f)
+        # The message can be a single note (from the MIDI fifo)
+        # or a single-character string (from the Consolefifo).
+        if ( typeof(m) == "phrase" )
+            realtime( major(m), 0 )
+        else if ( m&amp;gt;="a" &amp;&amp; m&amp;lt;="g" )
+            realtime( major(phrase("'"+m+"'")) )
+    &#125;
+&#125;
+function taskdemo() &#123;
+    fmerge = open()
+    tid1 = task fifoforward(Midiinfifo,fmerge)
+    tid2 = task fifoforward(Consolefifo,fmerge)
+    tid3 = task chordfifo(fmerge)
+    sleeptill( Now+32b )
+    kill(tid1)
+    kill(tid2)
+    kill(tid3)
+&#125;
+</pre>
+The <font face="Courier">fifoforward()</font> function shown above is a simple utility that
+continuously reads messages from one fifo and forwards them to another fifo.
+The <font face="Courier">taskdemo()</font> function spawns two instances of this utility, to forward
+messages from the Midiinfifo and Consolefifo fifos into a single <font face="Courier">fmerge</font> fifo.
+The <font face="Courier">fmerge</font> fifo is then read by the <font face="Courier">chordfifo()</font> function, generating
+a chord in response to each message it receives.  After spawning the 3 tasks
+that will do all the work, <font face="Courier">taskdemo()</font> uses <font face="Courier">sleeptill()</font> to wait
+until 32 beats have elapsed, and then kills the 3 tasks.
+<blankline/>
+<keyword name="onexit"/>
+Tasks can use the <font face="Courier">onexit()</font> function
+to arrange for cleanup operations when they are terminated or killed.
+A task can also use <font face="Courier">onexit()</font> to restart itself, resulting in
+a robust daemon-like task that can recover from run-time errors.
+<header1 name="Printing" key="printing"/>
+<keyword name="printing"/>
+<keyword name="printf"/>
+<keyword name="sprintf"/>
+<keyword name="console"/>
+<keyword name="print"/>
+The built-in <font face="Courier">printf</font> function is used for formatted printing:
+<pre>
+printf("num=0&#092;n",num)
+</pre>
+The output of the built-in <font face="Courier">printf</font> function is always sent to "standard
+output", which, in a graphics environment,
+may result in a separate pop-up window.
+Formatted output to other destinations can be done with <font face="Courier">sprintf</font>:
+<pre>
+f = open("tmpfile","w")
+put(f,sprintf("The current tempo is 0&#092;n",tempo()))
+close(f)
+</pre>
+Note that in the default user interface of KeyKit, the
+<font face="Courier">printf</font> function is immediately redefined so that it sends output to
+the Console window.
+<blankline/>
+The user-defined function library defines a
+<font face="Courier">print</font> function that is useful for simple printing - it merely prints its
+arguments separate by spaces.  For clarity, this function
+(<font face="Courier">print</font>) is used in most of the examples in this document,
+rather than <font face="Courier">printf</font>.
+<header1 name="Writing and Reading Phrase Files" key="phrasefiles"/>
+<keyword name="files"/>
+<keyword name="files"/>
+<keyword name="files"/>
+Files containing KeyKit phrases are by convention named with a ".k" suffix.
+Such files are typically created with the following function
+(found in the standard user-defined library):
+<pre>
+function writephr(ph,fname) &#123;
+        f = open(fname,"w")
+        put(f,string(ph))
+        close(f)
+&#125;
+writephr(ph,"phrasefile.k")     # example usage
+</pre>
+Phrases can be read from files with the <font face="Courier">readphr()</font> function
+(built-in, not user-defined):
+<pre>
+ph = readphr("phrasefile.k")
+</pre>
+<header1 name="Realtime" key="realtime"/>
+<keyword name="realtime"/>
+<keyword name="time"/>
+<keyword name="Clicks"/>
+<keyword name="tempo()"/>
+<keyword name="sleeptill()"/>
+<keyword name="Now"/>
+KeyKit can do things in realtime.  Time in KeyKit is measured in terms of
+clicks, and the relationship of clicks to actual time is determined by
+by the current tempo and the value of the variable <font face="Courier">Clicks</font>.
+The currrent tempo is set with the <font face="Courier">tempo()</font> function and is specified
+in terms of microseconds per beat.
+The value of <font face="Courier">Clicks</font> is the the number of clicks per beat.
+KeyKit's default settings are:
+<pre>
+Clicks = 96        # 96 clicks per beat
+tempo(500000)      # 500000 microseconds per beat, i.e. 120 bpm
+</pre>
+The variable <font face="Courier">Now</font> contains the current time, in clicks,
+and is continuously updated.  The <font face="Courier">sleeptill()</font> function can be used to
+pause until a specified absolute time:
+<pre>
+function reminder(tm,msg) &#123;
+        sleeptill(tm)
+        print(msg)
+&#125;
+task reminder(Now+16b,"16 beats are up!")
+</pre>
+This example would print the message <font face="Courier">"16 beats are up!"</font> after 16 beats,
+which, with the default tempo and <font face="Courier">Clicks</font> values, would be 8 seconds.
+<blankline/>
+<keyword name="notes"/>
+<keyword name="changes"/>
+The tempo of <font face="Courier">realtime</font> playback can be set explicitly with
+the <font face="Courier">tempo()</font> function, whose argument is the number of
+microseconds per beat.  The tempo can also be varied during playback
+with special
+<b>"text notes"</b>
+(described previously) of the form "Tempo=###",
+where ### is the desired speed.  For example, the phrase
+<pre>
+'"Tempo=500000",c,g,"Tempo=400000",c,g,"Tempo=300000",c,g'
+</pre>
+would slowly speed up during its playback.
+These special text notes also get translated
+into the tempo messages of a Standard MIDI File.
+<header1 name="MIDI Output" key="midioutput"/>
+<keyword name="output"/>
+<keyword name="realtime"/>
+Realtime MIDI output is managed by the <font face="Courier">realtime()</font> function, which
+creates a new task responsible for playing the output.
+The following statement:
+<pre>
+realtime('c e g, f a c')
+</pre>
+would play 2 chords (C and F major) via MIDI output, beginning immediately.
+A second argument to <font face="Courier">realtime()</font> can specify the absolute
+time at which to begin playback:
+<pre>
+tid = realtime('c e g, f a c', Now+4b )
+</pre>
+This would begin playing the phrase after 4 beats.  Because <font face="Courier">realtime()</font>
+spawns a new task, it will always return immediately - the playing of
+the MIDI output is done in the background by the new task.
+The return value of <font face="Courier">realtime()</font> is the id of the new task -
+you can use it to kill the task like any other, thereby terminating
+the playback of the phrase.
+<header1 name="MIDI Input" key="midiinput"/>
+<keyword name="input"/>
+<keyword name="Midiinfifo"/>
+<keyword name="Recorded"/>
+<keyword name="Record"/>
+As shown previously, MIDI input can be read from the special MIDI fifo.
+Messages read from this fifo will be isolated note-ons and note-offs, suitable
+for use when producing echoes and other realtime effects.  To get and
+manipulate MIDI input at a higher level, you should make use of the
+special <font face="Courier">Recorded</font> variable - a global phrase variable that
+contains a complete copy of all MIDI input.  This example takes whatever
+MIDI input has occurred during the previous 4 beats, flips it, and plays it:
+<pre>
+ph = cut(Recorded,CUT_TIME,Now-4b,Now)
+ph = flip(ph)
+realtime(ph)
+</pre>
+<header1 name="Synchronization" key="sync"/>
+<keyword name="synchronization"/>
+<keyword name="realtime"/>
+<keyword name="Now"/>
+Some of the examples shown previously have made cavalier use
+of the <font face="Courier">Now</font> variable.  Precise scheduling of MIDI output and
+other things requires a bit more care, though, since the value of <font face="Courier">Now</font>
+is continually changing, and since KeyKit does not execute
+infinitely fast.  This example attempts to play a drum pattern and melody
+simultaneously:
+<pre>
+realtime(drums,Now)     # equivalent to realtime(drums)
+realtime(melody,Now)
+</pre>
+Since the value of <font face="Courier">Now</font> might be incremented between the execution of these two
+function calls, we would not be guaranteed that the drums and melody would
+be in perfect sync.  A slightly better method would be:
+<pre>
+start = Now
+realtime(drums,start)
+realtime(melody,start)
+</pre>
+This would synchronize the playback of the two phrases.  However, the first note
+of the drums phrase might still get played before the first note of the melody
+(though they would be in perfect sync thereafter).
+This is usually not enough of a problem to worry about, but if you really want to
+schedule phrases independently and be assured of them starting playback
+at exactly the same time, you should guarantee that they are all scheduled
+sometime in the future:
+<pre>
+start = Now + 1b/4
+realtime(drums,start)
+realtime(melody,start)
+</pre>
+Of course, for this example you could finesse the whole issue with:
+<pre>
+realtime( drums | melody )
+</pre>
+<header1 name="Realtime Variables" key="realtimevars"/>
+<keyword name="Clicks"/>
+<keyword name="Current"/>
+<keyword name="Merge"/>
+<keyword name="Now"/>
+<keyword name="Record"/>
+<keyword name="Recorded"/>
+<keyword name="Recsched"/>
+Several global variables that have special meanings
+and effects on the realtime operation of KeyKit:
+<list>
+<listitem name="Clicks"/>
+The number of clicks in a single beat.  The default is 96.
+<listitem name="Current"/>
+This phrase contains, at any point in time, all notes that are being held down (ie. note-ons without note-offs) at that time.
+<listitem name="Merge"/>
+If non-zero, all MIDI input is echoed to MIDI output.  This is
+used when your MIDI controller is separate from your MIDI synth.
+<listitem name="Now"/>
+This is the current time, in clicks.
+<listitem name="Record"/>
+If the value of this variable is zero, recording of MIDI input
+is disabled, otherwise recording is enabled.  The default value is 1.
+<listitem name="Recorded"/>
+This phrase records all MIDI input when <font face="Courier">Record</font> is non-zero.
+<listitem name="Recsched"/>
+If non-zero, the <font face="Courier">Recorded</font> phrase also records any MIDI output generated by KeyKit.
+</list>
+A complete list of special variables can be found
+in the
+<b>keyvar(5)</b>
+manual page.  There are many things that can
+be tweaked through those variables, so reading that manual page is important
+if you want to use KeyKit effectively.
+<header1 name="Objects" key="objects"/>
+<keyword name="objects"/>
+<keyword name="data"/>
+<keyword name="methods"/>
+<keyword name="methods"/>
+Objects encapsulate methods and data.
+The syntax of object references is similar to that of C structures -
+<i>object.data</i> .  However,
+an object is treated more like a pointer to a structure than a structure.
+For example, copying an object value does not duplicate the object, it
+merely duplicates the pointer to the object.
+<blankline/>
+The data elements of an object can take on arbitrary values, but these values
+can only be accessed from within a method of that object.
+So, the only way
+in which objects are manipulated is through invocation of their methods,
+and the data elements within an object are completely hidden.
+<blankline/>
+Methods are used like functions.  This example
+invokes the method named <font face="Courier">meth</font> of an object named <font face="Courier">obj</font>,
+passing it 3 arguments:
+<pre>
+obj.meth(1,2,3)
+</pre>
+While executing a method of an object, the special symbol <font face="Courier">$</font> is an
+alias for that object.
+(See below for an explanation of what the special symbol <font face="Courier">$$</font> means.)
+So, the statement:
+<pre>
+$.data = 99
+</pre>
+would set the value of the <font face="Courier">data</font> element in the current object (the
+object on whose behalf the method is being executed).  Since data elements
+of objects are only accessible within methods,
+the <font face="Courier">$</font> notation is actually the only way that object data can be
+referenced.  The <font face="Courier">$</font> notation also becomes a useful visual flag that
+distinguishes object data from local variables.
+<blankline/>
+<keyword name="names"/>
+To invoke a method whose name is known only at run-time, you can use
+the following notation:
+<pre>
+methname = "meth"
+obj.(methname)(1,2,3)
+</pre>
+Any expression in parenthesis following an <i>object.</i> will be treated
+as a string value that will be used as the method name.  This 
+lookup is (obviously) done at execution time, and in fact
+even explicitly-named methods are executed by doing a lookup
+at execution time.
+<header1 name="Object Definition and Creation" key="objcreation"/>
+<keyword name="creation"/>
+<keyword name="definition"/>
+<keyword name="classes"/>
+<keyword name="classes"/>
+<keyword name="statement"/>
+<keyword name="statement"/>
+<keyword name="statement"/>
+Objects are defined with the <font face="Courier">class</font> statement.
+For this example, we want to define
+an object class that acts like a point
+(i.e. it has an "x" and "y" value).  Here is the definition of
+a class named <font face="Courier">point</font>:
+<pre>
+class point &#123;
+        method init &#123;
+                $.xvalue = 0
+                $.yvalue = 0
+        &#125;
+        method x &#123;
+                return($.xvalue)
+        &#125;
+        method y &#123;
+                return($.yvalue)
+        &#125;
+        method set (x,y) &#123;
+                $.xvalue = x
+                $.yvalue = y
+        &#125;
+&#125;
+</pre>
+An object of class <font face="Courier">point</font> can then be created and manipulated as follows:
+<pre>
+o = new point()
+o.set(33,44)
+print("x is ",o.x()," y is ",o.y())
+</pre>
+<blankline/>
+<keyword name="objects"/>
+<keyword name="statement"/>
+Objects are (currently) not reference-counted or garbage-collected internally,
+so they must be explicitly deleted when you want to get rid of them:
+<pre>
+delete o
+</pre>
+Although it is conventional for objects to have
+a <font face="Courier">delete</font> method, this method is not called automatically by the language.
+The default user-defined library has a <font face="Courier">deleteobject</font> function that,
+if used, will call the <font face="Courier">delete</font> method of an object,
+allowing it to clean up any tasks and graphics that it owns.
+The <font face="Courier">deleteobject</font> function also automatically deletes
+any children objects.
+<blankline/>
+If you print the value of an object, you will see a result like this:
+<pre>
+o = new point()
+print(o)
+<i>$18448396</i>
+</pre>
+<keyword name="constants"/>
+<keyword name="ids"/>
+<keyword name="$"/>
+The number that gets printed after the <font face="Courier">$</font> is the internal id of
+the object, which attempts to be a unique number (even between invocations
+of KeyKit).  This notation (a <font face="Courier">$</font> followed by an integer) can actually
+be used within KeyKit code - it is a valid constant
+that will refer to that object.  In fact, if you use such a constant,
+and an object with that id number does not currently exist, a generic
+object with that id will be created automatically.  This becomes the
+mechanism by which objects can refer to each other, and by which these
+references can be conveniently maintained between invocations of KeyKit.
+For example, in the interactive
+user interface, you can write the current page
+(i.e. all objects on the current screen) to a file.  If you look in this file,
+you will see lots of such <font face="Courier">$</font> values.  A button object that
+refers to another object will contain (as one of the button's data elements) 
+the value of that other object.  The button may very well be
+created and initialized before the
+other object even exists, but since the button refers
+to the other object by using a constant such
+as <font face="Courier">$12345678</font>, it will create the other object automatically.
+The other object will eventually get created, and the code
+that creates it will use the same constant <font face="Courier">$123454678</font> to
+initialize itself, and hence it will become the object that the button
+is already referring to.
+<blankline/>
+When you want to create an object of a given class, and you want to
+use an existing object id (as just described), the following syntax should
+be used:
+<pre>
+o = new($123) point()
+</pre>
+The value in parenthesis after <font face="Courier">new</font> is the object that will be
+initialized with the named class (in this case, <font face="Courier">point</font>).
+<header1 name="Inheritance and Children" key="inheritance"/>
+All objects have a <font face="Courier">.inherit</font> method that lets you specify
+one or more other objects from which methods will be inherited
+(if not overridden).
+As an example, the code below defines a <font face="Courier">polarpoint()</font> class
+that creates an object that acts like a <font face="Courier">point</font> object,
+except that you can also set its value with polar coordinates.
+<pre>
+class polarpoint &#123;
+        method init &#123;
+                $.pt = new point()
+                $.inherit($.pt)
+        &#125;
+        method setpolar (ang,r) &#123;
+                x = r*cos(ang)
+                y = r*sin(ang)
+                $.pt.set(x,y)
+        &#125;
+&#125;
+</pre>
+Note that inheritance requires explicit creation of an object
+from which methods are inherited.
+In this example, the <font face="Courier">setpolar</font> method explicitly calls
+the <font face="Courier">set</font> method of <font face="Courier">$.pt</font>.  Because of the inheritance
+that has been established, this call could actually be written
+as <font face="Courier">$.set(x,y)</font>.  Use of the <font face="Courier">polarpoint()</font> class is illustrated here:
+<pre>
+o = new polarpoint()
+o.setpolar(3.14,100)
+print("x is ",o.x()," y is ",o.y())
+</pre>
+Note that the <font face="Courier">x</font> and <font face="Courier">y</font> methods of the <font face="Courier">polarpoint</font>
+object will be inherited from the <font face="Courier">point</font> object.
+<blankline/>
+When executing a method that has been inherited, the special symbol
+<font face="Courier">$$</font> (rather than <font face="Courier">$</font>) will refer to the higher-level object
+which has established the inheritance relationship, rather than
+the inherited object.  This can be used with both method invocations
+and object variable references.  This code illustrates:
+<pre>
+class A {
+        method init {
+                $.value = "AVALUE";
+        }
+        method id() {
+                return("A")
+        }
+        method basefunc(numdollars) {
+                if ( numdollars == 1 ) {
+                        print($.value)
+                        print($.id())
+                } else {
+                        print($$.value)
+                        print($$.id())
+                }
+        }
+<blankline/>
+}
+<blankline/>
+class B {
+        method init {
+                someA = new A()
+                $.inherit(someA)
+<blankline/>
+                $.value = "BVALUE";
+        }
+        method id() {
+                return("B")
+        }
+}
+<blankline/>
+b = new B()
+b.basefunc(1)
+# will print "AVALUE" and "A"
+b.basefunc(2)
+# will print "BVALUE" and "B"
+</pre>
+<blankline/>
+<blankline/>
+<blankline/>
+<blankline/>
+<blankline/>
+<header1 name="Default Methods" key="methods"/>
+<keyword name="addchild()"/>
+<keyword name="inherit()"/>
+<keyword name="removechild()"/>
+<keyword name="inherited()"/>
+<keyword name="children()"/>
+All classes have the following built-in methods:
+<list>
+<listitem name="addchild(child-object)"/>
+<br/>
+Each object maintains
+a list of "children", typically used for forwarding
+events within the graphical user interface.  The <font face="Courier">addchild</font> method
+expects an object value to be given as an argument, and adds that object
+to the list of children for the current object.
+<listitem name="removechild(child-object)"/>
+<br/>
+Removes an object from the list of children (as created
+with <font face="Courier">addchild</font>) for the current object.
+<listitem name="children()"/>
+<br/>
+Returns an array containing the list of children
+for the current object.  The index values of the array elements are
+the object values, so you can conveniently loop through them.
+<listitem name="childunder(xyarray)"/>
+<br/>
+This method is
+given an
+<b>xy</b>
+value representing a point on the screen,
+and returns the value of the first child object that lies under that point.
+<listitem name="inherit(from-object)"/>
+<br/>
+Described above.
+<listitem name="inherited()"/>
+<br/>
+Returns
+an array containing the list of objects from which the
+current object inherits methods (as established with the <font face="Courier">inherit</font> method).
+</list>
+<header1 name="Graphical Features" key="graphics"/>
+<keyword name="graphics"/>
+<keyword name="features"/>
+Graphics in KeyKit is supported by a few built-in object types
+and a number of special global variables.  The built-in support is
+extremely minimal, designed to support the creation of almost all
+user-interface semantics (all the way down to the behaviour of pop-up menus)
+through the use of user-specified KeyKit code.
+The standard library that comes with KeyKit implements a complete
+graphical user interface that is described elsewhere;
+only the very raw built-in graphical capabilities are described here.
+<header1 name="Windows" key="windows"/>
+<keyword name="windows"/>
+<keyword name="window"/>
+First, an overview of the window features in KeyKit.
+All KeyKit graphics are done within a single root window (making it
+portable to environments that have no native window system).
+Coordinates are expressed in device-dependent pixel units, relative to the
+upper-left corner (0,0) of the root window.  There is only one coordinate
+space, that of the root window.  Coordinates used within
+sub-windows are expressed in that same coordinate space - they are not
+relative or scaled (although there is a coordinate space
+within phrase windows that uses clicks and pitches rather than pixels).
+<blankline/>
+<keyword name="xyarray"/>
+<keyword name="xy()"/>
+As a convention,
+many of the graphical methods use arrays with elements whose subscripts
+are "<font face="Courier">x0</font>", "<font face="Courier">y0</font>", "<font face="Courier">x1</font>", "<font face="Courier">y1</font>", and whose values
+are interpreted as coordinates of the origin and corner of a rectangle.
+This type of array is referred to as an <i>xyarray</i>, and
+here is a function that creates one:
+<pre>
+function xy(x0,y0,x1,y1) &#123;
+    return( ["x0"=x0,"y0"=y0,"x1"=x1,"y1"=y1] )
+&#125;
+</pre>
+In actuality, this function is a built-in function, since it is so
+heavily used.  And, the built-in function is also capable of dealing
+with only 2 arguments, in which case it creates an array whose
+subscripts are <font face="Courier">"x"</font> and <font face="Courier">"y"</font>.
+<header1 name="Window Objects" key="windowobjects"/>
+<keyword name="objects"/>
+<keyword name="style()"/>
+A window object is created with the special built-in class <font face="Courier">windowobject()</font>.
+In addition to the standard object methods described above,
+window objects have the following methods:
+<list>
+<listitem name="style(type)"/>
+<br/>
+This sets the drawn style of a window - a <i>type</i> of NOBORDER means no border
+at all, BORDER means a simple outline border, BUTTON means a
+3-d button look, MENUBUTTON means a 3-d button with an extra underline under
+the text (to distinguish a drop-down menu button), and PRESSSEDBUTTON means
+a 3-d button that looks like it's pressed.
+If given no argument, this method returns the current border type.
+<keyword name="contains()"/>
+<listitem name="contains(xyarray)"/>
+<br/>
+This method returns 1 (true) if the point specified by <i>xyarray</i>
+is contained within the window.  If <i>xyarray</i> specifies an area,
+this method returns 1 if the area overlaps (by any amount) the window.
+<keyword name="ellipse()"/>
+<listitem name="ellipse(xyarray [,mode] )"/>
+<br/>
+This draws the outline of an ellipse or circle within the rectangle specified
+by the coordinates in <i>xyarray</i>.
+The optional <i>mode</i> can be set to <font face="Courier">CLEAR</font>, or <font face="Courier">STORE</font>.
+The default <i>mode</i> is <font face="Courier">STORE</font>.
+<keyword name="fillellipse()"/>
+<listitem name="fillellipse(xyarray [,mode] )"/>
+<br/>
+This draws and fills an ellipse or circle within the rectangle specified by
+the coordinates in <i>xyarray</i>.
+The optional <i>mode</i> can be set to <font face="Courier">CLEAR</font> or <font face="Courier">STORE</font>.
+The default <i>mode</i> is <font face="Courier">STORE</font>.
+<keyword name="fillrectangle()"/>
+<listitem name="fillrectangle(xyarray [,mode] )"/>
+<br/>
+This fills a rectangular region using the coordinates in <i>xyarray</i>.
+The optional <i>mode</i> can be set to <font face="Courier">XOR</font>, <font face="Courier">CLEAR</font>, or <font face="Courier">STORE</font>.
+The default <i>mode</i> is <font face="Courier">STORE</font>.
+<keyword name="line()"/>
+<listitem name="line(xyarray [,mode] )"/>
+<br/>
+This draws a line using the coordinates in <i>xyarray</i>.
+The optional <i>mode</i> can be set to <font face="Courier">XOR</font>, <font face="Courier">CLEAR</font>, or <font face="Courier">STORE</font>.
+The default <i>mode</i> is <font face="Courier">STORE</font>.
+<keyword name="mousedo()"/>
+<listitem name="mousedo(mouse-array)"/>
+<br/>
+This processes the data from a mouse event (as received from
+the <font face="Courier">Mousefifo</font>) and takes whatever action is appropriate for the
+current window object.  For example, many of the behaviours
+of a menu object (scrolling, item highlighting)
+are done in response to handing it mouse events with this method.
+The return value of <font face="Courier">mousedo()</font>, when used with a menu object,
+indicates which item the user has selected.  Other valid return
+values for a menu object are MENU_DELETE (for the X-area in the upper-right
+corner of a menu), MENU_MOVE (the bar area in the upper-left corner of
+a menu), and MENU_NOCHOICE (no choice was selected).
+<keyword name="rectangle()"/>
+<listitem name="rectangle(xyarray [,mode] )"/>
+<br/>
+This draws a rectangle using the coordinates in <i>xyarray</i>.  The optional
+<i>mode</i> can be set to <font face="Courier">XOR</font>, <font face="Courier">CLEAR</font>, or <font face="Courier">STORE</font>.
+The default <i>mode</i> is <font face="Courier">STORE</font>.
+<keyword name="redraw()"/>
+<listitem name="redraw()"/>
+<br/>
+This redraws the window.  Note that this does not redraw anything inside
+the window.
+<keyword name="resize()"/>
+<listitem name="resize(xyarray)"/>
+<br/>
+This changes the size of the window to the value specified
+in <i>xyarray</i>.  If no argument is given to <font face="Courier">resize()</font>, it
+returns the current size of the window (as an <i>xyarray</i>).
+<keyword name="restoreunder()"/>
+<listitem name="restoreunder()"/>
+<br/>
+Restores the latest bitmap saved with <font face="Courier">saveunder()</font>.
+<keyword name="saveunder()"/>
+<listitem name="saveunder()"/>
+<br/>
+Saves the screen area covered by the window as a bitmap, which can be
+later restored with <font face="Courier">restoreunder()</font>.  Intended for use with
+pop-up menu windows.
+<keyword name="setconsole()"/>
+<listitem name="setconsole()"/>
+<br/>
+Sets the window so that it is considered the "console" - all error
+messages and the output of <font face="Courier">print</font> statements are seen in this window.
+<keyword name="size()"/>
+<listitem name="size(xyarraygp)"/>
+<br/>
+This is an alias for the <font face="Courier">resize</font> method.
+<keyword name="textcenter()"/>
+<listitem name="textcenter(string,xyarray [,mode] )"/>
+<br/>
+Draw the <i>string</i> centered within the area specified by<i>xyarray</i>.
+The optional <i>mode</i> can be set to <font face="Courier">XOR</font>, <font face="Courier">CLEAR</font>, or <font face="Courier">STORE</font>.
+The default <i>mode</i> is <font face="Courier">STORE</font>.
+<keyword name="textheight()"/>
+<listitem name="textheight()"/>
+<br/>
+Returns the current height, in pixels, of text characters.
+<keyword name="textleft()"/>
+<listitem name="textleft(string,xyarray [,mode] )"/>
+<br/>
+Draw the <i>string</i> left-justified within the area specified by<i>xyarray</i>.
+The optional <i>mode</i> can be set to <font face="Courier">XOR</font>, <font face="Courier">CLEAR</font>, or <font face="Courier">STORE</font>.
+The default <i>mode</i> is <font face="Courier">STORE</font>.
+<keyword name="textright()"/>
+<listitem name="textright(string,xyarray [,mode] )"/>
+<br/>
+Draw the <i>string</i> left-justified within the area specified by<i>xyarray</i>.
+The optional <i>mode</i> can be set to <font face="Courier">XOR</font>, <font face="Courier">CLEAR</font>, or <font face="Courier">STORE</font>.
+The default <i>mode</i> is <font face="Courier">STORE</font>.
+<keyword name="textwidth()"/>
+<listitem name="textwidth()"/>
+<br/>
+Returns the current width, in pixels, of text characters.
+<keyword name="windtype()"/>
+<listitem name="windtype()"/>
+<br/>
+Returns the window type as a string - <font face="Courier">"generic"</font>, <font face="Courier">"phrase"</font>,
+<font face="Courier">"menu"</font>, or <font face="Courier">"console"</font>.
+<keyword name="xmax()"/>
+<listitem name="xmax()"/>
+<br/>
+Returns the x value at the right side of the window.
+<keyword name="xmin()"/>
+<listitem name="xmin()"/>
+<br/>
+Returns the x value at the left side of the window.
+<keyword name="ymax()"/>
+<listitem name="ymax()"/>
+<br/>
+Returns the y value at the bottom of the window.
+<keyword name="ymin()"/>
+<listitem name="ymin()"/>
+<br/>
+Returns the y value at the top of the window.
+</list>
+<header1 name="Phrase Window Objects" key="phraseobjects"/>
+<keyword name="objects"/>
+<keyword name="windows"/>
+Windows objects are by default <font face="Courier">"generic"</font>
+windows, suitable for drawing lines and text.
+For displaying phrases, you can add a <font face="Courier">"phrase"</font>
+argument: <font face="Courier">o = new windowobject("phrase")</font>.
+This creates a window object with the following additional methods:
+<list>
+<keyword name="closestnote()"/>
+<listitem name="closestnote(xyarray)"/>
+<br/>
+Returns the note in the window that is closest to the specified point.
+<keyword name="drawphrase()"/>
+<listitem name="drawphrase(phrase [,mode])"/>
+<br/>
+Draws the specified phrase in the window.
+The optional <i>mode</i> can be set to <font face="Courier">XOR</font>, <font face="Courier">CLEAR</font>, or <font face="Courier">STORE</font>.
+The default <i>mode</i> is <font face="Courier">STORE</font>.
+<keyword name="scaletogrid()"/>
+<listitem name="scaletogrid(xyarray)"/>
+<br/>
+Scales the coordinates in <i>xyarray</i> from raw window values (pixels)
+to click (time) and pitch coordinates.  The scaled coordinates are
+relative to the window's current view (as set by the <font face="Courier">view()</font> method).
+<keyword name="sweep()"/>
+<listitem name="sweep(fifo,type,xyarray)"/>
+<br/>
+Begins a sweep operation.
+<keyword name="trackname()"/>
+<listitem name="trackname(string)"/>
+<br/>
+Sets the name of the track displayed in the window.
+<keyword name="view()"/>
+<listitem name="view(xyarray)"/>
+<br/>
+This method controls what area of the phrase is seen within the window,
+i.e. it allows you to zoom and pan around the phrase, using the window
+as a viewport.
+The argument to this method is assumed to be an xyarray value
+that specifies the desired viewing area.  The coordinates
+are specified in terms of click (time) and pitch values.
+For example, if the phrase in window <font face="Courier">w</font> were 32 beats
+in length, this statement would cause it to be dislayed in its entirety:
+w.view(xy(0,0,32b,127))
+</list>
+<header1 name="Menu Window Objects" key="menuobjects"/>
+<keyword name="objects"/>
+<keyword name="menus"/>
+For creating window objects that act like menus, use a <font face="Courier">"menu"</font>
+argument: <font face="Courier">o = new windowobject("menu")</font>.
+This creates a window object with the following additional methods:
+<list>
+<keyword name="menuitem()"/>
+<listitem name="menuitem(label)"/>
+<br/>
+Adds an item with the specified <i>label</i> to a menu object.
+<keyword name="menuitems()"/>
+<listitem name="menuitems()"/>
+<br/>
+Returns an array containing the current list of menu items in the menu.
+The index values of the array are the menu item labels.
+</list>
+<header1 name="Built-In Functions" key="builtins"/>
+<list>
+<keyword name="acos()"/>
+<funcitem name="acos ( x )"/>
+Returns the arc-cosine of <i>x</i>.
+<keyword name="argv()"/>
+<funcitem name="argv( arg-index-start [,arg-index-end] )"/>
+Used within a user-defined function to give generalized access
+to the arguments passed to it.
+If given one argument, <font face="Courier">argv</font> returns a single argument from
+those passed to the current user-defined function.  For example, <font face="Courier">argv(0)</font>
+will return the first argument.
+If given two arguments, <font face="Courier">argv</font> returns an array containing the specified
+argument range (from the first value up to, but not including,
+the second value).
+The index values of the returned array start at 0.
+For example, <font face="Courier">argv(0,nargs())</font> returns an array containing all
+of a function's arguments.
+<funcitem name="ascii( integer-or-string )"/>
+<keyword name="ascii()"/>
+When given a string argument, this function returns the ascii value of
+its first character.
+When given an integer argument, this function returns a string containing
+a single character whose ascii value is that integer.
+<funcitem name="asin ( x )"/>
+<keyword name="asin()"/>
+Returns the arc-sine of <i>x</i>.
+<funcitem name="atan ( x )"/>
+<keyword name="atan()"/>
+Returns the arc-tangent of <i>x</i>.
+<funcitem name="chdir(dir)"/>
+<keyword name="chdir()"/>
+Changes the current directory to <i>dir</i>.
+<funcitem name="close ( fifo )"/>
+<keyword name="close()"/>
+Closes the specified fifo.
+<funcitem name="color ( colorindex )"/>
+<keyword name="color()"/>
+Sets the current color index for drawing things.
+<funcitem name="colormix ( colorindex, red, green, blue )"/>
+<keyword name="colormix()"/>
+Sets the color for a given color index.  The values for red, green, and
+blue can range from 0 to 65535.  Color index 0 is main background color,
+color index 1 is the main foreground color, color index 2 is the "pick"
+color (used for displaying highlighted notes in phrase windows),
+color index 3 is the background in buttons, and color index 4 is the
+shadow in buttons.  Other color indicies can be used when drawing
+lines. 
+<funcitem name="cos ( angle )"/>
+<keyword name="cos()"/>
+Returns the cosine of <i>angle</i> (a value in radians).
+<funcitem name="currtime()"/>
+<keyword name="currtime()"/>
+Returns the current time, in seconds (typically since Jan 1, 1970).
+<funcitem name="cut( phrase, type, ... )     "/>
+<keyword name="cut()"/>
+<keyword name="CUT_TIME"/>
+<keyword name="CUT_CHANNEL"/>
+<keyword name="CUT_TYPE"/>
+<keyword name="CUT_NOTTYPE"/>
+<keyword name="CUT_FLAGS"/>
+<keyword name="NORMAL"/>
+<keyword name="TRUNCATE"/>
+<keyword name="INCLUSIVE"/>
+Returns a phrase containing
+notes cut from <i>phrase</i>.
+The <i>type</i> determines what the cut is based on.
+Possible values for <i>type</i> (as pre-defined macros) are
+<font face="Courier">CUT_TIME</font>,
+<font face="Courier">CUT_CHANNEL</font>,
+<font face="Courier">CUT_TYPE</font>,
+<font face="Courier">CUT_NOTTYPE</font>,
+and <font face="Courier">CUT_FLAGS</font>.
+<blankline/>
+If <i>type</i> is <font face="Courier">CUT_TIME</font>, the cut is based on time.
+The third and fourth arguments
+specify the starting and ending time.  The fifth argument, if present,
+controls how this cut behaves at the boundaries - possible values are
+<font face="Courier">NORMAL</font> (the default), <font face="Courier">TRUNCATE</font>, and <font face="Courier">INCLUSIVE</font>.
+The <font face="Courier">NORMAL</font> type of time cut is an efficient equivalent to the
+expression: <i>phrase</i>&#123;??.time&amp;gt;=<i>time1</i> &amp;&amp; ??.time&amp;lt;<i>time2&#125;</i>.
+A <font face="Courier">TRUNCATE</font> cut will chop off notes that cross the boundaries, while
+an <font face="Courier">INCLUSIVE</font> cut will include those notes unchanged.
+<blankline/>
+If <i>type</i> is <font face="Courier">CUT_CHANNEL</font>, the cut is based on channel.
+The third argument is the channel
+number (as a value from 1 to 16) of the notes that will be in the cut
+<blankline/>
+If <i>type</i> is <font face="Courier">CUT_TYPE</font>, the cut is based on type.
+The third argument is the type - 
+any notes that have this value as their <font face="Courier">.type</font> will be in the cut.
+<blankline/>
+If <i>type</i> is <font face="Courier">CUT_NOTTYPE</font>, the cut is based on the inverse of a type.
+The third
+argument is a type - any notes with this <font face="Courier">.type</font> value will
+<b>not</b>
+be in the cut phrase.
+<blankline/>
+If <i>type</i> is <font face="Courier">CUT_FLAGS</font>, the cut is based on the
+<font face="Courier">flags</font> attribute of the notes.
+The third argument is a mask that is or'ed with
+the <font face="Courier">flags</font> of each note - the cut contains any notes for which this
+results in a non-zero value.
+<funcitem name="debug(type)"/>
+<keyword name="debug()"/>
+Used as a debugging hook, whose meaning varies from time to time.
+<funcitem name="defined(variable-or-function-name)"/>
+<keyword name="defined()"/>
+Returns non-zero if the named variable or function
+has been defined, and 0 if it is undefined.
+<funcitem name="error( message )"/>
+<keyword name="error()"/>
+Generates an error, printing the specified message string and terminating
+the calling task.
+<funcitem name="exp ( x )"/>
+<keyword name="exp()"/>
+Returns the exponential function e**x.
+<funcitem name="exit()"/>
+<keyword name="exit()"/>
+Quits the entire KeyKit program, completely and abruptly.
+<funcitem name="fifoctl ( fifo, cmd, mode )"/>
+<keyword name="fifoctl()"/>
+Sets the given fifo to a particluar mode.  The <i>cmd</i> argument
+is intended as a hook to machine-dependent fifo commands.  The only
+command universally accepted is "type".
+If <i>mode</i> is "l", then
+reads from the fifo are done a line at a time (this is the default
+mode of fifos).
+If mode is "b", then
+reads from the fifo are done a byte at a time rather than a line at a time.
+<funcitem name="fifosize ( fifo )"/>
+<keyword name="fifosize()"/>
+Returns the number of unread data values in the specified fifo.
+<funcitem name="filetime ( filename )"/>
+<keyword name="filetime()"/>
+Returns the modification time of the named file,
+consistent with the values returned by <font face="Courier">currtime()</font>.
+<funcitem name="finishoff()"/>
+<keyword name="finishoff()"/>
+Send note-off messages on MIDI output to terminate any currently-held notes.
+<funcitem name="float ( value )"/>
+<keyword name="float()"/>
+Converts its argument (typically an integer or string) to a
+floating point value and returns it.
+<funcitem name="flush ( fifo )"/>
+<keyword name="flush()"/>
+Flush all unprocessed data values in the specified fifo.  If the
+fifo is attached to a file or pipe, the data is flushed.
+For other types of fifos, any unprocessed values in the fifo are discarded.
+<funcitem name="funkey ( num, statement )"/>
+<keyword name="funkey()"/>
+<keyword name="keys"/>
+Assigns a KeyKit statement (specified as a string beginning with '&#123;' )
+to the <i>num</i>-th function key.  Whenever that function key is pressed,
+the statement will be immediately executed.
+<funcitem name="get ( fifo )"/>
+<keyword name="get()"/>
+Retrieves a value from the specified fifo.  The task blocks
+if the fifo is empty.
+<funcitem name="gettid ( )"/>
+<keyword name="gettid()"/>
+<keyword name="ids"/>
+Returns the task id of the current task.
+<funcitem name="integer ( value )"/>
+<keyword name="integer()"/>
+Converts its argument (typically a string or float) to an
+integer value and returns it.
+<funcitem name="kill ( task-id )"/>
+<keyword name="kill()"/>
+<keyword name="tasks"/>
+Terminates the specified task, possibly invoking a cleanup function
+that the task has registered with <font face="Courier">onexit()</font>.
+The return value of <font face="Courier">kill()</font> is normally 0.
+Killing a non-existant task is okay - no error is produced, and
+the return value is 1.
+<funcitem name="log ( x )"/>
+<keyword name="log()"/>
+Returns the natural logarithm of <i>x</i>.
+<funcitem name="log10 ( x )"/>
+<keyword name="log10()"/>
+Returns the logarithm of <i>x</i> to base 10.
+<funcitem name="lsdir ( directory )"/>
+<keyword name="lsdir()"/>
+Returns an array of the files and directories contained
+in the specified directory.
+The index values of the elements in the array are the actual file and
+directory names.
+The value of an element is 1 if it is a directory, and 0 if it is a file.
+<funcitem name="midibytes ( num-or-phrase, num-or-phrase, ... )"/>
+<keyword name="midibytes()"/>
+<keyword name="MIDIBYTES"/>
+Returns a phrase containing a single MIDIBYTES note that
+is the concatenation of the bytes specified by all the arguments.
+Each argument can be either a number - specifying a single byte of the result;
+or a phrase - all of its MIDIBYTES notes are copied to the output phrase.
+<funcitem name="midifile(filename)  or midifile(array,filename)"/>
+<keyword name="midifile()"/>
+<keyword name="Files"/>
+<keyword name="Files"/>
+<keyword name="Files"/>
+The first usage (with only a filename as an argument) reads a Standard MIDI
+File and returns an array containing its tracks, starting at array index 0.
+The global variable <font face="Courier">Mfformat</font> is set to the format type (0, 1, or 2).
+The value of global variable <font face="Courier">Defrelease</font> specifies the default release velocity.
+If the value of global variable <font face="Courier">Onoffmerge</font> is 1 (its default value),
+noteons and noteoffs are merged.
+<br/>
+Used as <font face="Courier">midifile(<i>array,filename</i>)</font>, the elements of the specified
+array are used as tracks to create a Standard MIDI File in the named
+file.  The array subscripts should be numeric, since they will be
+sorted to determine the order of tracks in the file.  If global
+variable <font face="Courier">Tempotrack</font> is 1 (its default value), a tempo track is
+automatically created as the first track of the file.  The value of
+<font face="Courier">Clicks</font> is used as the 'divisions' value in the header.
+<funcitem name="milliclock ( )"/>
+<keyword name="milliclock()"/>
+Returns the (relative, not absolute) value of a millisecond-resolution clock.
+<funcitem name="objectinfo(object,info)"/>
+<keyword name="objectinfo()"/>
+Returns an array containing information about the specified <i>object</i>.
+If the value of <i>info</i> is "methods", the array will contain the
+names of all of the object's methods.
+If the value of <i>info</i> is "data", the array will contain the
+names of all of the object's data - both variables and methods.
+The array index values will be the method/data names,
+and the array element values will be the type of each item.
+<funcitem name="objectlist()"/>
+<keyword name="objectlist()"/>
+Returns an array containing all objects.
+<funcitem name="nargs ( )"/>
+<keyword name="nargs()"/>
+Returns the number of arguments passed
+to a user-defined function.
+<funcitem name="onchange(variable, func)"/>
+<keyword name="onchange()"/>
+Arranges for <i>func</i> (a function pointer value) to be called
+whenever the value of the specified variable is changed.
+<funcitem name="onexit(func [,arg(s)] )"/>
+<keyword name="onexit()"/>
+Arranges for <i>func</i> (a function pointer value) to be called
+when the current task is finished (either voluntarily or by being
+killed).  If there are additional arguments, they are passed
+as arguments to <i>func</i> when it is called.
+<funcitem name="open( [file-or-pipe [,mode] ] )"/>
+<keyword name="open()"/>
+Allocates a new fifo and returns its id.
+If given one argument, <font face="Courier">open</font> interprets it as a filename to be opened
+for reading.
+A second argument can modify the interpretation: "w" will open the file for
+writing rather than reading; "|" will interpret the first argument as a shell
+command, opening a pipe that can be used to read its output;
+and "|w" will execute a command,
+opening a pipe that can be used to write to it.
+<funcitem name="phrase ( value )"/>
+<keyword name="phrase()"/>
+Converts its argument (normally a string which includes the single quotes) to a
+phrase value and returns it.  For example, a=phrase("'a,b,c'").
+<funcitem name="pow ( x, y )"/>
+<keyword name="pow()"/>
+Returns <i>x</i>**<i>y</i>.
+<funcitem name="printf(format [,arguments])"/>
+<keyword name="printf()"/>
+Print formatted output.  See the section
+on "Printing" above, and see the description of <font face="Courier">sprintf</font> below for
+the type of formatting that can be done.
+<funcitem name="priority(task [,priority])"/>
+<keyword name="priority()"/>
+With one argument, <font face="Courier">priority()</font> returns the current priority of the
+specified task.  
+With two arguments, <font face="Courier">priority()</font> sets the current priority of the
+task to the specified priority value.
+If the value of <i>task-id</i> is -1, <font face="Courier">priority()</font> returns or sets
+the global priority limit, which specifies
+a lower limit for runnable tasks - only tasks with a priority
+greater than or equal to the current global priority are permitted to run.
+<funcitem name="put ( fifo, value )"/>
+<keyword name="put()"/>
+Puts the value on the specified fifo.  The return value is normally 0.
+If <i>fifo</i> does not exist, the return value is -1.
+<funcitem name="readphr(fname)"/>
+<keyword name="readphr()"/>
+Reads the specified file, expecting it to contain a KeyKit phrase
+whose value is returned.  The value of <font face="Courier">Musicpath</font> is used to search
+for the file.
+<funcitem name="realtime(phr [,time])"/>
+<keyword name="realtime()"/>
+Spawns a new task for playing the given phrase in realtime via MIDI output,
+and returns its task id.
+An optional second argument specifies the starting time; the default
+value is <font face="Courier">Now</font>.
+<funcitem name="reboot()"/>
+<keyword name="reboot()"/>
+Forces a reboot, terminating all tasks and calling <font face="Courier">Rebootfunc()</font>,
+a function whose initially-null value is typically redefined in <font face="Courier">keyrc()</font>.
+<funcitem name="rand ( n1 [,n2] )"/>
+<keyword name="rand()"/>
+Returns a random number between <i>n1</i> and <i>n2</i>,
+inclusive.  If only <i>n1</i> is given, the random number is
+between 0 and <i>(n1-1)</i>, inclusive.  If only <i>n1</i> is given,
+and it is negative, then it is used to seed the random number generator.
+<funcitem name="setmouse(type)"/>
+<keyword name="setmouse()"/>
+Set the cursor type for the mouse.
+Values for <i>type</i> are:
+<font face="Courier">ARROW</font>, <font face="Courier">SWEEP</font>, <font face="Courier">CROSS</font>,
+<font face="Courier">LEFTRIGHT</font>, <font face="Courier">UPDOWN</font>, <font face="Courier">BUSY</font>, and <font face="Courier">NOTHING</font>.
+<funcitem name="sin ( angle )"/>
+<keyword name="sin()"/>
+Returns the sine of <i>angle</i> (a value in radians).
+<funcitem name="sizeof(arg)"/>
+<keyword name="sizeof()"/>
+Returns the number of notes in a phrase, or the length
+of a string, or the number of elements in an array.
+<funcitem name="sleeptill(time)"/>
+<keyword name="sleeptill()"/>
+Causes the task to go to sleep until the specified time, expressed
+in absolute clicks.
+<funcitem name="sqrt ( val )"/>
+<keyword name="sqrt()"/>
+Returns the square root of <i>val</i>.
+<funcitem name="split(phrase-or-string)   "/>
+<keyword name="split()"/>
+When given a string as its first argument, this function breaks it
+into white-space-separated words and inserts them as separate elements
+into an array.  The return value of this function is a pointer to this
+newly-created array.
+The subscript of the first array element is 0.  When given a phrase,
+this function breaks it into a array of short phrases, using the starting and
+ending times of the notes in the original phrase to determine the
+split points.  To visualize this operation, imagine drawing vertical
+lines through the starting and ending point of every note in the original
+phrase.  The array elements would be the phrases contained between these
+vertical lines.  For example, <font face="Courier">x = split('a,bt12')</font>would result
+in <font face="Courier">x[0]='ad12' ; x[1]='ad84t12  b' ; x[2]='bd12t96'</font>.
+This is useful for constructing monophonic phrases, and any
+other operation in which you want to reconsider what notes should be playing
+whenever any note starts or stops.
+<funcitem name="sprintf ( format, args )"/>
+<keyword name="sprintf()"/>
+Formatted printing, with the result returned as a string.
+The <i>format</i> may contain the following
+conversion specifications: <font face="Courier">0</font> (decimal), <font face="Courier">0</font> (hex), <font face="Courier">0.000000</font>
+(float/double),
+<font face="Courier"></font> (string), <font face="Courier">0</font> (phrase), and <font face="Courier">%</font> (literal percent character).
+Width and precision prefixes (e.g. <font face="Courier">   0</font> and <font face="Courier">  0.00</font>) are recognized.
+<funcitem name="string ( value )"/>
+<keyword name="string()"/>
+<keyword name="conversion"/>
+<keyword name="strings"/>
+Converts its argument to a string and returns it.
+<funcitem name="subbytes(phrase,start,leng)"/>
+<keyword name="subbytes()"/>
+<keyword name="message"/>
+Works vaguely like <font face="Courier">substr</font>, but operates on notes whose
+type is <font face="Courier">MIDIBYTES</font>,
+allowing you to pull off individual bytes or ranges of bytes.
+For example, <font face="Courier">subbytes('xc005c106c207',3,2)</font> would return <font face="Courier">'xc106'</font>.
+Note that the <i>start</i> value for the first
+byte is 1, not 0.
+<funcitem name="substr(string,start,leng)"/>
+<keyword name="substr()"/>
+Returns a substring of a string.
+Note that the <i>start</i> value for the first
+character of a string is 1, not 0.
+<funcitem name="system(string)"/>
+The <i>string</i> is executed by the shell (or whatever program is the
+command interpreter for a given machine).
+This may not be supported on all machines.
+<funcitem name="tan ( angle )"/>
+<keyword name="tan()"/>
+Returns the tangent of <i>angle</i> (a value in radians).
+<funcitem name="taskinfo(&quot;list&quot;) or taskinfo ( taskid, type )"/>
+<keyword name="taskinfo()"/>
+<keyword name="status"/>
+<keyword name="parent"/>
+<keyword name="trace"/>
+<keyword name="priority"/>
+<keyword name="trace"/>
+<keyword name="trace"/>
+<keyword name="traceback"/>
+If given a single argument (whose only valid value is <font face="Courier">"list"</font>),
+<font face="Courier">taskinfo()</font> returns an array with entries for each currently-running
+task - the array element indicies are the task ids, and the array element
+values are all zero.
+If given two arguments, <font face="Courier">taskinfo()</font> expects the first to be a task id,
+and the second is a string that indicates what piece of information
+about the task should be returned by <font face="Courier">taskinfo()</font>.  The valid values of
+<i>type</i> are:
+<font face="Courier">"status"</font> (returns a string describing
+the running status),
+<font face="Courier">"parent"</font> (returns the id of the task's parent),
+<font face="Courier">"count"</font> (returns the number of interpreted instructions that the
+task has executed),
+<font face="Courier">"schedtime"</font> (returns the time at which the
+task is scheduled to awaken, if it is sleeping),
+<font face="Courier">"wait"</font> (returns
+the id of the task whose termination is being awaited),
+<font face="Courier">"blocked"</font>
+(returns the id of the fifo, if any, on which the task is blocked),
+<font face="Courier">"fulltrace"</font> (returns a string with a complete function traceback,
+including parameter values),
+<font face="Courier">"trace"</font> (returns a function traceback without parameter values), or
+<font face="Courier">"priority"</font> (returns the priority value of the task).
+<funcitem name="tempo( [newtempo] )"/>
+<keyword name="tempo()"/>
+When invoked
+with no arguments, <font face="Courier">tempo</font> returns the current tempo.
+When given an argument, the current playback speed is set to <i>newtempo</i>,
+whose units are microseconds per beat.  The return value is the old tempo.
+<funcitem name="typeof(arg)"/>
+<keyword name="typeof()"/>
+Returns a string describing the type of its
+argument: <font face="Courier">"string"</font>, <font face="Courier">"integer"</font>, <font face="Courier">"float"</font>,
+<font face="Courier">"phrase"</font>, <font face="Courier">"array"</font>, <font face="Courier">"function"</font>, or <font face="Courier">"uninitialized"</font>.
+<funcitem name="undefine(variable-or-function-name)"/>
+<keyword name="undefine()"/>
+Causes the definition of the named variable or function to be forgotten.
+This can be used to force the rereading of a user-defined function from the
+file that defined it, and is typically useful when a new function is
+being written and tested.
+<funcitem name="wait(task-id)"/>
+<keyword name="wait()"/>
+Causes the current task to go to sleep until the specifed task has finished.
+<funcitem name="xy(x0,y0,x1,y1)"/>
+<keyword name="xy()"/>
+<keyword name="xyarray"/>
+Returns an <b>xyarray</b> (see descrption in the Windows section above)
+containing the specified values.
+</list>
+<header1 name="Acknowledgments" key="acknowledgments"/>
+<keyword name="acknowledgments"/>
+<keyword name="Amiga"/>
+KeyKit has been a hobby project of mine for many years.  In that time,
+many people have contributed ideas, feedback, assistance, and encouragement.
+Some of them are:
+Jon Backstrom,
+Tom Duff,
+Geza Feketa,
+Dick Hamilton,
+Tony Hansen,
+John Helton,
+Tom Killian,
+Peter Langston,
+Hector Levesque,
+Jason Levitt,
+Howard Moscovitz,
+Marty Shannon,
+and Daniel Steinberg.
+The people who have put significant effort into porting KeyKit to various
+machines deserve special mention and special thanks -
+Steve Falco (Mac),
+Alan Bland (Amiga), Gregg Wonderly (Amiga),
+Mike Healy (Atari ST), Greg Youngdahl (DOS)
+Ag Primatic (Mac), and Jack Wright (Mac).
+Many thanks to all.
+</document>

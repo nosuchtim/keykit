@@ -1,0 +1,367 @@
+freebsd/makefile:protoproc : protoflp
+freebsd/makefile:		echo "protoflp $(PROTO) $$i ...\\c" ; \
+freebsd/makefile:		./protoflp $(PROTO) -d d_$$b.h < $$i > tmp.c ; \
+freebsd/makefile:			echo    Reason: protoflp exit was $$r and sizediff was $$sizediff ; \
+freebsd/makefile:	./protoflp $(PROTO) -dd_regex.h < regex.c > /dev/null
+freebsd/makefile:	./protoflp $(PROTO) -dd_sym.h < sym.c > /dev/null
+freebsd/makefile:	./protoflp $(PROTO) -dd_bltin.h < bltin.c > /dev/null
+freebsd/makefile:	./protoflp $(PROTO) -dd_util.h < util.c > /dev/null
+freebsd/makefile:	./protoflp $(PROTO) -dd_phrase.h < phrase.c > /dev/null
+freebsd/makefile:	./protoflp $(PROTO) -dd_misc.h < misc.c > /dev/null
+freebsd/makefile:	./protoflp $(PROTO) -dd_main.h < main.c > /dev/null
+freebsd/makefile:	./protoflp $(PROTO) -dd_task.h < task.c > /dev/null
+freebsd/makefile:	./protoflp $(PROTO) -dd_fifo.h < fifo.c > /dev/null
+freebsd/makefile:	./protoflp $(PROTO) -dd_code.h < code.c > /dev/null
+freebsd/makefile:	./protoflp $(PROTO) -dd_code2.h < code2.c > /dev/null
+freebsd/makefile:	./protoflp $(PROTO) -dd_mdep1.h < mdep1.c > /dev/null
+freebsd/makefile:	./protoflp $(PROTO) -dd_mdep2.h < mdep2.c > /dev/null
+freebsd/makefile:	./protoflp $(PROTO) -dd_view.h < view.c > /dev/null
+freebsd/makefile:	./protoflp $(PROTO) -dd_grid.h < grid.c > /dev/null
+freebsd/makefile:	./protoflp $(PROTO) -dd_midi.h < midi.c > /dev/null
+freebsd/makefile:	./protoflp $(PROTO) -dd_clock.h < clock.c > /dev/null
+freebsd/makefile:	./protoflp $(PROTO) -dd_real.h < real.c > /dev/null
+freebsd/makefile:	./protoflp $(PROTO) -dd_fsm.h < fsm.c > /dev/null
+freebsd/makefile:	./protoflp $(PROTO) -dd_keyto.h < keyto.c > /dev/null
+freebsd/makefile:	./protoflp $(PROTO) -dd_mfin.h < mfin.c > /dev/null
+freebsd/makefile:	./protoflp $(PROTO) -dd_menu.h < menu.c > /dev/null
+freebsd/makefile:	./protoflp $(PROTO) -dd_kwind.h < kwind.c > /dev/null
+freebsd/makefile:	./protoflp $(PROTO) -dd_meth.h < meth.c > /dev/null
+freebsd/makefile:key:	protoflp $(ALLDECS) $(OBJS)
+freebsd/makefile:protoflp: protoflp.c
+freebsd/makefile:	$(CC) protoflp.c -o protoflp
+freebsd/makefile:	rm -f $(EXECS) ptest1 ptest2 ptest3 ptest4 protoflp
+freebsd/makefile_stdio:lowkey : protoflp $(ALLDECS) $(KEYOBJ)
+freebsd/makefile_stdio:protoflp : protoflp.c
+freebsd/makefile_stdio:	$(CC) protoflp.c -o protoflp
+freebsd/makefile_stdio:protoproc : protoflp
+freebsd/makefile_stdio:	for %%f in ($(KEYFILES)) do protoflp -p -d d_%%f.h < %%f.c > tmp.c
+freebsd/makefile_stdio:	rm -f *.o lowkey protoflp keylib
+freebsd/makefile_stdio:	./protoflp $(PROTO) -dd_regex.h < regex.c > tmp.c
+freebsd/makefile_stdio:	./protoflp $(PROTO) -dd_sym.h < sym.c > tmp.c
+freebsd/makefile_stdio:	./protoflp $(PROTO) -dd_bltin.h < bltin.c > tmp.c
+freebsd/makefile_stdio:	./protoflp $(PROTO) -dd_meth.h < meth.c > tmp.c
+freebsd/makefile_stdio:	./protoflp $(PROTO) -dd_util.h < util.c > tmp.c
+freebsd/makefile_stdio:	./protoflp $(PROTO) -dd_phrase.h < phrase.c > tmp.c
+freebsd/makefile_stdio:	./protoflp $(PROTO) -dd_misc.h < misc.c > tmp.c
+freebsd/makefile_stdio:	./protoflp $(PROTO) -dd_main.h < main.c > tmp.c
+freebsd/makefile_stdio:	./protoflp $(PROTO) -dd_task.h < task.c > tmp.c
+freebsd/makefile_stdio:	./protoflp $(PROTO) -dd_fifo.h < fifo.c > tmp.c
+freebsd/makefile_stdio:	./protoflp $(PROTO) -dd_code.h < code.c > tmp.c
+freebsd/makefile_stdio:	./protoflp $(PROTO) -dd_code2.h < code2.c > tmp.c
+freebsd/makefile_stdio:	./protoflp $(PROTO) -dd_mdep1.h < mdep1.c > tmp.c
+freebsd/makefile_stdio:	./protoflp $(PROTO) -dd_mdep2.h < mdep2.c > tmp.c
+freebsd/makefile_stdio:	./protoflp $(PROTO) -dd_view.h < view.c > tmp.c
+freebsd/makefile_stdio:	./protoflp $(PROTO) -dd_grid.h < grid.c > tmp.c
+freebsd/makefile_stdio:	./protoflp $(PROTO) -dd_midi.h < midi.c > tmp.c
+freebsd/makefile_stdio:	./protoflp $(PROTO) -dd_clock.h < clock.c > tmp.c
+freebsd/makefile_stdio:	./protoflp $(PROTO) -dd_real.h < real.c > tmp.c
+freebsd/makefile_stdio:	./protoflp $(PROTO) -dd_fsm.h < fsm.c > tmp.c
+freebsd/makefile_stdio:	./protoflp $(PROTO) -dd_keyto.h < keyto.c > tmp.c
+freebsd/makefile_stdio:	./protoflp $(PROTO) -dd_mfin.h < mfin.c > tmp.c
+freebsd/makefile_stdio:	./protoflp $(PROTO) -dd_menu.h < menu.c > tmp.c
+freebsd/makefile_stdio:	./protoflp $(PROTO) -dd_kwind.h < kwind.c > tmp.c
+linux_alsa/makefile:protoproc : protoflp
+linux_alsa/makefile:		echo "protoflp $(PROTO) $$i ...\\c" ; \
+linux_alsa/makefile:		./protoflp $(PROTO) -d d_$$b.h < $$i > tmp.c ; \
+linux_alsa/makefile:			echo    Reason: protoflp exit was $$r and sizediff was $$sizediff ; \
+linux_alsa/makefile:	./protoflp $(PROTO) -dd_regex.h < regex.c > /dev/null
+linux_alsa/makefile:	./protoflp $(PROTO) -dd_sym.h < sym.c > /dev/null
+linux_alsa/makefile:	./protoflp $(PROTO) -dd_bltin.h < bltin.c > /dev/null
+linux_alsa/makefile:	./protoflp $(PROTO) -dd_util.h < util.c > /dev/null
+linux_alsa/makefile:	./protoflp $(PROTO) -dd_phrase.h < phrase.c > /dev/null
+linux_alsa/makefile:	./protoflp $(PROTO) -dd_misc.h < misc.c > /dev/null
+linux_alsa/makefile:	./protoflp $(PROTO) -dd_main.h < main.c > /dev/null
+linux_alsa/makefile:	./protoflp $(PROTO) -dd_task.h < task.c > /dev/null
+linux_alsa/makefile:	./protoflp $(PROTO) -dd_fifo.h < fifo.c > /dev/null
+linux_alsa/makefile:	./protoflp $(PROTO) -dd_code.h < code.c > /dev/null
+linux_alsa/makefile:	./protoflp $(PROTO) -dd_code2.h < code2.c > /dev/null
+linux_alsa/makefile:	./protoflp $(PROTO) -dd_mdep1.h < mdep1.c > /dev/null
+linux_alsa/makefile:	./protoflp $(PROTO) -dd_mdep2.h < mdep2.c > /dev/null
+linux_alsa/makefile:	./protoflp $(PROTO) -dd_view.h < view.c > /dev/null
+linux_alsa/makefile:	./protoflp $(PROTO) -dd_grid.h < grid.c > /dev/null
+linux_alsa/makefile:	./protoflp $(PROTO) -dd_midi.h < midi.c > /dev/null
+linux_alsa/makefile:	./protoflp $(PROTO) -dd_clock.h < clock.c > /dev/null
+linux_alsa/makefile:	./protoflp $(PROTO) -dd_real.h < real.c > /dev/null
+linux_alsa/makefile:	./protoflp $(PROTO) -dd_fsm.h < fsm.c > /dev/null
+linux_alsa/makefile:	./protoflp $(PROTO) -dd_keyto.h < keyto.c > /dev/null
+linux_alsa/makefile:	./protoflp $(PROTO) -dd_mfin.h < mfin.c > /dev/null
+linux_alsa/makefile:	./protoflp $(PROTO) -dd_menu.h < menu.c > /dev/null
+linux_alsa/makefile:	./protoflp $(PROTO) -dd_kwind.h < kwind.c > /dev/null
+linux_alsa/makefile:	./protoflp $(PROTO) -dd_meth.h < meth.c > /dev/null
+linux_alsa/makefile:$(KEY):	protoflp $(ALLDECS) $(OBJS)
+linux_alsa/makefile:protoflp: protoflp.c
+linux_alsa/makefile:	$(CC) protoflp.c -o protoflp
+linux_alsa/makefile:	rm -f $(EXECS) ptest1 ptest2 ptest3 ptest4 protoflp
+linux_devmidi/makefile:protoproc : protoflp
+linux_devmidi/makefile:		echo "protoflp $(PROTO) $$i ...\\c" ; \
+linux_devmidi/makefile:		./protoflp $(PROTO) -d d_$$b.h < $$i > tmp.c ; \
+linux_devmidi/makefile:			echo    Reason: protoflp exit was $$r and sizediff was $$sizediff ; \
+linux_devmidi/makefile:	./protoflp $(PROTO) -dd_regex.h < regex.c > /dev/null
+linux_devmidi/makefile:	./protoflp $(PROTO) -dd_sym.h < sym.c > /dev/null
+linux_devmidi/makefile:	./protoflp $(PROTO) -dd_bltin.h < bltin.c > /dev/null
+linux_devmidi/makefile:	./protoflp $(PROTO) -dd_util.h < util.c > /dev/null
+linux_devmidi/makefile:	./protoflp $(PROTO) -dd_phrase.h < phrase.c > /dev/null
+linux_devmidi/makefile:	./protoflp $(PROTO) -dd_misc.h < misc.c > /dev/null
+linux_devmidi/makefile:	./protoflp $(PROTO) -dd_main.h < main.c > /dev/null
+linux_devmidi/makefile:	./protoflp $(PROTO) -dd_task.h < task.c > /dev/null
+linux_devmidi/makefile:	./protoflp $(PROTO) -dd_fifo.h < fifo.c > /dev/null
+linux_devmidi/makefile:	./protoflp $(PROTO) -dd_code.h < code.c > /dev/null
+linux_devmidi/makefile:	./protoflp $(PROTO) -dd_code2.h < code2.c > /dev/null
+linux_devmidi/makefile:	./protoflp $(PROTO) -dd_mdep1.h < mdep1.c > /dev/null
+linux_devmidi/makefile:	./protoflp $(PROTO) -dd_mdep2.h < mdep2.c > /dev/null
+linux_devmidi/makefile:	./protoflp $(PROTO) -dd_view.h < view.c > /dev/null
+linux_devmidi/makefile:	./protoflp $(PROTO) -dd_grid.h < grid.c > /dev/null
+linux_devmidi/makefile:	./protoflp $(PROTO) -dd_midi.h < midi.c > /dev/null
+linux_devmidi/makefile:	./protoflp $(PROTO) -dd_clock.h < clock.c > /dev/null
+linux_devmidi/makefile:	./protoflp $(PROTO) -dd_real.h < real.c > /dev/null
+linux_devmidi/makefile:	./protoflp $(PROTO) -dd_fsm.h < fsm.c > /dev/null
+linux_devmidi/makefile:	./protoflp $(PROTO) -dd_keyto.h < keyto.c > /dev/null
+linux_devmidi/makefile:	./protoflp $(PROTO) -dd_mfin.h < mfin.c > /dev/null
+linux_devmidi/makefile:	./protoflp $(PROTO) -dd_menu.h < menu.c > /dev/null
+linux_devmidi/makefile:	./protoflp $(PROTO) -dd_kwind.h < kwind.c > /dev/null
+linux_devmidi/makefile:	./protoflp $(PROTO) -dd_meth.h < meth.c > /dev/null
+linux_devmidi/makefile:$(KEY):	protoflp $(ALLDECS) $(OBJS)
+linux_devmidi/makefile:protoflp: protoflp.c
+linux_devmidi/makefile:	$(CC) protoflp.c -o protoflp
+linux_devmidi/makefile:	rm -f $(EXECS) ptest1 ptest2 ptest3 ptest4 protoflp
+nt/makefile.nogesture:key.exe : protoflp.exe $(ALLDECS) $(KEYOBJ) keydll.lib key.res
+nt/makefile.nogesture:protoflp.exe : protoflp.obj
+nt/makefile.nogesture:	link $(conflags) $(VCPATHS) -out:protoflp.exe protoflp.obj binmode.obj $(conlibs)
+nt/makefile.nogesture:protoproc : protoflp.exe
+nt/makefile.nogesture:	for %%f in ($(KEYFILES)) do protoflp -p -d d_%%f.h < %%f.c > tmp.c
+nt/makefile.nogesture:	protoflp $(PROTO) -dd_regex.h < regex.c > tmp.c
+nt/makefile.nogesture:	protoflp $(PROTO) -dd_sym.h < sym.c > tmp.c
+nt/makefile.nogesture:	protoflp $(PROTO) -dd_bltin.h < bltin.c > tmp.c
+nt/makefile.nogesture:	protoflp $(PROTO) -dd_meth.h < meth.c > tmp.c
+nt/makefile.nogesture:	protoflp $(PROTO) -dd_util.h < util.c > tmp.c
+nt/makefile.nogesture:	protoflp $(PROTO) -dd_phrase.h < phrase.c > tmp.c
+nt/makefile.nogesture:	protoflp $(PROTO) -dd_misc.h < misc.c > tmp.c
+nt/makefile.nogesture:	protoflp $(PROTO) -dd_main.h < main.c > tmp.c
+nt/makefile.nogesture:	protoflp $(PROTO) -dd_task.h < task.c > tmp.c
+nt/makefile.nogesture:	protoflp $(PROTO) -dd_fifo.h < fifo.c > tmp.c
+nt/makefile.nogesture:	protoflp $(PROTO) -dd_code.h < code.c > tmp.c
+nt/makefile.nogesture:	protoflp $(PROTO) -dd_code2.h < code2.c > tmp.c
+nt/makefile.nogesture:	protoflp $(PROTO) -dd_mdep1.h < mdep1.c > tmp.c
+nt/makefile.nogesture:	protoflp $(PROTO) -dd_mdep2.h < mdep2.c > tmp.c
+nt/makefile.nogesture:	protoflp $(PROTO) -dd_view.h < view.c > tmp.c
+nt/makefile.nogesture:	protoflp $(PROTO) -dd_grid.h < grid.c > tmp.c
+nt/makefile.nogesture:	protoflp $(PROTO) -dd_midi.h < midi.c > tmp.c
+nt/makefile.nogesture:	protoflp $(PROTO) -dd_clock.h < clock.c > tmp.c
+nt/makefile.nogesture:	protoflp $(PROTO) -dd_real.h < real.c > tmp.c
+nt/makefile.nogesture:	protoflp $(PROTO) -dd_fsm.h < fsm.c > tmp.c
+nt/makefile.nogesture:	protoflp $(PROTO) -dd_keyto.h < keyto.c > tmp.c
+nt/makefile.nogesture:	protoflp $(PROTO) -dd_mfin.h < mfin.c > tmp.c
+nt/makefile.nogesture:	protoflp $(PROTO) -dd_menu.h < menu.c > tmp.c
+nt/makefile.nogesture:	protoflp $(PROTO) -dd_kwind.h < kwind.c > tmp.c
+ntcons/makefile:lowkey.exe : protoflp.exe $(ALLDECS) $(KEYOBJ) key.res
+ntcons/makefile:protoflp.exe : protoflp.obj
+ntcons/makefile:	$(VC7LINK) $(conflags) $(VCPATHS) -out:protoflp.exe protoflp.obj binmode.obj $(conlibs)
+ntcons/makefile:protoproc : protoflp.exe
+ntcons/makefile:	for %%f in ($(KEYFILES)) do .\protoflp -p -d d_%%f.h < %%f.c > tmp.c
+ntcons/makefile:	protoflp $(PROTO) -dd_regex.h < regex.c > tmp.c
+ntcons/makefile:	protoflp $(PROTO) -dd_sym.h < sym.c > tmp.c
+ntcons/makefile:	protoflp $(PROTO) -dd_bltin.h < bltin.c > tmp.c
+ntcons/makefile:	protoflp $(PROTO) -dd_meth.h < meth.c > tmp.c
+ntcons/makefile:	protoflp $(PROTO) -dd_util.h < util.c > tmp.c
+ntcons/makefile:	protoflp $(PROTO) -dd_phrase.h < phrase.c > tmp.c
+ntcons/makefile:	protoflp $(PROTO) -dd_misc.h < misc.c > tmp.c
+ntcons/makefile:	protoflp $(PROTO) -dd_main.h < main.c > tmp.c
+ntcons/makefile:	protoflp $(PROTO) -dd_task.h < task.c > tmp.c
+ntcons/makefile:	protoflp $(PROTO) -dd_fifo.h < fifo.c > tmp.c
+ntcons/makefile:	protoflp $(PROTO) -dd_code.h < code.c > tmp.c
+ntcons/makefile:	protoflp $(PROTO) -dd_code2.h < code2.c > tmp.c
+ntcons/makefile:	protoflp $(PROTO) -dd_mdep1.h < mdep1.c > tmp.c
+ntcons/makefile:	protoflp $(PROTO) -dd_mdep2.h < mdep2.c > tmp.c
+ntcons/makefile:	protoflp $(PROTO) -dd_view.h < view.c > tmp.c
+ntcons/makefile:	protoflp $(PROTO) -dd_grid.h < grid.c > tmp.c
+ntcons/makefile:	protoflp $(PROTO) -dd_midi.h < midi.c > tmp.c
+ntcons/makefile:	protoflp $(PROTO) -dd_clock.h < clock.c > tmp.c
+ntcons/makefile:	protoflp $(PROTO) -dd_real.h < real.c > tmp.c
+ntcons/makefile:	protoflp $(PROTO) -dd_fsm.h < fsm.c > tmp.c
+ntcons/makefile:	protoflp $(PROTO) -dd_keyto.h < keyto.c > tmp.c
+ntcons/makefile:	protoflp $(PROTO) -dd_mfin.h < mfin.c > tmp.c
+ntcons/makefile:	protoflp $(PROTO) -dd_menu.h < menu.c > tmp.c
+ntcons/makefile:	protoflp $(PROTO) -dd_kwind.h < kwind.c > tmp.c
+ntshare/makefile:key.exe : protoflp.exe $(ALLDECS) $(KEYOBJ) keydll.lib key.res
+ntshare/makefile:protoflp.exe : protoflp.obj
+ntshare/makefile:	link $(conflags) -out:protoflp.exe protoflp.obj binmode.obj $(conlibs)
+ntshare/makefile:protoproc : protoflp.exe
+ntshare/makefile:	for %%f in ($(KEYFILES)) do protoflp -p -d d_%%f.h < %%f.c > tmp.c
+ntshare/makefile:	protoflp $(PROTO) -dd_regex.h < regex.c > tmp.c
+ntshare/makefile:	protoflp $(PROTO) -dd_sym.h < sym.c > tmp.c
+ntshare/makefile:	protoflp $(PROTO) -dd_bltin.h < bltin.c > tmp.c
+ntshare/makefile:	protoflp $(PROTO) -dd_meth.h < meth.c > tmp.c
+ntshare/makefile:	protoflp $(PROTO) -dd_util.h < util.c > tmp.c
+ntshare/makefile:	protoflp $(PROTO) -dd_phrase.h < phrase.c > tmp.c
+ntshare/makefile:	protoflp $(PROTO) -dd_misc.h < misc.c > tmp.c
+ntshare/makefile:	protoflp $(PROTO) -dd_main.h < main.c > tmp.c
+ntshare/makefile:	protoflp $(PROTO) -dd_task.h < task.c > tmp.c
+ntshare/makefile:	protoflp $(PROTO) -dd_fifo.h < fifo.c > tmp.c
+ntshare/makefile:	protoflp $(PROTO) -dd_code.h < code.c > tmp.c
+ntshare/makefile:	protoflp $(PROTO) -dd_code2.h < code2.c > tmp.c
+ntshare/makefile:	protoflp $(PROTO) -dd_mdep1.h < mdep1.c > tmp.c
+ntshare/makefile:	protoflp $(PROTO) -dd_mdep2.h < mdep2.c > tmp.c
+ntshare/makefile:	protoflp $(PROTO) -dd_view.h < view.c > tmp.c
+ntshare/makefile:	protoflp $(PROTO) -dd_grid.h < grid.c > tmp.c
+ntshare/makefile:	protoflp $(PROTO) -dd_midi.h < midi.c > tmp.c
+ntshare/makefile:	protoflp $(PROTO) -dd_clock.h < clock.c > tmp.c
+ntshare/makefile:	protoflp $(PROTO) -dd_real.h < real.c > tmp.c
+ntshare/makefile:	protoflp $(PROTO) -dd_fsm.h < fsm.c > tmp.c
+ntshare/makefile:	protoflp $(PROTO) -dd_keyto.h < keyto.c > tmp.c
+ntshare/makefile:	protoflp $(PROTO) -dd_mfin.h < mfin.c > tmp.c
+ntshare/makefile:	protoflp $(PROTO) -dd_menu.h < menu.c > tmp.c
+ntshare/makefile:	protoflp $(PROTO) -dd_kwind.h < kwind.c > tmp.c
+stdio/makefile:lowkey : protoflp $(ALLDECS) $(KEYOBJ)
+stdio/makefile:protoflp : protoflp.c
+stdio/makefile:	$(CC) $(STATIC) protoflp.c -o protoflp
+stdio/makefile:protoproc : protoflp
+stdio/makefile:	for %%f in ($(KEYFILES)) do protoflp -p -d d_%%f.h < %%f.c > tmp.c
+stdio/makefile:	rm -f *.o lowkey protoflp keylib
+stdio/makefile:	./protoflp $(PROTO) -dd_regex.h < regex.c > tmp.c
+stdio/makefile:	./protoflp $(PROTO) -dd_sym.h < sym.c > tmp.c
+stdio/makefile:	./protoflp $(PROTO) -dd_bltin.h < bltin.c > tmp.c
+stdio/makefile:	./protoflp $(PROTO) -dd_meth.h < meth.c > tmp.c
+stdio/makefile:	./protoflp $(PROTO) -dd_util.h < util.c > tmp.c
+stdio/makefile:	./protoflp $(PROTO) -dd_phrase.h < phrase.c > tmp.c
+stdio/makefile:	./protoflp $(PROTO) -dd_misc.h < misc.c > tmp.c
+stdio/makefile:	./protoflp $(PROTO) -dd_main.h < main.c > tmp.c
+stdio/makefile:	./protoflp $(PROTO) -dd_task.h < task.c > tmp.c
+stdio/makefile:	./protoflp $(PROTO) -dd_fifo.h < fifo.c > tmp.c
+stdio/makefile:	./protoflp $(PROTO) -dd_code.h < code.c > tmp.c
+stdio/makefile:	./protoflp $(PROTO) -dd_code2.h < code2.c > tmp.c
+stdio/makefile:	./protoflp $(PROTO) -dd_mdep1.h < mdep1.c > tmp.c
+stdio/makefile:	./protoflp $(PROTO) -dd_mdep2.h < mdep2.c > tmp.c
+stdio/makefile:	./protoflp $(PROTO) -dd_view.h < view.c > tmp.c
+stdio/makefile:	./protoflp $(PROTO) -dd_grid.h < grid.c > tmp.c
+stdio/makefile:	./protoflp $(PROTO) -dd_midi.h < midi.c > tmp.c
+stdio/makefile:	./protoflp $(PROTO) -dd_clock.h < clock.c > tmp.c
+stdio/makefile:	./protoflp $(PROTO) -dd_real.h < real.c > tmp.c
+stdio/makefile:	./protoflp $(PROTO) -dd_fsm.h < fsm.c > tmp.c
+stdio/makefile:	./protoflp $(PROTO) -dd_keyto.h < keyto.c > tmp.c
+stdio/makefile:	./protoflp $(PROTO) -dd_mfin.h < mfin.c > tmp.c
+stdio/makefile:	./protoflp $(PROTO) -dd_menu.h < menu.c > tmp.c
+stdio/makefile:	./protoflp $(PROTO) -dd_kwind.h < kwind.c > tmp.c
+svr4/makefile:protoproc : protoflp
+svr4/makefile:		echo "protoflp $(PROTO) $$i ...\\c" ; \
+svr4/makefile:		./protoflp $(PROTO) -d d_$$b.h < $$i > tmp.c ; \
+svr4/makefile:			echo    Reason: protoflp exit was $$r and sizediff was $$sizediff ; \
+svr4/makefile:	./protoflp $(PROTO) -dd_regex.h < regex.c > /dev/null
+svr4/makefile:	./protoflp $(PROTO) -dd_sym.h < sym.c > /dev/null
+svr4/makefile:	./protoflp $(PROTO) -dd_bltin.h < bltin.c > /dev/null
+svr4/makefile:	./protoflp $(PROTO) -dd_util.h < util.c > /dev/null
+svr4/makefile:	./protoflp $(PROTO) -dd_phrase.h < phrase.c > /dev/null
+svr4/makefile:	./protoflp $(PROTO) -dd_misc.h < misc.c > /dev/null
+svr4/makefile:	./protoflp $(PROTO) -dd_main.h < main.c > /dev/null
+svr4/makefile:	./protoflp $(PROTO) -dd_task.h < task.c > /dev/null
+svr4/makefile:	./protoflp $(PROTO) -dd_fifo.h < fifo.c > /dev/null
+svr4/makefile:	./protoflp $(PROTO) -dd_code.h < code.c > /dev/null
+svr4/makefile:	./protoflp $(PROTO) -dd_code2.h < code2.c > /dev/null
+svr4/makefile:	./protoflp $(PROTO) -dd_mdep1.h < mdep1.c > /dev/null
+svr4/makefile:	./protoflp $(PROTO) -dd_mdep2.h < mdep2.c > /dev/null
+svr4/makefile:	./protoflp $(PROTO) -dd_view.h < view.c > /dev/null
+svr4/makefile:	./protoflp $(PROTO) -dd_grid.h < grid.c > /dev/null
+svr4/makefile:	./protoflp $(PROTO) -dd_midi.h < midi.c > /dev/null
+svr4/makefile:	./protoflp $(PROTO) -dd_clock.h < clock.c > /dev/null
+svr4/makefile:	./protoflp $(PROTO) -dd_real.h < real.c > /dev/null
+svr4/makefile:	./protoflp $(PROTO) -dd_fsm.h < fsm.c > /dev/null
+svr4/makefile:	./protoflp $(PROTO) -dd_keyto.h < keyto.c > /dev/null
+svr4/makefile:	./protoflp $(PROTO) -dd_mfin.h < mfin.c > /dev/null
+svr4/makefile:	./protoflp $(PROTO) -dd_menu.h < menu.c > /dev/null
+svr4/makefile:	./protoflp $(PROTO) -dd_kwind.h < kwind.c > /dev/null
+svr4/makefile:	./protoflp $(PROTO) -dd_meth.h < meth.c > /dev/null
+svr4/makefile:key:	protoflp $(ALLDECS) $(OBJS)
+svr4/makefile:protoflp: protoflp.c
+svr4/makefile:	$(CC) protoflp.c -o protoflp
+svr4/makefile:	rm -f $(EXECS) ptest1 ptest2 ptest3 ptest4 protoflp
+winpython/makefile:key.exe : protoflp.exe $(ALLDECS) $(KEYOBJ) key.res
+winpython/makefile:pykeykit.pyd : protoflp.exe $(ALLDECS) $(KEYOBJ) pykeykit.obj key.res
+winpython/makefile:protoflp.exe : protoflp.obj
+winpython/makefile:	$(VC7LINK) $(conflags) $(VCPATHS) -out:protoflp.exe protoflp.obj binmode.obj $(conlibs)
+winpython/makefile:protoproc : protoflp.exe
+winpython/makefile:	for %%f in ($(KEYFILES)) do .\protoflp -p -d d_%%f.h < %%f.c > tmp.c
+winpython/makefile:	protoflp $(PROTO) -dd_regex.h < regex.c > tmp.c
+winpython/makefile:	protoflp $(PROTO) -dd_sym.h < sym.c > tmp.c
+winpython/makefile:	protoflp $(PROTO) -dd_bltin.h < bltin.c > tmp.c
+winpython/makefile:	protoflp $(PROTO) -dd_meth.h < meth.c > tmp.c
+winpython/makefile:	protoflp $(PROTO) -dd_util.h < util.c > tmp.c
+winpython/makefile:	protoflp $(PROTO) -dd_phrase.h < phrase.c > tmp.c
+winpython/makefile:	protoflp $(PROTO) -dd_misc.h < misc.c > tmp.c
+winpython/makefile:	protoflp $(PROTO) -dd_main.h < main.c > tmp.c
+winpython/makefile:	protoflp $(PROTO) -dd_task.h < task.c > tmp.c
+winpython/makefile:	protoflp $(PROTO) -dd_fifo.h < fifo.c > tmp.c
+winpython/makefile:	protoflp $(PROTO) -dd_code.h < code.c > tmp.c
+winpython/makefile:	protoflp $(PROTO) -dd_code2.h < code2.c > tmp.c
+winpython/makefile:	protoflp $(PROTO) -dd_mdep1.h < mdep1.c > tmp.c
+winpython/makefile:	protoflp $(PROTO) -dd_mdep2.h < mdep2.c > tmp.c
+winpython/makefile:	protoflp $(PROTO) -dd_view.h < view.c > tmp.c
+winpython/makefile:	protoflp $(PROTO) -dd_grid.h < grid.c > tmp.c
+winpython/makefile:	protoflp $(PROTO) -dd_midi.h < midi.c > tmp.c
+winpython/makefile:	protoflp $(PROTO) -dd_clock.h < clock.c > tmp.c
+winpython/makefile:	protoflp $(PROTO) -dd_real.h < real.c > tmp.c
+winpython/makefile:	protoflp $(PROTO) -dd_fsm.h < fsm.c > tmp.c
+winpython/makefile:	protoflp $(PROTO) -dd_keyto.h < keyto.c > tmp.c
+winpython/makefile:	protoflp $(PROTO) -dd_mfin.h < mfin.c > tmp.c
+winpython/makefile:	protoflp $(PROTO) -dd_menu.h < menu.c > tmp.c
+winpython/makefile:	protoflp $(PROTO) -dd_kwind.h < kwind.c > tmp.c
+winpython/makefile~:key.exe : protoflp.exe $(ALLDECS) $(KEYOBJ) key.res
+winpython/makefile~:pykeykit.pyd : protoflp.exe $(ALLDECS) $(KEYOBJ) pykeykit.obj key.res
+winpython/makefile~:protoflp.exe : protoflp.obj
+winpython/makefile~:	$(VC7LINK) $(conflags) $(VCPATHS) -out:protoflp.exe protoflp.obj binmode.obj $(conlibs)
+winpython/makefile~:protoproc : protoflp.exe
+winpython/makefile~:	for %%f in ($(KEYFILES)) do protoflp -p -d d_%%f.h < %%f.c > tmp.c
+winpython/makefile~:	protoflp $(PROTO) -dd_regex.h < regex.c > tmp.c
+winpython/makefile~:	protoflp $(PROTO) -dd_sym.h < sym.c > tmp.c
+winpython/makefile~:	protoflp $(PROTO) -dd_bltin.h < bltin.c > tmp.c
+winpython/makefile~:	protoflp $(PROTO) -dd_meth.h < meth.c > tmp.c
+winpython/makefile~:	protoflp $(PROTO) -dd_util.h < util.c > tmp.c
+winpython/makefile~:	protoflp $(PROTO) -dd_phrase.h < phrase.c > tmp.c
+winpython/makefile~:	protoflp $(PROTO) -dd_misc.h < misc.c > tmp.c
+winpython/makefile~:	protoflp $(PROTO) -dd_main.h < main.c > tmp.c
+winpython/makefile~:	protoflp $(PROTO) -dd_task.h < task.c > tmp.c
+winpython/makefile~:	protoflp $(PROTO) -dd_fifo.h < fifo.c > tmp.c
+winpython/makefile~:	protoflp $(PROTO) -dd_code.h < code.c > tmp.c
+winpython/makefile~:	protoflp $(PROTO) -dd_code2.h < code2.c > tmp.c
+winpython/makefile~:	protoflp $(PROTO) -dd_mdep1.h < mdep1.c > tmp.c
+winpython/makefile~:	protoflp $(PROTO) -dd_mdep2.h < mdep2.c > tmp.c
+winpython/makefile~:	protoflp $(PROTO) -dd_view.h < view.c > tmp.c
+winpython/makefile~:	protoflp $(PROTO) -dd_grid.h < grid.c > tmp.c
+winpython/makefile~:	protoflp $(PROTO) -dd_midi.h < midi.c > tmp.c
+winpython/makefile~:	protoflp $(PROTO) -dd_clock.h < clock.c > tmp.c
+winpython/makefile~:	protoflp $(PROTO) -dd_real.h < real.c > tmp.c
+winpython/makefile~:	protoflp $(PROTO) -dd_fsm.h < fsm.c > tmp.c
+winpython/makefile~:	protoflp $(PROTO) -dd_keyto.h < keyto.c > tmp.c
+winpython/makefile~:	protoflp $(PROTO) -dd_mfin.h < mfin.c > tmp.c
+winpython/makefile~:	protoflp $(PROTO) -dd_menu.h < menu.c > tmp.c
+winpython/makefile~:	protoflp $(PROTO) -dd_kwind.h < kwind.c > tmp.c
+x/makefile:protoproc : protoflp
+x/makefile:		echo "protoflp $(PROTO) $$i ...\\c" ; \
+x/makefile:		./protoflp $(PROTO) -d d_$$b.h < $$i > tmp.c ; \
+x/makefile:			echo    Reason: protoflp exit was $$r and sizediff was $$sizediff ; \
+x/makefile:	./protoflp $(PROTO) -dd_regex.h < regex.c > /dev/null
+x/makefile:	./protoflp $(PROTO) -dd_sym.h < sym.c > /dev/null
+x/makefile:	./protoflp $(PROTO) -dd_bltin.h < bltin.c > /dev/null
+x/makefile:	./protoflp $(PROTO) -dd_util.h < util.c > /dev/null
+x/makefile:	./protoflp $(PROTO) -dd_phrase.h < phrase.c > /dev/null
+x/makefile:	./protoflp $(PROTO) -dd_misc.h < misc.c > /dev/null
+x/makefile:	./protoflp $(PROTO) -dd_main.h < main.c > /dev/null
+x/makefile:	./protoflp $(PROTO) -dd_task.h < task.c > /dev/null
+x/makefile:	./protoflp $(PROTO) -dd_fifo.h < fifo.c > /dev/null
+x/makefile:	./protoflp $(PROTO) -dd_code.h < code.c > /dev/null
+x/makefile:	./protoflp $(PROTO) -dd_code2.h < code2.c > /dev/null
+x/makefile:	./protoflp $(PROTO) -dd_mdep1.h < mdep1.c > /dev/null
+x/makefile:	./protoflp $(PROTO) -dd_mdep2.h < mdep2.c > /dev/null
+x/makefile:	./protoflp $(PROTO) -dd_view.h < view.c > /dev/null
+x/makefile:	./protoflp $(PROTO) -dd_grid.h < grid.c > /dev/null
+x/makefile:	./protoflp $(PROTO) -dd_midi.h < midi.c > /dev/null
+x/makefile:	./protoflp $(PROTO) -dd_clock.h < clock.c > /dev/null
+x/makefile:	./protoflp $(PROTO) -dd_real.h < real.c > /dev/null
+x/makefile:	./protoflp $(PROTO) -dd_fsm.h < fsm.c > /dev/null
+x/makefile:	./protoflp $(PROTO) -dd_keyto.h < keyto.c > /dev/null
+x/makefile:	./protoflp $(PROTO) -dd_mfin.h < mfin.c > /dev/null
+x/makefile:	./protoflp $(PROTO) -dd_menu.h < menu.c > /dev/null
+x/makefile:	./protoflp $(PROTO) -dd_kwind.h < kwind.c > /dev/null
+x/makefile:	./protoflp $(PROTO) -dd_meth.h < meth.c > /dev/null
+x/makefile:key:	protoflp $(ALLDECS) $(OBJS)
+x/makefile:protoflp: protoflp.c
+x/makefile:	$(CC) protoflp.c -o protoflp
+x/makefile:	-rm -f $(EXECS) ptest1 ptest2 ptest3 ptest4 protoflp

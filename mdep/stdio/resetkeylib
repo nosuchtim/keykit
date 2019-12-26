@@ -1,0 +1,3 @@
+cd ..
+cd lib
+../bin/lowkey ../lib/updatelib.k -c "updatelib(1)"

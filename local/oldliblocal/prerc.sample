@@ -1,0 +1,72 @@
+##############################################################
+#
+# If you want to do any custom things at startup time,
+# just rename this file as prerc.k and make the desired modifications.
+#
+# Future versions of keykit will not include a liblocal/prerc.k file,
+# so changes to prerc.k will not be overwritten when you install new
+# versions of keykit.
+#
+##############################################################
+
+function prerc() {
+
+	##############################################################
+	# Local modifications go here
+	##############################################################
+
+	##############################################################
+	## If you want all MIDI input to be automatically echoed to
+	## MIDI output (e.g. if your controller output is connected to
+	## the PC input and the PC output is connected to your synths)
+	## then set Merge=1.  If you have things set up so that your
+	## controller is sending things to the synths as well as to
+	## the PC, then you don't need this, and you should set Merge=0
+	## The default value of Merge is 1
+
+	# Merge = 1
+
+	##############################################################
+	## You will have to adjust the MIDI input and output devices that
+	## are opened by default.  To get a list of the ports, type
+	## "listports()" at the keykit console, or better, use the
+	## "Port Enabler" tool in the GUI.
+	##
+	## Note that the values you can give here are strings - it will
+	## search for a string match in the list of port names.
+	## Also note that you can open multiple inputs and outputs.
+
+	# inport("MIDI INPUT 1")
+	# inport("MIDI INPUT 2")
+	# outport("MIDI OUTPUT 1")
+	# outport("MIDI OUTPUT 2")
+	# outport("MIDI OUTPUT 3")
+
+	##############################################################
+	## These lines are the kind you can use to
+	## adjust the colors for the background (color
+	## index 0), foreground (color index 1),
+	## "picked notes" (color index 2), and
+	## bar-lines-in-the-phrase-window (color index 3).
+	## The example below produces a pink-ish background,
+	## and magenta "picked" notes.
+
+	# colormix(0,50000,40000,40000)
+	# colormix(1,20000,1000,1000)
+	# colormix(2,50000,0,30000)
+
+	##############################################################
+	## If you want to access other libraries of keykit functions, add
+	## them to Keypath here.
+
+	# Keypath += Pathseparator + "C:/TclK/k"
+	# Keypath += Pathseparator + "C:/TclK/usr"
+	# Keypath = Keypath + Pathseparator
+	#	+ ".."+Dirseparator+"users"+Dirseparator+"libback"
+	# Keypath = Keypath + Pathseparator
+	#	+ ".."+Dirseparator+"users"+Dirseparator+"beerman"
+	# Keypath = Keypath + Pathseparator
+	#	+ ".."+Dirseparator+"users"+Dirseparator+"chapman"
+	# Keypath = Keypath + Pathseparator
+	#	+ ".."+Dirseparator+"users"+Dirseparator+"brusorio"
+}

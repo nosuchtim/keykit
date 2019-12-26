@@ -1,0 +1,11 @@
+[0.000,T5344840] No config file (.\config/defaults.json), assuming defaults
+[0.000,T5344840] Hello Manifold!
+[0.000,T5344840] MmttServer::setup start
+[0.000,T5344840] MmttListener::onInit
+[0.000,T5344840] Leap controller created
+[0.000,T5344840] _leapable = 1
+[0.000,T5344840] NOW LISTENING for HTTP on TCP port 4444
+[0.000,T5344992] real_mmtt_json_threadfunc is starting
+[0.000,T15239128] MmttListener::onConnect
+[0.000,T5344840] Warning - unable to open patch file: .\config/mmtt/default.json
+[0.000,T5344840] LoadPatch of default failed!?  err=Warning - unable to open patch file: .\config/mmtt/default.json

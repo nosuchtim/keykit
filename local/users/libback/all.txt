@@ -1,0 +1,105 @@
+2bar Styles defined in alla.mid, allb.mid
+
+1	8beat Pop
+2	8 Upbeat Pop
+3	Light Pop
+4	Folk Rock
+5	Detroit Pop
+6	Upbeat Pop Shuffle
+7	Pop Rhumba
+8	Showtune
+9	8beat light
+10	Slow Ballad
+11	Epic Ballad
+12	16Beat Ballad
+13	Piano Ballad
+14	Ballad 1
+15	Ballad 2
+16	Rock Ballad
+17	Light Rock Ballad
+18	Latin Rock
+19	Heavy Rock
+20	Slow Rock
+21	Acid Jazz
+22	70s Disco
+23	Disco Party
+24	Disco Tropical
+25	Polka Pop
+26	Rock & Roll 1
+27	Rock & Roll 2
+28	Boogie
+29	Twist
+30	Dixieland
+31	Big Band
+32	Big Band Ballad
+33	Swing
+34	Charleston
+35	Cool Jazz
+36	Jazz Ballad
+37	Fast Bossa
+38	Slow Bossa
+39	Samba 1
+40	Jazz Samba
+41	Mambo
+42	Beguine
+43	Merengue
+44	Son
+45	Bolero Lento
+46	Reggae 1
+47	Reggae 2
+48	Bluegrass
+49	Country Rock 1
+50	Country Rock 2
+51	Cowboy Boogie
+52	Country Ballad
+53	Country Shuffle
+54	Twostep
+55	Polka 1
+56	Polka 2
+57	Espagnole
+58	Tarantella
+59	March 1
+60	March 2
+61	March 3
+62	March 4
+63	Tango
+64	Foxtrot
+65	Jive
+66	Quickstep
+67	Slow Foxtrot
+68	Cha cha
+69	Rhumba
+70	Samba 2
+71	Conga
+72	Pasodoble
+73	Pop Rock
+74	Pop Shuffle
+75	Rock Pop
+76	Rock Shuffle
+77	16 Beat Pop
+78	12 Beat Ballad 2
+79	Techno
+80	Dance Pop
+81	Pop Rap
+82	Eurobeat
+83	Disco Pop
+84	Disco Soul
+85	R & B
+86	Soul
+87	Funk
+88	Blues
+89	Fusion
+90	Pop Bossa
+91	Salsa
+92	Pop Reggae
+
+2bar 3/4 styles defined in all3a.mid, all3b.mid
+
+1	Gospel
+2	Traditional Waltz 1
+3	Traditional Waltz 2
+4	Slow Waltz
+5	Vienna Waltz
+6	Jazz Waltz
+7	Country Waltz 1
+8	Country Waltz 2

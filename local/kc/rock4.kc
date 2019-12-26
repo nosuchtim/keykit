@@ -1,0 +1,203 @@
+Collection = [
+	0=
+		["name"="One beat",
+		"phrase"=',l96'],
+	1=
+		["name"="rock40",
+		"phrase"='co1d24v99c10 f+,dt96 f+,ct192 f+,dt288 f+,cv85t336,l384'],
+	2=
+		["name"="rock40fill",
+		"phrase"='do1d16v99c10,do2v85,fo1v99,cd24,dd25t96,dd24v85t120,do2d25,dd24v71t168,co1d2\
+5v85,cd24v71t216,dd25v85,dv71t264,dd24v99t288,l384'],
+	3=
+		["name"="rock41",
+		"phrase"='co1d16v99c10 f+,f+v85t48,dv99t96 f+,cv85t144 f+,cv99t192 f+,f+v85t240,dv99t2\
+88 f+,f+v85t336,l384'],
+	4=
+		["name"="rock41fill",
+		"phrase"='co1d16v99c10 f+,cv85t48 f+,dv99t96 f+,f+v85t144,cv99t192 f+,f+v85t240,dd17v9\
+9t288,dv85t304,dt320,dd16v99t336,l384'],
+	5=
+		["name"="rock42",
+		"phrase"='co1d24v99c10 f+,f+v85t48,dv99t96 f+,cv85t144 f+,cv99t192 f+,cv85t240 f+,dv99\
+t288 f+,f+v85t336,l384'],
+	6=
+		["name"="rock42fill",
+		"phrase"='f+o1d24v113c10,cv85t48 f+,dv99t96 f+,f+v85t144,cv99t192 f+,dv85t240 f+,dv99t\
+288 f+,do2v85,fo1v99 f+v85,l384'],
+	7=
+		["name"="rock43",
+		"phrase"='co1d24v99c10 f+,cv85t48,dv99t96 f+,ct192 f+,cv85t240,dv99t288 f+,l384'],
+	8=
+		["name"="rock43fill",
+		"phrase"='co1d16v99c10 f+,cv85t48,dv99t96 f+,ct192 f+,dd17v85t240,dv71t256,dv85t272,dd\
+16v99t288,l384'],
+	9=
+		["name"="rock44",
+		"phrase"='co1d24v99c10 f+d25,f+v85t24,cd24t48 f+d25,f+t72,dd24t96 f+d25v99,f+v85t120,f\
++t144,f+t168,cd24v99t192 f+d25,f+v85t216,f+t240,f+t264,dd24v99t288 f+,dd25v85\
+t336,dd24v99t360'],
+	10=
+		["name"="rock44fill",
+		"phrase"='do2d8v99c10,dv85t16,dv99t32,co1t48,dv85t64,dv99t80,dt96,cv85t112,ft128,fv99t\
+144,fv85t160,ct176,dv99t192,do2v85t216,fo1t240,ct264,dd9t280,dd8v99t288 c+o2v\
+85,c+v99t320 d,fo1t352 c+o2v113,fo1v85t368,l384'],
+	11=
+		["name"="rock45",
+		"phrase"='co1d24v85c10 f+d25v99,f+v85t24,f+v99t48,cd24v71t72 f+d25v85,dd24t96 f+d25v99\
+,f+v85t120,cd24v71t144 f+d25v99,f+v85t168,f+v99t192,dd24v71t216 f+d25v85,ct24\
+0 f+v99,cd24v71t264 f+d25v85,dd24t288 f+d25v99,f+v85t312,cd24t336 f+d25v99,f+\
+v85t360,l384'],
+	12=
+		["name"="rock45fill",
+		"phrase"='co1d24v85c10 f+d25v99,f+v85t24,f+v99t48,cd24v85t72 f+d25,f+v99t96,dd24v85t12\
+0 f+d25,ct144 f+v99,cd24v85t168 f+d25,f+v99t192,dd24v85t216 f+d25,ct240 f+v99\
+,cd24v71t264 f+v85,dd25,dd13v71t312,dv57t324,dd25v85t336,dd24v99t360 c+o2'],
+	13=
+		["name"="rock46",
+		"phrase"='co1d24v99c10 f+d25,f+v85t24,ct48 f+,cd24v99t72 f+d25v85,dd24t96 f+d25v99,f+v\
+85t120,f+t144,f+t168,cd24v99t192 f+d25,f+v85t216,f+t240,cd24v99t264 f+d25v85,\
+dd24v99t288 f+d25,f+v85t312,dd24t336 f+d25,f+d24t360'],
+	14=
+		["name"="rock46fill1a",
+		"phrase"='co1d12v99c10,cv85t24,ct48,dd13t84,dd12v99t96,dt144,dv85t168,cv99t192,cv85t21\
+6,dv99t240,do2v85t264,co1v99t288,do2v85t312,fo1v99t336,cv85t360,l384'],
+	15=
+		["name"="rock46fill1b",
+		"phrase"='do1d8v99c10,do2v85t24,co1v99t48,do2v85t72,fo1v99t96,cv85t120,dv99t144,do2v85\
+t160,co1t176,do2v99t192,fo1v85t208,ct224,dv99t240,do2v85t256,co1t272,do2v113t\
+288,fo1v99t304,ct320,dv113t336,dv99t352,dv113t368,l384'],
+	16=
+		["name"="rock47a",
+		"phrase"='co1d24v85c10 b-,f+d25,cd24v71t48 f+d25v99,f+d24v85t72,d b-,f+d25,cd24v71t144\
+ f+d25v99,f+d24v85t168,cv71 b-v85,f+d25,f+v99t240,cd24v57t264 f+d25v85,dd24v7\
+1t288 f+d25v99,f+d24v85t312,cv71 b-v85,l384'],
+	17=
+		["name"="rock47b",
+		"phrase"='b-o1d24v85c10,cv71,f+v99,cv57,dv85 b-,cv71t144 f+v99,cv85t192 b-,cv71t240 f+\
+v99,dv85t288 b-,cv71t336 f+v99,l384'],
+	18=
+		["name"="rock47fill1",
+		"phrase"='b-o1d24v85c10,cv71,f+v99,cv57,dv85 b-,cv71,f+v99,cv71,b-v85,cd25v71,cv57t240\
+ f+d24v99,cv71,dv85 b-,cv71t336 f+v99,l384'],
+	19=
+		["name"="rock47fill2",
+		"phrase"='b-o1d24v85c10,cv71,cv57t72,dv85 b-,cv71,ct168,dd25v85 f+d24v113,cd25v71 dd24\
+,cd25v57 f+d24v113,cv71,dv85 f+v113,cv71t336 dd25 f+d24v113,dv57'],
+	20=
+		["name"="rock47fill3",
+		"phrase"='b-o1d24v85c10,cv71,cv57t72,dv85 b-,cv71,ct168,dd25v85 f+d24v113,cd25v71 dd24\
+,cd25v57 f+d24v113 do2d25v99,co1d24v71t264 do2v85,do1 f+v113 bv99,cv71t336 dd\
+25 f+d24v113 bv85,dv57'],
+	21=
+		["name"="rock47fill4",
+		"phrase"='f+o1d25v99c10,f+v71t24,ct48 f+v85,cd24v57t72 f+v71,dv85 b-v99,f+d25v71,ct144\
+ f+d24v85,cv57 b-v99,cv71t216 b-v99,cv71t264 b-v99,dv85 f+d25v99,f+v71t312,cd\
+24t336 f+d25v85,f+d24v71t360'],
+	22=
+		["name"="rock47fill5",
+		"phrase"='co1d24v85c10 dd25 f+d24v113,dv71,c f+v99 do2d25v85,dd24v71t72,co1 f+v113 bd2\
+5v85,bd24v71t120,c fd25v85 f+d24v99,fv71,cv85 dv71 f+v113,do2v71,co1d25 fd24v\
+85 f+v99 bd25v85,cd24v57t264 bv71,d fv85 f+v113,cv71t336 fv85 f+v99,l384'],
+	23=
+		["name"="rock48intro1a",
+		"phrase"='co1d24v85c10 c+o2v71,co1d25t48 f+v99,cd24v57t72 f+v85,d b-v71,ct144 f+d25v99\
+,f+d24v85t168,c c+o2v71,f+o1v85t240,c c+o2v57,do1v85,ct336 c+o2v71,l384'],
+	24=
+		["name"="rock48intro1b",
+		"phrase"='co1d24v85c10 f+v99,cd25v71t48 f+v99,cd24v57t72 f+v85,d b-v71,ct144 c+o2,co1d\
+25v85t192 dd24v71 c+o2v85,co1v57,dd25v71,dv57t264,cd24v85t288 d c+o2v71,l384'],
+	25=
+		["name"="rock48a",
+		"phrase"='co1d24v85c10 e-o2,co1d25v71t48 e-o2d24,co1v57,dv85 e-o2,co1v71t144 e-o2,e-v8\
+5t192,co1v71t240 e-o2,do1v85t288 e-o2,e-v71t336,l384'],
+	26=
+		["name"="rock48b",
+		"phrase"='e-o2d24v85c10,co1v71t48 e-o2,do1v85t96 e-o2,e-v71t144,co1,e-o2v85,co1d25v57,\
+cd24v71t240 e-o2,e-v85t288,co1v71t336 e-o2,l384'],
+	27=
+		["name"="rock48fill1",
+		"phrase"='e-o2d24v85c10,co1v71t48 e-o2,do1v85t96 e-o2,co1d25v71t144 e-o2v99,co1v57t168\
+ e-o2d24v85,co1 d,cv71t240 e-o2v99,co1d25v85t288 dd24,cd25v57,cd24v71t336 dv8\
+5,l384'],
+	28=
+		["name"="rock48fill2",
+		"phrase"='co1d24v85c10 dd25,dd13v71t24,dv57t36,cd24v71t48 dd25v85,dd24v71t72,cv85 do2d\
+25,dd13v71t120,dv57t132,co1d24v71t144 do2d25v85,dd24v71t168,co1v85 bd25,bv71t\
+216,ct240 bd13v57,bd12v85t252,cd24v57 fd25v85,dd24t288 fv99,cv71t336 f,l384'],
+	29=
+		["name"="rock48fillend1a",
+		"phrase"='do1d24v85c10 do2,co1t48,ct96,dt144 b,ct192,ct240,dt288 b,l384'],
+	30=
+		["name"="rock48end1b",
+		"phrase"='co1d24v85c10 f c+o2,l384'],
+	31=
+		["name"="rock intro1",
+		"phrase"='co1d24v85c10t264,d,ft336,b'],
+	32=
+		["name"="rock intro2",
+		"phrase"='do1d24v85c10t96,dt168,do2d25,dd24t216,bo1,d,f,d,cd25,ct360,l384'],
+	33=
+		["name"="rock intro3",
+		"phrase"='do1d16v85c10,do2t64,co1t160,bt192,dt224,ft256,dt288,dt352,l384'],
+	34=
+		["name"="rock intro4",
+		"phrase"='f+o1d24v99c10,f+v85t48,f+v99t96,f+v85t144,f+v99t192,f+v85t240,f+v99t288,f+v8\
+5t336,l384'],
+	35=
+		["name"="rock intro5",
+		"phrase"='f+o1d25v99c10,f+d24v85t24,b-d48,f+d25v99,f+d24v85t120,b-d48,f+d25v99,f+d24v8\
+5t216,b-d48,f+d25v99,f+d24v85t312,b-d48'],
+	36=
+		["name"="rock intro6",
+		"phrase"='do1d25v85c10,dv71t24,dv85t48,dd24v71t72,dd25t120,dv85t144,dv71t168,dv85t192,\
+dd24v71t216,dd25t264,dv85t288,dv71t312,dv85t336,dd24v71t360'],
+	37=
+		["name"="rock solo 1a",
+		"phrase"='do1d24v71c10,do2t96,bo1t192,ct288,l384'],
+	38=
+		["name"="rock solo 1b",
+		"phrase"='do1d24v71c10,do2t48,bo1t96,ct144,dt192,do2t240,bo1t288,ct336,l384'],
+	39=
+		["name"="rock solo 1c",
+		"phrase"='do1d24v71c10,do2,bo1,c,d,do2,bo1,c,d,do2,bo1,c,d,do2,bo1,c'],
+	40=
+		["name"="rock solo 1d",
+		"phrase"='do1d24v85c10,do2v71,bo1,c,dd25v85,dd24v71t120,c,do2,bo1v85,do2v71,do1,cd25,c\
+d24v85t288,dv71,do2,co1d25 d,l384'],
+	41=
+		["name"="rock solo 1end",
+		"phrase"='co1d24v85c10 d c+o2,l384'],
+	42=
+		["name"="rock solo 2a",
+		"phrase"='do1d49v85c10,dd48v71t48,do2d49v85,dd48v71t144,bo1d49v85,bd48v71t240,cd49v85,\
+cd48v71t336'],
+	43=
+		["name"="rock solo 2b",
+		"phrase"='do1d33v85c10,dv57t32,dd32v71t64,do2d33v85,dv57t128,dd32v71t160,bo1d33v85,bv5\
+7t224,bd32v71t256,cd33v85,cv57t320,cd32v71t352'],
+	44=
+		["name"="rock solo 2c",
+		"phrase"='do1d25v85c10,dv57t24,dv71t48,dd24v57t72,do2d25v85,dv57t120,dv71t144,dd24v57t\
+168,bo1d25v85,bv57t216,bv71t240,bd24v57t264,cd25v85,cv57t312,cv71t336,cd24v57\
+t360'],
+	45=
+		["name"="rock solo 2d",
+		"phrase"='do1d17v99c10,dv71t16,dv57t32,dv85t48,dv71t64,dd16v57t80,do2d17v99,dv71t112,d\
+v57t128,dv85t144,dv71t160,dd16v57t176,bo1d17v99,bv71t208,bv57t224,bv85t240,bv\
+71t256,bd16v57t272,cd17v99,cv71t304,cv57t320,cv85t336,cv71t352,cd16v57t368'],
+	46=
+		["name"="rock solo 2e",
+		"phrase"='do1d24v85c10,do2v71,bo1,c,dd25v85,dd24v71t120,c,do2,bo1d32v85,do2v71,do1,cd2\
+5v85,cd24v71t312,dd16v85,do2v71,bo1v85'],
+	47=
+		["name"="rock end 1a",
+		"phrase"='co1d12v85c10 f+v99 a-o2v85,a-v71t24,b-o1d24v85t48 a-o2d12,c+o1v57t72 f+v99 a\
+-o2v85,c+o1v71t96 dv85 a-o2,c+o1v57t120 b-d24v85,f+d12v99 a-o2v71,a-v85t168,c\
+o1v99t192 c+v71 a-o2,c+o1v57t216,cv71t240 c+ a-o2d13v85,a-v71t252,co1d12v85t2\
+64 a-o2,do1v99t288 b-d24 a-o2d12v71,c+o1t312 f+v113,a-o2d13v85t336,a-v71t348,\
+do1d12t360 b-d24v99 a-o2d13v85,c+o1d12t372 a-o2d13,l384'],
+	48=
+		["name"="rock end 1b",
+		"phrase"='co1d24v85c10 d e-v99 f+v127 a-o2v71,l384']
+]

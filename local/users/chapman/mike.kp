@@ -1,0 +1,20 @@
+Pageobj=$31
+Pagenm="mike"
+Pagesz=["x0"=-4,"x1"=804,"y0"=-4,"y1"=576]
+function keypage_create(r) {
+r.restore(["Autoresize"=1,"Dragquant"=24,"Flashquick"=1,"Menujump"=0,"Merge"=1,"Playquant"=96,"Record"=1,"Recsched"=0,"Showbar"=384,"Sweepquant"=24,"Volstem"=0])
+# recreate object $34
+o=wconsole($34)
+r.addtool(o,["x0"=4,"x1"=796,"y0"=285,"y1"=549])
+
+# recreate object $211
+o=wkboom($211)
+r.addtool(o,["x0"=404,"x1"=796,"y0"=4,"y1"=281])
+o.restore(["cell"=[0=[0=0,1=0,2=0,3=0,4=0,5=0,6=0,7=0,8=0,9=0,10=0,11=0,12=0],1=[0=0,1=0,2=0,3=0,4=0,5=0,6=0,7=0,8=0,9=0,10=0,11=0,12=0],2=[0=0,1=0,2=0,3=0,4=0,5=0,6=0,7=0,8=0,9=0,10=0,11=0,12=0],3=[0=0,1=0,2=0,3=0,4=0,5=0,6=0,7=0,8=0,9=0,10=0,11=0,12=0],4=[0=0,1=0,2=0,3=0,4=0,5=0,6=0,7=0,8=0,9=0,10=0,11=0,12=0],5=[0=0,1=0,2=0,3=0,4=0,5=0,6=0,7=0,8=0,9=0,10=0,11=0,12=0],6=[0=0,1=0,2=0,3=0,4=0,5=0,6=0,7=0,8=0,9=0,10=0,11=0,12=0],7=[0=0,1=0,2=0,3=0,4=0,5=0,6=0,7=0,8=0,9=0,10=0,11=0,12=0]],"compact"=0,"doflash"=1,"inc"=4,"kbdrumlabel"=[0="bass",1="rim_shot",2="snare",3="hand_clap",4="low_tom",5="mid_tom",6="high_tom",7="closed_hat",8="open_hat",9="open_hat2",10="ride",11="tambourine",12="cowbell"],"kbdrumnote"=[0='bo0d24c10',1='c+o1d24c10',2='do1d24c10',3='e-o1d24c10',4='fo1d24c10',5='ao1d24c10',6='co2d24c10',7='f+o1d24c10',8='a-o1d24c10',9='b-o1d24c10',10='e-o2d24c10',11='f+o2d24c10',12='a-o2d24c10'],"layout"=1])
+
+# recreate object $112
+o=wgroup($112)
+r.addtool(o,["x0"=5,"x1"=400,"y0"=4,"y1"=279])
+o.restore(["buttmod"=0,"buttonact"=[1=[0=0,1=2,2=25],2=[0=1,1=7,2=6]],"dn2tn"=[0=0],"groupname"="New","ntracks"=1,"phrases"=[1=''],"tn2chan"=[0=0,1=0],"tn2label"=[0="Merged",1="Trk 1"],"tn2mute"=[0=0,1=0],"tn2patch"=[0=0,1=0],"tn2port"=[0=0,1=0],"toolnotes"=[1=[]],"view"=["x0"=-96,"x1"=864,"y0"=0,"y1"=127]])
+
+}

@@ -1,0 +1,182 @@
+<document name="Keykit Special Variables" title="Special Variables" >
+<blanklink/>
+Below are descriptions of the global variables that have special
+meanings within KeyKit.  Most of these
+are built-in to KeyKit, but some are implemented with code in the
+user-defined library.
+<blankline/>
+<list>
+<listitem name="Abortonerr" bold="yes" />
+When set to 1, KeyKit will abort when an error occurs.  The default is 0.
+<listitem name="Abortonint" bold="yes" />
+When set to 1, KeyKit will abort when an interrupt is received.  The default is 1.
+<listitem name="Arraysort" bold="yes" />
+When set to 1, the index values in
+the "for ( i in arr )" statement will be processed in sorted order.
+The default is 0, so that the order of index values is not sorted.
+<listitem name="Autoresize" bold="yes" />
+When set to 1, resizing the main KeyKit window will result in the
+proportionate resizing of all the individual tool windows.
+Default is 0, so that making the main window bigger will get
+you more space for new tools rather than just making the existing
+tools bigger.
+<listitem name="Clicks" bold="yes" />
+The number of clicks per beat.  Default is 96.
+<listitem name="Clicksperclock" bold="yes" />
+When <font face="Courier">Sync!=0</font>, this is the number of KeyKit clicks per MIDI clock.
+Default is 1.
+<listitem name="Clocksperclick" bold="yes" />
+When <font face="Courier">Sync!=0</font>, this is the number of MIDI clocks per KeyKit click.
+Default is 1.  To avoid confusion when adjusting
+<font face="Courier">Clicksperclock</font> and <font face="Courier">Clocksperclick</font>,
+you should ensure that at least one of those two variables
+has a value of 1.
+<listitem name="Consolefifo" bold="yes" />
+The automatically-opened fifo that can be used
+to read characters from the console.
+<listitem name="Current" bold="yes" />
+This phrase contains all currently-depressed notes.
+<listitem name="Defpriority" bold="yes" />
+This is the default priority of new tasks (though normally,
+tasks inherit the priority of the task that spawns them).
+<listitem name="Dirseparator" bold="yes" />
+This string is the machine-dependent value that separates directory
+entries within a pathname.  For example, on Unix, it is "/".
+<listitem name="Dragquant" bold="yes" />
+This number is used to quantize the dragging of notes with the Group tool.
+<listitem name="Eof" bold="yes" />
+This value is returned when you do a <font face="Courier">get()</font> on a closed (or nonexistent)
+fifo.
+<listitem name="Errorfunc" bold="yes" />
+The function specified by this pointer is automatically called when
+a non-fatal execution error occurs.
+<listitem name="Filter" bold="yes" />
+The value of this variable is a collection of bitflags that
+determines what MIDI messages are filtered out of received MIDI input.
+Macros for the bit values that can be set in the value of Filter
+are: CHANPRESSURE, CONTROLLER, PROGRAM, PRESSURE, PITCHBEND, SYSEX,
+POSITION, SONG, STARTSTOPCONT, and CLOCK.
+Default value is 0, i.e. nothing is filtered.
+<listitem name="Keypath" bold="yes" />
+This string is the list of directories in which to search for
+KeyKit function libraries.  Default is machine-dependent, usually computed
+on the fly by the executable, though you can override it by defining a
+KEYPATH environment variable.  Note: if you change Keypath after KeyKit has
+started executing, you need to call the <font face="Courier">rekeylib()</font> function in order
+to rescan all the directories for their keylib.k files - otherwise the
+change will be ineffective.
+<listitem name="Loadverbose" bold="yes" />
+If non-zero, the dynamic loading of each KeyKit function is announced.
+Default is 0.
+<listitem name="Lowcore" bold="yes" />
+When the amount of free memory falls below this number, warnings begin to be
+issued to encourage exiting.  Default is 50000.
+<listitem name="Machine" bold="yes" />
+This string holds the machine type (e.g. "win", "unix", "amiga").
+<listitem name="Maxatonce" bold="yes" />
+This controls how many simultaneously-depressed notes can be handled
+on MIDI input.  Default value is 256.
+<listitem name="Merge" bold="yes" />
+If non-zero, MIDI input is merged into MIDI output.  Default is 1.
+<listitem name="Mergefilter" bold="yes" />
+If non-zero (and if Merge is non-zero), this value is a bitmask used
+to determine which channels are <b>not</b> merged from MIDI input to MIDI output.
+For example, if the value of Mergefilter is <font face="Courier">41&lt;&lt;4</font>, then channel
+5 will not be merged.  Any number of bits in Mergefilter can be set.
+<listitem name="Mfformat" bold="yes" />
+The value of this variable is the type (0,1,2) of the last MIDI file read
+with <font face="Courier">midifile()</font>.
+<listitem name="Midififo" bold="yes" />
+The automatically-opened fifo that can be used
+to read notes from MIDI input.
+<listitem name="Mousefifo" bold="yes" />
+The automatically-opened fifo that can be used
+to read events from the mouse.  The items read from this fifo are
+arrays - the index values are <font face="Courier">"button"</font>, <font face="Courier">"x"</font>, and <font face="Courier">"y"</font>.
+<listitem name="Now" bold="yes" />
+The current time, in clicks.
+<listitem name="Offsetfilter" bold="yes" />
+If non-zero (and if Offsetpitch is non-zero), this value is a bitmask used
+to determine which channels are <b>not</b> pitch-shifted.
+For example, if the value of Offsetfilter is <font face="Courier">1&lt;&lt;9</font>, then channel
+10 will not be affected.  (And, in fact, 1&lt;&lt;9 is the default
+value of Offsetfilter.)  Any number of bits in Offsetfilter can be set.
+<listitem name="Offsetpitch" bold="yes" />
+If non-zero, all scheduled MIDI output will be pitch-shifted by
+the value of Offsetpitch.
+<listitem name="Pathseparator" bold="yes" />
+This string is the character that separates the components of <font face="Courier">Keypath</font>.
+Default is ":".
+<listitem name="Phraseflashnotes" bold="yes" />
+If this value is non-zero, notes within phrase windows are flashed
+as they are played.  Default is 1.  If your CPU is too busy, setting
+this to 0 can help a bit.
+<listitem name="Printsplit" bold="yes" />
+When long phrase values are printed, they are broken up on separate lines
+(each line terminated with a backslash),
+and Printsplit is the number of characters on each line.  The default
+value is 77.  To disable splitting of lines entirely, set Printsplit to 0.
+<listitem name="Record" bold="yes" />
+When non-zero, recording of MIDI input is enabled.  Default is 1.
+<listitem name="Recorded" bold="yes" />
+This phrase collects all MIDI input (when <font face="Courier">Record</font> is non-zero).
+<listitem name="Recsched" bold="yes" />
+When non-zero, scheduled MIDI output is included
+in the <font face="Courier">Recorded</font> phrase.  Default is 0.
+<listitem name="Sync" bold="yes" />
+If non-zero, time is advanced from clocks on MIDI input instead
+of being driven by the computer's clock.
+This allows synchronization with other MIDI devices (e.g. a drum machine
+or sequencer).
+Default is 0.
+<listitem name="Throttle" bold="yes" />
+This determins how many KeyKit instructions (internal interpreted
+instructions, not KeyKit statements) are executed per each
+check for realtime activity.
+Default value is 100.
+<listitem name="Version" bold="yes" />
+This string is the KeyKit version number (e.g. <font face="Courier">"6.0a"</font>).
+<blankline/>
+<blankline/>
+<title2 name="Variables used in Graphics"/>
+<blankline/>
+<listitem name="Bendrange" bold="yes" />
+This number controls the relative size of pitch-bend controller lines in
+the Misc window.  Default is 16384.
+<listitem name="Bendoffset" bold="yes" />
+This number controls the vertical offset of the beginning of pitch-bend controller
+lines in the Misc window.  Default is 64.
+<listitem name="Checkcount" bold="yes" />
+This controls the frequency of garbage collection activities.  Default is 20.
+<listitem name="Colors" bold="yes" />
+This is the number of colors (including black and white) available.
+<listitem name="Font" bold="yes" />
+This string is the name of the font to be used.  Default is machine-dependent,
+and some machines may completely ignore it.
+<listitem name="Graphics" bold="yes" />
+This number is non-zero whenever graphics mode is enabled.
+<listitem name="Menujump" bold="yes" />
+If non-zero, moving the mouse into a menu's scroll bar will cause the
+menu to immediately jump to that position.  Otherwise, scroll bar movement
+is only relative.  Default is 0.  If you have trouble interacting with
+the scroll bar, try setting this to 1.
+<listitem name="Menuscrollwidth" bold="yes" />
+This number controls the width of the scroll bar in scrolling
+menus.  Default is 20.  If you have trouble getting on the scroll bar,
+increase this value.
+<listitem name="Menusize" bold="yes" />
+This is the default maximum number of items in a pop-up menu.
+When a menu becomes larger than this, it will display a scroll bar.
+Default is 12.
+<listitem name="Musicpath" bold="yes" />
+This string is the list of directories in which to search for
+music files.  Default is machine-dependent.
+<listitem name="Showbar" bold="yes" />
+The number of clicks between vertical measure bars.  Default is 4b.
+<listitem name="Sweepquant" bold="yes" />
+This number is used to quantize the sweeping of areas with sweep() and gridsweep().
+<listitem name="Volstem" bold="yes" />
+If non-zero, ``volume stems'' are displayed on notes.  Default is 0.
+<listitem name="Volstemsize" bold="yes" />
+This number controls the relative scale of volume stems.  Default is 4.
+</list></document>

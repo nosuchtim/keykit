@@ -1,0 +1,380 @@
+'''\" number register H determins what type of output is begin generated.
+'''\"
+'''\"   H=0 for normal nroff/troff
+'''\"		X=0 for troff
+'''\"		X=1 for nroff
+'''\"		X=2 for Amiga Guide
+'''\"   H=1 for Windows help files (i.e. .rtf files)
+'''\"
+'''\"======================================================================
+'''\" LS - List Start
+.de LS
+.if \\nH=1 \{.br
+\epar\epard
+.br\}
+.if \\nH=0 \{.nr W \\$1
+.ta \\nWu
+.in +\\nWu
+.sp 0.4\}
+..
+'''\"======================================================================
+'''\" IS - Indented List Start
+.de IS
+.if \\nH=1 \{.br
+\epar\epard
+.br\}
+.if \\nH=0 \{.nr W \\$1
+.in +0.5i
+.ta \\nWu
+.in +\\nWu
+.sp 0.4\}
+..
+'''\"======================================================================
+'''\" LI - List Item
+.de LI
+.if \\nH=1 \{.br
+\epar\epard
+.br
+\etx2000\eli2000\efi-2000
+.br
+\\$1
+.br
+\etab
+.br\}
+.if \\nH=0 \{.sp .55
+.ti 0i
+\\$1\t\}
+..
+'''\"======================================================================
+'''\" LE - List End
+.de LE
+.if \\nH=1 \{.br
+\epar\epard
+.br
+\epar\epard
+.br\}
+.if \\nH=0 \{.in -\\nWu
+.sp 0.55\}
+..
+'''\"======================================================================
+'''\" IE - Indented List End
+.de IE
+.if \\nH=1 \{.br
+\epar\epard
+.br
+\epar\epard
+.br\}
+.if \\nH=0 \{.in -\\nWu
+.in -0.5i
+.sp 0.55\}
+..
+'''\"======================================================================
+'''\" ES is Example Start, EE is Example End
+.de EL
+.if \\nH=1 \eline\etab
+..
+'''\"======================================================================
+'''\" ES - Example Start
+.de ES
+.nf
+.if \\nH=1 \{.br
+\epar\epard
+.br
+\edeff1\ef1\ekeep
+.br\}
+.if \\nH=0 \{.sp 0.55
+.in +.5i
+.ft 4\}
+..
+'''\"======================================================================
+'''\" EE - Example End
+.de EE
+.ft 1
+.fi
+.if \\nH=1 \{.br
+\ef0
+.br
+\epar\epard
+.br
+\epar\epard
+.br
+\edeff0
+.br\}
+.if \\nH=0 \{.in -.5i
+.sp 0.55\}
+..
+'''\"======================================================================
+'''\" He - End of document
+.de He
+.if \\nH=1 \{
+\epar
+\epage
+}
+\}
+.if \\nX=2 \{.br
+@endnode
+.br\}
+..
+'''\"======================================================================
+'''\" SP - Space
+.de SP
+.if \\nH=1 \{.br
+\epar\epard
+.br
+\epar\epard
+.br\}
+.sp \\$1
+..
+'''\"======================================================================
+'''\" S1 - Space (without interrupting indentation)
+.de S1
+.if \\nH=1 \{
+\epar
+\epar
+\}
+.sp
+..
+'''\"======================================================================
+'''\" BR - Line Break
+.de BR
+.if \\nH=1 \{
+\eline
+\}
+.br
+..
+'''\"======================================================================
+'''\" CE - Center next line
+.de CE
+.if \\nH=1 \{
+\eqc
+\}
+.if \\nH=0 .ce
+..
+'''\"======================================================================
+'''\" B - Bold
+.de B
+.if \nH=1 \{{\ef0\eb \\$1}\}
+.if \nH=0 \f2\\$1\f1
+..
+'''\"======================================================================
+'''\" I - Italic
+.de I
+.if \nH=1 \{{\ef2 \\$1}\}
+.if \nH=0 \f2\\$1\f1
+..
+'''\"======================================================================
+'''\" CW - Constant Width
+.de CW
+.if \nH=1 \{{\ef1 \\$1}\}
+.if \nH=0 \f4\\$1\f1
+..
+'''\"======================================================================
+'''\" Hi - Initial Header
+.de Hi
+.ds KV 8.0
+'''\"	H=1 for Windows .rtf files for generating help files
+.if \nH=1 \{
+.ds Es \e\e
+.ds B1 \e{
+.ds B2 \e}
+.ad l
+.hy 0
+.nf
+{\ertf1\eansi
+{\efonttbl \ef0\efswiss Arial; \ef1\efmodern Courier New; \ef2\efroman Times New Roman; \ef3\efroman Palatino;}
+{\ecolortbl \ered0\egreen0\eblue0; \ered0\egreen128\eblue0; \ered0\egreen0\eblue255; \ered255\egreen0\eblue0;}
+#{\efootnote \\$2}
+${\efootnote \\$1}
++{\efootnote \\$3}
+\edeff0\esa360\esb360\ef0\efs30
+\ef0\efs30\ecf2
+.fi
+\}
+.if \nH=0 \{.ds Es \e
+'''\"	This is for normal troff/nroff.
+.if \nX=0 \{
+'fp 1 TR
+'fp 2 TB
+'fp 3 TI
+'fp 4 CR
+\}
+.ds B1 {
+.ds B2 }
+.lg 0
+.pl 11i
+.if \nX<2 .sp 0.5i
+\}
+.if \nX<2 \{.wh 0 Hd\}
+.if \nX<2 \{.wh -1.1i Tl\}
+.if \nX=2 \{.br
+.sp -1
+@database "\\$2.guide"
+.sp 1
+\\$1
+.sp 1
+@master "\\$2.guide"
+.br
+@toc main
+.br
+@node main "\\$1"
+.ds HH main
+.br
+\}
+..
+'''\"======================================================================
+'''\"	T1 - Title 1
+.de T1
+.CE
+.if \nH=1 \{.br
+\\$1
+.br
+\epar\epard
+.br
+\ef0\efs30\ecf2
+.br\}
+.if \nH=0 \{
+\f2\s+4\\$1\s-4\f1
+\}
+..
+'''\"======================================================================
+'''\"	T2 - Title 2
+.de T2
+.CE
+.if \nH=1 \{.br
+\\$1
+.br
+\ef0\efs20\ecf0
+.br\}
+.if \nH=0 \{
+\f2\s+3\\$1\s-3\f1
+\}
+..
+'''\"======================================================================
+'''\"	Te - Title end
+.de Te
+.Hr
+.SP
+.Ta
+..
+'''\"======================================================================
+'''\"	Ta - Title Author
+.de Ta
+.ps +1
+.CE
+Tim Thompson
+.BR
+.CE
+AT&T
+.BR
+.CE
+San Jose, California
+.BR
+.CE
+\f4tjt@nosuch.com\f1
+.SP
+.ps -1
+..
+'''\"======================================================================
+'''\"	C0 - Contents 0
+.de C0
+.if \\nH=1 \{
+.KW contents
+\eli0
+.br
+\\$1
+.SP
+\}
+.if \\nX=2 \{
+.SP
+\\$1
+.SP\}
+..
+'''\"======================================================================
+'''\"	Hc - Header Contents
+.de Hc
+.if \\nH=1 \{.br
+\etab\etab\etab
+.br
+{\euldb \\$1}{\ev \\$2}
+.br
+\epar\epard
+.br\}
+.if \\nX=2 \{.br
+.ta 3i
+@{"  \\$1\t" link \\$2 }
+.br\}
+..
+'''\"======================================================================
+'''\"	H1 - Header
+.de H1
+.SP 1
+.if \nX=2 \{.br
+@next \\$2
+.br
+@endnode
+.br
+@node \\$2 "\\$1"
+.br
+@prev \\*(HH
+.ds HH \\$2
+.br\}
+.if \\nH=1 \{.nf
+\epar\epage
+#{\efootnote \\$2}
+${\efootnote \\$1}
++{\efootnote \\$3}
+.fi
+\epar\ef0\efs30\ecf2\f2\s+2\\$1\s-2\f1
+.br
+\epar\epard\epar\epard\ef0\efs20\ecf0
+.KW "\\$1"
+.KW "\\$2"
+.br\}
+'''\"  add the underline if it is real troff
+.if \\nH=0 \{.ie \\nX=0 \f2\s+2\\$1\l'|0\(ul'\s-2\f1
+.el \f2\s+2\\$1\s-2\f1
+.sp .7\}
+..
+'''\"======================================================================
+'''\"	Hn - Header next
+.de Hn
+.if \\nX=2 \{.br
+@next \\$1
+.br\}
+..
+'''\"======================================================================
+'''\"	Hp - Header previous
+.de Hp
+.if \\nX=2 \{.br
+@prev \\$1
+.br\}
+..
+'''\"======================================================================
+'''\"	KW - Keyword
+.de KW
+.if \nH=1 \{.br
+K{\efootnote \\$1}
+.br\}
+..
+'''\"======================================================================
+'''\"	Hd - Top of page
+.de Hd
+.ev 1
+.sp 0.4i
+.if \\nH=0 \{
+.if \\n+%>1 \{
+.tl ''\-  %  \-''\}
+\}
+.sp 0.3i
+.ev
+..
+'''\"======================================================================
+'''\"	Tl - Top
+.de Tl
+'bp
+..
+'''\"======================================================================
+'''\"	NE - Need room
+.de NE
+.if \\nX<2 .ne \\$1
+..

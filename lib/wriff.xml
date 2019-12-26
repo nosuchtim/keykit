@@ -1,0 +1,61 @@
+<tool name="Riff" class="wriff">
+The
+<b>Riff</b>
+tool is a simple utility for playing and recording phrases.
+It has no real editing functions - that role is filled by the
+<b>Group</b>
+tool.  The Riff tool is useful for looping phrases (repeating them
+endlessly), and is often used as a target of the
+<b>Bang</b>
+tool.
+<blankline/>
+The
+<b>"Load Rec"</b>
+item in the
+<b>More</b>
+menu will load the Riff tool with the most recently recorded MIDI input.
+If you select
+<b>"Load Rec (1b space),"</b>
+it will look back in time to find the first one-beat space, and will
+load the Riff tool with all MIDI input recorded after that.  The
+<b>"Load Rec (4b space)"</b>
+does the same thing except it looks for a four-beat space.
+The
+<b>"Load From Snarf"</b>
+and
+<b>"Load from File"</b>
+items in the
+<b>More</b>
+menu let you load the Riff tool from the Snarf buffer and from
+a Standard MIDI File, respectively.
+<blankline/>
+After loading a phrase into the Riff tool, you can play it by clicking the
+mouse button anywhere within the phrase window.  Clicking the mouse again,
+while the phrase is playing, will terminate playback.  The
+<b>Loop</b>
+button is a toggle switch - if you turn it on, the phrase will be
+played repeatedly until you explicitly terminate it, either by turning the
+<b>Loop</b>
+mode off or by clicking the mouse within the phrase window.
+<blankline/>
+The
+<b>"Loop Quant->"</b>
+item lets you select the value by which the loop repeat time will be quantized.
+For example, if the Riff tool contains a phrase whose length is not
+exactly a multiple of 4 beats, you will probably want to set the loop
+quantization value to 4b.
+Similarly, the
+<b>"Start Quant->"</b>
+item lets you select the quantization value used whenever the riff
+is started.
+<blankline/>
+The
+<b>Snarf</b>
+item in the
+<b>More</b>
+menu will put the current phrase into the Snarf buffer.
+The
+<b>Strip</b>
+item will strip the current phrase - all leading and trailing space (rests)
+will be removed.
+</tool>

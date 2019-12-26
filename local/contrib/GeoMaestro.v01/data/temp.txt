@@ -1,0 +1,36 @@
+## save after changes then call AnyName = Padnote()
+##  to get the array back into variable AnyName
+## BEWARE: always leave two empty spaces between the last ] and the value
+##------->
+a0 ["-->"]
+a1        ["A"]
+f2             ["x"]  -0.509712
+f2             ["y"]  -0.253727
+a1        ["B"]
+f2             ["x"]  -0.0603349
+f2             ["y"]  -0.245085
+a1        ["P1"]
+f2              ["x"]  -0.518227
+f2              ["y"]  1.44138
+a1        ["P2"]
+f2              ["x"]  1.07783
+f2              ["y"]  -0.739902
+a1        ["P_1i1i5a"]
+f2                    ["x"]  -0.200953
+f2                    ["y"]  0.361551
+a1        ["P_1i1i5b"]
+f2                    ["x"]  0.0302236
+f2                    ["y"]  0.170351
+a1        ["P_1i2i5a"]
+f2                    ["x"]  0.20229
+f2                    ["y"]  0.65494
+a1        ["P_1i2i5b"]
+f2                    ["x"]  0.324766
+f2                    ["y"]  0.381079
+f1        ["Speed"]  -0.8
+##
+||_ depth level (indent). Note: level 0 is created by Notepad(), so
+|    editing must only apply to level 1 (simple array) or more (embedded arrays)
+|
+|__ variable type: a(rray), s(tring), i(nteger), f(loat)
+                   value for an array is given in the following lines

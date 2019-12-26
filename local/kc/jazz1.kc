@@ -1,0 +1,143 @@
+Collection = [
+	0=
+		["name"="One beat",
+		"phrase"=',l96'],
+	1=
+		["name"="jazz1",
+		"phrase"='co1d32v99c10 f+,f+d33v85t64,dd32v99t96 f+,cd33v85t160 f+,cd32v99t192 f+,f+d3\
+3v85t256,dd32v99t288 f+,f+d33v85t352,l384'],
+	2=
+		["name"="jazz fill 1",
+		"phrase"='co1d32v99c10 f+,cv85t64 f+d33,dd32v99t96 f+,f+d33v85t160,cd32v99t192 f+,f+v8\
+5t256,dd17v99,dv71t304,dv85t320,dd25v99t336,dd24v85t360'],
+	3=
+		["name"="jazz 2",
+		"phrase"='co1d32v99c10 f+,f+d33v85t64,dd32v99t96 f+,cd33v85t160 f+,cd32v99t192 f+,ct25\
+6 f+d33v85,dd32v99t288 f+,f+d33v85t352,l384'],
+	4=
+		["name"="jazz fill 2",
+		"phrase"='f+o1d32v113c10,cv85t64 f+d33,dd32v99t96 f+,f+d33v85t160,cd32v99t192 f+,dd33v\
+85t256 f+,dd32v99t288 f+,do2v85,fo1v99 f+d33v85,l384'],
+	5=
+		["name"="jazz 3",
+		"phrase"='co1d32v99c10 f+,cv85t64,dv99 f+,ct192 f+,cv85t256,dv99 f+,l384'],
+	6=
+		["name"="jazz fill 3",
+		"phrase"='co1d32v99c10 f+,cv85t64,dv99 f+,ct192 f+,dd17v71t240,dv85t256,dv71t272,dd16v\
+99t288,l384'],
+	7=
+		["name"="jazz 4",
+		"phrase"='co1d32v99c10 f+,dt96 f+,ct192 f+,dt288 f+,cv85t352'],
+	8=
+		["name"="jazz fill 4",
+		"phrase"='do1d16v99c10,do2v85,fo1v99,cd24,dd25t96,dd24v85t120,do2d25,dd24v71t168,co1d2\
+5v85,cd24v71t216,dd25v85,dv71t264,dd32v99t288,l384'],
+	9=
+		["name"="jazz 5",
+		"phrase"='co1d32v99c10 f+,f+d33v71t64,dd32v99t96 f+v85,dt160 f+d33v71,cd32v85t192 f+v9\
+9,f+d33v71t256,dd32v85t288 f+,cd33v71t352 f+,l384'],
+	10=
+		["name"="jazz fill 5a",
+		"phrase"='co1d32v99c10,dv85,c,dd9v71t88,dd32v99t96,cv85,d,c+o2,co1v99t288,do2v85,co1,d\
+o2d9v71t376,l384'],
+	11=
+		["name"="jazz fill 5b",
+		"phrase"='do2d32v99c10,co1v85,do2,c+,co1t192,f,c,fd9v71t280,fd32v85t288,c,f'],
+	12=
+		["name"="jazz 6",
+		"phrase"='co1d24v57c10 f+v99,dv57,cv85 f+,cv57t96 dv71 f+v99,f+v85t144,dv57,cv85 f+v99\
+,cv85t240 f+,cv57t288 dv71 f+v99,cv57t336 f+v85,l384'],
+	13=
+		["name"="jazz fill 6:1",
+		"phrase"='do1d24v71c10 f+v99,cv71,dv57 f+v85,cv57,d f+v99,cv71,d f+v85,cd25v57,cd24v71\
+t192 f+v99,dd25v57,dd24v71t240 f+v85,cv57,dd25v71 f+d24v99,dv57,cd25v71 f+d24\
+v85,cd25v57,l384'],
+	14=
+		["name"="jazz fill 6:2",
+		"phrase"='do1d24v71c10 f+v99 a-o2v71 ao3v85,co1v71,dv57 f+v85 ao3d25,co1d24v57t72 a-o2\
+v71 ao3v57,do1 f+v99,cv71,d f+v85 a-o2d25v71,co1v57t168 a-o2d24v71,co1 c+ f+v\
+99,dd25v57,dd24v71t240 f+v85,cv57 c+v71,dd25 f+d24v99,dv57,cd25v71 e- f+d24v8\
+5,cd25v57 e-d24v71,l384'],
+	15=
+		["name"="jazz 7",
+		"phrase"='co1d32v85c10 e-o2v99,co1d33v57t64 e-o2v85,co1d32t96 d e-o2,co1d33v57t160 e-o\
+2,co1d32v85t192 e-o2v99,co1d33v57t256 e-o2v85,co1d32t288 d e-o2,co1v57t352 e-\
+o2d33,l384'],
+	16=
+		["name"="jazz fill 7",
+		"phrase"='do1d32v85c10 e-o2,dd33t96,dv57t128,dd32t160,co1v85 f,f+t288,e-o2d33t352,l384\
+'],
+	17=
+		["name"="jazz fill 8",
+		"phrase"='co1d16v85c10 d f+v99 e-o2,do1v57t32,dv71t64,cv85t96 d f+v99 e-o2,do1v71t128,\
+dv57t160,cv85t192 do2,dv57t224,dv71t256,co1v85t288 f,fv57t320,cv71t352 f,l384\
+'],
+	18=
+		["name"="jazz fill 9",
+		"phrase"='f+o1d16v113c10,b-v99t64 e-o2,fo1v85t192,fv71t224,fv57t256,cv85t288 f,l384'],
+	19=
+		["name"="jazz fill 10",
+		"phrase"='do1d24v71c10,cv85,ct96 dv71,do2t192,do1v85,b-v113t288 e-o2,l384'],
+	20=
+		["name"="jazz fill 11",
+		"phrase"='do1d16v85c10 do2 e-v113,dv57t32,dv71t64,f+o1v113t96 do2v85,co1t192 f,fv71t22\
+4,ct256 fv57,cv85t288 f f+v113,l384'],
+	21=
+		["name"="jazz fill 12",
+		"phrase"='f+o1d16v99c10,f+v85t32,f+v99t64,f+t96,f+v85t128,b-v113t160,f+v99t192,dv85t28\
+8,dd17v15t352,dd16v43t368'],
+	22=
+		["name"="jazz fill 13",
+		"phrase"='do1d16v85c10,f+t32,dt64,f+v99t96,dv85t128,f+v99t192,b-v113t256,dv85t288 f+v9\
+9,dd17v15t352,dd16v43t368'],
+	23=
+		["name"="jazz fill 14",
+		"phrase"='co1d16v85c10 f+v99 e-o2,do1v71t32,dt64,cv85t96 f+v99 e-o2,do1v71t128,dt160,c\
+v85t192 f+v99 e-o2,do1v71t224,dt256,cv85t288 f+v99 e-o2,co1v71t320 d c+o2,l38\
+4'],
+	24=
+		["name"="jazz fill 15",
+		"phrase"='f+o1d24v99c10,cv85,f+d25v99,f+d24v85t72,dd25v43,dd24v71t120,f+d25v99,f+d24v8\
+5t168,dv71,cd25v29,cd24v85t240,dv71,cv85,b-,f+v99,c+o2v85'],
+	25=
+		["name"="jazz 20",
+		"phrase"='co1d16v85c10 do2v71 e-v99,e-v71t32,e-v85t64,co1v71t96 dv85 f+v99 e-o2,e-v71t\
+128,do1v43t160 e-o2v85,co1t192 e-o2v99,e-v71t224,e-v85t256,co1v71t288 f f+v99\
+ e-o2,e-v71t320,fo1v43t352 e-o2v85,l384'],
+	26=
+		["name"="jazz 21",
+		"phrase"='co1d16v85c10 dv71 f+v113 e-o2v99,do1v15t64,cv71t96 dv85 f+v99 e-o2v85,do1v43\
+t160,cv85t192 f+v113 do2v71 e-v85,dv15t224 e-v71,dv43t256 e-v85,co1t288 f f+v\
+99 e-o2,fo1v15t320 e-o2v71,fo1v43t352 b-v85 e-o2,l384'],
+	27=
+		["name"="jazz 22 big band",
+		"phrase"='co1d16v85c10 e-o2,co1v71t96 dv85 f+v99 e-o2v85,e-v71t160,co1v85t192 e-o2,co1\
+v71t288 f+v99 do2v71 e-v85,dv57t352 e-v71,l384'],
+	28=
+		["name"="jazz 23 big band",
+		"phrase"='co1d16v85c10 f+v99 e-o2v85,do1v71t64,ct96 f+v99 do2v71 e-v85,do1v15t128,e-o2\
+v71t160,co1v85t192 f+v99 e-o2v85,do1v71t256,cv85t288 fv71 b- e-o2v85,co1v71t3\
+52 dv15 fv71 e-o2,l384'],
+	29=
+		["name"="jazz 24 bebop",
+		"phrase"='co1d16v85c10 dv15 f+v99 e-o2v85,do1v71t64 do2,f+o1v99t96 e-o2v85,e-v71t160,e\
+-v85t192,co1v71t256 dv85 fv71,cv85t288 f+v99 e-o2v85,do1v15t320,b-v99t352 e-o\
+2v71,l384'],
+	30=
+		["name"="jazz 25 bebop",
+		"phrase"='co1d16v85c10 d do2v71 e-v85,do1v71t64,dv15t96 f+v99 e-o2v85,do1v15t160 e-o2v\
+71,do1v85t192 e-o2,co1v71t256 fv57,cv85t288 fv71 f+v99 e-o2v85,e-v71t352,l384\
+'],
+	31=
+		["name"="jazz 26 waltz",
+		"phrase"='co1d16v85c10 e-o2,do1t64 b-v71,f+v85t96 e-o2,e-v71t160,f+o1v85t192 e-o2,do1v\
+15t256,cv85t288 e-o2,do1t352 b-v71,l384'],
+	32=
+		["name"="jazz 26b waltz",
+		"phrase"='f+o1d16v85c10 e-o2,e-v71t64,f+o1v85t96 e-o2,do1v15t160,cv85t192 e-o2,do1t256\
+ e-o2,f+o1v99t288,do2v57t352 e-v85,l384'],
+	33=
+		["name"="jazz 27 waltz",
+		"phrase"='co1d16v71c10 dv85 fv71 f+v99 e-o2v85,do1v15t64,cv85t96 e-o2,do1t160 e-o2,f+o\
+1v99t192,do2v57t256 e-v85,co1v71t288 dv85 fv71 f+v99 e-o2v85,do1v15t352,l384']
+]

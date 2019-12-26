@@ -1,0 +1,6 @@
+# local tools can be added here (see lib/tools.lst for format)
+# local tools can be added here (see lib/tools.lst for format)
+Clavier:wclavier
+Interface GeoMaestro:wev
+Test sliders:wtestsliders
+Test compositor:wcompositor

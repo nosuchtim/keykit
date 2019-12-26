@@ -1,0 +1,51 @@
+
+	ESCAPE  	- quit
+	space   	- toggle on/off
+	\r or \n	- redraw
+	v	- verbose (toggle)
+
+	r	- Rhythm on
+	R	- Rhythm off
+
+	c	- switch mouse color
+	C	- Clear all balls
+
+	p	- Random Patch
+	P	- Reset Patch
+
+	q	- quantize more
+	Q	- quantize less
+
+	0	- Walls = keyset
+	1-9	- Walls = file 1-9
+
+	a	- All notes off
+	A	- All notes more off 
+
+	w	- Rand Walls Down
+	W	- All Walls Up
+
+	o	- Octave down
+	O	- Octave up
+
+	t	- More Threads
+	T	- Fewer Threads
+
+	n	- More Notes
+	N	- Fewer Notes
+
+	d	- Decay More
+	D	- Decay Less
+
+	b	- More Balls
+	B	- Fewer Balls
+
+	e	- Less Energy
+	E	- More Energy
+
+	m	- Move Slower
+	M	- More Faster
+
+	s	- Tempo Slower
+	S	- Tempo Faster
+

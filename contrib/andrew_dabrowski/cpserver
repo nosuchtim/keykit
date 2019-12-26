@@ -1,0 +1,4 @@
+# !/bin/bash
+# start lisp counterpoint server
+
+exec sbcl --eval "(require 'counterpoint)" --eval "(listenforcmds)"

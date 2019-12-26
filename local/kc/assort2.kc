@@ -1,0 +1,205 @@
+Collection = [
+	0=
+		["name"="One beat",
+		"phrase"=',l96'],
+	1=
+		["name"="cajun waltz 1a",
+		"phrase"='co1d32v71c10 b-v85 ao3,ad33v71t64,do1d32t96 b- ao3v85,ad33v71t160,do1d32t192\
+ b- ao3d33v85,av57t224,av71t256,co1d32t288 b-v85 ao3,ad33v71t352,l384'],
+	2=
+		["name"="cajun waltz 1a",
+		"phrase"='co1d32v71c10 b-v85 ao3,ad33v71t64,do1d32t96 b- ao3v85,ad33v71t160,do1d32t192\
+ b- ao3d33v85,av57t224,av71t256,l288'],
+	3=
+		["name"="cajun waltz 1b",
+		"phrase"='co1d32v71c10 b-v85 ao3,ad33v71t64,do1d32t96 b- ao3v85,ad33v71t160,do1d32t192\
+ b- ao3d33v85,av57t224,do1d32v71t256 ao3d33,l288'],
+	4=
+		["name"="zydeco 1a",
+		"phrase"='co1d24v71c10 b- f+o2v99,f+v71t48,do1t96 b- f+o2v99,f+v71t144,co1v57t192 b-v7\
+1 f+o2v99,f+v71t240,do1t288 b-v57 f+o2v99,f+v71t336,l384'],
+	5=
+		["name"="zydeco 1b",
+		"phrase"='co1d24v71c10 b- f+o2v99,f+v71t48,do1t96 b-v57 f+o2v99,do1v57t144 f+o2v71,co1\
+t192 b- f+o2v99,f+v71t240,do1v57t288 b-v71 f+o2v99,f+v71t336,l384'],
+	6=
+		["name"="country 1:1",
+		"phrase"='co1d24v85c10 f+,dv71t96 f+v85,f+v71t144,ct192 f+v85,dv71t288 f+v85,f+v71t336\
+,l384'],
+	7=
+		["name"="country 1:2",
+		"phrase"='co1d24v85c10 f+,dv71t96 f+v85,f+v71t144,ct192 f+v85,dv71t288 f+v85,cv71t336 \
+f+,l384'],
+	8=
+		["name"="country 1:3",
+		"phrase"='co1d24v85c10 f+,dv71t96 f+v85,f+v71t144,ct192 f+v85,dt288 f+,dv71t336 f+,l38\
+4'],
+	9=
+		["name"="country 1:4",
+		"phrase"='co1d24v85c10 f+v99,dv71t96 f+v99,cv71t144 f+v85,cv71t192 f+v99,dv85t288 f+v9\
+9,dv71t336 f+v85,l384'],
+	10=
+		["name"="country 2:1",
+		"phrase"='co1d32v85c10 f+,dv71t96 f+v85,f+d33v71t160,cd32t192 f+v85,dv71t288 f+v85,f+d\
+33v71t352,l384'],
+	11=
+		["name"="country 2:2",
+		"phrase"='co1d32v85c10 f+v99,dv71t96 f+v99,f+d33v85t160,cd32v71t192 f+v99,dv71t288 f+v\
+99,dv71t352 f+d33v85,l384'],
+	12=
+		["name"="country 2:3a",
+		"phrase"='co1d32v71c10 f+v85,f+d33v71t64,dd32t96 f+v85,f+d33v71t160,cd32t192 f+v85,f+d\
+33v71t256,dd32t288 f+v85,f+d33v71t352,l384'],
+	13=
+		["name"="country 2:3b",
+		"phrase"='co1d32v71c10 f+v85,f+d33v71t64,dd32t96 f+v85,f+d33v71t160,cd32t192 f+v85,f+d\
+33v71t256,dd32t288 f+v85,cd33v57t352 f+v71,l384'],
+	14=
+		["name"="country 3",
+		"phrase"='co1d24v85c10 dd25v57,dv43t24,dv85t48 f+d24v113,dd25v43,cd24v71t96 dd25v57,dv\
+43t120,dv85t144 f+d24v113,dv43,cv85,dd25v43,dv85t240 f+d24v113,dd25v43,cd24v7\
+1t288 dd25v57,dv43t312,dv85t336 f+d24v113,dd25v43,l384'],
+	15=
+		["name"="dixieland 1",
+		"phrase"='co1d32v85c10 b-v71,ct96 dv85 f+v99,f+v85t160,c b-v71,ct288 dv85 f+v99,f+v85t\
+352'],
+	16=
+		["name"="dixieland 2",
+		"phrase"='co1d16v85c10 b-v71,f+v85t64,cv71t96 dv85 f+v99,f+v85t160,ct192 b-v71,f+v85t2\
+56,cv71t288 dv85 f+v99,f+v85t352,l384'],
+	17=
+		["name"="dixieland 3",
+		"phrase"='co1d16v85c10 b-v71,f+v85t64,cv71t96 dv85 f+v99,f+v71t160,cv85t192 b-v71,f+v8\
+5t256 do2v71,co1t288 dv85 f+v99,dv71t352 f+,l384'],
+	18=
+		["name"="dixieland 4",
+		"phrase"='co1d32v85c10 f+d33v99,f+v71t32,f+v85t64,cd32v71t96 dv85 f+d33v99,f+v85t128,d\
+d32v57t160 f+d33v71,cd32v85t192 f+d33v99,f+v71t224,f+v85t256,cd32v71t288 f f+\
+d33v99,f+v85t320,fd32v57t352 f+d33v71,l384'],
+	19=
+		["name"="dixieland 5",
+		"phrase"='co1d32v85c10 f+v99,cv71t96 dv85 f+v99,b-v71t160,cv85 f+v99,cv71t288 f+v99,f+\
+d33v85t352,l384'],
+	20=
+		["name"="dixieland fill 1",
+		"phrase"='co1d32v85c10 dv71 f+v99,dd33v57t64,cd32v71t96 dv85 f+v99,dv57t160,cv85 f+d33\
+v99 do2v71,f+o1t224 do2d32v57,fo1 f+d33v85,cd32v71t288 f+d33v99 bv71,f+d32v85\
+t320 bv57,f b-v85'],
+	21=
+		["name"="snare roll",
+		"phrase"='do1d13v71c10,dv85t12,dv71t24,dv57t36,dv71t48,dv57t60,dv71t72,dv57t84,dv71t96\
+,dv57t108,dv71t120,dv57t132,dv71t144,dv85t156,dv71t168,dv57t180,dv71t192,dv57\
+t204,dv71t216,dv57t228,dv71t240,dv57t252,dv71t264,dv57t276,dv85t288,dv71t300,\
+dv57t312,dv71t324,dv57t336,dt348,dv71t360,dv57t372,l384'],
+	22=
+		["name"="solo snare",
+		"phrase"='do1d25v99c10,dd13v71t24,dv57t36,dd25v85t48,dd13v71t72,dv57t84,dd25v99t96,dd1\
+3v71t120,dv57t132,dv71t144,dv85t156,dv71t168,dv57t180,dd25v99t192,dd13v71t216\
+,dv57t228,dd25v85t240,dv71t264,dd13v99t288,dv85t300,dv99t312,dv85t324,dd25t33\
+6,dv71t360,l384'],
+	23=
+		["name"="solo hi-hat 16ths",
+		"phrase"='f+o1d25v99c10,f+v71t24,f+v85t48,f+v71t72,f+v99t96,f+v71t120,f+v85t144,f+v71t\
+168,f+v99t192,f+v71t216,f+v85t240,f+v71t264,f+v99t288,f+v71t312,f+v85t336,f+v\
+71t360,l384'],
+	24=
+		["name"="solo hi0hat embellished",
+		"phrase"='f+o1d25v99c10,f+v71t24,f+v85t48,f+v71t72,f+v99t96,f+v71t120,f+d13v85t144,f+t\
+156,f+d25v71t168,f+v99t192,f+v71t216,f+v85t240,f+v71t264,f+d13v99t288,f+v85t3\
+00,f+v99t312,f+v85t324,f+d25t336,f+v71t360,l384'],
+	25=
+		["name"="bunny hop 1a",
+		"phrase"='co1d32v85c10 e-o2v99,co1v71t96 dv85 f+v99 e-o2,e-d33v85t160,co1d32t192 e-o2v\
+99,co1v71t288 dv85 f+v99 do2v71 e-v99,dv71t352 e-d33v85,l384'],
+	26=
+		["name"="bunny hop 1b",
+		"phrase"='co1d32v85c10 d f+ do2 e-v99,co1v71t96 dv85 f+v99 do2v85 e-v99,co1v85t192 d d\
+o2 e-v99,l384'],
+	27=
+		["name"="can can 1a",
+		"phrase"='co1d24v85c10 e-o2v99,do1v71t48,ct96 f+v99 e-o2,do1v71t144,cv85t192 e-o2v99,d\
+o1v71t240,ct288 f+v99 e-o2,do1v71t336,l384'],
+	28=
+		["name"="can can 1b",
+		"phrase"='co1d24v85c10 e-o2v99,do1v71t48,ct96 c+o2v113,do1v71t144,cv85t192 e-o2v99,do1\
+v71t240,ct288 f+v99 e-o2,do1v71t336,l384'],
+	29=
+		["name"="charleston 1",
+		"phrase"='co1d32v85c10 dv71,ct96 f+v99,dv71t160,cv85,do2d33v57t256,co1d32v71t288 f+v99\
+ do2v71,l384'],
+	30=
+		["name"="charleston 2a",
+		"phrase"='co1d32v85c10 dv71 f e-o2v99,co1v71t96 f+v99 e-o2,e-v85t160,co1,e-o2d33t256,c\
+o1d32v71t288 d f f+v99 e-o2,l384'],
+	31=
+		["name"="charleston 2b",
+		"phrase"='co1d32v85c10 dv71 e-o2v99,co1v71t96 f+v99 e-o2,do1v71t160 e-o2d33v85,co1d32t\
+192 e-o2v99,co1v71t288 f+v99 e-o2,e-d33v85t352,l384'],
+	32=
+		["name"="charleston 2c",
+		"phrase"='co1d32v85c10 e-o2v99,co1v71t96 d f+v99 do2v71 e-v99,do1v57t160 do2 e-d33v85,\
+co1d32t192 e-o2v99,do1d33v57t256 f,cd32v71t288 d f f+v99 e-o2,e-d33v85t352,l3\
+84'],
+	33=
+		["name"="jewish 1a",
+		"phrase"='co1d24v85c10,dt48,cv71t96,dt144,cv85t192,dt240,cv71t288,dt336,l384'],
+	34=
+		["name"="jewish 1b",
+		"phrase"='co1d24v85c10,dt48,cv71t96,dt144,cv85t192,dt240,cv71t288 c+o2,do1d25,dv57t336\
+,dd24v71t360'],
+	35=
+		["name"="jewish 1c",
+		"phrase"='co1d24v85c10,dd25t48,dd24v57t72,cv71,dd25t144,dd24v57t168,cv85,dd25t240,dv57\
+t264,cd24v71t288 dd25v85,dv57t312,dv71t336,dd24v57t360'],
+	36=
+		["name"="jewish 2a",
+		"phrase"='co1d24v85c10 e-o2v99,do1v85t48 e-o2,co1v71t96 e-o2v99,do1v71t144 e-o2v85,co1\
+t192 e-o2v99,do1v85t240 e-o2,co1v71t288 e-o2v99,do1v71t336 e-o2v85,l384'],
+	37=
+		["name"="jewish 2b",
+		"phrase"='co1d24v85c10 e-o2v99,do1v85t48 e-o2,co1v71t96 e-o2v99,do1v71t144 e-o2v85,co1\
+t192 e-o2v99,do1v85t240 e-o2,co1v71t288 c+o2,do1d25,dv57t336 e-o2d24v85,do1v7\
+1'],
+	38=
+		["name"="jewish 2c",
+		"phrase"='co1d24v85c10 c+o2v99,do1d25v85t48,dd24v57t72,cv71 c+o2v85,do1d25v71t144,dd24\
+v57t168,cv85 c+o2v99,do1d25v85t240,dd24v57t264,cv71 c+o2v99,do1d25v57,dv71t33\
+6,dv57t360,l384'],
+	39=
+		["name"="jewish 3",
+		"phrase"='co1d24v85c10 dv71 e-o2v99,co1v71t96 f+v99 e-o2,do1v71t144 e-o2v85,co1t192,do\
+2v57t240 e-v85,co1v71t288 f+v99 do2v71 e-v99,dv57t336,l384'],
+	40=
+		["name"="irish jig 1:1",
+		"phrase"='co1d16v85c10 d e-o2v99,do1v57t64,cv71t96 dv85 e-o2v99,do1v71t128,dv57t160,cv\
+85t192 d e-o2v99,do1v57t256,cv85t288 d e-o2v99,do1v71t320,dv57t352,l384'],
+	41=
+		["name"="irish jig 1:2",
+		"phrase"='co1d16v85c10 d e-o2v113,do1d17v57t64,dt80,cd16v71t96 dv85 e-o2v99,do1v57t128\
+,dt160,cv85t192 d e-o2v113,do1d17v57t256,dt272,cd16v85t288 d e-o2v99,do1v57t3\
+20,dt352,l384'],
+	42=
+		["name"="mex hat dance 1a",
+		"phrase"='co1d32v71c10 d e-o2,co1t96 d e-o2,co1d33t192 d e-o2,co1d32t224 d e-o2,co1t28\
+8 d e-o2,l384'],
+	43=
+		["name"="mex hat dance 1b",
+		"phrase"='co1d32v71c10 d e-o2,co1t96 d e-o2,co1t192 d e-o2,co1d33t256 d e-o2,co1d32t28\
+8 d e-o2,l384'],
+	44=
+		["name"="polka 1a",
+		"phrase"='co1d24v85c10 e-o2,do1v71t48,ct96 f+v99 e-o2v71,do1t144,cv85t192 e-o2,do1v71t\
+240,ct288 f+v99 e-o2v71,do1t336,l384'],
+	45=
+		["name"="polka 1b",
+		"phrase"='co1d24v85c10 e-o2,do1v71t48,ct96 f+v99 e-o2v71,do1t144,cv85t192 b-v99 e-o2v8\
+5,do1v71t240 f+v99,cv85t288 d f+v99 e-o2v71,l384'],
+	46=
+		["name"="russian march",
+		"phrase"='co1d24v85c10 e-o2v99,do1v71t48,ct96 e-o2v99,do1v71t144,cv85t192 e-o2v99,do1d\
+25v85t240,dv71t264,cd24t288 dv85 e-o2v99,do1v71t336,l384'],
+	47=
+		["name"="tarantella",
+		"phrase"='co1d32v85c10 d,dd33v71t64,cd32t96 d f+v99,dd33v71t160,cd32v85t192 dv71,dd33t\
+256 b-d32v99 e-o2d33v85,co1d32v71t288 d f+v99 e-o2,do1d33v71t352,l384']
+]

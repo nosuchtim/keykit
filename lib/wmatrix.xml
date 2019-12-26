@@ -1,0 +1,34 @@
+<tool name="Mouse Matrix" class="wmatrix">
+The
+<b>"Mouse Matrix"</b>
+tool is an interactive toy.  Each cell of the grid it displays contains
+a different chord.  Pressing the left mouse button within a cell
+plays its chord.  Dragging the mouse (while its button is pressed)
+across the grid generates interesting sounds.
+<blankline/>
+The left mouse button plays notes on channel 1, by default.
+The right mouse button plays notes on channel 10, by default, which is
+the drum channel of General MIDI synthesizers.  You can change these
+two defaults by setting the values of the
+<b>Mmchan1</b>
+and
+<b>Mmchan2</b>
+variables - either interactively, by typing in the Console window,
+or by putting statements into your
+<b>prerc</b>
+function.
+<blankline/>
+For each cell, four notes are played as a chord.  You can change the number
+of notes in the chord by setting the
+<b>Mmsize</b>
+variable (again, interactively or in
+<b>prerc</b>
+).  Valid values for
+<b>Mmsize</b>
+are 4, 3, 2 and 1.
+For example, typing
+<b>Mmsize=1</b>
+in the Console window would cause the
+<b>"Mouse Matrix"</b>
+tool to produce single notes for each cell.
+</tool>

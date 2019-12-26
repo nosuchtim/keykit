@@ -1,0 +1,174 @@
+Collection = [
+	0=
+		["name"="One beat",
+		"phrase"=',l96'],
+	1=
+		["name"="fusiondrive 1:1",
+		"phrase"='co1d24v85c10 e-o2v113,do1d25v15,dd24v29t48,cv71 e-o2v113,do1d25v29,dd24v15t1\
+20,cv71 e-o2v85,do1v15,cv85 e-o2v113,do1d25v15,dd24v29t240,cv71 e-o2v113,do1v\
+71,ct336 e-o2v85,do1'],
+	2=
+		["name"="fusiondrive 1:2",
+		"phrase"='co1d24v85c10 f+v113,dd25v15,dd24v29t48 b-v71,c f+v113,dd25v29,dd24v15t120 b-\
+v71,c f+v113,dv15,cv85 f+v113,dd25v15,dd24v29t240 b-v71,c f+v113,dv71,b-,c f+\
+v113,dv85'],
+	3=
+		["name"="fusiondrive 1:3",
+		"phrase"='co1d24v85c10 b-,dd25v15 f+d24v113,dv29,cv71 b-,dd25v29 f+d24v113,dv15,cv71 b\
+-,dv15 f+v113,cv85 b-,dd25v15 f+d24v113,dv29,cv71 b-,d f+v113,cv71t336 b-,dv8\
+5 f+v113'],
+	4=
+		["name"="fusiondrive 1:4",
+		"phrase"='co1d24v85c10,dd25v15 do2d24v85,do1v29,cv71 bv85,dd25v29,dd24v15t120 fv85,cv7\
+1,dv15,cv85 do2,do1d25v15,dd24v29t240,cv71 bd25,dd24t288 bv85,cv71t336 fv85,d\
+'],
+	5=
+		["name"="fusiondrive 1:5",
+		"phrase"='co1d24v85c10 e-v71,dd25v15 do2d24v85,do1v29,cv71 e- bv85,dd25v29,dd24v15t120\
+ fv85,cv71 e-,dv15,cv85 e-v71 do2v85,do1d25v15,dd24v29t240,cv71 e- bd25,dd24t\
+288 bv85,cv71t336 e- fv85,d'],
+	6=
+		["name"="fusiondrive 1:6",
+		"phrase"='co1d24v85c10 e-o2v113,do1d25v15 do2d24v85,do1v29 e-v85,cv71 bv85 e-o2v99,do1\
+d25v29,dd24v15t120 fv85,cv71 e- e-o2v99,do1v15,cv85 do2 e-v113,do1d25v15,dd24\
+v29t240 e-v85,cv71 bd25 e-o2d24v99,do1v85 b,cv71t336 e-d25v99 fd24v85 e-o2v99\
+,do1 e-v85'],
+	7=
+		["name"="fusiondrive 2:1",
+		"phrase"='do1d24v99c10 e-o2d25,co1v57t24 e-o2v85,co1d24t48 e-o2d25v99,do1d24v15t72 e-o\
+2d25v85,co1t96 e-o2v99,co1d24v57t120 e-o2d25v85,do1d24t144 e-o2d25v99,co1v57t\
+168 e-o2v85,co1d24t192 e-o2d25v99,do1d24v15t216 e-o2d25v85,co1t240 e-o2v99,co\
+1d24v57t264 e-o2d25v85,do1d24v15t288 e-o2d25v99,co1d24v85t312 e-o2d25,do1d24t\
+336 e-o2d25v99,co1d24v57t360 e-o2d25v85,l384'],
+	8=
+		["name"="fusiondrive 2:2",
+		"phrase"='do1d24v99c10 e-o2d25 a-d24v57,co1d25 e-o2v85,co1d24t48 e-o2d25v99,do1d24v15t\
+72 e-o2d25v85 a-d24v99,co1d25v85 e-o2v99,co1d24v57t120 e-o2d25v85,do1d24t144 \
+e-o2d25v99 a-d24v57,co1d25 e-o2v85,co1d24t192 e-o2d25v99,do1d24v15t216 e-o2d2\
+5v85 a-d24v99,co1d25v85 e-o2v99,co1d24v57t264 e-o2d25v85,do1d24v15t288 e-o2d2\
+5v99 a-d24,co1v85 e-o2d25,do1d24t336 e-o2d25v99 a-d24v71,co1v57 e-o2d25v85,l3\
+84'],
+	9=
+		["name"="fusiondrive 2:3",
+		"phrase"='do1d24v99c10 e-o2d25 a-d24v85,co1d25v57 e-o2v85,co1d24t48 e- e-o2d25v99,do1d\
+24v15t72 e-o2d25v85 a-d24v57,co1d25v85 e-o2v99,co1d24v57t120 e-o2d25v85,do1d2\
+4t144 e- e-o2d25v99 a-d24v85,co1d25v57 e-o2v85,co1d24t192 e-o2d25v99,do1d24v1\
+5t216 e-o2d25v85 a-d24v57,co1d25v85 e-d24 e-o2d25v99,co1d24v57t264 e-o2d25v85\
+,do1d24v15t288 e-o2d25v99 a-d24v85,co1 e-o2d25,do1d24t336 e- e-o2d25v99 a-d24\
+v57,co1 e-o2d25v85,l384'],
+	10=
+		["name"="fusiondrive 2:4",
+		"phrase"='do1d24v99c10 f+v113 a-o2v85,co1d25v57 b-d24v85,c e- f+d25v99,dd24v15t72 f+d2\
+5v113 a-o2d24v57,co1d25v85 f+d24v99,cv57 b-v85,d e- f+d25v113 a-o2d24v85,co1d\
+25v57 f+v99,cd24v85t192 f+d25v99,dd24v15t216 f+d25v113 a-o2d24v57,co1d25v85 e\
+-d24 f+v99,cv57 b-v85,dv15 f+v113 a-o2v85,co1 b-,d e- f+v99 a-o2v57,co1 b-v85\
+'],
+	11=
+		["name"="fusiondrive 2:5",
+		"phrase"='do1d24v99c10 f+v113 a-o2v57 ao3v99,co1d25v57 b-d24v85,c e- f+d25v99 ao3v85,d\
+o1d24v15t72 f+d25v113 a-o2d24v99 ao3v57,co1d25v85 f+d24v99,cv57 b-v85,d e- f+\
+d25v113 a-o2d24v57,co1d25 f+v99,cd24v85t192 f+d25v99 ao3d24,do1v15 f+d25v113 \
+a-o2d24v99,co1d25v85 e-d24 f+v99,cv57 b-v85 a-o2d25v57,do1d24v15t288 f+v113 a\
+-o2v99 ao3d25,co1d24v85t312 b- ao3,do1 e- f+v99 a-o2v57,co1 b-v85'],
+	12=
+		["name"="fusiondrive 3:1a",
+		"phrase"='co1d24v85c10,bv71,do2,bo1,c dv85,fv71,dd25,dd24v57t168,cv85 fv71,b,fd25,fd24\
+v57t264,cv71 dv85,fv71,d,f'],
+	13=
+		["name"="fusiondrive 3:1b",
+		"phrase"='co1d24v85c10,bv71,do2,bo1,c dv85,fv71,dd25,dd24v57t168,cv85 bv71,d,bd25,bd24\
+v57t264,cv71 dv85,bv71,d,b'],
+	14=
+		["name"="fusiondrive 3:1c",
+		"phrase"='co1d24v85c10,bv71,do2,bo1,c dv85,fv71,dd25,dv57t168,cd24v85t192 dd25v71,dv57\
+t216,dv71t240,dv85t264,cd24v71t288 dd25v57,dv71t312,dv85t336,dd24v99t360'],
+	15=
+		["name"="fusiondrive 3:2a",
+		"phrase"='co1d24v85c10,do2v71,bo1,do2,co1 fv85,dv71,fd25,fd24v57t168,cv85 bv71,f,bd25,\
+bd24v57t264,cv71 fv85,dv71,f,d'],
+	16=
+		["name"="fusiondrive 3:2b",
+		"phrase"='co1d24v85c10,do2v71,bo1,do2,co1 fv85,dv71,fd25,fd24v57t168,cv85 dv71,b,dd25,\
+dd24v57t264,cv71 bv85,dv71,b,d'],
+	17=
+		["name"="fusiondrive 3:2c",
+		"phrase"='co1d24v85c10,do2v71,bo1,do2,co1 fv85,dv71,fd25,fd24v57t168,cv85 dd25,dd24v71\
+t216,b,f,c b,f,dd25,dd24v57t360'],
+	18=
+		["name"="fusiondrive 3:3a",
+		"phrase"='co1d24v85c10 f+v113,b-v85 bv71,f+d25v99 do2d24v71,f+o1d25v113 bd24v71,c dv85\
+ f+v99,fv71 b-v85,dd25v57 f+v113,dd24v71t168 f+d25v99,cd24v85t192 fv71 f+d25v\
+99,f+v113t216 bd24v71,fd25 f+d24v99,fv57 b-v85,cv71 dv85 f+v113,fv71 b-v85,dv\
+71 f+v113,fv71 b-v85'],
+	19=
+		["name"="fusiondrive 3:3b",
+		"phrase"='co1d24v85c10 f+v113,b-v85 bv71,f+d25v99 do2d24v71,f+o1d25v113 bd24v71,c dv85\
+ f+v99,fv71 b-v85,dd25v57 f+v113,dd24v71t168 f+d25v99,cd24v85t192 f+d25v99 bd\
+24v71,d f+d25v113,f+d24v99t240 bd25v71,b-d24v85t264 bv57,cv71 dv85 f+v113,b-v\
+85 bv71,d f+v113,b-v85 bv71'],
+	20=
+		["name"="fusiondrive 3:3c",
+		"phrase"='co1d24v85c10 f+v113,b-v85 bv71,f+d25v99 do2d24v71,f+o1d25v113 bd24v71,c dv85\
+ f+v99,fv71 b-v85,dd25v71 f+v113,dv57t168 f+v99,cd24v85t192 dd25v71 f+v99,dv5\
+7t216 f+v113,dv71t240 f+d24v99,dd25v85 b-d24,cv71 dd25v57 f+d24v113,dd25v71 b\
+-d24v85,dd25 f+d24v113,dv99 b-v85'],
+	21=
+		["name"="polytom 1:1",
+		"phrase"='bo1d32v85c10 do2,co1v71,bv85 do2,co1v71,b,c,fv85 b,cv71,fv85 b,cv71,f,c'],
+	22=
+		["name"="polytom 1:2",
+		"phrase"='bo1d32v85c10 do2 a-,co1v71,bv85 do2,co1v71 a-o2v85,bo1v71,c,fv85 b a-o2,co1v\
+71,fv85 b,cv71 a-o2v85,fo1v71,c'],
+	23=
+		["name"="polytom 1:3",
+		"phrase"='bo1d32v85c10 do2 a-,co1v71,c+v85 b do2,co1v71 a-o2v85,bo1v71,c c+v85,f b a-o\
+2,co1v71,c+v85 f b,cv71 a-o2v85,fo1v71,c c+v85'],
+	24=
+		["name"="polytom 1:4",
+		"phrase"='bo1d32v85c10 do2 f+d16v113 a-d32v85,co1v71,e-d16v85t48 ao3,c+o1d32 b do2,co1\
+v71 a-o2v85,bo1v71,e-d16v85t144,cd32v71 c+v85,f b a-o2,co1v71,e-d16v85t240,c+\
+d32 f b,cv71 a-o2v85,fo1v71,e-d16v85t336,cd32v71 c+v85'],
+	25=
+		["name"="polytom 2:1",
+		"phrase"='do2d32v85c10,co1v71,do2d9v57t56,dd32v71t64,co1,bd9v57t120,bd32v85t128,cv71,b\
+d9v57t184,bd32v71t192,c,fd9v57t248,fd32v85t256,cv71,fd9v57t312,fd32v71t320,c'],
+	26=
+		["name"="polytom 2:2",
+		"phrase"='do2d32v85c10 a-d16,co1d32v71t32,do2d9v57t56,dd32v71t64,co1 a-o2d16v85,bo1d9v\
+57t120,bd32v85t128,cv71,bd9v57t184,bd32v71t192 a-o2d16v85,co1d32v71t224,fd9v5\
+7t248,fd32v85t256,cv71 a-o2d16v85,fo1d9v57t312,fd32v71t320,c'],
+	27=
+		["name"="polytom 2:3",
+		"phrase"='do2d32v85c10 a-d16,co1d32v71t32,do2d9v57t56,c+o1d32v85t64 do2v71,co1 a-o2d16\
+v85,bo1d9v57t120,bd32v85t128,cv71 c+v85,bd9v57t184,bd32v71t192 a-o2d16v85,co1\
+d32v71t224,fd9v57t248,c+d32v85t256 f,cv71 a-o2d16v85,fo1d9v57t312,fd32v71t320\
+,c c+v85'],
+	28=
+		["name"="polytom 2:4",
+		"phrase"='do2d32v85c10 f+d16v113 a-v85,co1d32v71t32,e-d16v85t48 ao3,do2d9v57t56,c+o1d3\
+2v85t64 do2v71,co1 a-o2d16v85,bo1d9v57t120,bd32v85t128,e-d16t144,cd32v71 c+v8\
+5,bd9v57t184,bd32v71t192 a-o2d16v85,co1d32v71t224,e-d16v85t240,fd9v57t248,c+d\
+32v85t256 f,cv71 f+o2d16v85 a-,fo1d9v57t312,fd32v71t320,e-d16v85t336 ao3,co1d\
+32v71 c+v85'],
+	29=
+		["name"="polytom 3:1",
+		"phrase"='do1d16v85c10,do2v71,fo1,do2,co1d17,cd16v85t80,do2d17,dd16v71t112,bo1,do2,co1\
+d17v85,cd16v71t176,bd17v85,bd16v71t208,fv85,bv71,cd17v85,cd16v71t272,dd9t280,\
+dd16v85t288,ct352 c+o2,l384'],
+	30=
+		["name"="polytom 3:2",
+		"phrase"='do1d16v85c10 a-o2,dv71,fo1,do2,co1d17,cd16v85t80,do2d17 a-d16,dv71,bo1,do2,c\
+o1d17v85,cd16v71t176,bd17v85 a-o2d16,bo1v71,fv85,bv71,cd17v85,cd16v71t272,dd9\
+t280,dd16v85t288 a-o2,co1t352 c+o2,l384'],
+	31=
+		["name"="polytom 3:3",
+		"phrase"='do1d16v85c10 a-o2,dv71,fo1,do2,co1d17 c+d32v85,cd16t80,do2d17 a-d16,dv71,bo1\
+,do2,co1d17v85 c+d32v71,cd16t176,bd17v85 a-o2d16,bo1v71,fv85,bv71,cd17v85 c+d\
+32,cd16v71t272,dd9t280,dd16v85t288 a-o2,co1t352 c+d32v71 c+o2d16v85'],
+	32=
+		["name"="polytom 3:4",
+		"phrase"='do1d16v85c10 f+o2v113 a-v85,dv71,fo1,e-v85 do2v113 ao3v99,co1d17v71 c+d32v85\
+,cd16t80,do2d17 a-d16,dv71,bo1,e-v85 do2v113,co1d17v85 c+d32v71,cd16t176,bd17\
+v85 a-o2d16,bo1v71,fv85,e-t232,bv113t240,cd17v85 c+d32,cd16v71t272,dd9t280,dd\
+16v85t288 a-o2,e-o1t336 fv113,cv85 c+d32v71 c+o2d16v85']
+]

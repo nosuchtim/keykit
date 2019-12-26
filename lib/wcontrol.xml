@@ -1,0 +1,18 @@
+<tool name="Controller" class="wcontrol">
+The
+<b>Controller</b>
+tool lets you generate MIDI controller messages, such as volume and pan.
+There are sixteen sliders, each corresponding to one of the
+sixteen MIDI channels.  Moving a slider will generate messages on that channel.
+The menu button in the upper-left corner lets you specify
+which type of message is generated.  Some of the message types (for
+example, "reverb depth") are specific to General MIDI devices.
+<blankline/>
+The
+<b>Send</b>
+button, when pressed, will send the current controller values (as specified
+by the current settings of the 16 sliders) to MIDI output.  The
+<b>Snarf</b>
+button will take all of these messages and, rather than sending them to
+MIDI output, put them in the Snarf buffer.
+</tool>

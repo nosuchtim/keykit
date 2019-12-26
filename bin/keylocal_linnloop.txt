@@ -1,0 +1,165 @@
+# To control your "local" configuration, you can create a file
+# named c:\keylocal.k (ie. in the root directory of the drive you
+# are running keykit from), and put a function keylocal() in it.
+# That function will be executed when keykit starts, and you 
+# can set things like the default MIDI input/output ports, etc.
+#
+# This is a sample.  You should copy this file to c:\keylocal.k
+# and then edit it as needed.  The Contribdir, if set, is where things
+# like GeoMaestro will be located.
+
+function keylocal() {
+
+	Contribdir = "c:\\contrib"
+
+	# You can add (multiple) things to be executed at the beginning and
+	# end of the boot process, by using addprerc and addpostrc, like this:
+	addprerc(global(localprerc))
+	addpostrc(global(localpostrc))
+
+	Drummapdefault = "gm"
+	Textscrollsize = 2000
+
+	SmtpServer = "ninja"
+
+	MdepPriority = "normal"
+	Debuggesture = 0
+
+	# Inittask = remotecons(4444)  # would start remote console on port 444
+
+	# Cs32input = lookforandopen("input","JLCooper.*MIDI",0)
+	# Cs32output = lookforandopen("output","JLCooper.*MIDI",0)
+	Cs32input = -1
+	Cs32output = -1
+
+	Osclisten = 1384
+
+
+	# OUTPUT Yoke 1
+	# yoke1 = lookforandopen("output","Yoke.*1",0)
+	# if ( yoke1 >= 0 ) {
+	# 	mapport(0,yoke1)		# default output
+	# }
+
+
+	MicroKEY = lookforandopen("input","microKEY",0)
+	Logidy = lookforandopen("input","Logidy UMI3",0)
+
+	# lookforandopen("input","microKEY",0)
+	# lookforandopen("input","LPK25",0)
+	# lookforandopen("input","microKEY",0)
+	# lookforandopen("input","E-MU XMidi1X1",0)
+	# lookforandopen("input","Code",0)
+
+	# lookforandopen("input","USB Audio Device (2)",0)
+	# lookforandopen("input","USB Audio Device",0)
+	# lookforandopen("input","USB.*(3)",0)
+
+	Launchpad_input = lookforandopen("input","Launchpad.*",0)
+	# UnoMidi = lookforandopen("input","In.*1x1",0)
+	# Launchpad_output = lookforandopen("output","Launchpad.*",0)
+	# SalvationOutput = lookforandopen("output","Yoke.*2",0)
+
+	# SpacePaletteInput = lookforandopen("input","In.*Yoke.*1",0)
+	# SpacePaletteOutput = lookforandopen("output","Out.*Yoke.*2",0)
+	# if ( SpacePaletteOutput >= 0 ) {
+	# 	mapport(0,SpacePaletteOutput)		# default output
+	# }
+
+	doLinn = 1
+	doVizcamp = 0
+	doLoopMIDI = 0
+	doLoopBe30 = 1
+
+	ToFFFF = lookforandopen("output","13. Internal MIDI",0)
+
+	Synth = []
+	if ( doLinn ) {
+
+		Linnstrument_input = lookforandopen("input","LinnStrument",0)
+		Linnstrument_output = lookforandopen("output","LinnStrument",0)
+
+		Merge = 0  # for Space Palette, LinnLoop, and FFFF stuff
+		Inittask = "linnloop()"
+		screen("size",xy(1227,56,2027,379))
+	}
+
+	if ( doLoopMIDI ) {
+		Synth[0] = lookforandopen("output","loopMIDI.*1",0)
+		Synth[1] = lookforandopen("output","loopMIDI.*2",0)
+		Synth[2] = lookforandopen("output","loopMIDI.*3",0)
+		Synth[3] = lookforandopen("output","loopMIDI.*4",0)
+		if ( Synth[0] >= 0 ) {
+			mapport(0,Synth[0])		# default output
+		}
+	} else if ( doLoopBe30 ) {
+		Synth[0] = lookforandopen("output","01. Internal MIDI",0)
+		Synth[1] = lookforandopen("output","02. Internal MIDI",0)
+		Synth[2] = lookforandopen("output","03. Internal MIDI",0)
+		Synth[3] = lookforandopen("output","04. Internal MIDI",0)
+		Synth[4] = lookforandopen("output","05. Internal MIDI",0)
+		Synth[5] = lookforandopen("output","06. Internal MIDI",0)
+		Synth[6] = lookforandopen("output","07. Internal MIDI",0)
+		Synth[7] = lookforandopen("output","08. Internal MIDI",0)
+		if ( Synth[0] >= 0 ) {
+			mapport(0,Synth[0])		# default output
+		}
+	}
+
+	if ( doVizcamp ) {
+		# not Linn
+		Merge = 1
+		Keyboard_input = lookforandopen("input","MK-461C USB MIDI Keyboard",0)
+		Inittask = "vizcamp()"
+	}
+
+	MidiVizPort = -1
+	MidiVizPort = ToFFFF  # for visualizing MIDI
+
+	Clicksperclock = 8
+
+	# colormix(0,0,0,0)
+	# colormix(1,60000,60000,60000)
+
+	seconddisplay = 0
+	highres = 0
+	if ( seconddisplay ) {
+		if ( highres )
+			screen("size",xy(1024,0,2305,1024))
+		else
+			screen("size",xy(1024,0,2048,768))
+	}
+
+	FrescoDevice = 2
+	GestureDevMap = [0=0,3=1,1=2,2=3]
+	# Inittask = "vvvvlooper()"
+	# Inittask = "vvvv()"
+	# Inittask = "fresco3()"
+	# Inittask = "klooperx()"
+	# Inittask = "klooper_battle()"
+	# Inittask = "klooper_palette_continuous()"
+	# Inittask = "klooper_loopfest_continuous()"
+	# Inittask = "klooper_portable()"
+	# Inittask = "klooper_twobuck()"
+	# Inittask = "klooper_drums()"
+	# Inittask = "klooper_techshop()"
+	# Inittask = "klooper_hackers()"
+
+}
+
+function x() {
+	klooper_battle()
+}
+
+function Consolesize(s) {
+ 	return ( xy(s["x0"]+10,s["y0"]+10,
+			s["x1"]-10,s["y1"]-10) )
+}
+
+function localprerc() {
+	# This would get executed at the beginning of keyrc()
+}
+
+function localpostrc() {
+	# This would get executed at the end of keyrc()
+}

@@ -1,0 +1,419 @@
+See mdep/nt and mdep/x for examples of two working ports of KeyKit.
+
+This is a list of the files and functions expected in
+the machine-dependent layer of KeyKit.
+
+==========================================================================
+
+IN FILE: mdep1.c
+----------------
+void mdep_hello(int argc,char **argv);
+
+	First function called - starts things up (but doesn't start graphics).
+
+void mdep_bye(void);
+
+	Cleans up before exit.
+
+int mdep_changedir(char *d);
+
+	Changes to the specified directory (e.g. like "cd" in a shell).
+
+char * mdep_currentdir(char *buff,int leng);
+
+	Returns the full path of the current directory in buff, whose
+	length is leng.
+
+int mdep_lsdir(char *dir, char *exp, void (*callback)(char *,int));
+
+	Scans the files of the named dir, using exp as a regular expression
+	to filter what things are of interest (e.g. *.k).  For each file
+	or directory, the callback function is invoked, passing it the
+	name of the file or directory, and an integer which is 0 if it's
+	a file, 1 if it's a directory. 
+
+long mdep_filetime(char *fn);
+
+	Returns the modification time of the named file.
+
+int mdep_fisatty(FILE *f);
+
+	Returns non-zero if the given FILE stream is a tty-like device
+	(like a console).  I don't know how important this one is anymore,
+	it may be obsolete at this point.
+
+long mdep_currtime(void);
+
+	Returns the current time (in UNIX-style seconds).
+
+long mdep_coreleft(void);
+
+	Returns the number of bytes of memor available for dynamic allocation.
+
+int mdep_full_or_relative_path(char *path);
+
+	Returns non-zero if the named path is a full path (e.g. /x/y
+	on UNIX or c:\x\y on DOS) or relative path (e.g. ../x/y on UNIX).
+
+int mdep_makepath(char *dirname, char *filename, char *result, int resultsize);
+
+	Concatenates a directory and filename to make a full pathname,
+	putting the result into result, whose size is resultsize.
+
+==========================================================================
+
+IN FILE: mdep2.c
+----------------
+
+void mdep_popup(char *s);
+
+	Brings up a pop-up window, displaying the string s.  Should include
+	buttons that let the user dismiss the pop-up, i.e. it should be a
+	modal box.
+
+int mdep_statconsole(void);
+
+	Return non-zero if the console has pending characters.  This one
+	may be obsolete.
+
+int mdep_getconsole(void);
+
+	Return the next character from the console.  This one may be obsolete.
+
+void mdep_prerc(void);
+
+	Called after mdep_hello(), and after KeyKit symbols are
+	set up, but before mdep_startgraphics().
+
+void mdep_initcolors(void);
+
+	Called right after mdep_startgraphics, and is expected to
+	set the first 5 colors (0,1,2,3,4) that are used for
+	background, foreground, pick-highlighting, and the 2 shades
+	of grey for 3-d buttons.  One example of a consistent
+	set would be white,black,red,light-grey,dark-grey.
+	Note that these colors can be changed, later on, by the
+	user (with colormix()).
+
+char * mdep_keypath(void);
+
+	Returns the KEYPATH value (list of lib directories).
+
+char * mdep_musicpath(void);
+
+	Returns the MUSICPATH value (list of music directories).
+
+void mdep_postrc(void);
+
+	Called after the initial KeyKit prerc() and postrc() functions
+	are executed.
+
+void mdep_abortexit(char *s);
+
+	Quit with the given message.
+
+int mdep_shellexec(char *s);
+
+	Execute the command via a shell.
+
+void mdep_setinterrupt(SIGFUNCTYPE i);
+
+	Arrange things so that the specified function is called when
+	an interrupt (from the console, e.g. hitting break) is seen.
+
+void mdep_ignoreinterrupt(void);
+
+	Arrange for interrupts to be ignored.
+
+int mdep_waitfor(int tmout);
+
+	Wait for an event, with a timeout in milliseconds.  
+	mdep_waitfor(tm) should block until something happens,
+	or until 'tmout' milliseconds have elapsed.
+	If something happens, mdep_waitfor() should return one
+	and only one of these values:
+	
+	    K_CONSOLE - console input is available
+	    K_MOUSE - mouse state has changed
+	    K_WINDEXPOSE - window has been exposed and/or needs redrawing
+	    K_WINDRESIZE - window has changed size
+	    K_MIDI - MIDI input is available
+	    K_PORT - input on a port (see mdep_openport below) is available
+	    K_TIMEOUT - the timeout has elapsed
+	    K_QUIT - the parent OS has requested that the application shut down
+	
+	No input should be discarded when calling mdep_waitfor().
+	Other routines (e.g. getconsole, getnmidi) will be called to
+	retrieve the data, however there is no guarantee that they
+	will be called before the next call to mdep_waitfor(),
+	so mdep_waitfor() should continue to return non-zero values
+	(indicating what input is still available) until the input data has
+	actually been retrieved.
+	
+	If no data is available, and the specified timeout occurs, then
+	mdep_waitfor() returns with a value of K_TIMEOUT.  The timeout
+	may be 0 - in this case, input should still be checked, and only
+	if there is no input pending should a value of K_TIMEOUT be returned.
+
+int mdep_startgraphics(int argc,char **argv);
+
+	Initialize graphics - bring up the window.
+
+char * mdep_browse(char *desc, char *types, int mustexist);
+
+	Pop up a file-selection browser.  Desc is a description of the
+	type of file desired, types is a regular expression list,
+	and if mustexist is non-zero, then only existing files can
+	be selected.  The return value is the full path name of
+	the file selected, or NULL if no file was selected.
+
+int mdep_screenresize(int x0, int y0, int x1, int y1);
+
+	Resizes the graphics window on the display.
+
+int mdep_screensize(int *x0, int *y0, int *x1, int *y1);
+
+	Returns the current coordinates of the graphics window on
+	the display.  This is NOT the same as mdep_maxx/maxy - partly
+	because in mdep_screensize() the origin is not usually 0,0,
+	because it also takes into account any border on the window.
+	The only (current) use of these values is to give them back to
+	mdep_screenresize() to restore a given size/location of
+	the display.
+
+int mdep_maxx(void);
+
+	Returns the maximum displayable X coordinate in the graphics display.
+	The minimum displayable X coordinate is always 0.
+
+int mdep_maxy(void);
+
+	Returns the maximum displayable Y coordinate in the graphics display.
+	The minimum displayable Y coordinate is always 0.
+
+void mdep_plotmode(int mode);
+
+	Set the plotting mode for future drawing requests.  mode can
+	be one of P_STORE, P_CLEAR, or P_XOR.
+
+void mdep_endgraphics(void);
+
+	Terminate graphics mode (prior to final exiting).
+
+void mdep_line(int x0,int y0,int x1,int y1);
+
+	Draw a line, using current drawing mode.  The line should include
+	the final endpoint (x1,y1).
+
+void mdep_box(int x0,int y0,int x1,int y1);
+
+	Draw a rectangle, using current drawing mode.  The sides and corner
+	should include the x1,y1 point.
+
+void mdep_boxfill(int x0,int y0,int x1,int y1);
+
+	Draw a filled rectangle, using current drawing mode.  The sides
+	and corner should include the x1,y1 point.
+
+void mdep_ellipse(int x0,int y0,int x1,int y1);
+
+	Draw the outline of an ellipse in the specified area,
+	using current drawing mode.  Only STORE and CLEAR modes need
+	to be supported.
+
+void mdep_fillellipse(int x0,int y0,int x1,int y1);
+
+	Draw a filled ellipse in the specified area,
+	using current drawing mode.  Only STORE and CLEAR modes need
+	to be supported.
+
+Pbitmap mdep_allocbitmap(int xsize,int ysize);
+
+	Allocate a bitmap of the given size.
+
+Pbitmap mdep_reallocbitmap(int xsize,int ysize,Pbitmap pb);
+
+	Re-allocate a bitmap of the given size.
+
+void mdep_freebitmap(Pbitmap pb);
+
+	Free the memory of the specified bitmap.
+
+void mdep_movebitmap(int fromx0,int fromy0,int width,int height,int tox0,int toy0);
+
+	Move a rectangular region on the screen.  (Not required - it
+	can use pull/putbitmap functions instead, this function is
+	only provided as an optimization so text scrolling can be
+	improved if necessary.)
+	
+void mdep_pullbitmap(int x0,int y0,Pbitmap pb);
+	
+	Grab a bitmap off of the screen (upper-left corner at x0,y0),
+	putting it into Pbitmap pb.
+
+void mdep_putbitmap(int x0,int y0,Pbitmap pb);
+
+	Put the bitmap in bp back onto the screen at x0,y0.
+
+int mdep_mouse(int *ax,int *ay, int *am);
+
+	Get the current status of the mouse, putting the position into
+	*ax,*ay, and putting the current status of modifiers into *am.
+	Modifier values are: 1 for the control key, 2 for the shift key.
+
+int mdep_mousewarp(int x, int y);
+
+	Move the mouse cursor to the given point.
+
+void mdep_color(int n);
+
+	Set the current foreground color to color index n.  In other words,
+	the foreground drawing color for all future drawing operations
+	will be be color index n.
+
+void mdep_colormix(int n,int r,int g,int b);
+
+	Specifies the rgb values for a given color index.
+
+void mdep_sync(void);
+
+	Make sure all graphics output is flushed.
+
+char * mdep_fontinit(char *fnt);
+
+	Set up the named font.
+
+int mdep_fontheight(void);
+
+	Returns the height (in pixels) of the current font.
+
+int mdep_fontwidth(void);
+
+	Returns the width (in pixels) of the current font.
+
+void mdep_string(int x, int y, char *s);
+
+	Draws a text string at location x,y (in pixels).  Should
+	be done in the current plotting mode.  It's very important
+	that the background of the character cell be transparent,
+	i.e. only the actual character is drawn, so the existing
+	background on the screen is not disturbed.
+
+void mdep_setcursor(int type);
+
+	Sets the mouse cursor icon - types are: M_ARROW (normal pointer),
+	M_CROSS (a plus), M_SWEEP (for sweeping a rectangular area),
+	M_LEFTRIGHT (for sweeping left/right), M_UPDOWN (for sweeping 
+	up/down), M_ANYWHERE (for moving something anywhere), M_BUSY (an
+	hourglass), and M_NOTHING (invisible).
+
+PORTHANDLE * mdep_openport(char *name, char *mode, char *type)
+
+	This function allows access to machine-dependent ports, such
+	as TCP/IP sockets, or AREXX connections, or whatever.  The name,
+	mode, and type are passed unmodified from the parameters of
+	the KeyKit language's built-in open() function.  The mode value
+	will typically be "rw" or something like that, but the name
+	and type are unrestricted.  The return value of this function
+	is a pointer to an array of PORTHANDLE's, representing the two
+	ports that were created (in the case when mode=="rw").
+	PORTHANDLE is a machine-dependent type that should be defined
+	in mdep.h
+
+	When input data is available on one or more of these ports,
+	the mdep_waitfor() function should return a value of K_PORT.
+
+int mdep_putportdata(PORTHANDLE h, char *buff, int size)
+
+	Output the specified buffer of data (size bytes, pointed to by buff)
+	to port h.  Returns the number of bytes transmitted.
+
+int mdep_getportdata(PORTHANDLE *hp, char *buff, int buffsize)
+
+	This function will return data from one of the ports that has input.
+	If no ports currently have pending input, the return
+	value is -1.  Otherwise, the return value is the number of
+	bytes that were read, the hp pointer is used to return the
+	value of the PORTHANDLE for the port, and the data is placed
+	into the memory pointed to by buff (whose size, not to be
+	exceeded, is buffsize).  If the return value is 0, then the
+	port has been closed (not by use, presumably by the other end).
+	This function is normally called repeatedly (emptying all
+	available input) until it returns -1.
+
+
+int mdep_closeport(PORTHANDLE h)
+
+	Closes the indicated port.
+
+Datum mdep_mdep(int argc)
+
+	This function may be in midi.c rather than mdep2.c.
+	This function provides a hook for machine-dependent operations
+	that are made available via KeyKit's built-in "mdep()" function.
+	The style of mdep_mdep() is much like the bi_* functions in bltin.c,
+	for example the arguments that are passed (at the KeyKit level)
+	are accessible within mdep_mdep() by using the ARG() macro.
+	The return value of mdep_mdep() is a Datum that
+	will be the return value of the KeyKit "mdep()" function.
+	For Windows, the implementation of mdep_mdep() allows
+	you to use the following statements within KeyKit code:
+
+	mdep("midi","output","list")	# returns a list of the
+					# value MIDI output devices
+	mdep("midi","output","close")	# closes the current MIDI output device
+	mdep("midi","output","open",N)	# opens MIDI output device #N
+
+	If you don't want any machine-dependent capabilies, just
+	have mdep_mdep() return the value Noval.
+
+int mdep_help(char *fname, char *keyword)
+
+	This provides access to an on-line help machanism.
+	The fname argument is the filename (with no suffix (like .hlp))
+	of one of the documentation files (e.g. "tools") and the keyword
+	argument is the name of a keyword (e.g. "kboom") that controls
+	what page of the document will be displayed.  If successful, this
+	function returns 0.  If you don't want to provide on-line help,
+	or there is an error, return 1.
+
+==========================================================================
+
+IN FILE: midi.c
+----------------
+
+int mdep_getnmidi(char *buff,int buffsize);
+
+	Get as many MIDI input bytes as you can (though not exceeding
+	buffsize in number), and put them in buff.  Returns the 
+	number of bytes retrieved.  Active sensing bytes should be removed
+	from the MIDI input stream, if they aren't already by the operating
+	system.  Running status is okay, and complete MIDI messages do not
+	have to be received in a single chunk.
+
+void mdep_putnmidi(int n,char *cp);
+
+	Send n MIDI bytes (from cp) to MIDI output.  All MIDI messages
+	are guaranteed to be sent with a single call to putnmidi.
+
+void mdep_endmidi(void);
+
+	Shut down MIDI devices.
+
+int mdep_initmidi(void);
+
+	Initialize MIDI devices.
+
+==========================================================================
+
+IN FILE: clock.c
+----------------
+
+long mdep_milliclock(void);
+
+	Return the current time in milliseconds.
+
+void mdep_resetclock(void);
+
+	Reset the offset of the values returned by mdep_milliclock().
+	I.e. the current time is henceforth considered time=0.

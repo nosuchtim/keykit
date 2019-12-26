@@ -1,0 +1,289 @@
+STRUCTURES DE DONNEES 
+dans GéoMaestro v0.5
+
+
+
+1) De la géométrie à la musique:
+--------------------------------
+
+# liste de plots: (pour visualiser les données avec Gnuplot)
+#----------------
+# liste["xmax"]	
+#      ["xmin"]
+#      ["ymax"]
+#      ["ymin"]		... intervalles d'affichage
+# liste["fnom"]		nom du fichier de données
+# liste[0]			nbe d'items 
+# liste[n][0]		nbe de lignes de commandes de l'item n
+#					(pour des segments, une par couple de points)
+# liste[n][nl]		ligne de commande (partielle: voir GnuPlot() ) 
+#					(format: "points@..." ou "lines@..." ou "[..:..]@..."
+#			     			  ex: "points@using 1:2 "
+#			         			"lines@using 2:3 "
+#			         			"[0:2*pi]@ cos(t), sin(t)"    )
+# liste[n]["leg"]		legende de l'item n
+
+
+
+	Fonctions associées:
+
+		ListColl, ListScEv, ListGen, ListGeo
+		ListSeg, ListCer, ListPiste
+		GnuPlot
+
+
+
+# collection: (= une piste plus des nodurs, un canal et un nom)
+#------------
+#
+# coll["nom"]	nom de la collection (facultatif) 
+# coll["ch"]	canal attribué (n'engage à rien tant que la collection n'appartient pas à une scène)
+# coll[0]		nbe d'événements
+# coll[n]["x"]
+#	   ["y"]
+#	   ["nodur"] ... les événements eux-mêmes
+
+
+	Fonctions associées:
+
+		Convo, Rot, Sca, ScaXY, Trans
+		CExport, CImport, ListColl
+		PlusCol
+		Maillage
+		Idem, DansChoix, RandomNotes
+
+
+
+# scène (ensemble de collections, avec des instruments associés aux canaux):
+#---------------------------------------------------------------------------
+#
+# facultatif (aucune fonction n'utilise ces champs, ils aident seulement à la composition:)
+#
+# scene[0] 			nbe de collections constituant la scène
+# scene[-n]["nom"]	nom de la collection n
+#	     [0]		nbe d'événements dans "nom"		
+#	     ["ch"]		canal d'affectation de "nom"
+#
+# scene[ch][n]["nc"]	numéro de la collection d'origine de l'événement 	
+# scene[ch]["desc"]	description de l'instrument 
+#
+# obligatoire:
+#
+# scene[ch][0]		nbe total d'événements dans le canal ch
+# scene[ch][n]["x"]
+#	        ["y"]
+#             ["nodur"]	... les événements eux-mêmes
+#	        ["nc"]	    (facultatif, voir ci-dessus)
+# scene[ch]["PAC"]	phrase d'initialisation du canal: PourAC(LSB,patch,ch)
+#			       (CreScen() initialise par un '')
+#				 (pour les canaux > 16, on doit avoir "PAC"='')
+
+
+Une scène devient THE scène (i.e. les événements Ev) grace à ChoixScene
+Elle peut simplement se rajouter aux Ev par PlusScene (les "PAC" doivent alors correspondre,
+ceux de la scene étant ignorés au profit de ceux des Ev)
+
+(Note: après ces deux fonctions, tous les Ev sont actifs)
+
+
+	Fonctions associées:
+
+		CreScen, PlusCol, SaveScen, ReadScene, ChoixScene
+
+
+
+# Evénements: (scène + activités)
+#------------
+# (variable globale réservée Ev)
+#
+# Ev[ch][0]		nbe total d'événements dans le canal ch
+# Ev[ch]["PAC"]	phrase d'initialisation du canal ('' si ch > 16)
+# Ev[ch][n]["x"]
+#	     ["y"]
+#          ["nodur"]	... les événements eux-mêmes
+#	     ["actif"]	marqueur d'activité (0/1) 	
+
+
+
+Principe de l'utilisation des canaux:
+
+Les 16 premiers sont des canaux MIDI affectés à un instrument particulier 
+(d'où la phrase d'initialisation "PAC", et aussi la fonction Init16() qui renvoie
+les 16 "PAC" en une phrase unique)
+
+Mais: il faut garder vides les canaux 17-N à 16 si l'on veut utiliser des événements composés
+de N notes (sur autant d'instruments différents, par exemple). Ces événements seront stockés
+dans les canaux supérieurs à 16 (de 17 jusqu'à NbCan), avec les canaux utilisés par leurs notes 
+explicitement définis dans les "nodur".
+
+(comment ça, c'est pas clair ?)
+
+
+	Fonctions associées:
+
+		WriteEv, LoadEv
+		ChoixScene, PlusScene
+		Init16
+		EvPlot
+		ActiveCanal, DesactiveCanal, 
+		ActiveTout, DesactiveTout, 
+		ActiveRegion, DesactiveRegion
+
+
+
+# données générées par les projecteurs (les "lignes") :
+# -----------------------------------------------------
+# ligne["ph"]	phrase musicale en elle-même
+# ligne[0]	 	temps de début (pas forcément la première note de la phrase !)
+# ligne[1]	 	temps de fin (pas forcément la dernière !)
+# ligne["para"]  	garde trace de certains paramètres de l'invocation du générateur
+# ligne["rac"]	est un tableau spécifique au générateur, utile pour passer les paramètres 
+#			permettant des raccords propres entre les différents algorithmes/mouvements,
+#		 	comme la position finale d'un segment modifié par le générateur Brown() 
+# ligne["inter"] 	permet de retrouver/se raccorder à des positions intermédiaires du calcul 
+#		 	(ex. dans Brown() ou dans Echelle() )
+#
+#		 	en particulier:
+#		 	["inter"][0]		nbe d'états intermédiaires
+#		 	["inter"][n]["A"]		typique des gén. basés sur ProjSeg
+#				      ["B"]         (intermédiaires = segments)		
+#		 	["inter"][n]["c"]		typique des gén. basés sur ProjCer 
+#		                  ["s"]	 	  (interm. = cercle orienté, d'où sens)
+
+
+Les projecteurs utilisent les fonctions contenues dans Volume, Pan, PB, Dur et Pit et travaillent
+à partir des événements actifs de Ev qui font partie de la région choisie lors de leur invocation.
+
+
+	Fonctions associées:
+	
+	{ CoreModes, ProjCer, ProjSeg }
+	
+	{Volume} 	Vexp1, Vexp10, MemeVol, VolMax, D2
+	{Pan} 	BasicPan, LargePan
+	{PB} 		NoBend, PetitDoppler
+	{Pit} 	BasicPitch, DopplerLateral, FondBasses, FondAigu
+	{Dur} 	MemeDur
+
+		EcouteC, Spiro, Onde
+		Ecoute, Echelle, AversB, Helice, Brown, 
+
+		ListGen
+		ExMIDI, GrosMIDI
+
+
+2) Formats secondaires
+----------------------
+
+
+# mailles:
+#---------
+# maille[0]			nombre de côtés/sommets
+#		       	(ils seront numérotés dans le sens de l'horloge, le
+#		        	numéro d'un côté étant celui du sommet précédent)
+# maille["adj"]		tableau contenant les paires de côtés adjacents dans le maillage
+#	  ["adj"][n]	(coté adjacent au coté n)		
+# maille[n]			tableau contenant la géométrie de la maille:
+#	  [n]["r"]	
+#	  [n]["theta"]	...position du sommet n 
+#	  [n]["vr"]	
+#	  [n]["vtheta"]	...position de la maille voisine côté n 
+#			 	(la "position de la maille" est celle d'un point donné quelconque
+#			 	dans la maille, généralement le centre. La position des sommets est
+#			 	relative à ce point)
+
+	Fonctions associées:
+
+		Maillage
+		MHexa, MRect
+
+
+
+# choix de patches: (défini dans un fichier .choix)
+#------------------
+# Patch[0]			nbe de patches sélectionnés
+# Patch[n]["LSB"]		... LSB
+# Patch[n]["ACn"]		... numéro de patch au format AC (de 0 à 127)
+# Patch[n]["low"]		pitch minimal	
+# Patch[n]["hig"]		pitch maximal
+# Patch[n]["dmin"]	durée minimale
+# Patch[n]["dmax"]	durée maximale
+# Patch[n]["vmin"]	volume minimal
+# Patch[n]["vmax"]	volume maximal
+
+
+	Fonctions associées:
+
+		ReadPatches
+		RandomMix
+		PourAC
+
+
+# Points/vecteurs:
+#-----------------
+# v["x", "y"]		coord. rectangulaires (ex: return de Setpolar), STANDARD
+#	 ou bien
+# v["r", "theta"]		coord. polaires (principalement: return de Getpolar)
+#			 	(à ne pas utiliser dans un appel de fonction !)
+
+	Fonctions associées:
+
+		Geo, Setpolar, Getpolar, Dist
+		ListSeg
+
+
+# Cercles:
+#---------
+# cerc["c", "r"]	où cerc["c"] est un point en rectangulaire (d'où cerc["c"]["x"]...)
+
+
+	Fonctions associées:
+
+		Geo, ListCer, Peri
+
+
+# Régions:
+#---------		
+# blob[0]	nombre de ET-tests délimitant la région, liés entre eux par des OU
+# blob[n]	ET-test numéro n, sur les variables X, Y et C (voir catalogue.k)		
+
+
+	Fonctions associées:
+
+		RegionET, RegionOU, RDisque, RTri, RRect, RCanal
+		Geo
+		ActiveRegion, DesactiveRegion
+
+
+# Pistes:
+#--------
+# piste[0]
+# piste[n]["x"]
+#	 [n]["y"]
+
+
+	Fonctions associées:
+
+		Piste	
+		Rot, Trans, Sca, ScaXY
+		List, ListPiste
+
+
+
+3) Fichiers particuliers:
+-------------------------
+
+.choix lus par ReadPatches
+(description d'une sélection d'instruments et leurs paramètres d'utilisation)
+
+.txt lus par Geo
+(description de points, cercles et régions, possiblement en tableaux)
+
+.ev écris par WriteEv, lus par LoadEv
+
+.s écris par SaveScene, lus par ReadScene
+
+.dat écris par CExport(), lus par CImport()
+
+.dat & .gp écris par GnuPlot() pour WGnuplot
+

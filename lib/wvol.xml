@@ -1,0 +1,25 @@
+<tool name="Volume" class="wvol">
+The
+<b>Volume</b>
+tool is a slider that you can use to control the volume of MIDI output.
+Moving the slider will generate volume controller messages on all 16 channels.
+<blankline/>
+The
+button immedately below the slider controls whether the generated messages
+are added to the Recorded phrase.
+The default value of this button is
+<b>NoRec,</b>
+so that the controller messages are not recorded.
+Changing the value to
+<b>Rec</b>
+(by pressing the button and selecting "Rec")
+will cause all of the controller message to be recorded.
+This would mean, for example, that you could play back something
+in the Group tool, adjust the volume in realtime by moving the slider
+of the
+<b>Volume</b>
+tool, and then use the
+<b>File->Add Track->Last Overdub</b>
+feature of the Group tool to add the volume controller messages
+as a new track.
+</tool>

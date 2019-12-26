@@ -1,0 +1,27 @@
+WaterLilies2.k:function WaterLilies2() {
+bodysynth1.k:function bodysynth1() {
+clarinet.k:function clarinet() {
+grabvelos.k:	function grab(){
+interactive2.k:function midimonx() {
+interactive2.k:function task_midimonx() {
+monitor.k:function monitor() {
+monitor.k:function task_monitor() {
+util.k:function lookandkill(start,time1,time2,pitch1,pitch2,ch,phr) {
+util.k:function melody(notes,time,beginpitch,endpitch,begindur,enddur)
+util.k:function melody2(num,delay,beginpitch,endpitch)
+util.k:function panic(when)
+util.k:function lookfornote(pitch1,pitch2,ch,phr) {
+util2.k:function printAt(t,s) {
+util2.k:function realprintAt(t,s) {
+util2.k:function playAt(t,p) {
+util2.k:function panicAt(t) {
+util2.k:function dofrom(tm1,tm2,pitch1,pitch2,ch,p1) {
+util2.k:# lookAndPlay - this function spawns a task that looks for notes
+util2.k:function lookAndPlay(start,time1,time2,pitch1,pitch2,ch,phr) {
+util2.k:# lookForNoteRange - This function monitors MIDI input, looking
+util2.k:function lookForNoteRange(pitch1,pitch2,ch,phr) {
+util2.k:function interact(time,size)
+work2.k:function work2()
+work2b.k:function work2b()
+work3.k:function work3() {
+work3.k:function task_work3() {

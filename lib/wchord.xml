@@ -1,0 +1,26 @@
+<tool name="Chord Palette" class="wchord">
+The
+<b>"Chord Palette"</b>
+tool presents a matrix of cells that let you play (and Snarf) chords.
+Pressing the mouse button in a given cell will play a chord and automatically
+place it into the Snarf.  The rows of the matrix are labelled with the
+chord types (major, minor, etc.), and the columns are labelled with
+the chord keys (C,C#,D,etc.).
+<blankline/>
+If the size of the window is too small, the column labels may be truncated.
+Resizing the window so it's larger will reveal the full labels.
+<blankline/>
+The
+<b>"Octave->"</b>
+item in the
+<b>More</b>
+menu lets you control the octave of the played chords - the default is
+octave 3.
+<blankline/>
+The
+<b>"Mode->"</b>
+item in the
+<b>More</b>
+menu lets you control whether the chords are played, automatically put
+into the Snarf, or both.  The default is to do both.
+</tool>

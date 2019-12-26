@@ -1,0 +1,15 @@
+# This is a setup for the kboom() function
+chan 10
+bass 35
+rim_shot 37
+snare 38
+hand_clap 39
+low_tom 41
+mid_tom 45
+high_tom 48
+closed_hat 42
+open_hat 44
+open_hat2 46
+ride 51
+tambourine 54
+cowbell 56

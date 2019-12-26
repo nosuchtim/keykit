@@ -1,0 +1,38 @@
+
+# set the initial tempo
+xt=75
+# drums only
+xsl=m{alla.mid}<19|2>PIANO
+xsr=PIANO-2
+x-=1
+xo=1
+d.maj-8
+# Piano style
+xp=m{bestill.mid}BESTILL
+xsm=BESTILL-1:p-5,v-127
+d.maj-4
+f+.min-2
+b.min-2
+e.min7-4
+a.7th-4
+d.maj-4
+f+.min-2
+b.min-2
+e.min7-4
+a.7sus4-2
+a.7th-2
+
+g.maj-2
+a.maj-2
+d.maj-4
+g.maj-2
+a.maj-2
+d.maj-4
+g.maj-2
+a.maj-2
+f+.min7-2
+b.min7-2
+e.min7-2
+a.sus4-1
+a.7th-1
+d.maj-4

@@ -1,0 +1,228 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
+
+<HTML>
+<HEAD>
+<TITLE>GeoMaestro v0.6</TITLE>
+<META NAME="Author" CONTENT="Stéphane Rollandin">
+<META NAME="Description" CONTENT="GeoMaestro for KeyKit, v0.6 manual">
+<META NAME="Keywords" CONTENT="KeyKit, MIDI, GeoMaestro">
+</HEAD>
+<BODY>
+
+<H1>GeoMaestro</H1>
+<CENTER><FONT COLOR="#FF0000"><H1>- Not done yet ! Sorry... -</H1></FONT></CENTER>
+<H2>Functions library</H2>
+
+<BR><BR> Here are briefly introduced the useful functions in GeoMaestro; "useful" means: "that you could find some interest into" or, less frequently, "that you need to use and understand otherwise you won't be able to do anything"<BR><BR>
+I'll present the functions the way they are displayed in the<I> keylib.k </I>file (which is automatically created by KeyKit when it encounters a .k file in its path)<BR><BR><BR>
+You will very likely find that you hate some of theses function names (if not all of them !), because they're long and complicated and don't mean anything to you. Well, these are very good reasons to hate a function name.<BR><BR>
+So change it ! If you want to have your own name but keep GeoMaestro working with the horrible original one, you can create a wrapper like this in your <I>initialisations.k </I>file:<BR><BR>
+<B>function</B> NiceName<B>(...) {return (</B>HorribleName<B>(...))}</B><BR><BR>
+That's it !<BR><BR>
+
+<BR><BR>
+<A HREF="#region">Regions handling</A><BR>
+<A HREF="#console">Console utilities</A><BR>
+<A HREF="#projectors">Projectors</A><BR>
+<A HREF="#io">I/O</A><BR>
+<A HREF="#init">Initialisation functions</A><BR>
+<A HREF="#low">Basic utilities</A><BR>
+<A HREF="#distort">Distortion functions</A><BR>
+<A HREF="#actif">Activation functions</A><BR>
+<A HREF="#gnuplot">Gnuplot functions</A><BR>
+<A HREF="#events">Events handling</A><BR>
+<BR><BR><BR><BR>
+<A NAME="region"><H2>Regions handling</H2></A>
+
+<BR><BR>#library geometrie.k Region
+<BR><BR>#library geometrie.k RegionPoint
+<BR>#library geometrie.k RCanal
+<BR>#library geometrie.k RDisque
+<BR>#library geometrie.k RRect
+<BR>#library geometrie.k RTri
+<BR>#library geometrie.k DansTriangle
+<BR>#library geometrie.k RegionET
+<BR>#library geometrie.k RegionOU
+
+
+<A NAME="console"><H2>Console utilities</H2></A>
+
+<BR>#library console.k xyd
+<BR>#library console.k cr
+<BR>#library console.k Seg
+<BR>#library console.k Snarph
+<BR>#library console.k Sgeo
+<BR>#library console.k FT_
+<BR>#library console.k FKK_
+<BR>#library console.k SNARF_
+<BR>#library console.k HLog
+<BR>#library console.k EvaLog
+<BR>#library console.k ExLog
+<BR>#library console.k DumpChantier
+<BR>#library console.k RestoreChantier
+<BR>#library console.k Notepad
+<BR>#library console.k Padnote
+
+<A NAME="projectors"><H2>Projectors</H2></A>
+
+<BR>#library projection.k EcouteC
+<BR>#library projection.k Spiro
+<BR>#library projection.k Onde
+<BR>#library projection.k Ecoute
+<BR>#library projection.k Echelle
+<BR>#library projection.k AversB
+<BR>#library projection.k Helice
+<BR>#library projection.k Brown
+<BR>#library projection.k EntrePistes
+<BR>#library projection.k Vague
+<BR>#library projection.k PerspectiveAB
+<BR>#library projection.k CercleRythm
+
+
+<A NAME="io"><H2>I/O</H2></A>
+
+<BR>#library interfaces.k Geo
+<BR>#library interfaces.k MIDI
+<BR>#library interfaces.k ExMIDI
+<BR>#library interfaces.k GrosMIDI
+<BR>#library interfaces.k RacineN
+<BR>#library interfaces.k FichierN
+<BR>#library interfaces.k Bprint
+<BR>#library interfaces.k DEBUG
+<BR>#library interfaces.k KKSR
+<BR>#library interfaces.k KKSS
+<BR>#library interfaces.k GetMIDIch
+<BR>#library interfaces.k Aligne
+<BR>#library interfaces.k EnRond
+
+
+
+
+
+<A NAME="init"><H2>Initialisation functions</H2></A>
+
+<BR>#library initialisations.k Go
+<BR>#library initialisations.k InitStatique
+<BR>#library initialisations.k InitConstantes
+<BR>#library initialisations.k InitVolume
+<BR>#library initialisations.k InitPan
+<BR>#library initialisations.k InitPit
+<BR>#library initialisations.k InitPB
+<BR>#library initialisations.k InitDur
+<BR>#library initialisations.k InitEv
+<BR>#library initialisations.k InitEvOlution
+<BR>#library initialisations.k InitACPat
+
+
+<BR>#library audiocompositor.k RandomMix
+<BR>#library audiocompositor.k ReadPatches
+
+<A NAME="low"><H2>Basic utilities</H2></A>
+
+<BR>#library catalogue.k ArCopy
+<BR>#library catalogue.k SupprimeIndex
+<BR>#library catalogue.k Setpolar
+<BR>#library catalogue.k Getpolar
+<BR>#library catalogue.k Mod2Pi
+<BR>#library catalogue.k Hexa
+<BR>#library catalogue.k Hexa16
+<BR>#library catalogue.k Arrondi
+<BR>#library catalogue.k EnvironEgal
+<BR>#library catalogue.k Signe
+<BR>#library catalogue.k Abs
+<BR>#library catalogue.k Id
+<BR>#library catalogue.k Minimum
+<BR>#library catalogue.k Maximum
+<BR>#library catalogue.k Dist
+<BR>#library catalogue.k Peri
+
+<A NAME="distort"><H2>Distortion functions</H2></A>
+
+<BR>#library catalogue.k Vexp1
+<BR>#library catalogue.k Vexp10
+<BR>#library catalogue.k VexpPARA
+<BR>#library catalogue.k MemeVol
+<BR>#library catalogue.k VolDEF
+<BR>#library catalogue.k D2
+<BR>#library catalogue.k BasicPan
+<BR>#library catalogue.k LargePan
+<BR>#library catalogue.k NoBend
+<BR>#library catalogue.k PetitDoppler
+<BR>#library catalogue.k PB64
+<BR>#library catalogue.k PB8K
+<BR>#library catalogue.k BasicPitch
+<BR>#library catalogue.k DopplerLateral
+<BR>#library catalogue.k FondBasses
+<BR>#library catalogue.k FondAigu
+<BR>#library catalogue.k MemeDur
+
+<A NAME="actif"><H2>Activation functions</H2></A>
+
+<BR>#library catalogue.k ActiveCanal
+<BR>#library catalogue.k DesactiveCanal
+<BR>#library catalogue.k ActiveTout
+<BR>#library catalogue.k DesactiveTout
+<BR>#library catalogue.k ActiveRegion
+<BR>#library catalogue.k DesactiveRegion
+
+
+<A NAME="gnuplot"><H2>Gnuplot functions</H2></A>
+
+
+<BR>#library graphisme.k InitList
+<BR>#library graphisme.k ListColl
+<BR>#library graphisme.k ListScEv
+<BR>#library graphisme.k ListGen
+<BR>#library graphisme.k ListGeo
+<BR>#library graphisme.k ListAjout
+<BR>#library graphisme.k ListSeg
+<BR>#library graphisme.k ListCer
+<BR>#library graphisme.k ListPiste
+<BR>#library graphisme.k InBornes
+<BR>#library graphisme.k GnuPlot
+
+<A NAME="events"><H2>Events handling</H2></A>
+
+<BR>#library data.k CExport
+<BR>#library data.k CImport
+<BR>#library data.k Convo
+<BR>#library data.k Rot
+<BR>#library data.k Trans
+<BR>#library data.k Sca
+<BR>#library data.k ScaXY
+<BR>#library data.k CreScen
+<BR>#library data.k PlusCol
+<BR>#library data.k SaveScene
+<BR>#library data.k ReadScene
+<BR>#library data.k ChoixScene
+<BR>#library data.k Init16
+<BR>#library data.k PlusScene
+<BR>#library data.k EvPlot
+<BR>#library data.k WriteEv
+<BR>#library data.k LoadEv
+<BR>#library data.k GetPhrase
+<BR>#library data.k NoEv
+<BR>#library data.k Maillage
+<BR>#library data.k DessineMaille
+<BR>#library data.k MHexa
+<BR>#library data.k MRect
+<BR>#library data.k Idem
+<BR>#library data.k DansChoix
+<BR>#library data.k RandomNotes
+<BR>#library data.k Piste
+<BR>#library data.k WritePiste
+<BR>#library data.k ReadPiste
+
+
+<BR><BR>
+
+
+
+<BR>
+
+
+<BR><BR><BR><BR><BR>
+<CENTER>-- <A HREF="eGM0.html">Back </A>--</CENTER>
+
+</BODY>
+</HTML>

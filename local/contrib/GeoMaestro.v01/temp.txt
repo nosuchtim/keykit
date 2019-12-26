@@ -1,0 +1,22 @@
+ScriptPartition = "if(C_!=0) Y_+=YDeBase+0.1*(N_.pitch-PitchDeBase)"
+
+
+(History, for easy cut & paste:)
+0: :GVARS
+1: p ='a,b,c,d'
+2: :p
+3: :strip(p)
+4: p=Init16+p
+5: :p
+6: p ='a,b,c,d'
+7: p=Init16()+p
+8: :p
+9: :strip(p)
+10: p='at125,b,c'
+11: :p
+12: :strip(p)
+13: :GVARS
+14: ScriptPartition = "if(C_!=0) Y_+=0.1*(N_.pitch-PitchDeBase)"
+15: :GVARS
+16: YDeBase=0
+17: ScriptFromPartition="if (C_!=0) N_.pitch=10*(Y_-YDeBase)+PitchDeBase"

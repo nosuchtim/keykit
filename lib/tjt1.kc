@@ -1,0 +1,19 @@
+Collection = [
+	0=
+		["name"="One beat",
+		"phrase"=',l96'],
+	1=
+		["name"="one",
+		"phrase"='bo0d24c10,f+o2t48,a-,do1,c+,f,c+,co2,f+,ao1,c+,f,f+o2,do1,c+'],
+	2=
+		["name"="two",
+		"phrase"='bo0d24c10,e-o2t48,e-,do1,c+ b-,f f+,c+ f+,a,a,a,c+,f,f,f a-o2,c+o1'],
+	3=
+		["name"="three",
+		"phrase"='bo0d24c10,e-o2t48,e-,do1,c+ b-,f f+,c+ f+,f e-o2,e-o1,f,c+ f+,d b- e-o2,f+o1\
+,f+,c+ f+'],
+	4=
+		["name"="four",
+		"phrase"='bo0d24c10,e-o2t48,e-,do1,c+ a b-,f+,c+ f+ a,d e-o2,ao1,a,c+ f+,d b- e-o2,fo1\
+ f+,f f+,c+ f f+']
+]

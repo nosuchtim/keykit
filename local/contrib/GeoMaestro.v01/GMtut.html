@@ -1,0 +1,44 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
+
+<HTML>
+<HEAD>
+<TITLE>GeoMaestro v0.6</TITLE>
+<META NAME="Author" CONTENT="Stéphane Rollandin">
+<META NAME="Description" CONTENT="GeoMaestro for KeyKit, v0.6 manual">
+<META NAME="Keywords" CONTENT="KeyKit, MIDI, GeoMaestro">
+</HEAD>
+<BODY>
+
+<H1>GeoMaestro</H1>
+
+<CENTER><FONT COLOR="#FF0000"><H1>- DEPRECATED ! -</H1></FONT></CENTER>
+
+<H2>Tutorial</H2>
+
+We will suppose you have started the <A HREF="GMtool.html">graphic tool</A> and have a console window available. Click on "new"  to initialise the <A HREF="GMstructures.html#events">event scene</A>, and on "grid" twice to have axes and loose grid on.<BR><BR>
+
+Using the mouse mode "new event", click in the scene somewhere in the green square around the origin, and enter <B>1#'a' </B> in the pop-up window. Repeat this with <B>2#'b'</B> , then <B>3#'c' </B>, then<B> 4#'d'</B> and finally <B>5#'e'</B> <BR><BR>
+You should have something like that in your window now (use "zoom in" and "zoom out" to adjust the view):<BR><BR>
+
+<CENTER><IMG SRC="images/tut0.jpg" BORDER=0 WIDTH=376 HEIGHT=376></CENTER>
+<BR><BR>
+We're going to generate a projection using the <A HREF="GMprojectors.html#Hel">Helice()</A> <A HREF="GMprojectors.html">projector</A>. To define the rotation center <A HREF="GMstructures.html#points">point</A>, we can either use the console and type<B> Or = xyd(0,0)</B> or use the "new point" mouse mode. If you do so, click around the center and enter <B>Or </B>as the name of the defined point. If you  want this point to be exactly the center (x=0, y=0) and only use the GUI, then select it (it should now be a blue circle), click on "operation" and type <B>x=0 ; y=0</B><BR><BR>
+If you defined Or with the console, you won't see it in the GUI. To see it, click on "display" and type <B>Or</B>. That's it !<BR><BR>
+<!-- We need another point that will be used to set the first segment position. So go and define Dep around x=1, y=1.<BR><BR>  -->
+Now you should have this: <BR><BR>
+<CENTER><IMG SRC="images/tut1.jpg" BORDER=0 WIDTH=377 HEIGHT=376></CENTER><BR><BR>
+
+At the moment, you can't call a projector from the GUI. You have to use the console like a poor ol' hacker, so go there and type: <BR><BR>
+<B>L = Helice(Or, 1, 0, 0.2*Pi, 1)</B><BR><BR>
+To see what happened, click on "display" and type <B>L</B>. You should have this in your GUI:<BR><BR>
+<CENTER><IMG SRC="images/tut2.jpg" BORDER=0 WIDTH=377 HEIGHT=376></CENTER><BR><BR>
+The new blue lines we have are the segments Helice() used as parameters for Ecoute(). The five events have been projected in the first one (the horizontal one), so a MIDI phrase of length 2*CPCM (that is 2 seconds, if you didn't change CPCM) has been rendered, then on the second one, giving a new phase that have been added to the first one, etc.. we have ten segments but you only see five of them in the graphic tool since we used a step of 0.2*Pi, so there's an overlapping. The total music duration is then 20 seconds<BR><BR>
+To hear the result, type this in the console:<BR><BR>
+<B>L["ph"]</B><BR><BR>
+(here is the one I got doing this tutorial: <A HREF="tut.mid">tut.mid</A> )<BR><BR>
+Note that everything is played at the piano, since GeoMaestro channels are not identical to MIDI channels ! Only MIDI channel one has been used here.  More of this later, as this tutorial is not completed yet, sorry...
+<BR><BR><BR><BR><BR>
+<CENTER>-- <A HREF="eGM0.html">Back </A>--</CENTER>
+
+</BODY>
+</HTML>

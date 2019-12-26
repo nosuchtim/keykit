@@ -1,0 +1,21 @@
+<tool name="Apply" class="wapply">
+The
+<b>Apply</b>
+tool is a utility for taking multiple phrases and applying their attributes
+to some target phrase.
+The
+<b>PH1 ,</b>
+<b>PH2 ,</b>
+<b>PH3 ,</b>
+and
+<b>PH4</b>
+buttons let you read four phrases (either from Standard MID Files, or
+from the Snarf).  The
+<b>Apply</b>
+button lets you load the target phrase (from Standard MIDI Files, or from
+one of the other four phrases).  The
+<b>Apply </b>
+button then is used to apply the attributes
+(such as pitch, duration, or timing) from the other phrases to this target
+phrase.
+</tool>

@@ -1,0 +1,100 @@
+Holding down SELECT & SQUARE    ---   VOL/DUR, FILE SETTING, BALL SPEED/MOVE
+
+      L2       -  lockballs
+
+      SQUARE   -  file0
+      TRIANGLE -  file1
+      CIRCLE   -  file2
+      X        -  file3
+
+      ANA X    -
+      ANA Y    -  edit energy
+      ANA R    -  edit ball2
+      ANA Z    -  edit ball2
+
+      UP       - vol up
+      DOWN     - vol down
+      LEFT     - dur shorter
+      RIGHT    - dur longer
+
+Holding down SELECT & TRIANGLE    ---   PITCH CHANGING
+
+      L2       -  shiftmap
+
+      SQUARE   -  
+      TRIANGLE -  togglemap
+      CIRCLE   -  
+      X        -  pitchreset
+
+      ANA X    -
+      ANA Y    -  
+      ANA R    -  
+      ANA Z    -  
+
+      UP       - pitch up
+      DOWN     - pitch down
+      LEFT     - pitch left
+      RIGHT    - pitch right
+
+Holding down SELECT & CIRCLE    ---	LOCKBALLS,
+					PAD = PATCH CHANGES
+					BUTTS = BALL OPS
+					JOY = BALL SPEED/MOVING
+
+      L2       -  lockballs
+
+      SQUARE   -  do breakout
+      TRIANGLE -  all walls up
+      CIRCLE   -  add one ball
+      X        -  delete one ball
+
+      ANA X    -
+      ANA Y    -  edit energy
+      ANA R    -  edit ball 2
+      ANA Z    -  edit ball 2
+
+      UP       - patch up
+      DOWN     - patch down
+      LEFT     - patch left
+      RIGHT    - patch right
+
+Holding down SELECT & X    ---	PATCH CHANGES, LOOP PLAYBACK
+
+      SQUARE   -  loopback 0
+      TRIANGLE -  loopback 1
+      CIRCLE   -  loopback 2
+      X        -  loopback 3
+
+      ANA X    -
+      ANA Y    -  
+      ANA R    -  
+      ANA Z    -  
+
+      UP       - patch up
+      DOWN     - patch down
+      LEFT     - patch left
+      RIGHT    - patch right
+
+Holding down START & SQUARE    ---	REVERB / DELAY
+
+      SQUARE   -  
+      TRIANGLE -  
+      CIRCLE   -  
+      X        -  
+
+      ANA X    -  reverb time
+      ANA Y    -  reverb effect
+      ANA R    -  delay feedback
+      ANA Z    -  delay effect
+
+      UP       - 
+      DOWN     - 
+      LEFT     - 
+      RIGHT    - 
+
+Holding down START & TRIANGLE    ---	NOTHING YET
+
+Holding down START & CIRCLE      ---	NOTHING YET
+
+Holding down START & X           ---	NOTHING YET
+

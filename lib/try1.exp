@@ -1,0 +1,12 @@
+# This is a set of transformations for the expresso tool
+A=A+A
+A=transpose(A,4)
+A=transpose(A,-5)
+A=transpose(A,-7)
+A=A+transpose(A,12)
+A=A+transpose(A,7)
+A=A+transpose(A,4)+transpose(A,7)
+A=flip(A)
+A=step(A,12)
+A=arpeggio(A)
+A=shuffle(A)

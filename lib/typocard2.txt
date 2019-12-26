@@ -1,0 +1,94 @@
+# Summary of typo characters
+
+control-/	Print current pattern/channel info
+
+control-D	Drums
+
+	0-9	Drum patterns
+	R	generated 2-measure pattern
+	T	generated 1-measure pattern
+
+control-M	Mode
+
+	L	Looper
+	R	Repeater
+
+control-O	Offset
+
+	A-Z	Offset value (M is 0 offset)
+
+control-N      Pan
+
+	L	Left
+	R	Right
+	C	Center
+
+control-Q	Quant
+
+       	H	Half
+       	Q	Quarter
+       	E	Eight
+       	S	Sixteenth
+       	T	Thirtysecond
+       	N	None (1 click)
+
+control-P	Pattern
+
+	0-9
+
+control-A	Assign
+
+	M	Midi file
+	S	Scale
+	O	Ornament
+	C	Chord
+	I	Inversions
+	B	BeatStep algorithm
+	P	Random choice from patterns
+	W	Write file of assignments
+	R	Read file of assignments
+	A	Copy current channel's assignments to All channels
+	Y	(followed by 0-9) Copy current channel's assignments to 1 chan
+
+control-F	File
+
+	R	Read
+	W	Write
+
+control-S	Sound
+
+	A	Random from All patches
+	R	Random from selected patches
+	S	Random from selected patches
+	H	Random from "hard" patches
+	B	Random from "bass" patches
+	C	Random from "perCussive" patches
+	V	Random from "vocal" patches
+	D	Random from "drum" patches
+	P	Random from "pad" patches
+	D	Random from "drum" patches
+
+control-T	Transitions
+
+	0-9
+
+control-X	Xecute
+
+	Q	Quit
+	T	Timer start/restart
+
+control-L	Length
+
+	D	Double
+	H	Half
+
+control-W	Warp
+
+	W	Reset (i.e. remove) warp
+	F	Fractal
+	A	Warp applys to all channels
+	C	Warp applys to current channel
+
+control-G	Grab
+
+	A-Z

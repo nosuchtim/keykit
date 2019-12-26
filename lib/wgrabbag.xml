@@ -1,0 +1,25 @@
+<tool name="Grab Bag" class="wgrabbag">
+The
+<b>Grab Bag</b>
+tool is too complicated for me to explain completely at this
+point, but I'll describe one
+way to get interesting things out of it.  Assuming you have a
+General MIDI synth, use the More menu button and invoke
+More->Fill All->GM drums(4b).  You should see the cells of the
+grid fill with randomly generated drum patterns.  Press the Walk
+toggle button, and it will start playing the cells of the grid,
+walking from one to the next.  Press the Walk toggle button again
+to turn it off.
+<blankline/>
+Do the same thing with More->Fill All->BS Riff(4b) and it will fill
+the cells with melodic patterns.
+<blankline/>
+Put multiple Grab Bag tools on the screen and start them simultaneously.
+There are menu items to let you control the grid size, the starttime
+quantization, etc.
+<blankline/>
+There is a value button at the top that lets you set the MIDI
+channel (except for drums).
+The slider on the left controls volume, and the slider on the right
+controls how many notes of each pattern are included.
+</tool>

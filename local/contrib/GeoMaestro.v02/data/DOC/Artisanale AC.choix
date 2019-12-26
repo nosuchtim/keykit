@@ -1,0 +1,73 @@
+#LSB	low		dmin	vmin	instrument	
+#	n		hig		dmax	vmax
+#	|	|	|	|	|	|	|	|
+
+# Rem: 119 en note max signifie souvent 127...
+				
+# Percussions:
+70	4	0	119	.		.		Xylo Large
+70 	3	0	86	.		.		Xylo Bois
+70	15	21	96	.		.		Sake Bell
+70	16	33	107	.		.		Temple Gong
+70	6	0	119	.		.		Tubular Chord
+
+
+# Drums Indian Ensemble
+
+72	1	36	96	.long	.		Sarangi Riff
+72	2	36	96	.		.		Sitar
+72	3	0	83	.long	.		Low Sitar (excellentes basses très rugueuses !)
+72	4	36	96	.		.		Sarod
+72	0	36	52	.long	.		Tamboura/tabla en mode pad, très grésillant
+72	0	53	75	.		.				mode percussion sec
+72	0	76	85	.		.				mode aouh
+72	0	86	96	.		.				mode choc (chaleureux mais pas musical)
+
+
+# Vents:
+
+60	0	23	89	.		.		Tuba
+60	19	12	90	.		.		Orgue
+
+
+# Pianos:
+
+20	0	19	110	.		.		WT Grand
+
+
+# Basses:
+
+30	5	48	80	.		.		Yamaha Fingered Bass
+30	6	46	89	.		.		Yamaha Slap Bass
+30	22	39	64	.		.		Rick_sub
+
+# Cordes:
+
+50	0	11	83	.		.		Viola
+50	20	19	65	.		.		Contrebasse
+50	30	0	119	.		.		Mandolin
+50	50	45	92	.long	.		Harpe celtique
+
+
+# Flûtes:
+
+10	1	40	101	.long	.		Forest flute
+11	0	23	84	.long	.		Pan pipe
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

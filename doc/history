@@ -1,0 +1,118 @@
+
+Tim Thompson
+
+B.S. (1976) and M.S. (1978) in Computer Science from the
+University of Illinois, Champaign-Urbana.  Working
+for Bell Laboratories and using the UNIX System since 1978,
+he has been involved in the development of computer-aided design
+software for VLSI chips and high-frequency circuit packs,
+tools for the design of optical systems, fax image processing,
+and DSP development software.  His free time is spent working
+on MIDI software.
+
+
+The History of KeyKit
+----------------------
+
+The development of the KeyKit language began in 1986 (or so)
+in response to the rigid interfaces and capabilities of the
+sequencers available at that time.  Of course, the desire
+to hack and have fun was also a strong motivation.  Although UNIX
+Systems with MIDI interface were then (and are still now) rare,
+it seemed that the meeting of those two standards was inevitable,
+so the goal has always been to develop a tool that fits the style of the
+UNIX System.  The inspiration and model for many of KeyKit's
+features has been the awk language, coupled with the common UNIX System
+philosophy of creating an application-specific ``little language''.
+
+Version 1.0 of KeyKit was a very primitive BASIC-like language.
+It used a recursive-descent parser and implemented loops by repeatedly
+parsing the input.  There were a large number of built-in functions
+for phrase manipulations, and very few phrase operators (ie. '+' did not
+work on phrases, instead there was a serial() function).
+
+Version 2.0 speeded things up considerably, and added real-time
+capabilities, so that user-defined KeyKit functions could be
+called, triggered by MIDI input messages.  By this time, the
+potential of the system was fairly obvious, but the language was
+far too primitive - illustrated by the tendency to implement new
+phrase operations with built-in functions instead of writing them
+in the KeyKit language.
+
+Version 3.0 was virtually a complete rewrite.  The parsing was done
+with a yacc grammar, and the language was pre-compiled into an
+internal form that is then executed.  The structure of the software
+was based on the 'hoc' program described in Kernighan & Pike's book
+"The UNIX Programming Environment."   This resulted in a healthy
+speed increase.  Phrase operations were added (+,-,|,{}), and most
+of the built-in functions for phrase manipulations were (with great
+delight) removed, since they could now be done fairly efficiently
+and directly with user-defined KeyKit functions.
+
+Version 4.0 added floating point numbers and graphics support.
+Graphics were provided by a fairly small number of built-in functions
+and special variables.  All of the graphical user interface (the
+menus and all the operations they invoke) were implemented with
+ordinary KeyKit code, which could be extended and modified by
+users.  The extensibility of Version 4.0 was exciting.  Versions
+4.1 and 4.2 were incremental improvements, generalizing a few
+features and improving robustness.
+
+Version 5.0 consisted of several aborted attempts at adding a multi-window
+interface to KeyKit.  A first brief attempt used Open Look widgets.
+I then realized that multi-tasking was a necessary attribute of a
+multi-window interface, so multi-tasking was added.  Fifos were added to
+standardize inter-task communication and other I/O.  Multi-window support
+was built using only low-level functions, not using any machine-dependent
+widgets.  I then built a simple but usable multi-window user interface using
+a somewhat object-oriented implementation, where methods/messages were
+triggered by sending them down fifos (each "tool" had a set of standard
+fifos), using standardized message formats.  Each tool consisted of one or
+more continuously-running tasks which monitored the fifos and reacted to
+messages.  I demonstrated this system at a party at my house in 1992.
+This version was never widely distributed.
+
+Version 6.0 added object-oriented features, to provide direct language support
+for the object-oriented style of the multi-window user interface.
+Instead of tasks interpreting messages on fifos, the tools were defined
+as classes with methods, and all interactions with and between tools was
+done by invoking the methods.  The user interface for the multi-window
+interface was completely re-written from scratch, adding a much richer
+and complete set of tools.  Pull-off menus and buttons were a key attribute
+of this new user interface.  Version 6.0 was finally "right", and I stopped
+making fundamental changes to the language and started using it to
+develop a full-fledged multi-track sequencer, drum pattern editor, and
+lots of strange algorithmic toys.  There were many incremental versions
+of 6.* (up to 6.6c) as tools in the GUI interface were continuously added
+and enhanced.
+
+Version 7.0 added support for multiple MIDI inputs and outputs
+(on Windows only, initially).
+
+Development of KeyKit was first done using an Atari ST, then an IBM PC clone,
+then a UNIX System with X windows, and then Windows NT.
+Portability has always been an overriding consideration - the software
+is portable to a wide variety of machines.  It its lifetime, KeyKit
+has run on the following machine types, operating systems, and displays:
+
+    Atari ST, DOS, UNIX PC, Macintosh, Amiga, SVR3, SVR4, SunOS, NeXT,
+    X Windows, SGI, Amdahl, VAX, 5620, Plan 9, Windows 3.1, Windows 95/98,
+    Windows NT, Linux.
+
+Many people have contributed ideas, feedback, assistance, and encouragement
+during the development of KeyKit.  Some of them are: Jon Backstrom,
+Tom Duff, Geza Feketa, Dick Hamilton, Tony Hansen, John Helton, Tom Killian,
+Peter Langston, Hector Levesque, Jason Levitt, Howard Moscovitz,
+Marty Shannon, and Daniel Steinberg.
+
+People who have put significant effort into porting KeyKit to various
+machines, and who provided significant language and feature feedback
+along the way, deserve special mention and special thanks:
+
+	Alan Bland (Amiga)
+	Steve Falco (Mac),
+	Ag Primatic (Mac),
+	Jack Wright (Mac),
+	Mike Healy (Atari ST)
+	Gregg Wonderly (Amiga)
+	Greg Youngdahl (DOS)

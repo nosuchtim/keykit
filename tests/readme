@@ -1,0 +1,11 @@
+You can run all tests with:
+
+	sh keytest.sh
+
+If keytest.sh isn't here, look in the mdep directory.
+To create a new test, just make a {test-name}.k  file, and
+execute "Test -s {test-name}".   This creates the {test-name}.sav
+file, which is the 'good' output from the test.
+
+The .k files are keykit language tests.  The .mf files are Standard
+MIDI files, and .m5 files are midi(5) files.

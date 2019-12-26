@@ -1,0 +1,240 @@
+<html><head>
+		<style type="text/css">
+		.big {margin: 0pt; font-family: "Arial"; font-size: 18pt}
+		.normal {margin: 0pt; font-family: "Arial"; font-size: 12pt}
+		.small {margin: 0pt; font-family: "Arial"; font-size: 10pt}
+		.tiny {margin: 0pt; font-family: "Arial"; font-size: 8pt}
+		</style>
+		</head><title>Keykit tool: Group</title><table border=0 width=100% bgcolor=#ffcc99><tr><td><font class=big><a href=../index.html>KeyKit</a> :: <a href=index.html>Tools</a> :: Group</td></tr></table>
+<p/>
+The
+<b>Group</b>
+tool is very much like a standard multi-track sequencer.
+It allows flexible editing of music, and is the most important (and largest)
+tool provided in the user interface of KeyKit.
+<p>
+The
+<b>Read</b>
+item in the
+<b>File</b>
+menu lets you read things into the Group tool.
+For example, the
+<b>"Read->Standard MIDI File"</b>
+item will prompt you for the name of a Standard MIDI File.
+<b>"Read->Snarf"</b>
+will load the Group tool with the current contents of the Snarf buffer.
+<b>"Read->Recorded"</b>
+will load the Group tool by looking at the
+<b>Recorded</b>
+variable, which records MIDI input.  If you choose the
+<b>"(2b space)"</b>
+variation of this item, the Recorded MIDI input will be searched backwards
+until a two-beat space is located, and all MIDI input from that
+point forward will be grabbed and loaded into the Group tool.
+Likewise for the
+<b>"(8b space)"</b>
+variation, except that it looks for an eight-beat space.
+<p>
+The Group tool maintains a set of tracks.  The merged contents of
+all tracks is always displayed in the track named
+<b>Merged.</b>
+The
+<b>View->Tracks</b>
+menu item controls what tracks are displayed.
+For example, selecting
+<b>View->Tracks->All</b>
+will cause all tracks to be displayed.
+Other items in the
+<b>View</b>
+menu control the region (time-wise) of the music that is displayed.
+For example,
+<b>View->In</b>
+lets you zoom in to get more detail.
+After invoking
+<b>View->In,</b>
+you are expected to sweep out an area within one of
+the tracks in the Group tool.
+The mouse cursor will change to a left-right arrow, to give you
+a reminder that you are expected to sweep out a horizontal area.
+The area you sweep out will then fill the display.
+<p>
+The
+<b>View->Pan</b>
+item lets you move left and right within the phrase.  After invoking
+<b>View->Pan,</b>
+you are then expected to press the left mouse button and drag the mouse.
+You will see the phrase within the Group tool move left and right as
+you drag the mouse left and right.
+<p>
+New tracks can be added with the
+<b>"File->Add Track"</b>
+menu.  For example, a new blank track can be added with
+<b>"File->Add Track->Blank."</b>
+If you play back some part of the music in the Group tool, and
+play something along with it on your MIDI input device,
+you will often want to add your overdubbed input as a new track.
+This is done with with
+<b>"File->Add Track->Last Overdub."</b>
+Note that you don't have to do anything in preparation for adding an
+Overdub track.  Every time you play back something in the Group tool,
+KeyKit is recording MIDI input, and if you happen to play something
+you like, you can immediatly save it as a new track.
+<p>
+At the upper-left corner
+of each track (including the merged track) is a menu button, and the
+menu it reveals is called the
+<b>"track menu."</b>
+The
+items in a track menu apply only to the corresponding track.
+For example, the
+<b>Unshow</b>
+item in the track menu will cause that
+track to be removed from the display (though it still exists, and its
+music will still be shown in the
+Merged
+track.  The
+<b>Showonly</b>
+item will cause only that track to be display (in addition to the
+Merged
+track, which is always shown.  If you want to go back to seeing only
+the
+Merged
+track, select
+<b>Showonly</b>
+in the track menu for
+the
+Merged
+track.
+<p>
+The text within the track menu buttons are the track names.
+You can change a track name by using the
+<b>Label</b>
+item in the track menu.
+<p>
+Within each track window, the 2 mouse buttons (left and right) are used
+for a variety of operations.  Instead of being fixed, the
+meaning of each mouse button can be changed, and in practice you should
+expect to change their meanings often.
+The meanings of the mouse buttons are assigned with the 3 menu buttons
+in the upper-right corner of the Group tool.
+Each mouse button actually has three meanings - one when the
+shift key is pressed, one when the control key is pressed, and one when
+no keys are pressed.
+The keys that can modify the mouse button meanings are called "modifiers".
+The leftmost of the 3 menu buttons in the upper right corner of the
+Group tool controls the "modifier" that currently applies
+to the other two menu buttons - the modifier value can be
+<b>Normal,</b>
+<b>Shift,</b>
+or
+<b>Control.</b>
+When the modifier is set to
+<b>Shift,</b>
+then the other two menu buttons will control the meanings of the left and right
+mouse buttons when the Shift key is pressed.  Likewise, when the modifier
+is set to
+<b>Control,</b>
+then the other two menu buttons control the meanings of the mouse buttons
+when the Control key is pressed.  And when the modifier
+is set to
+<b>Normal,</b>
+then the other two menu buttons control the meanings of the mouse buttons
+when no key is pressed.
+The label of each button reveals the current meaning
+of that mouse button (for the current modifier setting).
+To change the operation of a button, you select the
+operation you want from the corresponding mouse button menu, and from
+then on that mouse button (combined with the appropriate modifier)
+will perform that operation.
+<p>
+The default operation for the left mouse button, when a Group tool is
+first created, is
+<b>"Aud Sweep"</b>
+(where
+<b>Aud</b>
+is short
+for
+<b>Audition</b>
+).
+This means that when you press and drag the left mouse button within a track
+window, you will be sweeping out the audition area.  Try it, making sure
+that the mouse is within a track window when you start sweeping.  While you
+sweep, you will see vertical bars that indicate the audition area.  When
+you release, there is no visible indication of the current audition area
+(though someday there probably should be).  The default operation
+for the right mouse button is
+<b>"Aud Play"</b>
+- to play the current
+audition area.
+So, if you use the left mouse button to sweep some part of the music,
+and then press the right mouse button, you should hear that music
+played via MIDI output, and you should see the notes flash as they play.
+To stop the playback, press the right mouse button again.  This shows that
+<b>"Aud Play"</b>
+is a toggle - it starts and stops playback.
+<p>
+Now, try changing the meaning of the left mouse button.  Use the
+menu button labeled
+<b>L:,</b>
+and select
+<b>Pick->Sweep.</b>
+From then on, the left mouse button
+will sweep out the current
+<b>Pick.</b>
+The term Pick refers to the
+selected notes of the music that will be affected whenever an Edit operation
+is used.  Try using the left mouse button to sweep an area of the music.
+After you sweep, you should see the notes in that area turn red.  The notes
+of the current Pick are always drawn in red.
+<p>
+The
+<b>View->In</b>
+menu item lets you zoom in to get a closer look at the
+music.  After you select this item, the mouse cursor will change to
+a left-right arrow, meaning that you are then expected to sweep out an
+area within one of the tracks.  Do this.  You should see the display redrawn
+with that area of the track filling the display.  Note that
+<b>View->In</b>
+changes the meaning of the left mouse button only temporarily - it then
+reverts to the operation specified in the
+<b>L:</b>
+menu button.
+<b>View->Out</b>
+will return to viewing the entire piece of music.
+<p>
+Zoom in on part of the music, so that you can easily see individual notes.
+Pick a few notes (i.e.
+make sure the left mouse button is set to
+<b>Pick->Sweep,</b>
+and then sweep the notes).
+Now, select
+<b>Edit->Delete,</b>
+and the notes in
+the current Pick will be removed.
+Do it again - pick some more notes and delete them.
+Now, select
+<b>Edit->Undo.</b>
+You will see your last deletion undone.
+Select
+<b>Edit->Undo</b>
+again, and you will see your first deletion undone,
+so your music is back to its original state.  The
+<b>Undo</b>
+operation can
+undo the last 32 editing operations, by default, and you can easily increase
+this number, subject to memory limitations.
+<p>
+The
+<b>Edit->Undo</b>
+item is one of the most common menu items to pull off
+and make into a real button.  It's important to realize that when you do this,
+that
+<b>Undo</b>
+button will only affect the Group tool from which you
+pulled it - it will not affect any other Group tools that are on the screen.
+This is true of any of the buttons that you pull from menus in any
+given tool.  There is currently no visible or other indication of the
+relationship between pulled-off buttons and the tools they control,
+so it's obviously a good idea to position the buttons
+in ways that make it obvious as to which tool they belong.
+</tool>

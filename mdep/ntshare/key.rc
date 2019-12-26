@@ -1,0 +1,23 @@
+#include <windows.h>
+
+arrow		CURSOR arrow.cur
+nothing		CURSOR nothing.cur
+updown		CURSOR updown.cur
+leftrigh	CURSOR leftrigh.cur
+busy		CURSOR coffee.cur
+anywhere	CURSOR anywhere.cur
+cross		CURSOR cross.cur
+sweep		CURSOR sweep.cur
+keykit		ICON keykit.ico
+
+AboutBox	DIALOG 20, 20, 160, 90
+	STYLE	WS_POPUP | WS_CAPTION | WS_DLGFRAME
+	CAPTION "About KeyKit..."
+	{
+	ICON "keykit"		-1,	8, 8, 0, 0
+	CTEXT "KeyKit (6.5f)"		-1,	40, 12, 80, 8	/* VERSION */
+	CTEXT "Musical Fun with Windows, Tasks, and Objects" -1, 0, 32, 160, 8
+	CTEXT "by Tim Thompson - tjt@nosuch.com"	-1,	0, 42, 160, 8
+	CTEXT "Copyright 1996 AT&T Corp.  All rights reserved."	-1,	0, 52, 160, 8, SS_CENTER|SS_NOPREFIX
+	DEFPUSHBUTTON "OK"	IDOK,	65, 67, 32, 14, WS_GROUP
+	}

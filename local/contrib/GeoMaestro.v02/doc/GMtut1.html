@@ -1,0 +1,44 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
+
+<HTML>
+<HEAD>
+<TITLE>GeoMaestro v1.0</TITLE>
+<META NAME="Author" CONTENT="Stéphane Rollandin">
+<META NAME="Description" CONTENT="GeoMaestro for KeyKit, v1.0 manual">
+<META NAME="Keywords" CONTENT="KeyKit, MIDI, GeoMaestro">
+</HEAD>
+<BODY>
+
+<H1>GeoMaestro</H1>
+
+
+<H2>Tutorial 1: basics</H2>
+
+We will suppose you have started the <A HREF="GMtool.html">graphic tool</A> and have a console window available. Click on "new"  to initialise the <A HREF="GMstructures.html#events">event scene</A>, and on "grid" twice to have axes and loose grid on.<BR><BR>
+
+Using the mouse mode "new event", click in the scene somewhere in the green square around the origin, and enter <B>'a'#1</B> in the pop-up window. Repeat this with <B>'b'#2</B> , then <B>'c'#3 </B>, then<B> 'd'#4</B> and finally <B>'e'#5</B> <BR><BR>
+You should have something like that in your window now (use "zoom in" and "zoom out" to adjust the view):<BR><BR>
+
+<CENTER><IMG SRC="images/tut0.jpg" BORDER=0 WIDTH=376 HEIGHT=376></CENTER>
+<BR><BR>
+We're going to generate a projection using the <A HREF="GMprojectors.html#Hel">Helice()</A> <A HREF="GMprojectors.html">projector</A>. To define the rotation center <A HREF="GMstructures.html#points">point</A>, we can either use the console and type<B> Or = xyd(0,0)</B> or use the "new point" mouse mode. If you do so, click around the center and enter <B>Or </B>as the name of the defined point. If you wanted this point to be exactly the center (x=0, y=0) you would have  clicked on the "snap" button before... but it's not to late ! you can select it (it should now be a blue circle), click on "operation" and type <B>X_=0 ; Y_=0</B><BR><BR>
+If you defined Or with the console, you won't see it in the GUI. To see it, click on "display" and type <B>Or</B>. That's it !<BR><BR>
+
+Now you should have this: <BR><BR>
+<CENTER><IMG SRC="images/tut1.jpg" BORDER=0 WIDTH=377 HEIGHT=376></CENTER><BR><BR>
+
+Now, click on the small "pj" button to set the GUI in projection mode. The "PROJECTORS" button is a menu: select the item  "Helice", then click in the array button just beside.<BR><BR>
+A pop-up window appears with the prompt: "Args >", and at the same time in the console you have a message describing which arguments the projector is waiting for. So enter <B>Or, 1, 0, 0.2*Pi, 1</B> at the promp.<BR><BR>
+What happens now is that the tool is calculating the projection Helice(Or, 1, 0, 0.2*Pi, 1) and storing the resulting line in the second menu button, just below the projectors one.<BR><BR>You should see "1: Helice(Or, 1,..." on this button. <BR><BR>To hear the result, click on "hear" (of course you must have some sound device connected to your MIDI out port). <BR><BR> To see the segments used by Helice for the projections, click on "display" and type <B>£1</B>. You should have this in your GUI:<BR><BR>
+<CENTER><IMG SRC="images/tut2.jpg" BORDER=0 WIDTH=377 HEIGHT=376></CENTER><BR><BR>
+The new blue lines we have are the segments Helice() used as parameters for Ecoute(). The five events have been projected in the first one (the horizontal one), so a MIDI phrase of length 2*CPCM (that is 2 seconds, if you didn't change CPCM) has been rendered, then on the second one, giving a new phase that have been added to the first one, etc.. we have ten segments but you only see five of them in the graphic tool since we used a step of 0.2*Pi, so there's an overlapping. The total music duration is then 20 seconds<BR><BR>
+To visualize the projections, click on the "proj" button<BR><BR>
+Now you may want to export what you just made as a MIDI file: click on the small arrow button (the one beside the "Ex" button). You will be asked if you want to export this ligne to a variable. No, so just press RETURN. Now you're asked if you want to copy the phrase to a variable. No, so press RETURN again. At last you're asked if you want to write a MIDI file. Yes, so enter the name of the file and press RETURN.<BR><BR>
+(here is the one I got doing this tutorial: <A HREF="tut.mid">tut.mid</A> )<BR><BR>
+
+<BR><BR><BR><BR><BR>
+<CENTER>-- <A HREF="GMtut.html">Back to the tutorials index</A>--</CENTER>
+<CENTER>-- <A HREF="eGM0.html">Back </A>--</CENTER>
+
+</BODY>
+</HTML>

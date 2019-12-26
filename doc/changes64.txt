@@ -1,0 +1,265 @@
+-------------------------------------------------
+Changes from KeyKit 6.2 to KeyKit 6.4  - 08/01/98
+-------------------------------------------------
+
+Here's an outline of the sections below:
+
+   - There are now 2 Tools menus.
+   - Various new and changed tools.
+   - New or changed utility functions.
+   - Some changes to the KeyKit language itself.
+   - No more need to run the "keylib" program.
+   - Bugs fixed.
+   - Bugs remaining.
+   - People who have contributed
+   - The ability to instantiate tools *within* tracks of a Group.
+
+--------------------------------------------------------------------------
+There are now 2 Tools menus.
+--------------------------------------------------------------------------
+
+        There are now two tools menus rather than one - you'll see
+        Tools1-> and Tools2-> in the main pop-up menu.  The tools in
+        the Tools1 list are the basic tools that are most commonly
+        used, and the Tools2 list contains everything else.  The list
+        of tools in these two menus is defined by the lib/tools1.lst
+        and lib/tools2.lst files.  You can create files
+        liblocal/localtools1.lst and liblocal/localtools2.lst to
+        add your own local tools to these menus.
+
+--------------------------------------------------------------------------
+Various new and changed tools.
+--------------------------------------------------------------------------
+
+        The Group tool has some new editing operations:
+
+                - Quantize duration
+                - Invert (invert intervals)
+                - Spread (like an echo in 2 directions)
+
+        The Kboom tool has a new operation that will fill a
+        random number of cells.  If you pull off the "Clear"
+        button and the "Random" menu, you can rapidly try
+        random patterns with just 2 mouse clicks per try.
+        
+        The Kboom tool has new options for loading the drums from
+        Snarf and Recorded.  For example, play a few notes on your keyboard
+        and then choose More->LoadDrums->Add->PitchesOnly->FromRecorded.
+        The set of drums will be initialized from the notes you just played.
+        
+        The Chord tool has many more chords
+        
+        The Controller tool has a lot more choices (ie. all
+        controller values, not just the "known" ones).
+        
+        The new Apply tool lets you interactively apply attributes
+        (pitch/timing/duration) from a set of phrases to a target phrase.
+        
+        The new PortPicker tool is a little gui to help select
+        the MIDI input/output ports.
+        
+        The new Sync tool is a weird one that lets you set up 4 phrases
+        and play them simultaneously, independently controlling the
+        scaling factor of each.
+        
+        The new Techno tool is a variation of the Kboom tool with a
+        sequence of blocks above it.  You can "push" the current kboom
+        pattern into a block, or pull the contents of one of the blocks 
+        down into the kboom tool for editing.  Useful for constructing
+        sequences of patterns.
+        
+        The new WWWtools tool is a gui interface to the algorithms used in
+        the Tune Toys at http://www.nosuch.com
+        
+        The new Curve tool is a controller generator, not really meant to
+        be used standalone, but meant to be used from tracks of the
+        wgroup tool.
+        
+        The new Roller tool is a weird one that lets you generate LOTS of
+        controller messages - for each "row" in this tool, you can assign
+        a particular controller number, and a "low" and "high" value for
+        the controller, and then press buttons to generate "sweeps" of the
+        controller value, or turn on an LFO that continuously cycles between
+        those low/high values with a speed that you can control with a slider.
+        If you assign controllers to the editing parameters of a patch on
+        your synthesizer, this can generate radical results.  This tool is
+        capable of reading a Nord Modular patch (*.pch) file - it reads the
+        patch and determines what controllers are in use, and builds up
+        the Roller tool's configuration to control just those controllers.
+
+--------------------------------------------------------------------------
+New or changed utility functions.
+--------------------------------------------------------------------------
+
+        gmreset() now sets the pitch bend range
+
+        midimon() is a MIDI monitoring utility - type "midimon()"
+        and it prints out all MIDI input until you press
+        another console key.
+
+        quantizedur(p) quantizes the duration of notes in phrase p.
+
+        rootmon() is a MIDI monitoring utility - it continuously
+        monitors MIDI input trying to deduce what key you
+        are playing in, and prints the result.
+
+        seconds(n) returns the number of clicks in n seconds.
+
+        milliclicks(n) returns the number of clicks in n milliseconds.
+
+        bpm(t) sets the tempo to t beats per minute.
+
+        listports() prints all MIDI input and output ports.
+        inport(n) will close the current input and open the nth input port.
+        outport(n) will do likewise for the nth output port.
+
+--------------------------------------------------------------------------
+Some changes to the KeyKit language itself.
+--------------------------------------------------------------------------
+
+        The object() function can cast strings (containing object
+        references like "$123") to object values.
+
+        The new scaletowind() method of the wphrase() object will
+        scale an xyarray from pitch/time values (within a phrase window)
+        to x/y coordinates.
+
+        The ".attr" attribute of notes (a string attached to each note,
+        whose value can be used for anything) is now used in comparisons
+        and sorting.  (This is because I'm now actually *using*
+        the .attr attribute :-).
+
+        The system() function (for executing other programs) now works
+        on Win95/98, although you still can't redirect (to KeyKit)
+        the output of those commands.
+
+--------------------------------------------------------------------------
+No more need to run the "keylib" program.
+--------------------------------------------------------------------------
+
+        There should be no need to run the "keylib" program any more.
+        The "keylib.k" file, which keeps an index of functions vs. the files
+        in which they are defined, is now automatically maintained.
+        When KeyKit starts up, it runs the updatelib() function which checks
+        all files in all directories in your Keypath - if any file is more
+        recent than keylib.k, it updates keylib.k.  If you are developing
+        interactively, and want to update keylib.k without restarting KeyKit,
+        you can manually execute updatelib().
+
+--------------------------------------------------------------------------
+Bugs fixed.
+--------------------------------------------------------------------------
+
+        Several stack expansion bugs.
+
+        Error message buffer overflow.
+
+        In Linux, window resizing (both interactively and when
+        saving/restoring a page) now works properly.
+
+--------------------------------------------------------------------------
+Bugs remaining.
+--------------------------------------------------------------------------
+
+        There is evidence (i.e. I see it occasionally) of a new bug
+        (perhaps revealed by the fixing of the stack expansion bug,
+        or perhaps yet another facet of the same bug) - the symptom
+        is that it strikes during the garbage collection of arrays.
+
+--------------------------------------------------------------------------
+People who have contributed.
+--------------------------------------------------------------------------
+
+        The following people have contributed to the changes in KeyKit 6.4.
+        I hope I haven't forgotten anyone.
+
+        - Mehmet Okonsar, mokonsar@dominet.in.com.tr
+        - Nato Welch, nato@spintheweb.com
+        - Ben Alkov, quaestor@earthlink.net
+        - Paul Barton-Davis, pbd@op.net
+        - Steve Falco, sfalco@worldnet.att.net
+
+        I haven't included every change that people have sent me, but
+        I try to include the ones that I think are most generally useful.
+        Although none of their code is in KeyKit 6.4, let me also give a
+        special mention and thank you to the following people who have
+        written the most interesting KeyKit code and made the
+        most interesting use of KeyKit I've seen:
+
+        - Burton Beerma, bbeerma@opie.bgsu.edu, making use of the realtime
+          capabilities for doing things with a "body synth" MIDI controller.
+
+        - Simon Blakely, blakelys@ihug.co.nz, who wrote the style generation
+          application that you can find in the contrib section of
+          the download site.
+
+--------------------------------------------------------------------------
+And finally, the ability to instantiate tools *within* tracks of a Group.
+--------------------------------------------------------------------------
+
+        I hesitate to describe this, because there are lots of problems
+        in the behviour of this feature if you really try to use it
+        extensively, but the basics really do work, so here it is.  One
+        of the actions that you can assign to a mouse button in the
+        Group tool is "Tool".  (Assigning different actions to the mouse
+        buttons in the Group tool is described in the tools
+        documentation - if you've never used that feature before, you
+        should probably not try to attempt any of this.)
+        After activating this "Tool" action for a particular mouse
+        button, you can use that button to sweep out a section of a
+        track, in which will appear a blank "tool holder".  (You can
+        only do this in a real track, not the Merged track.)  This
+        holder will have a "Tool" menu button that you can use to assign
+        it a tool - e.g. invoke "Tool->Type->Kboom" to put a Kboom tool in
+        that holder.  You can then interact with the Kboom tool as if it
+        was a normal Kboom tool.  However, it's embedded in the track.
+        The Kboom tool and Curve tool (for generating controller sweeps)
+        are the only tools I've really used in this way.
+
+        When you audition a section of the Group that contains a tool,
+        the tool will be queried for it's contents.  For example,
+        if you've added a Kboom tool to a track, whenever you make
+        changes in the Kboom tool, you will see the results immediately
+        in the Merged track of the Group tool.  If you Pick the tool
+        within the track, you can move it around (with the Drag operation)
+        and stretch it (with the Drag Dur(ation) operation) just like
+        any other note - in actuality it *is* a note, with a .attrib value
+        that refers to the name of the tool holder.  You can also apply some
+        of the editing operations (e.g. Repeat->4X will result in 4 Kboom
+        tools - the first one will be the "master" and the other 3 will be
+        references.  If you change the master, the references change as
+        well - you can see this effect in the results that appear in the
+        Merged track.  You can use the "Tool->Takeover" item to convert
+        a tool reference into a master (there can only be one master, so
+        the current master will be turned into a reference).  The little
+        square in the upper left corner of the tool holder (to the far
+        left of the Tool button) lets you "drag" the tool *OUT* of the
+        track and *OUT* of the Group and place it onto the background, where
+        it becomes just another reference to the same tool - this lets you
+        interact with the tool without being restricted to the (usually small)
+        dimensions of the track in which it is embedded.
+
+        I'll stop there.  There are many aspects of this capability
+        which are "weak" - especially when you are
+        deleting/undoing/pasting/saving things.  The basics work
+        (including saving), but there are many scenarios of usage which
+        result in total chaos.  I describe the capability here for a
+        couple of reasons - one is that it is a way way cool thing in
+        general, and there may be some people who have ideas about what
+        this kind of capability should be used for and how it should
+        work.  I know that as I use it and improve it, I will be making
+        my own conclusions about what works and what doesn't, and make
+        adjustments, possibly radical.  For example, I'm starting to
+        think that an important feature will be the ability to convert a
+        tool (embedded in a track) *back* into its raw notes (for
+        further processing with the normal editing operations) and then
+        *back* into the tool.  I'm not sure whether the ability for
+        multiple tools to reference the same data is going to be worth
+        the complexity of implementation, though I expect I will
+        continue to try to make it work, since it's already there,
+        and it really is a way way cool feature.  Anyway, there it is.
+        If you've read all of this, you deserve an award.
+
+Yours for better KeyKitting,
+
+    ...Tim...

@@ -1,0 +1,512 @@
+Pageobj=$1
+Pagenm="Page 1"
+Pagesz=["x0"=22,"x1"=1021,"y0"=79,"y1"=863]
+function keypage_create(r) {
+r.restore(["Autoresize"=1,"Dragquant"=24,"Flashquick"=1,"Menujump"=0,"Merge"=0,"Playquant"=96,"Record"=1,"Recsched"=0,"Showbar"=384,"Sweepquant"=24,"Sync"=0,"Volstem"=0])
+# recreate object $4
+o=wconsole($4)
+r.addtool(o,["x0"=10,"x1"=979,"y0"=561,"y1"=740])
+
+# recreate object $136
+o=wgroup($136)
+r.addtool(o,["x0"=5,"x1"=512,"y0"=306,"y1"=556])
+o.restore(["buttmod"=0,"buttonact"=[1=[0=0,1=2,2=25],2=[0=1,1=7,2=6]],"dn2tn"=[0=0,1=1],"groupname"="New","ntracks"=1,"phrases"=[1='go0v71:1,go3d32t32,a,go1d96 do3 gd64 bd32,do4,f+o3 co4d24,eo1d96t192 eo3 gd6\
+4 co4d32,e,ao3 do4d24,bo0d96t288 go3 bd64 do4d32,g,ao3 f+o4d24,eo1d96t384 eo3\
+ bd64 go4d32,d,go3 bd24,eo0d96t480 bo2 eo3d64 gd32,a,d bd24,ao0d96t576 ao2 eo\
+3d64 co4d32,d,f+o3 eo4d24,bo0d96t672 do3 gd64 do4d32,c,do3 bd24,co1d96t768 co\
+3d192 ed56 ad32,b,bo2 go3d24,do1d96t864 ao2d64 f+o3d32,g,d ad24,f+o1d96t960 a\
+o2 do3d32 ad64,f+d32t992,g ad24,do1d96t1056 f+o3 ad64 co4d32,bo3,f+ ad24,go1d\
+96t1152 do3d64 g bd32,gd64,f+d32t1216 ad24,eo1d96t1248 go2 go3d64 bd32,do4,f+\
+o3 co4d24,co1d96t1344 eo3 gd64 co4d32,e,ao3 do4d24,bo0d96t1440 go3 bd64 do4d3\
+2,g,ao3 f+o4d24,eo1d96t1536 eo3 bd64 go4d32,d,go3 bd24,do1d96t1632 bo2 eo3d64\
+ gd32,a,g bd24,co1d96t1728 co3 ed32 ad64,do4d32t1760,f+o3 co4d24,c+o1d96t1824\
+ eo3 gd64 bd32,a,e gd24,do1d96t1920 ao2d64 do3d32 dd96,gd32t1952,c f+d24,go0d\
+96t2016 bo2d64 do3d96 gd32,b,g do4,bo3d64 go4d32,d,go1 do3 b do4,do1d64 bo2 g\
+o3d32 go4d64,bo3d32t2240,bo0 go3 do4 d,go0d96 go2 do3 dd192 g bd96 bd192 b go\
+4d96,f+o1 f+o2,eo1 eo2 eo3 g co4 c,f+o1 f+o2 ad192 ao3d96 do4d192 d,eo1d96t26\
+88 eo2 go3,do1 do2 b f+o3 do4 d,eo1 eo2 b go3 co4d192 c,f+o1d96t2976 f+o2 a d\
+o3d192,go1d96t3072 go2 g bo3 b,do1 do2 f+ do3d64 ad96 a,dd64t3200,ed32t3232,d\
+o2d96 a bd64 do3 dd96 f+d32 ad64 ad96,ad64t3296,do1d32t3328 bo2 eo3 g,do1d64 \
+do3 f+ ad32,co4,do1 do3 g b,do0d96 f+o3d64 a co4d32,ao3,f+ a co4,do3 f+d64 a,\
+f+d32t3584,do1 do3 f+ a,do1d64 ao2 do3 co4d32,bo3,do1 do3 f+ a,go1d96 go2 do3\
+ d gd64 g bd32 bd128 bd192,gd128t3776,dt3808 ad24,f+o1d96t3840 f+o2 do3 g b,d\
+o4d32t3872,f+o3 co4d24,eo1d96t3936 eo2 eo3 e gd64 gd96 co4d32 cd96 c,ed32t396\
+8,ao3 do4d24,bo1d96t4032 bo2 do3 g g bd64 do4d32 dd160 dd192,gd32t4064,ao3 f+\
+o4d24,bo0d96t4128 bo1 bo2 do3 d gd64 go4d32,dd64,f+o3d32t4192 bd24,eo1d96t422\
+4 eo2 b b eo3d64 ed96 gd32 bd88 bd96,ad32t4256,g b,co1d96 co2 co3d48 c ed32 e\
+d96 ad48 a ad64,do4d32t4352,ao2d48t4368 a bo3d24 b,gd32t4384 co4d24,ct4392 c,\
+do1d96 do2 do3d48 d f+ f+d64 bd32 bd96 bd112,ad32t4448,bo2d48t4464 b eo3,gd24\
+t4480 gd32,do0d96 do2 co3d48 cd96 dd32 f+d88 ad32 ad48,at4528,gd32t4544 bd8,a\
+d24,ao2d48t4560 bo3d8,ad24,cd32t4576 f+ bd8,ad24,gd8t4592,a,go0d96 go1d192 bo\
+2d64 bd96 bd192 do3d96 gd32 gd160 gd192,bd32t4640,dd128 ad24,go1d96t4704 do3 \
+g bd32,do4,f+o3 co4d24,eo1d96t4800 eo3 gd64 co4d32,e,ao3 do4d24,bo0d96t4896 g\
+o3 bd64 do4d32,g,ao3 f+o4d24,eo1d96t4992 eo3 bd64 go4d32,d,go3 bd24,eo0d96t50\
+88 bo2 eo3d64 gd32,a,d bd24,ao0d96t5184 ao2 eo3d64 co4d32,d,f+o3 eo4d24,bo0d9\
+6t5280 do3 gd64 do4d32,c,do3 bd24,co1d96t5376 co3d192 ed64 ad32,b,bo2 go3d24,\
+do1d96t5472 ao2d64 f+o3d32,g,d ad24,f+o1d96t5568 ao2 do3d32 ad64,f+d32t5600,g\
+ ad24,do1d96t5664 f+o3 ad64 co4d32,bo3,f+ ad24,go1d96t5760 do3d64 g bd32,gd64\
+,f+d32t5824 ad24,eo1d96t5856 go2 go3d64 bd32,do4,f+o3 co4d24,co1d96t5952 eo3 \
+gd64 co4d32,e,ao3 do4d24,bo0d96t6048 go3 bd64 do4d32,g,ao3 f+o4d24,eo1d96t614\
+4 eo3 bd64 go4d32,d,go3 bd24,do1d96t6240 bo2 eo3d64 gd32,a,g bd24,co1d96t6336\
+ co3 ed32 ad64,do4d32t6368,f+o3 co4d24,c+o1d96t6432 eo3 gd64 bd32,a,e gd24,do\
+1d96t6528 ao2d64 do3d32 dd96,gd32t6560,c f+d24,go0d96t6624 go2 b do3 dd192 gd\
+96 gd192 b b,f+o1d96t6720 f+o2,eo1 eo2 eo3 g co4 c,f+o1 f+o2 ad192 ao3d96 do4\
+d192 d,eo1d96t7008 eo2 go3,do1 do2 b f+o3 do4 d,eo1 eo2 b go3 co4d192 c,f+o1d\
+96t7296 f+o2 a do3d192,go1d96t7392 go2 g bo3 b,do1 do2 f+ do3d64 ad96 a,dd64t\
+7520,ed32t7552,do2d96 ad64 ad96 do3d64 dd96 f+d32 ad64 ad96,ad64t7616,do1d32t\
+7648 ao2 eo3 g,do1d64 do3 f+ ad32,co4,do1 do3 g b,do0d96 f+o3d64 a co4d32,ao3\
+,f+ a co4,do3 f+d64 a,f+d32t7904,do1 do3 f+ a,do1d64 ao2 do3 co4d32,bo3,do1 d\
+o3 f+ a,go1d96 go2 do3 d gd64 g bd32 bd128 bd192,gd128t8096,dt8128 ad24,f+o1d\
+96t8160 f+o2 do3 g b,do4d32t8192,f+o3 co4d24,eo1d96t8256 eo2 eo3 e gd64 gd96 \
+co4d32 cd96 c,ed32t8288,ao3 do4d24,bo1d96t8352 bo2 do3 g g bd64 do4d32 dd160 \
+dd192,gd32t8384,ao3 f+o4d24,bo0d96t8448 bo1 bo2 do3 d gd64 go4d32,dd64,f+o3d3\
+2t8512 bd24,eo1d96t8544 eo2 b b eo3d64 ed96 gd32 bd88 bd96,ad32t8576,g b,co1d\
+96 co2 co3d48 c ed32 ed96 ad48 a ad64,do4d32t8672,ao2d48t8688 a bo3d24 b,gd32\
+t8704 co4d24,ct8712 c,do1d96 do2 do3d48 d f+ f+d64 bd32 bd96 b,ad32t8768,bo2d\
+48t8784 b eo3,gd24t8800 gd32,do0d96 do2 co3d48 cd96 dd32 f+d88 ad32 ad48 bd16\
+,ad48,gd32t8864 bd8,ad24,ao2d48t8880 bo3d8,ad24,cd32t8896 f+ bd8,ad24,gd8t891\
+2,a,go0d96 go1d192 bo2d64 bd96 bd192 do3d96 gd32 gd160 gd192,bd32t8960,dd128 \
+ad24,go1d96t9024 do3 g bd32,do4,f+o3 co4d24,eo1d96t9120 eo3 gd64 co4d32,e,ao3\
+ do4d24,bo0d96t9216 go3 bd64 do4d32,g,ao3 f+o4d24,eo1d96t9312 eo3 bd64 go4d32\
+,d,go3 bd24,eo0d96t9408 bo2 eo3d64 gd32,a,d bd24,ao0d96t9504 ao2 eo3d64 co4d3\
+2,d,f+o3 eo4d24,bo0d96t9600 do3 gd64 do4d32,c,do3 bd24,co1d96t9696 co3d192 ed\
+64 ad32,b,bo2 go3d24,do1d96t9792 ao2d64 f+o3d32,g,d ad24,f+o1d96t9888 ao2 do3\
+d32 ad64,f+d32t9920,g ad24,do1d96t9984 f+o3 ad64 co4d32,bo3,f+ ad24,go1d96t10\
+080 do3d64 g bd32,gd64,f+d32t10144 ad24,eo1d96t10176 go2 go3d64 bd32,do4,f+o3\
+ co4d24,co1d96t10272 eo3 gd64 co4d32,e,ao3 do4d24,bo0d96t10368 go3 bd64 do4d3\
+2,g,ao3 f+o4d24,eo1d96t10464 eo3 bd64 go4d32,d,go3 bd24,do1d96t10560 bo2 eo3d\
+64 gd32,a,g bd24,co1d96t10656 co3 ed32 ad64,do4d32t10688,f+o3 co4d24,c+o1d96t\
+10752 eo3 gd64 bd32,a,e gd24,do1d96t10848 ao2d64 do3d32 dd96,gd32t10880,c f+d\
+24,go0d96t10944 bo2d64 do3d96 gd32,b,g do4d24,bo3d64t11040 go4d32,d,go1 go3 b\
+d24 do4d32,f+o1d64 do3 gd32 go4d64,bo3d32t11168,eo1 eo3 g c+o4d24,do1d96t1123\
+2 do2 do3d64 f+d96 f+d128 ad64 ad160 a do4d32,do3d160,ed24t11296 gd32,co1d96 \
+co2 do3 f+ a,ad64t11360,a-d24t11392 do4d32,bo0d96 bo1 do3d64 dd96 d a-d32 a-d\
+96 bd64 bd96,bd64t11456,cd32t11488 ad24,ao0d96t11520 ao1 co3d64 ed96 ed160 ad\
+32 ad160 co4d64 cd128,cd160t11552,do3d32t11584 bd24,ao1d48t11616 ao2 ad96 eo3\
+d88 co4d96,ao3d64t11648,go1d48t11664 go2,co3d32t11680 e,fo1d48 fo2 ad64 co3d3\
+2 fd96 a ad192 co4d96 c,do3d32t11744,eo1d48t11760 eo2,co3d32t11776 ed24,do1d9\
+6t11808 do2 do3d64 fd32 fd96 ad192 bd144 b,do4d32t11840,eo3 co4d24,bo0d96t119\
+04 bo1 do3 fd64 ad96 do4d32,bo3,co4d24t11952 c,do3d32t11968 a-d24,do4t11976 d\
+,eo1d96 eo2 bd64 eo3d32 ed96 a-d88 a-d96 b b,f+d32t12032,d a-,ao0d96 ao1 co3d\
+64 cd96 e ad32 ad96 a a,co4d32t12128,eo3 bd24,fo1d96t12192 a ao2 co3 ad64 ad9\
+6 a a co4d32,e,a-o3 do4d24,do1d96t12288 fo3 ad64 do4d32,f,bo3 eo4d24,co1d96t1\
+2384 ao3 co4d64 ed32,a,bo3 a-o4d24,fo1d96t12480 fo3 co4d64 ad32,e,ao3 co4d24,\
+eo1d96t12576 co3 fd64 ad32,b,a co4d24,do1d96t12672 do3 ad64 fo4d32,e,a-o3 do4\
+d24,e-o1d96t12768 f+o3 ad64 co4d32,bo3,f+ ad24,eo1d96t12864 bo2d64 eo3d32 ed9\
+6,ad32t12896,d a-d24,ao0d96t12960 ao2d192 co3d96 e ed192 ad32 ad192 co4d64 cd\
+192,cd160t12992,ed32t13024,ao1d96 ao4d32,bo1d96t13152 bo2 do3 g do4 d,co2 co3\
+ cd192 gd96 eo4d128 ed192,cd32t13280,d,ao1d96 ao2 ao3 co4d64 cd96 e,gd32t1337\
+6,d fd24,eo1d96t13440 eo2 co3 g g eo4d64 ed96 e gd32,b-,c ad24,fo1d96t13536 f\
+o2 ad192 do3d96 fd64 fd96 do4d144 d ad32,co5,go3 bo4d24,do1d96t13632 do2 fo3 \
+ad64 ad96 co5d32,ao4,ed24t13680 e,dd32t13696 fd24,ft13704 f,go1d96 go2 b go3 \
+g bd64 do4d32 dd96 d,ed32t13760,d fd24,co1d96t13824 co2 eo3 g g co4d64 cd96 c\
+ ed32,g,go3 fo4d24,eo1d96t13920 co2 eo3 e g co4d64 cd88 cd96 gd32,e,go3 co4,c\
+o1d96 eo3d64 gd32 gd96,ad32t14048,d b-d24,fo1d96t14112 co3d64 fd96 ad32,co4,e\
+o3 bd24,do1d96t14208 fo3d64 a co4d32,ao3d64,fd24t14272 ad32,go1d96 do3d32 gd9\
+6 bd64,ed32t14336,fd24 do4d32,co1d96 eo3d32 gd96 co4d64,co3d32t14432,dd24 gd3\
+2,e co4d64,go3d32t14528,co1 do3 f+d24 ad32,bo0d64 do3 gd32 do4d64,bo3d32t1462\
+4,do1 do3 f+ ad24,go0d96t14688 go2d192 do3d96 d gd64 g bd32 bd128 bd192,gd128\
+t14720,dt14752 ad24,go1d96t14784 do3 g b,do4d32t14816,f+o3 co4d24,eo1d96t1488\
+0 eo2 eo3 e gd64 gd96 co4d32 cd96 c,ed32t14912,ao3 do4d24,bo0d96t14976 bo2 do\
+3 g gd192 bd64 do4d32 dd160 dd192,gd32t15008,ao3 f+o4d24,eo1d96t15072 bo2 eo3\
+ e bd64 go4d32,dd64,go3d32t15136 bd24,eo0d96t15168 eo2 b b eo3d64 gd32 gd96 d\
+o4 d,ao3d32t15200,d bd24,ao0d96t15264 ao1 ao2 co3 ed64 gd48 co4d32 cd96 c,dd3\
+2t15296,f+o3d48t15312,f+d32t15328 eo4d24,bo0d96t15360 bo1 do3 d gd64 gd184 co\
+4d16 c dd32,bo3d16t15376 b,co4 c cd32,bo3d16t15408 b,dd32 bd24 co4d16 c,bo3 b\
+,co1d96 co2 co3d192 ed64 ed96 ad32 co4d8 c,bo3 b,co4 c,bo3 b,bd16 co4d8 c,bo3\
+ bd24,co4d8t15504 c,bo3 b,bo2d32 go3 co4d8 c,bo3 b,a a,b b,do1d96 do2d192 ad6\
+4 ad160 f+o3d32 f+d128 ad160 ad192,dd32t15584,c+ ed24,ao2d96t15648 do3d64 f+d\
+96,ad64t15680,do1d32t15712 ao2 eo3 gd24,do1d64t15744 do3 f+ ad32,co4,do1 do3 \
+g bd24,do0d96t15840 f+o3d64 a co4d32,ao3,f+d24 ad32 co4,do3 f+d64 a,f+d32t159\
+68,do1 do3 f+ ad24,do1d64t16032 ao2 do3 co4d32,bo3,do1 do3 f+ ad24,go1d96t161\
+28 go2 do3 d gd64 g bd32 bd128 bd192,gd128t16160,dt16192 ad24,f+o1d96t16224 f\
++o2 do3 g b,do4d32t16256,f+o3 co4d24,eo1d96t16320 eo2 eo3 e gd64 gd96 co4d32 \
+cd96 c,ed32t16352,ao3 do4d24,bo1d96t16416 bo2 do3 g g bd64 do4d32 dd160 dd192\
+,gd32t16448,ao3 f+o4d24,bo0d96t16512 bo1 bo2 do3 d gd64 go4d32,dd64,f+o3d32t1\
+6576 bd24,eo1d96t16608 eo2 b b eo3d64 ed96 gd32 bd88 bd96,ad32t16640,g b,co1d\
+96 co2 co3d48 c ed32 ed96 ad48 a ad64,do4d32t16736,ao2d48t16752 a bo3d24 b,gd\
+32t16768 co4d24,ct16776 c,do1d96 do2d192 do3d48 d f+ f+d64 bd16 b bd32,ad16t1\
+6816 a,ad32 bd16 b,bo2d48 b eo3 ad16 a,gd24 gd32 bd16 b,a a,do0d96 co3d48 cd9\
+6 dd32 f+d88 ad16 bd8 b,a ad24,bd8t16912 b,a ad24,gd32t16928 bd8 b,a ad24,ao2\
+d48t16944 bo3d8 b,a a,cd32 f+ bd8 b,a a,g g,a a,go0d1248 go1d288 bo2d64 bd96 \
+bd288 do3d256 gd32 gd96 gd192,bd32t17024,gd160 do4d24,bo3d64t17088 go4d32,d,g\
+o3d128 bd24 do4d32,do3d96 g go4d64,bo3d32t17216,g do4d24 dd32,go0d960 do3d96 \
+bd64 fo4d32,d,go3 bd24,gd32t17376 do4d64,bo3d32t17408,g b do4d24,eo3d64t17472\
+ co4 ed32,cd128,co3d32t17536 ad24,ao2d96t17568 f+o3d32,a,a co4d24,bo3d64t1766\
+4 do4d32,bo3d128,dd32t17728 gd24,bo2d64t17760 eo3d32,g,e g bd24,eo2d64t17856 \
+ao3 co4d32,ao3d128,ao2d32t17920 f+o3d24,f+o2d64t17952 do3d32,f+,f+ ad24 ad32,\
+dd64 f+ co4d32,bo3,d f+ ad24,dd96t18144 gd64 bd32,g,d ad24,go1d96t18240 do3 g\
+d64 bd32,do4,f+o3 co4d24,eo1d96t18336 eo3 gd64 co4d32,e,ao3 do4d24,bo0d96t184\
+32 go3 bd64 do4d32,g,ao3 f+o4d24,eo1d96t18528 eo3 bd64 go4d32,d,go3 bd24,eo0d\
+96t18624 bo2 eo3d64 gd32,a,d bd24,ao0d96t18720 ao2 eo3d64 co4d32,d,f+o3 eo4d2\
+4,bo0d96t18816 do3 gd64 do4d32,c,do3 bd24,co1d96t18912 co3d192 ed64 ad32,b,bo\
+2 go3d24,do1d96t19008 ao2d64 f+o3d32,g,d ad24,f+o1d96t19104 ao2 do3d32 ad64,f\
++d32t19136,g ad24,do1d96t19200 f+o3 ad64 co4d32,bo3,f+ ad24,go1d96t19296 do3d\
+64 g bd32,gd64,f+d32t19360 ad24,eo1d96t19392 go2 go3d64 bd32,do4,f+o3 co4d24,\
+co1d96t19488 eo3 gd64 co4d32,e,ao3 do4d24,bo0d96t19584 go3 bd64 do4d32,g,ao3 \
+f+o4d24,eo1d96t19680 eo3 bd64 go4d32,d,go3 bd24,do1d96t19776 bo2 eo3d64 gd32,\
+a,g bd24,co1d96t19872 co3 ed32 ad64,do4d32t19904,f+o3 co4d24,c+o1d96t19968 eo\
+3 gd64 bd32,a,e gd24,do1d173t20064 ao2d93 do3d40 dd173,gd53t20104,cd80 f+d60,\
+go0d411t20237 bo2 do3 g'],"tn2chan"=[0=0,1=0],"tn2label"=[0="Merged",1="Trk 1"],"tn2mute"=[0=0,1=0],"tn2patch"=[0=0,1=0],"tn2port"=[0=0,1=0],"toolnotes"=[1=[]],"view"=["x0"=-1290,"x1"=21938,"y0"=0,"y1"=127]])
+
+# recreate object $529
+o=wmenu($529,"mkmenu_root",varg([]))
+r.addtool(o,["x0"=503,"x1"=583,"y0"=12,"y1"=174])
+
+# recreate object $274
+o=wgroup($274)
+r.addtool(o,["x0"=549,"x1"=942,"y0"=303,"y1"=540])
+o.restore(["buttmod"=0,"buttonact"=[1=[0=0,1=2,2=25],2=[0=1,1=7,2=6]],"dn2tn"=[0=0],"groupname"="New","ntracks"=1,"phrases"=[1='cd52v110:1t48,dd48v100t96,ev110t140,fd56v96,dd52v100t240,ed44t284,cd48v96,gd\
+96v110,co2d56v112t428,co4d100v127t472,do2d48v103t476,e,bo3d16v91t568,fo2d52v1\
+12t572,ao3d16v91t584,bd68v120,do2d52v94t620,ed48v112t668 co4d100v120,co2d52v9\
+4t716,gd96v103 do4d60v120,go3d48v100t816,go1d192v94 ao3d52v110,bd48v100t912,c\
+o4d52,ao3d56v96t1000,bd44v110t1052,gd52v100t1100,do4d100v110t1144,go2d44v94t1\
+196,go4d104v120,ao2d40v103t1244,bd48t1288,co3t1340,fo4d12v100t1344,ed16v82,fd\
+68v120t1368,ao2d52v94t1384,bd44,go4d104v110t1440,go2d44v90t1484,co3d100v103t1\
+532,eo4d60v110t1540,ad52t1588,bo2d92v103t1636 go4d56v110,fd48t1680,ed52v120,c\
+o3d88v103t1732,go4d56v110t1776,do3d92v121t1828 fo4d56v120,ad60t1876,eo3d96v11\
+2t1924,go4d52v100t1928,fd48v127t1972,e,go2d92v112t2024,do4d56v100t2064,ao2d88\
+v112t2112 co4d52v100,et2160,bo2d96v112t2204,do4d52v127t2208,fv110t2252,ed60t2\
+300,co3d96v103t2304,do4d48v120t2348,cd52v127,eo2d92v112t2400,bo3d48v91t2444,f\
++o2d92v94 ao3d48v127,co4v120,go2d96v103 bo3d56v127,do4d48v96t2636,ao2d96v121 \
+co4d56v127,bo3d44t2732,bo2d88v112t2780 ao3d44v127,gd60v91,cd192v112t2876 f+d4\
+8v120,ad52v100t2920,gd84v127,bd48v120t3012,ad108v110t3064,do2d60v112t3116,ed5\
+2v94t3164,do3d96v127t3168,f+o2d52v82t3212,gv103,co4d12v120t3268,bo3d20t3284,c\
+o4d72v100t3292,eo2d52v103t3308,f+d56v121t3356,do4d100v127t3364,do2d52v94t3404\
+,gd104t3452,bo3d44v127t3464,ad48v120,bo1d92v112 go3d48v100,f+v87,ed52v96t3648\
+,co2d100v103t3652,go3d52v100t3696,f+v127t3744,do2d92v112t3748,ao3d48v120t3788\
+,eo2d100v94t3840 go3d48v96,bd60v100t3884,f+o2d104v94t3936 ao3d56v127,co4d48v1\
+00t3984,go2d96v103 bo3d56v100,do4v96t4076,cd52v127t4128,eo2d96v112t4132,eo4d5\
+2v110t4176,dv127t4224,bo1d132v121t4228,bo3d20v110t4276,co4d28,dd48t4320,co2v1\
+21 go4d40v110,bo3d16t4412,do2d96v121t4416,co4d12v120t4428,bo3v110t4444,co4d8v\
+100,bo3v82t4468,co4d20v110t4480,bo3v127t4496,do1d88v121t4512 ao3d44v127,gd16v\
+120t4564,gd384v127t4612,go1d60v112t4660,ad48v103t4708,bv94t4752,co2d52v103,ao\
+1d48v94t4848,bd52v112,gv94t4944,do2d92v121t4992,go3d52v110t5040,ad48v100t5088\
+,go2d96v103t5092,bo3d48v100t5136,co4d52v87t5180,f+o2d92v112t5184,ao3d60v100t5\
+228,bd40v91t5276,go2d100v94t5280,go3d52v96t5320,f+d296,ao2d52v103t5376,dd44t5\
+424,ed52v94,f+d44v112,gd48v103t5568,ed56v94,f+d52v121t5664,dd40v94,ad88v103t5\
+760,ao3d52v127t5804,bd48v100t5852,dd104v94t5856,co4d60v100t5896,co3d112v103t5\
+952 do4d56v91,bo3v120t5996,dd96v94t6048 co4d48v110,ao3v100,bo2d44v94 bo3d292v\
+127,gd48v94t6192,fd44v90,ev103,dd48t6336,fd44t6380,ed48t6428,gd44v94,fd92v103\
+t6524,do4d56v127t6576,cd48v120t6624,eo3d92v103t6628,bd52v110t6672,at6720,fd96\
+v103t6724,co4d56v120t6764,bo3d52t6812,dd96v103t6816,do4d44v120t6864,cd320v127\
+,eo3d44v103t6912,av112t6960,gd48v103t7008,fd44t7052,et7104,g,fd40t7196,ad48t7\
+240,gd92v112t7292,eo4d48v127t7344,fo3d100v112,do4d44v127t7396,cd56v96,bo3t748\
+8,gd92v121t7492,do4d52v96t7536,c+d60v110t7584,eo3d96v112t7588,eo4d48v100t7632\
+,fo3d40v103t7684 do4d96v120,b-o3d36v86t7728,c+o4d100v127t7776,ao3d48v112t7780\
+,gd44v94,fd48v103,do4d100v120t7876,ao3d44v103t7924,gd52v94t7972 eo4d96v120,b-\
+o3d40v94t8016,fo4d88v120t8064,ao3d48v112t8068,gd44v94,ad96v127,fd44v103t8164,\
+ed40v112t8212,dd56v103t8256 bd104v100,fd40v121t8308,ed52v112t8352,co4d92v120t\
+8356,go3d48v112t8400,fv103 do4d92v110,eo3d40v103t8496,dd56v112t8544 f+d108v12\
+7,cd52v112t8592,bo2d48v121t8640,a-o3d96v110t8644,dd44v112t8688,cd56t8736,ad92\
+v127t8740,ed44v103t8788,dd48v121t8836 bd96v127,cd44v103t8884,co4d100v127,bo2d\
+44v121t8932,ad52v103,a-d48v94t9024,do4d232v120t9028,bo2d48v103t9072,ad52v112,\
+co3d48v103t9160,bo2d100v121t9212,eo3d60v127t9268,eo2d84v121t9316 f+o3d52v96,a\
+-t9364,dd20v103t9404,ad48v100t9412,c+d24v94t9424,dd60v103t9444,f+d64v96t9456,\
+ed88v103t9504 a-d44v100,f+d24v47t9524,ed48v110,eo4d56v127,co3d44v103t9600,bo2\
+v94 do4d52v100,cd56v110t9688,ao2d48v103t9692,eo4d60v120t9736,go2d48v103t9740,\
+f+t9784 do4d64v127,ao2d56v94t9828,co4d52v120t9836,a-o2v103t9880 bo3d64v120,bo\
+2d48v103t9928,do4v110t9932,ao2d64v103t9976,co4d92v110t9984,co3d52v86t10024,ao\
+4d48v110t10032,bo2v103t10076,a-o4d60v127t10080,do3d52v90t10124,bo4v120t10128,\
+co3v103t10176 ao4d72v110,ed52v96t10224,eo3d48v103t10228,fo4v127t10272,do3v103\
+t10276,fv86t10320,do4d36v80t10324,eo3d96v127t10372 a-d60,fo4d48v110t10420,ed6\
+0v100t10464,ao2d92v112t10468,do4d48v110t10512,cd12t10556,eo3d128v112t10564,do\
+4d12v100t10576,cd8v91t10592,dd32v110,cd20t10628,bo3d56v100t10644,eo2d88v121t1\
+0660,ao3d28v120t10692,ao2d292v103t10744 ao3d92v127,ao4d56v120t10796,gd60v110t\
+10840,ao1d192v112t10844,fo4d52v120t10888,ed56v127,gv110t10984,fv127t11036,ad5\
+2v110t11084,gd400v120,eo3d52v112t11176,dt11224,cd44v103t11272,bo2v112t11320,d\
+o3d56,c+d44v103t11412,et11460,dd436v121t11508,eo4d52v127t11572,fd48v100t11620\
+,gd52v96t11664,ad56v100t11712,fd52v96t11760,gd56v110t11808,ed44v100t11856,fd3\
+56v120t11904,ao2d56v112t11952,bd48t12000,co3v103t12044,dv94,bo2d52v103,co3d48\
+v112t12188,ao2d52v103t12232,bd428v121,go4d60v127t12340,fd48v100t12392,ed56v11\
+0t12436,dd60v100t12484,fd52v110t12532,ev120t12580,gv100t12624,fd396v127,do3d5\
+2v103t12720,ct12768,bo2d48t12812,ad52v112,co3t12908,bo2d48v121t12952,do3d52v1\
+03,cd432v112,do4d52v127t13108,ed56v100t13152,fd44v96,gd56t13248,ev100t13296,f\
+v110t13348,dd52v100t13392,ed420v120,go2d52v103t13492,ad56v121t13536,b-d52v112\
+t13584,co3d48,ao2d60t13680,b-d44v121t13732,gd48v103,ad104v121t13828,co4d52v12\
+7t13876,dd56v100t13920,b-o2d92v121t13928,eo4d56v96t13972,fd52v82t14020,ao2d88\
+v103t14024,do4d56v96t14064,ed52v116t14112,go2d92v103t14116,co4d56v100t14160,f\
+o2d100v112t14208 do4d48v127,ed56v100,fd60v110t14304,do3d96v121t14308,go4d44v9\
+6t14356,ad56v110t14396,co3d104v112t14404,fo4d52v127t14448,gt14496,b-o2d88v94t\
+14500,eo4d56v110t14540,fd48v127t14588,ao2d96v112t14592,go4d52v110t14640,ad56v\
+120t14684,fo3d92v121t14692,bo4d48v120t14736,co5d52v100t14780,eo3d92v121t14788\
+,ao4d60v120t14824,bd92v127t14876,do3v121t14880,go4d52v100t14916,co5d92v127t14\
+972,eo3d44v107t14976,do2d56v119t15024,ev103t15068 go4d100v120,fo2d52v103t1512\
+0,gv121t15168,eo4d96v127t15172,eo2d56v112t15216,fd48t15268 do4d52v110,cd20v10\
+0t15312,do2d48v112t15316,co4v110,eo2d96v121t15368,b-o3d56v110t15408,ad44v100t\
+15460,co2d104v112t15464,go3d60v96t15504,do2d104v112t15556 fo3d52v110,ad60v100\
+t15600,gd64v120t15648,eo2d104v127t15656,b-o3d44v120t15696,ad56v110,fo2d52v121\
+t15752,bo3d56v100t15788,do2v112t15792,et15840 co4v110,eo3d36t15884,fo2d48v127\
+t15888,do3d72t15932,go2d104v112t15948,co4d52v120t15984,fo3d76v127,go1d52v112t\
+16044,bo3v120t16092,co1d624v112t16136,eo3d408v127t16144,gd404t16152'],"tn2chan"=[0=0,1=0],"tn2label"=[0="Merged",1="Trk 1"],"tn2mute"=[0=0,1=0],"tn2patch"=[0=0,1=0],"tn2port"=[0=0,1=0],"toolnotes"=[1=[]],"view"=["x0"=-996,"x1"=17804,"y0"=0,"y1"=127]])
+
+# recreate object $346
+o=wgroup($346)
+r.addtool(o,["x0"=543,"x1"=947,"y0"=75,"y1"=283])
+o.restore(["buttmod"=0,"buttonact"=[1=[0=0,1=2,2=25],2=[0=1,1=7,2=6]],"dn2tn"=[0=0],"groupname"="New","ntracks"=3,"phrases"=[1='',2='do5d24v115:1t24,c,bo4,co5,go4,a,b,co5,eo4,f,g,c,g,f,g,a,c,f,a,f,a,g,f,g,c,e,\
+g,e,g,f,e,f,ao3,do4,f,bo3,do4,g,f,e,g,a,b,ed192 g co5,cd24t1272,d,e,d,go4,b,d\
+o5,bo4,do5,c,bo4,ed96 a co5,dd24t1656,c,d,do4d96 g b,co5d24,go4,e,co5,f+o4,a,\
+do5,c,bo4,g,d,b,c,e,a,g,ao3,do4,f+,do5t2304,e,d,c,bo4,do5,c,bo4,a,co5,bo4,a,g\
+d192 b,bd24t2808,a,g,f+,a,d,c,bo3d48,ao4d24,g,f+,g,e,f+,bo3d192 do4 g,do5d24t\
+3480,c,bo4,co5,go4,a,b,co5,eo4,f,g,c,g,f,g,a,c,f,a,f,a,g,f,g,c,e,g,e,g,f,e,f,\
+ao3,do4,f,bo3,do4,g,f,e,g,a,b,ed192 g co5,cd24t4728,d,e,d,go4,b,do5,bo4,do5,c\
+,bo4,ed96 a co5,dd24t5112,c,d,do4d96 g b,co5d24,go4,e,co5,f+o4,a,do5,c,bo4,g,\
+d,b,c,e,a,g,ao3,do4,f+,do5t5760,e,d,c,bo4,do5,c,bo4,a,co5,bo4,a,gd192 b,bd24t\
+6264,a,g,f+,a,d,c,bo3d48,ao4d24,g,f+,g,e,f+,bo3d192 do4 g,l6912',3='cd192v115c2:1t96,ed96,f,f,e,e,d,bo2,co3,cd24,co4,bo3,a,g,f,e,d,cd96,bo2d192,\
+ad24,ao3,g,a,f+d96,go2d24,go3,f+,g,ed96,f+,g,c,dd48,do4d24,c,bo3,co4,bo3,a,g,\
+b,a,g,f+,a,g,f+,go2,go3,f+,e,d,c,bo2,a,gd96,do3,dd192,go2d24,go3,f+,e,d,g,bo2\
+,do3,go2d96,co3d192t3552,ed96,f,f,e,e,d,bo2,co3,cd24,co4,bo3,a,g,f,e,d,cd96,b\
+o2d192,ad24,ao3,g,a,f+d96,go2d24,go3,f+,g,ed96,f+,g,c,dd48,do4d24,c,bo3,co4,b\
+o3,a,g,b,a,g,f+,a,g,f+,go2,go3,f+,e,d,c,bo2,a,gd96,do3,dd192,go2d24,go3,f+,e,\
+d,g,bo2,do3,go2d96'],"tn2chan"=[0=0,1=0,2=0,3=0],"tn2label"=[0="Merged",1="Trk 1",2="Trk 2",3="Trk 3"],"tn2mute"=[0=0,1=0,2=0,3=0],"tn2patch"=[0=0,1=0,2=0,3=0],"tn2port"=[0=0,1=0,2=0,3=0],"toolnotes"=[1=[],2=[],3=[]],"view"=["x0"=-432,"x1"=7344,"y0"=0,"y1"=127]])
+
+# recreate object $89
+o=wblocks($89)
+r.addtool(o,["x0"=66,"x1"=485,"y0"=53,"y1"=300])
+o.restore(["b"=[0=1,1=2,2=3],"collection"=[0=["name"="One beat","phrase"=',l96'],1=["name"="joy6","phrase"='go0v71:1,go3d32t32,a,go1d96 do3 gd64 bd32,do4,f+o3 co4d24,eo1d96t192 eo3 gd6\
+4 co4d32,e,ao3 do4d24,bo0d96t288 go3 bd64 do4d32,g,ao3 f+o4d24,eo1d96t384 eo3\
+ bd64 go4d32,d,go3 bd24,eo0d96t480 bo2 eo3d64 gd32,a,d bd24,ao0d96t576 ao2 eo\
+3d64 co4d32,d,f+o3 eo4d24,bo0d96t672 do3 gd64 do4d32,c,do3 bd24,co1d96t768 co\
+3d192 ed56 ad32,b,bo2 go3d24,do1d96t864 ao2d64 f+o3d32,g,d ad24,f+o1d96t960 a\
+o2 do3d32 ad64,f+d32t992,g ad24,do1d96t1056 f+o3 ad64 co4d32,bo3,f+ ad24,go1d\
+96t1152 do3d64 g bd32,gd64,f+d32t1216 ad24,eo1d96t1248 go2 go3d64 bd32,do4,f+\
+o3 co4d24,co1d96t1344 eo3 gd64 co4d32,e,ao3 do4d24,bo0d96t1440 go3 bd64 do4d3\
+2,g,ao3 f+o4d24,eo1d96t1536 eo3 bd64 go4d32,d,go3 bd24,do1d96t1632 bo2 eo3d64\
+ gd32,a,g bd24,co1d96t1728 co3 ed32 ad64,do4d32t1760,f+o3 co4d24,c+o1d96t1824\
+ eo3 gd64 bd32,a,e gd24,do1d96t1920 ao2d64 do3d32 dd96,gd32t1952,c f+d24,go0d\
+96t2016 bo2d64 do3d96 gd32,b,g do4,bo3d64 go4d32,d,go1 do3 b do4,do1d64 bo2 g\
+o3d32 go4d64,bo3d32t2240,bo0 go3 do4 d,go0d96 go2 do3 dd192 g bd96 bd192 b go\
+4d96,f+o1 f+o2,eo1 eo2 eo3 g co4 c,f+o1 f+o2 ad192 ao3d96 do4d192 d,eo1d96t26\
+88 eo2 go3,do1 do2 b f+o3 do4 d,eo1 eo2 b go3 co4d192 c,f+o1d96t2976 f+o2 a d\
+o3d192,go1d96t3072 go2 g bo3 b,do1 do2 f+ do3d64 ad96 a,dd64t3200,ed32t3232,d\
+o2d96 a bd64 do3 dd96 f+d32 ad64 ad96,ad64t3296,do1d32t3328 bo2 eo3 g,do1d64 \
+do3 f+ ad32,co4,do1 do3 g b,do0d96 f+o3d64 a co4d32,ao3,f+ a co4,do3 f+d64 a,\
+f+d32t3584,do1 do3 f+ a,do1d64 ao2 do3 co4d32,bo3,do1 do3 f+ a,go1d96 go2 do3\
+ d gd64 g bd32 bd128 bd192,gd128t3776,dt3808 ad24,f+o1d96t3840 f+o2 do3 g b,d\
+o4d32t3872,f+o3 co4d24,eo1d96t3936 eo2 eo3 e gd64 gd96 co4d32 cd96 c,ed32t396\
+8,ao3 do4d24,bo1d96t4032 bo2 do3 g g bd64 do4d32 dd160 dd192,gd32t4064,ao3 f+\
+o4d24,bo0d96t4128 bo1 bo2 do3 d gd64 go4d32,dd64,f+o3d32t4192 bd24,eo1d96t422\
+4 eo2 b b eo3d64 ed96 gd32 bd88 bd96,ad32t4256,g b,co1d96 co2 co3d48 c ed32 e\
+d96 ad48 a ad64,do4d32t4352,ao2d48t4368 a bo3d24 b,gd32t4384 co4d24,ct4392 c,\
+do1d96 do2 do3d48 d f+ f+d64 bd32 bd96 bd112,ad32t4448,bo2d48t4464 b eo3,gd24\
+t4480 gd32,do0d96 do2 co3d48 cd96 dd32 f+d88 ad32 ad48,at4528,gd32t4544 bd8,a\
+d24,ao2d48t4560 bo3d8,ad24,cd32t4576 f+ bd8,ad24,gd8t4592,a,go0d96 go1d192 bo\
+2d64 bd96 bd192 do3d96 gd32 gd160 gd192,bd32t4640,dd128 ad24,go1d96t4704 do3 \
+g bd32,do4,f+o3 co4d24,eo1d96t4800 eo3 gd64 co4d32,e,ao3 do4d24,bo0d96t4896 g\
+o3 bd64 do4d32,g,ao3 f+o4d24,eo1d96t4992 eo3 bd64 go4d32,d,go3 bd24,eo0d96t50\
+88 bo2 eo3d64 gd32,a,d bd24,ao0d96t5184 ao2 eo3d64 co4d32,d,f+o3 eo4d24,bo0d9\
+6t5280 do3 gd64 do4d32,c,do3 bd24,co1d96t5376 co3d192 ed64 ad32,b,bo2 go3d24,\
+do1d96t5472 ao2d64 f+o3d32,g,d ad24,f+o1d96t5568 ao2 do3d32 ad64,f+d32t5600,g\
+ ad24,do1d96t5664 f+o3 ad64 co4d32,bo3,f+ ad24,go1d96t5760 do3d64 g bd32,gd64\
+,f+d32t5824 ad24,eo1d96t5856 go2 go3d64 bd32,do4,f+o3 co4d24,co1d96t5952 eo3 \
+gd64 co4d32,e,ao3 do4d24,bo0d96t6048 go3 bd64 do4d32,g,ao3 f+o4d24,eo1d96t614\
+4 eo3 bd64 go4d32,d,go3 bd24,do1d96t6240 bo2 eo3d64 gd32,a,g bd24,co1d96t6336\
+ co3 ed32 ad64,do4d32t6368,f+o3 co4d24,c+o1d96t6432 eo3 gd64 bd32,a,e gd24,do\
+1d96t6528 ao2d64 do3d32 dd96,gd32t6560,c f+d24,go0d96t6624 go2 b do3 dd192 gd\
+96 gd192 b b,f+o1d96t6720 f+o2,eo1 eo2 eo3 g co4 c,f+o1 f+o2 ad192 ao3d96 do4\
+d192 d,eo1d96t7008 eo2 go3,do1 do2 b f+o3 do4 d,eo1 eo2 b go3 co4d192 c,f+o1d\
+96t7296 f+o2 a do3d192,go1d96t7392 go2 g bo3 b,do1 do2 f+ do3d64 ad96 a,dd64t\
+7520,ed32t7552,do2d96 ad64 ad96 do3d64 dd96 f+d32 ad64 ad96,ad64t7616,do1d32t\
+7648 ao2 eo3 g,do1d64 do3 f+ ad32,co4,do1 do3 g b,do0d96 f+o3d64 a co4d32,ao3\
+,f+ a co4,do3 f+d64 a,f+d32t7904,do1 do3 f+ a,do1d64 ao2 do3 co4d32,bo3,do1 d\
+o3 f+ a,go1d96 go2 do3 d gd64 g bd32 bd128 bd192,gd128t8096,dt8128 ad24,f+o1d\
+96t8160 f+o2 do3 g b,do4d32t8192,f+o3 co4d24,eo1d96t8256 eo2 eo3 e gd64 gd96 \
+co4d32 cd96 c,ed32t8288,ao3 do4d24,bo1d96t8352 bo2 do3 g g bd64 do4d32 dd160 \
+dd192,gd32t8384,ao3 f+o4d24,bo0d96t8448 bo1 bo2 do3 d gd64 go4d32,dd64,f+o3d3\
+2t8512 bd24,eo1d96t8544 eo2 b b eo3d64 ed96 gd32 bd88 bd96,ad32t8576,g b,co1d\
+96 co2 co3d48 c ed32 ed96 ad48 a ad64,do4d32t8672,ao2d48t8688 a bo3d24 b,gd32\
+t8704 co4d24,ct8712 c,do1d96 do2 do3d48 d f+ f+d64 bd32 bd96 b,ad32t8768,bo2d\
+48t8784 b eo3,gd24t8800 gd32,do0d96 do2 co3d48 cd96 dd32 f+d88 ad32 ad48 bd16\
+,ad48,gd32t8864 bd8,ad24,ao2d48t8880 bo3d8,ad24,cd32t8896 f+ bd8,ad24,gd8t891\
+2,a,go0d96 go1d192 bo2d64 bd96 bd192 do3d96 gd32 gd160 gd192,bd32t8960,dd128 \
+ad24,go1d96t9024 do3 g bd32,do4,f+o3 co4d24,eo1d96t9120 eo3 gd64 co4d32,e,ao3\
+ do4d24,bo0d96t9216 go3 bd64 do4d32,g,ao3 f+o4d24,eo1d96t9312 eo3 bd64 go4d32\
+,d,go3 bd24,eo0d96t9408 bo2 eo3d64 gd32,a,d bd24,ao0d96t9504 ao2 eo3d64 co4d3\
+2,d,f+o3 eo4d24,bo0d96t9600 do3 gd64 do4d32,c,do3 bd24,co1d96t9696 co3d192 ed\
+64 ad32,b,bo2 go3d24,do1d96t9792 ao2d64 f+o3d32,g,d ad24,f+o1d96t9888 ao2 do3\
+d32 ad64,f+d32t9920,g ad24,do1d96t9984 f+o3 ad64 co4d32,bo3,f+ ad24,go1d96t10\
+080 do3d64 g bd32,gd64,f+d32t10144 ad24,eo1d96t10176 go2 go3d64 bd32,do4,f+o3\
+ co4d24,co1d96t10272 eo3 gd64 co4d32,e,ao3 do4d24,bo0d96t10368 go3 bd64 do4d3\
+2,g,ao3 f+o4d24,eo1d96t10464 eo3 bd64 go4d32,d,go3 bd24,do1d96t10560 bo2 eo3d\
+64 gd32,a,g bd24,co1d96t10656 co3 ed32 ad64,do4d32t10688,f+o3 co4d24,c+o1d96t\
+10752 eo3 gd64 bd32,a,e gd24,do1d96t10848 ao2d64 do3d32 dd96,gd32t10880,c f+d\
+24,go0d96t10944 bo2d64 do3d96 gd32,b,g do4d24,bo3d64t11040 go4d32,d,go1 go3 b\
+d24 do4d32,f+o1d64 do3 gd32 go4d64,bo3d32t11168,eo1 eo3 g c+o4d24,do1d96t1123\
+2 do2 do3d64 f+d96 f+d128 ad64 ad160 a do4d32,do3d160,ed24t11296 gd32,co1d96 \
+co2 do3 f+ a,ad64t11360,a-d24t11392 do4d32,bo0d96 bo1 do3d64 dd96 d a-d32 a-d\
+96 bd64 bd96,bd64t11456,cd32t11488 ad24,ao0d96t11520 ao1 co3d64 ed96 ed160 ad\
+32 ad160 co4d64 cd128,cd160t11552,do3d32t11584 bd24,ao1d48t11616 ao2 ad96 eo3\
+d88 co4d96,ao3d64t11648,go1d48t11664 go2,co3d32t11680 e,fo1d48 fo2 ad64 co3d3\
+2 fd96 a ad192 co4d96 c,do3d32t11744,eo1d48t11760 eo2,co3d32t11776 ed24,do1d9\
+6t11808 do2 do3d64 fd32 fd96 ad192 bd144 b,do4d32t11840,eo3 co4d24,bo0d96t119\
+04 bo1 do3 fd64 ad96 do4d32,bo3,co4d24t11952 c,do3d32t11968 a-d24,do4t11976 d\
+,eo1d96 eo2 bd64 eo3d32 ed96 a-d88 a-d96 b b,f+d32t12032,d a-,ao0d96 ao1 co3d\
+64 cd96 e ad32 ad96 a a,co4d32t12128,eo3 bd24,fo1d96t12192 a ao2 co3 ad64 ad9\
+6 a a co4d32,e,a-o3 do4d24,do1d96t12288 fo3 ad64 do4d32,f,bo3 eo4d24,co1d96t1\
+2384 ao3 co4d64 ed32,a,bo3 a-o4d24,fo1d96t12480 fo3 co4d64 ad32,e,ao3 co4d24,\
+eo1d96t12576 co3 fd64 ad32,b,a co4d24,do1d96t12672 do3 ad64 fo4d32,e,a-o3 do4\
+d24,e-o1d96t12768 f+o3 ad64 co4d32,bo3,f+ ad24,eo1d96t12864 bo2d64 eo3d32 ed9\
+6,ad32t12896,d a-d24,ao0d96t12960 ao2d192 co3d96 e ed192 ad32 ad192 co4d64 cd\
+192,cd160t12992,ed32t13024,ao1d96 ao4d32,bo1d96t13152 bo2 do3 g do4 d,co2 co3\
+ cd192 gd96 eo4d128 ed192,cd32t13280,d,ao1d96 ao2 ao3 co4d64 cd96 e,gd32t1337\
+6,d fd24,eo1d96t13440 eo2 co3 g g eo4d64 ed96 e gd32,b-,c ad24,fo1d96t13536 f\
+o2 ad192 do3d96 fd64 fd96 do4d144 d ad32,co5,go3 bo4d24,do1d96t13632 do2 fo3 \
+ad64 ad96 co5d32,ao4,ed24t13680 e,dd32t13696 fd24,ft13704 f,go1d96 go2 b go3 \
+g bd64 do4d32 dd96 d,ed32t13760,d fd24,co1d96t13824 co2 eo3 g g co4d64 cd96 c\
+ ed32,g,go3 fo4d24,eo1d96t13920 co2 eo3 e g co4d64 cd88 cd96 gd32,e,go3 co4,c\
+o1d96 eo3d64 gd32 gd96,ad32t14048,d b-d24,fo1d96t14112 co3d64 fd96 ad32,co4,e\
+o3 bd24,do1d96t14208 fo3d64 a co4d32,ao3d64,fd24t14272 ad32,go1d96 do3d32 gd9\
+6 bd64,ed32t14336,fd24 do4d32,co1d96 eo3d32 gd96 co4d64,co3d32t14432,dd24 gd3\
+2,e co4d64,go3d32t14528,co1 do3 f+d24 ad32,bo0d64 do3 gd32 do4d64,bo3d32t1462\
+4,do1 do3 f+ ad24,go0d96t14688 go2d192 do3d96 d gd64 g bd32 bd128 bd192,gd128\
+t14720,dt14752 ad24,go1d96t14784 do3 g b,do4d32t14816,f+o3 co4d24,eo1d96t1488\
+0 eo2 eo3 e gd64 gd96 co4d32 cd96 c,ed32t14912,ao3 do4d24,bo0d96t14976 bo2 do\
+3 g gd192 bd64 do4d32 dd160 dd192,gd32t15008,ao3 f+o4d24,eo1d96t15072 bo2 eo3\
+ e bd64 go4d32,dd64,go3d32t15136 bd24,eo0d96t15168 eo2 b b eo3d64 gd32 gd96 d\
+o4 d,ao3d32t15200,d bd24,ao0d96t15264 ao1 ao2 co3 ed64 gd48 co4d32 cd96 c,dd3\
+2t15296,f+o3d48t15312,f+d32t15328 eo4d24,bo0d96t15360 bo1 do3 d gd64 gd184 co\
+4d16 c dd32,bo3d16t15376 b,co4 c cd32,bo3d16t15408 b,dd32 bd24 co4d16 c,bo3 b\
+,co1d96 co2 co3d192 ed64 ed96 ad32 co4d8 c,bo3 b,co4 c,bo3 b,bd16 co4d8 c,bo3\
+ bd24,co4d8t15504 c,bo3 b,bo2d32 go3 co4d8 c,bo3 b,a a,b b,do1d96 do2d192 ad6\
+4 ad160 f+o3d32 f+d128 ad160 ad192,dd32t15584,c+ ed24,ao2d96t15648 do3d64 f+d\
+96,ad64t15680,do1d32t15712 ao2 eo3 gd24,do1d64t15744 do3 f+ ad32,co4,do1 do3 \
+g bd24,do0d96t15840 f+o3d64 a co4d32,ao3,f+d24 ad32 co4,do3 f+d64 a,f+d32t159\
+68,do1 do3 f+ ad24,do1d64t16032 ao2 do3 co4d32,bo3,do1 do3 f+ ad24,go1d96t161\
+28 go2 do3 d gd64 g bd32 bd128 bd192,gd128t16160,dt16192 ad24,f+o1d96t16224 f\
++o2 do3 g b,do4d32t16256,f+o3 co4d24,eo1d96t16320 eo2 eo3 e gd64 gd96 co4d32 \
+cd96 c,ed32t16352,ao3 do4d24,bo1d96t16416 bo2 do3 g g bd64 do4d32 dd160 dd192\
+,gd32t16448,ao3 f+o4d24,bo0d96t16512 bo1 bo2 do3 d gd64 go4d32,dd64,f+o3d32t1\
+6576 bd24,eo1d96t16608 eo2 b b eo3d64 ed96 gd32 bd88 bd96,ad32t16640,g b,co1d\
+96 co2 co3d48 c ed32 ed96 ad48 a ad64,do4d32t16736,ao2d48t16752 a bo3d24 b,gd\
+32t16768 co4d24,ct16776 c,do1d96 do2d192 do3d48 d f+ f+d64 bd16 b bd32,ad16t1\
+6816 a,ad32 bd16 b,bo2d48 b eo3 ad16 a,gd24 gd32 bd16 b,a a,do0d96 co3d48 cd9\
+6 dd32 f+d88 ad16 bd8 b,a ad24,bd8t16912 b,a ad24,gd32t16928 bd8 b,a ad24,ao2\
+d48t16944 bo3d8 b,a a,cd32 f+ bd8 b,a a,g g,a a,go0d1248 go1d288 bo2d64 bd96 \
+bd288 do3d256 gd32 gd96 gd192,bd32t17024,gd160 do4d24,bo3d64t17088 go4d32,d,g\
+o3d128 bd24 do4d32,do3d96 g go4d64,bo3d32t17216,g do4d24 dd32,go0d960 do3d96 \
+bd64 fo4d32,d,go3 bd24,gd32t17376 do4d64,bo3d32t17408,g b do4d24,eo3d64t17472\
+ co4 ed32,cd128,co3d32t17536 ad24,ao2d96t17568 f+o3d32,a,a co4d24,bo3d64t1766\
+4 do4d32,bo3d128,dd32t17728 gd24,bo2d64t17760 eo3d32,g,e g bd24,eo2d64t17856 \
+ao3 co4d32,ao3d128,ao2d32t17920 f+o3d24,f+o2d64t17952 do3d32,f+,f+ ad24 ad32,\
+dd64 f+ co4d32,bo3,d f+ ad24,dd96t18144 gd64 bd32,g,d ad24,go1d96t18240 do3 g\
+d64 bd32,do4,f+o3 co4d24,eo1d96t18336 eo3 gd64 co4d32,e,ao3 do4d24,bo0d96t184\
+32 go3 bd64 do4d32,g,ao3 f+o4d24,eo1d96t18528 eo3 bd64 go4d32,d,go3 bd24,eo0d\
+96t18624 bo2 eo3d64 gd32,a,d bd24,ao0d96t18720 ao2 eo3d64 co4d32,d,f+o3 eo4d2\
+4,bo0d96t18816 do3 gd64 do4d32,c,do3 bd24,co1d96t18912 co3d192 ed64 ad32,b,bo\
+2 go3d24,do1d96t19008 ao2d64 f+o3d32,g,d ad24,f+o1d96t19104 ao2 do3d32 ad64,f\
++d32t19136,g ad24,do1d96t19200 f+o3 ad64 co4d32,bo3,f+ ad24,go1d96t19296 do3d\
+64 g bd32,gd64,f+d32t19360 ad24,eo1d96t19392 go2 go3d64 bd32,do4,f+o3 co4d24,\
+co1d96t19488 eo3 gd64 co4d32,e,ao3 do4d24,bo0d96t19584 go3 bd64 do4d32,g,ao3 \
+f+o4d24,eo1d96t19680 eo3 bd64 go4d32,d,go3 bd24,do1d96t19776 bo2 eo3d64 gd32,\
+a,g bd24,co1d96t19872 co3 ed32 ad64,do4d32t19904,f+o3 co4d24,c+o1d96t19968 eo\
+3 gd64 bd32,a,e gd24,do1d173t20064 ao2d93 do3d40 dd173,gd53t20104,cd80 f+d60,\
+go0d411t20237 bo2 do3 g'],2=["name"="jsbach","phrase"='cd52v80t48,dd48v70t96,ev80t140,fd56v66,dd52v70t240,ed44t284,cd48v66,gd96v80,\
+co2d56v82t428,co4d100v100t472,do2d48v73t476,e,bo3d16v61t568,fo2d52v82t572,ao3\
+d16v61t584,bd68v90,do2d52v64t620,ed48v82t668 co4d100v90,co2d52v64t716,gd96v73\
+ do4d60v90,go3d48v70t816,go1d192v64 ao3d52v80,bd48v70t912,co4d52,ao3d56v66t10\
+00,bd44v80t1052,gd52v70t1100,do4d100v80t1144,go2d44v64t1196,go4d104v90,ao2d40\
+v73t1244,bd48t1288,co3t1340,fo4d12v70t1344,ed16v52,fd68v90t1368,ao2d52v64t138\
+4,bd44,go4d104v80t1440,go2d44v60t1484,co3d100v73t1532,eo4d60v80t1540,ad52t158\
+8,bo2d92v73t1636 go4d56v80,fd48t1680,ed52v90,co3d88v73t1732,go4d56v80t1776,do\
+3d92v91t1828 fo4d56v90,ad60t1876,eo3d96v82t1924,go4d52v70t1928,fd48v100t1972,\
+ev110,go2d92v82t2024,do4d56v70t2064,ao2d88v82t2112 co4d52v70,et2160,bo2d96v82\
+t2204,do4d52v100t2208,fv80t2252,ed60t2300,co3d96v73t2304,do4d48v90t2348,cd52v\
+100,eo2d92v82t2400,bo3d48v61t2444,f+o2d92v64 ao3d48v100,co4v90,go2d96v73 bo3d\
+56v100,do4d48v66t2636,ao2d96v91 co4d56v100,bo3d44t2732,bo2d88v82t2780 ao3d44v\
+100,gd60v61,cd192v82t2876 f+d48v90,ad52v70t2920,gd84v100,bd48v90t3012,ad108v8\
+0t3064,do2d60v82t3116,ed52v64t3164,do3d96v104t3168,f+o2d52v52t3212,gv73,co4d1\
+2v90t3268,bo3d20t3284,co4d72v70t3292,eo2d52v73t3308,f+d56v91t3356,do4d100v110\
+t3364,do2d52v64t3404,gd104t3452,bo3d44v100t3464,ad48v90,bo1d92v82 go3d48v70,f\
++v57,ed52v66t3648,co2d100v73t3652,go3d52v70t3696,f+v100t3744,do2d92v82t3748,a\
+o3d48v90t3788,eo2d100v64t3840 go3d48v66,bd60v70t3884,f+o2d104v64t3936 ao3d56v\
+100,co4d48v70t3984,go2d96v73 bo3d56v70,do4v66t4076,cd52v100t4128,eo2d96v82t41\
+32,eo4d52v80t4176,dv100t4224,bo1d132v91t4228,bo3d20v80t4276,co4d28,dd48t4320,\
+co2v91 go4d40v80,bo3d16t4412,do2d96v91t4416,co4d12v90t4428,bo3v80t4444,co4d8v\
+70,bo3v52t4468,co4d20v80t4480,bo3v110t4496,do1d88v91t4512 ao3d44v110,gd16v90t\
+4564,gd384v110t4612,go1d60v82t4660,ad48v73t4708,bv64t4752,co2d52v73,ao1d48v64\
+t4848,bd52v82,gv64t4944,do2d92v91t4992,go3d52v80t5040,ad48v70t5088,go2d96v73t\
+5092,bo3d48v70t5136,co4d52v57t5180,f+o2d92v82t5184,ao3d60v70t5228,bd40v61t527\
+6,go2d100v64t5280,go3d52v66t5320,f+d296,ao2d52v73t5376,dd44t5424,ed52v64,f+d4\
+4v82,gd48v73t5568,ed56v64,f+d52v91t5664,dd40v64,ad88v73t5760,ao3d52v99t5804,b\
+d48v70t5852,dd104v64t5856,co4d60v70t5896,co3d112v73t5952 do4d56v61,bo3v90t599\
+6,dd96v64t6048 co4d48v80,ao3v70,bo2d44v64 bo3d292v100,gd48v64t6192,fd44v60,ev\
+73,dd48t6336,fd44t6380,ed48t6428,gd44v64,fd92v73t6524,do4d56v110t6576,cd48v90\
+t6624,eo3d92v73t6628,bd52v80t6672,at6720,fd96v73t6724,co4d56v90t6764,bo3d52t6\
+812,dd96v73t6816,do4d44v90t6864,cd320v100,eo3d44v73t6912,av82t6960,gd48v73t70\
+08,fd44t7052,et7104,g,fd40t7196,ad48t7240,gd92v82t7292,eo4d48v110t7344,fo3d10\
+0v82,do4d44v100t7396,cd56v66,bo3t7488,gd92v91t7492,do4d52v66t7536,c+d60v80t75\
+84,eo3d96v82t7588,eo4d48v70t7632,fo3d40v73t7684 do4d96v90,b-o3d36v56t7728,c+o\
+4d100v99t7776,ao3d48v82t7780,gd44v64,fd48v73,do4d100v90t7876,ao3d44v73t7924,g\
+d52v64t7972 eo4d96v90,b-o3d40v64t8016,fo4d88v90t8064,ao3d48v82t8068,gd44v64,a\
+d96v99,fd44v73t8164,ed40v82t8212,dd56v73t8256 bd104v70,fd40v91t8308,ed52v82t8\
+352,co4d92v90t8356,go3d48v82t8400,fv73 do4d92v80,eo3d40v73t8496,dd56v82t8544 \
+f+d108v101,cd52v82t8592,bo2d48v91t8640,a-o3d96v80t8644,dd44v82t8688,cd56t8736\
+,ad92v100t8740,ed44v73t8788,dd48v91t8836 bd96v100,cd44v73t8884,co4d100v110,bo\
+2d44v91t8932,ad52v73,a-d48v64t9024,do4d232v90t9028,bo2d48v73t9072,ad52v82,co3\
+d48v73t9160,bo2d100v91t9212,eo3d60v100t9268,eo2d84v91t9316 f+o3d52v66,a-t9364\
+,dd20v73t9404,ad48v70t9412,c+d24v64t9424,dd60v73t9444,f+d64v66t9456,ed88v73t9\
+504 a-d44v70,f+d24v17t9524,ed48v80,eo4d56v110,co3d44v73t9600,bo2v64 do4d52v70\
+,cd56v80t9688,ao2d48v73t9692,eo4d60v90t9736,go2d48v73t9740,f+t9784 do4d64v110\
+,ao2d56v64t9828,co4d52v90t9836,a-o2v73t9880 bo3d64v90,bo2d48v73t9928,do4v80t9\
+932,ao2d64v73t9976,co4d92v80t9984,co3d52v56t10024,ao4d48v80t10032,bo2v73t1007\
+6,a-o4d60v110t10080,do3d52v60t10124,bo4v90t10128,co3v73t10176 ao4d72v80,ed52v\
+66t10224,eo3d48v73t10228,fo4v100t10272,do3v73t10276,fv56t10320,do4d36v50t1032\
+4,eo3d96v100t10372 a-d60v103,fo4d48v80t10420,ed60v70t10464,ao2d92v82t10468,do\
+4d48v80t10512,cd12t10556,eo3d128v82t10564,do4d12v70t10576,cd8v61t10592,dd32v8\
+0,cd20t10628,bo3d56v70t10644,eo2d88v91t10660,ao3d28v90t10692,ao2d292v73t10744\
+ ao3d92v100,ao4d56v90t10796,gd60v80t10840,ao1d192v82t10844,fo4d52v90t10888,ed\
+56v100,gv80t10984,fv110t11036,ad52v80t11084,gd400v90,eo3d52v82t11176,dt11224,\
+cd44v73t11272,bo2v82t11320,do3d56,c+d44v73t11412,et11460,dd436v91t11508,eo4d5\
+2v110t11572,fd48v70t11620,gd52v66t11664,ad56v70t11712,fd52v66t11760,gd56v80t1\
+1808,ed44v70t11856,fd356v90t11904,ao2d56v82t11952,bd48t12000,co3v73t12044,dv6\
+4,bo2d52v73,co3d48v82t12188,ao2d52v73t12232,bd428v91,go4d60v110t12340,fd48v70\
+t12392,ed56v80t12436,dd60v70t12484,fd52v80t12532,ev90t12580,gv70t12624,fd396v\
+100,do3d52v73t12720,ct12768,bo2d48t12812,ad52v82,co3t12908,bo2d48v91t12952,do\
+3d52v73,cd432v82,do4d52v110t13108,ed56v70t13152,fd44v66,gd56t13248,ev70t13296\
+,fv80t13348,dd52v70t13392,ed420v90,go2d52v73t13492,ad56v91t13536,b-d52v82t135\
+84,co3d48,ao2d60t13680,b-d44v91t13732,gd48v73,ad104v91t13828,co4d52v110t13876\
+,dd56v70t13920,b-o2d92v91t13928,eo4d56v66t13972,fd52v52t14020,ao2d88v73t14024\
+,do4d56v66t14064,ed52v86t14112,go2d92v73t14116,co4d56v70t14160,fo2d100v82t142\
+08 do4d48v100,ed56v70,fd60v80t14304,do3d96v91t14308,go4d44v66t14356,ad56v80t1\
+4396,co3d104v82t14404,fo4d52v100t14448,gv110t14496,b-o2d88v64t14500,eo4d56v80\
+t14540,fd48v110t14588,ao2d96v82t14592,go4d52v80t14640,ad56v90t14684,fo3d92v91\
+t14692,bo4d48v90t14736,co5d52v70t14780,eo3d92v91t14788,ao4d60v90t14824,bd92v1\
+00t14876,do3v91t14880,go4d52v70t14916,co5d92v100t14972,eo3d44v77t14976,do2d56\
+v89t15024,ev73t15068 go4d100v90,fo2d52v73t15120,gv91t15168,eo4d96v100t15172,e\
+o2d56v82t15216,fd48t15268 do4d52v80,cd20v70t15312,do2d48v82t15316,co4v80,eo2d\
+96v91t15368,b-o3d56v80t15408,ad44v70t15460,co2d104v82t15464,go3d60v66t15504,d\
+o2d104v82t15556 fo3d52v80,ad60v70t15600,gd64v90t15648,eo2d104v100t15656,b-o3d\
+44v90t15696,ad56v80,fo2d52v91t15752,bo3d56v70t15788,do2v82t15792,et15840 co4v\
+80,eo3d36t15884,fo2d48v100t15888,do3d72t15932,go2d104v82t15948,co4d52v90t1598\
+4,fo3d76v100,go1d52v82t16044,bo3v90t16092,co1d624v82t16136,eo3d408v100t16144,\
+gd404t16152'],3=["name"="prelude","phrase"='do5d24v115:1t24,c,bo4,co3d192c2 co5d24c1,go4,a,b,co5,eo4,f,g,eo3d96c2 co4d24\
+c1,g,f,g,fo3d96c2 ao4d24c1,c,f,a,fo3d96c2 fo4d24c1,a,g,f,eo3d96c2 go4d24c1,c,\
+e,g,eo3d96c2 eo4d24c1,g,f,e,do3d96c2 fo4d24c1,ao3,do4,f,bo2d96c2 bo3d24c1,do4\
+,g,f,co3d96c2 eo4d24c1,g,a,b,co3c2 eo4d192c1 g co5,co4d24c2t1080,bo3,a,g,f,e,\
+d,cd96,co5d24c1t1272,d,e,bo2d192c2 do5d24c1,go4,b,do5,bo4,do5,c,bo4,ao2c2 eo4\
+d96c1 a co5,ao3d24c2t1560,g,a,f+d96,do5d24c1t1656,c,d,go2c2 do4d96c1 g b,go3d\
+24c2t1752,f+,g,ed96 co5d24c1,go4,e,co5,f+o3d96c2 f+o4d24c1,a,do5,c,go3d96c2 b\
+o4d24c1,g,d,b,co3d96c2 co4d24c1,e,a,g,do3d48c2 ad24c1,do4,dc2 f+c1,cc2,bo3 do\
+5c1,co4c2 eo5c1,bo3c2 do5c1,ao3c2 co5c1,go3c2 bo4c1,bo3c2 do5c1,ao3c2 co5c1,g\
+o3c2 bo4c1,f+o3c2 ao4c1,ao3c2 co5c1,go3c2 bo4c1,f+o3c2 ao4c1,go2c2 go4d192c1 \
+b,go3d24c2t2616,f+,e,d,c,bo2,a,gd96,bo4d24c1t2808,a,g,do3d96c2 f+o4d24c1,a,d,\
+c,do3d192c2 bd48c1,ao4d24,g,f+,g,e,f+,go2c2 bo3d192c1 do4 g,go3d24c2t3192,f+,\
+e,d,g,bo2,do3,go2d96,do5d24c1t3480,c,bo4,co3d192c2 co5d24c1,go4,a,b,co5,eo4,f\
+,g,eo3d96c2 co4d24c1,g,f,g,fo3d96c2 ao4d24c1,c,f,a,fo3d96c2 fo4d24c1,a,g,f,eo\
+3d96c2 go4d24c1,c,e,g,eo3d96c2 eo4d24c1,g,f,e,do3d96c2 fo4d24c1,ao3,do4,f,bo2\
+d96c2 bo3d24c1,do4,g,f,co3d96c2 eo4d24c1,g,a,b,co3c2 eo4d192c1 g co5,co4d24c2\
+t4536,bo3,a,g,f,e,d,cd96,co5d24c1t4728,d,e,bo2d192c2 do5d24c1,go4,b,do5,bo4,d\
+o5,c,bo4,ao2c2 eo4d96c1 a co5,ao3d24c2t5016,g,a,f+d96,do5d24c1t5112,c,d,go2c2\
+ do4d96c1 g b,go3d24c2t5208,f+,g,ed96 co5d24c1,go4,e,co5,f+o3d96c2 f+o4d24c1,\
+a,do5,c,go3d96c2 bo4d24c1,g,d,b,co3d96c2 co4d24c1,e,a,g,do3d48c2 ad24c1,do4,d\
+c2 f+c1,cc2,bo3 do5c1,co4c2 eo5c1,bo3c2 do5c1,ao3c2 co5c1,go3c2 bo4c1,bo3c2 d\
+o5c1,ao3c2 co5c1,go3c2 bo4c1,f+o3c2 ao4c1,ao3c2 co5c1,go3c2 bo4c1,f+o3c2 ao4c\
+1,go2c2 go4d192c1 b,go3d24c2t6072,f+,e,d,c,bo2,a,gd96,bo4d24c1t6264,a,g,do3d9\
+6c2 f+o4d24c1,a,d,c,do3d192c2 bd48c1,ao4d24,g,f+,g,e,f+,go2c2 bo3d192c1 do4 g\
+,go3d24c2t6648,f+,e,d,g,bo2,do3,go2d96']]])
+
+# recreate object $505
+o=wmenu($505,"mkmenu_setvol",varg([0=$274]))
+r.addtool(o,["x0"=945,"x1"=985,"y0"=353,"y1"=477])
+
+}

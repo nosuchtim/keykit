@@ -1,0 +1,645 @@
+############################################################
+#
+# WATER LILES for bodysynth (dancer) and electric clarinet
+#
+# The goal of this code is to play phrases
+# in response to notes within certain time periods.
+#
+############################################################
+
+function WaterLilies() {
+
+	print("Waterlilies...")
+
+	# All times computed by the program will be
+	# relative to Start, so that things are all
+	# synchronized to a common starting point.
+
+	Start = Now
+
+	# All of the values here in seconds
+
+        point1 = 1
+        point2 = 10
+        point3 = 15
+        point4 = 20
+        point5 = 40
+        point6 = 50
+        point7 = 60	#1'
+        point8 = 70
+
+	# NEW INSERT 1
+
+	point8a=80
+	point8b=100	#1'40"
+	point8c=110
+	point8d=120	#2'
+	point8e=130
+	point8f=140	#2'20"
+
+	# SECTION TWO
+
+	point9 = 150 	#2'30"
+	point10= 163
+	point11= 170	#2'50"
+	point12= 185	#3'05"
+	point13= 190	#3'10"
+	point14= 200	#3'20"
+	point15= 220	#3'40"
+
+	# NEW INSERT TWO
+
+	point15a=230
+	point15b=250	#4'10"
+	point15c=270	#4'30"
+	point15d=280
+	point15e=290
+	point15f=300	#5'
+	point15g=310
+
+	# SECTION THREE
+
+	point16= 320	#5'20"
+	point17= 335	#5'35"
+	point18= 345	#5'45"
+	point19= 360	#6'
+	point20= 375	#6'15"
+	point21= 385	#6'25"
+
+	# NEW INSERT THREE
+
+	point21a=395	#6'35"
+	point21b=410	#6'50"
+	point21c=420	#7'
+	point21d=430
+	point21e=445	#7'25"
+	point21f=460	#7'40"
+
+	# SECTION FOUR (JUST PERCUSSION)
+
+	point22= 485	#8'05"
+	point23= 490	#8'10"
+	point24= 510	#8'30"
+	point25= 520	#8'40"
+
+	# SECTION FIVE (JUST CHANNELS 11-16)
+
+	point26= 525	#8'45"
+	point27= 540	#9'
+	point28= 555	#9'15"
+	point29= 570	#9'30"
+	point30= 600
+	point31= 630
+
+	######################################
+	# PHRASES USED BY THE BODYSYNTH AND CALLED BY VARIABLE NAME
+	######################################
+
+	a1='d4d110,cv40c1 c5c2d140v90,r50,d5c7d40v50 d6c2 a5c4, r80,d3v30d25,e4v40,f+6v50,b3v60,a4 b2'
+	a1a='a5c4, r80,e4v40,f+6v50'
+	a1b=shuffle(a1)
+	a1c=reverse(a1)
+
+	a2= 'd5v55c1d60 d3c2,c5c6v70'
+	a2a=shuffle(a2)
+	a2b=reverse(a2)
+
+	b1='p57d200v100c4 p60c11 p40c10, p55c2 p79c1,p57 45 69'
+	b1a=randdur(b1,50)
+
+	b2='p60d548v100c3,62,64c5 76c15d300,p71c7 p83c15'
+	b2a=eventime(b2)
+	b2b=randpitch(b2,12)
+
+	b3='pc60d50c1 48c8, d4c9 d6c11 a5c16,e4d200c14,b4d130c9 50c1040 c10,
+		a4c9d23 a3c8 a6c5,d4,c,f4c1d200 c58 30c10 60c10'
+	b3a=randpitch(b3,12)
+	b3b=var7(b3)
+
+	b4='d6d100c12v100 d5c6 d4c5 20c10,c60c1 72c2 77c3 61c10,
+		d5c5 d6c7,e4 e5 e6 e7'
+	b4a=var8(b4)
+
+	p1='p45v110c10 55,ed20,f,a,g,55d40'
+	p1a=shuffle(p1)
+	p1b=reverse(p1)
+
+	p2='p45v110c10 55,ed20,f,a,g,55d40'
+	p2a=flip(p2)
+	p2b=repleng(p2,500)
+
+	p3='p50v110d19c10,55,67,44,66 80 22,100,20 51, 30,44,46,47,48,50 30 77'
+
+	r1='p40v127d19 50 60 70 80,r5,p40v80,r5,p42 56,r5,p40 41 55,r5,p40v127 50 52 54,
+		p41v80,r5,40,r5'
+	r1a=randpitch(r1,12)
+	r1b=randdur(r1,50)
+
+	r2='p48v127d19c10 66 70,r5,p39v80d19 52,r5,p38v80d19 53c9,r5,p48v127d19c10 66 70,r5,
+		p39v80d19 52,r5,p42v80d19 47 58c8,r5,p37v80d19c10 56 59,r5'
+	r2a=pitchlimit(r2,70,86)
+
+	r3='p45v127d19c10 62 70c11,r5,p39v80d19c10 51,r5,p38v120d19 53c7,r5,p48v127d19c10 66 70c12,r5,
+	    p39v80d19c10 52,r5,p60v120d19 49 58c13,r5,p37v80d19c10 56 59,r5'
+	r3a=shuffle(r3)
+	r3b=swapnote(r3)
+	r3c=randpitch(r3,24)
+
+	r4= 'p59v127d19c10 70 57c11,r5,p37v80d19c10 51c14,r5,p40v80d19 53c15,r5,p47v127d19c10 66 70c12,r5,
+	    p53v80d19c10 48c3 60c7 76c5,r5,p60v120d19c10 50 58c8,r5,p37v127d19c10 56 59,r5,
+	    p49v80d19c10'
+	r4a=shuffle(r4)
+
+	######################################
+	# PERFORMANCE TASKS FOR THE BODYSYNTH
+	######################################
+
+	#################
+	# SECTION ONE  o'-1'10"
+	#################
+
+	# point 1 to 2
+
+	dofrom(point1,point2, 60,63,1,p1)
+	dofrom(point1,point2, 60,63,2,a1)
+ 	dofrom(point1,point2, 60,63,3,a1a)
+
+	#dofrom(point1,point2, 64,66,1,a1b)
+	#dofrom(point1,point2, 64,66,2,b2)
+ 	#dofrom(point1,point2, 64,66,3,p1)
+
+	#dofrom(point1,point2, 67,72,1,p2)
+	#dofrom(point1,point2, 67,72,2,a2b)
+ 	#dofrom(point1,point2, 67,72,3,r4a)
+
+	# point2 to 3
+
+	dofrom(point2,point3, 60,63,1,a1c)
+	#dofrom(point2,point3, 60,63,2,b1a)
+ 	#dofrom(point2,point3, 60,63,3,p1b)
+
+	#dofrom(point2,point3, 64,66,1,r4)
+	#dofrom(point2,point3, 64,66,2,p2b)
+ 	#dofrom(point2,point3, 64,66,3,b3)
+
+	#dofrom(point2,point3, 67,72,1,a2)
+	#dofrom(point2,point3, 67,72,2,a2b)
+ 	#dofrom(point2,point3, 67,72,3,a1)
+
+	# point3 to 4
+
+	dofrom(point3,point4, 60,63,1,b3)
+	#dofrom(point3,point4, 60,63,2,r3b)
+ 	dofrom(point3,point4, 60,63,3,r2)
+
+	#dofrom(point3,point4, 64,66,1,a1b)
+	#dofrom(point3,point4, 64,66,2,r1a)
+ 	dofrom(point3,point4, 64,66,3,p2b)
+
+	#dofrom(point3,point4, 67,72,1,p2)
+	#dofrom(point3,point4, 67,72,2,a1a)
+ 	#dofrom(point3,point4, 67,72,3,r1a)
+
+	# point4 to 5
+
+	dofrom(point4,point5, 60,63,1,b3)
+	#dofrom(point4,point5, 60,63,2,r3b)
+ 	dofrom(point4,point5, 60,63,3,r2)
+	dofrom(point4,point5, 64,66,1,a1)
+	#dofrom(point4,point5, 64,66,2,r1b)
+ 	dofrom(point4,point5, 64,66,3,p2a)
+	#dofrom(point4,point5, 67,72,1,p2)
+	#dofrom(point4,point5, 67,72,2,a1a)
+ 	dofrom(point4,point5, 67,72,3,b2)
+
+	task panicAt(point5)
+
+	# point 5 to 6
+
+	dofrom(point5,point7, 60,63,1,a1b)
+	#dofrom(point5,point7, 60,63,2,r2)
+ 	#dofrom(point5,point7, 60,63,3,b1)
+	#dofrom(point5,point6, 64,66,1,a1a)
+	#dofrom(point5,point6, 64,66,2,p3)
+ 	dofrom(point5,point6, 64,66,3,p2b)
+	#dofrom(point5,point6, 67,72,1,p2)
+	#dofrom(point5,point6, 67,72,2,r3c)
+ 	#dofrom(point5,point6, 67,72,3,r1a)
+
+	task panicAt(point6)
+
+	# point 6 to 7
+
+	dofrom(point6,point7, 67,72,1,p2)
+	#dofrom(point5,point6, 67,72,2,r3c)
+ 	dofrom(point6,point7, 67,72,3,r1a)
+	
+	#################
+	# SECTION TWO
+	#################
+
+	# point 7 to 8
+
+	dofrom(point7,point8, 60,67,1,p1b)
+	dofrom(point7,point8, 60,67,2,r3)
+	dofrom(point7,point8, 60,67,3,b3b)
+
+	# point 8 to 8a
+ 
+	dofrom(point8,point8a, 64,64,1,a2)
+	#dofrom(point8,point8a, 60,67,2,a1)
+	#dofrom(point8,point8a, 60,67,3,a1b)
+	task panicAt(point8a)
+
+	# point8a to 8b
+
+	dofrom(point8a,point8b, 60,63,1,a2b)
+	#dofrom(point8a,point8b, 60,63,2,p1a)
+ 	dofrom(point8a,point8b, 60,63,3,r3)
+	
+	# point 8b to 8c
+
+	dofrom(point8b,point8c, 60,63,1,a2b)
+	#dofrom(point8b,point8c, 60,63,2,p1a)
+ 	dofrom(point8b,point8c, 60,63,3,r3)
+	#dofrom(point8b,point8c, 64,66,1,a1b)
+	#dofrom(point8b,point8c, 64,66,2,r2)
+ 	dofrom(point8b,point8c, 64,66,3,p2a)
+	dofrom(point8b,point8c, 67,72,1,p2)
+	#dofrom(point8b,point8c, 67,72,2,r3b)
+ 	#dofrom(point8b,point8c, 67,72,3,r1a)
+	task panicAt(point8c)
+	
+	# point 8c to 8d
+
+	dofrom(point8c,point8d, 60,67,1,p2b)
+	dofrom(point8c,point8d, 60,67,1,r3b)
+	dofrom(point8c,point8d, 60,67,1,r3b)
+	
+	# point 8d to 8e
+
+	dofrom(point8d,point8e, 60,67,1,p2b)
+	dofrom(point8d,point8e, 60,67,1,r3b)
+	dofrom(point8d,point8e, 60,67,3,r3b)
+
+	# point 8e t 8f
+
+	dofrom(point8e,point8f, 60,64,1,a2)
+	dofrom(point8e,point8f, 65,67,1,r2a)
+
+	task panicAt(point8f)
+
+	# point 9 to 10
+
+	dofrom(point9,point10, 60,63,1,b1)
+	dofrom(point9,point10, 60,63,2,p1a)
+ 	dofrom(point9,point10, 60,63,3,12b)
+	dofrom(point9,point10, 64,66,1,a1b)
+	#dofrom(point9,point10, 64,66,2,r1)
+	dofrom(point9,point10, 64,66,3,p2b)
+	dofrom(point9,point10, 67,72,1,p3)
+	#dofrom(point9,point10, 67,72,2,r3)
+ 	dofrom(point9,point10, 67,72,3,r4)
+	task panicAt(point10)
+	
+	# point 10 to 11
+
+	dofrom(point10,point11, 60,67,1,b1)
+	#dofrom(point10,point11, 60,63,2,p1a)
+ 	dofrom(point10,point11, 60,67,3,12b)
+	
+	# point 11 to 12
+
+	dofrom(point11,point12, 60,63,1,b3b)
+	#dofrom(point11,point12, 64,63,2,r4)
+	#dofrom(point11,point12, 64,67,1,r1a)
+	#dofrom(point11,point12, 60,67,2,r1b)
+
+	task panicAt(point12)
+
+	# point 12 to 13
+
+	dofrom(point12,point13, 60,63,1,b3b)
+	#dofrom(point12,point13, 64,63,2,r4)
+	dofrom(point12,point13, 64,67,1,r1a)
+	
+	# POINT 13 TO 14
+
+	#dofrom(point13,point14, 64,66,2,r2)
+ 	dofrom(point13,point14, 67,72,1,p2)
+	#dofrom(point13,point14, 67,72,2,r3)
+ 	#dofrom(point13,point14, 67,72,3,p1)
+
+	task panicAt(point14)
+
+	#################
+	# SECTION THREE
+	#################
+ 
+	# point 15 to 15a
+
+	dofrom(point15,point15a, 60,67,1,p3)
+	dofrom(point15,point15a, 60,67,2,p1a)
+
+	# point 15b to 15c
+
+	dofrom(point15b,point15c, 60,67,1,p1a)
+	dofrom(point15b,point15c, 60,67,2,r3b)
+	dofrom(point15b,point15c, 60,67,3,p2)
+
+	task panicAt(point15c)
+
+	# point 15c to 15d
+
+	dofrom(point15c,point15d, 60,67,1,p1a)
+	dofrom(point15c,point15d, 60,67,2,r3b)
+	dofrom(point15c,point15d, 60,67,3,p2)
+	
+	# point 15d to 15e
+
+	dofrom(point15d,point15e, 60,67,1,b3)
+	dofrom(point15d,point15e, 60,67,2,p1a)
+	dofrom(point15d,point15e, 60,67,3,r3a)
+
+	task panicAt(point15e)
+
+	# point 15e to 15 f
+
+	dofrom(point15e,point15f, 60,67,1,p1a)
+	dofrom(point15e,point15f, 60,67,2,r3b)
+	dofrom(point15e,point15f, 60,67,3,p2)
+	
+	# point 15f to 15g
+
+	dofrom(point15f,point15g, 60,67,1,p2)
+	dofrom(point15f,point15g, 60,67,2,p1a)
+	dofrom(point15f,point15g, 60,67,3,r3b)
+
+	task panicAt(point15g)
+
+	# point 16 to 17
+
+	dofrom(point16,point17, 60,63,1,r4a)
+	#dofrom(point16,point17, 60,63,2,r4)
+ 	#dofrom(point16,point17, 60,63,3,r3c)
+	#dofrom(point16,point17, 64,66,1,r3b)
+	#dofrom(point16,point17, 64,66,2,r2)
+ 	dofrom(point16,point17, 64,66,3,r3a)
+	#dofrom(point16,point17, 67,72,1,p2)
+	##dofrom(point16,point17, 67,72,2,r3)
+ 	#dofrom(point16,point17, 67,72,3,p1)
+
+	task panicAt(point17)
+
+	#################
+	# SECTION THREE
+	#################
+
+	# point 17 to 18
+
+	dofrom(point17,point18, 60,67,1,a1)
+	#dofrom(point17,point18, 60,67,2,p1b)
+
+	task panicAt(point18)
+
+	# point 19 to 20
+
+	dofrom(point19,point20, 60,67,1,a2)
+	#dofrom(point19,point20, 60,67,2,p1)
+	dofrom(point19,point20, 60,67,3,b1)
+
+	task panicAt(20)
+
+	# point 20 to 21
+
+	dofrom(point20,point21, 60,67,1,b1)
+	#dofrom(point20,point21, 60,67,2,p3)
+	dofrom(point20,point21, 60,67,3,a2)
+
+	task panicAt(point21)
+
+	dofrom(point21a,point21b, 60,67,1,b1)
+	#dofrom(point21a,point21b, 60,67,2,p3)
+	dofrom(point21b,point21c, 60,67,1,b1)
+	#dofrom(point21b,point21c, 60,67,2,p3)
+	#dofrom(point21d,point21e, 60,67,1,b1)
+	#dofrom(point21e,point21f, 60,67,2,p3)
+
+	task panicAt(point21f)
+
+	#################
+	# SECTION FOUR
+	#################
+
+	# point 22 to 23
+
+	dofrom(point22,point23, 60,67,1,r1)
+	dofrom(point22,point23, 60,67,2,r2)
+	dofrom(point22,point23, 60,67,3,a1)
+
+	task panicAt(point23)
+
+	# point 24 to 25
+
+	dofrom(point23,point24, 60,67,1,p1a)
+	dofrom(point23,point24, 60,67,2,r2)
+	dofrom(point24,point25, 60,67,1,p1b)
+	dofrom(point24,point25, 60,67,2,r2)
+
+	task panicAt(point25)
+
+	#################
+	# SECTION FIVE
+	#################
+
+	# points 26 to 27
+
+	dofrom(point26,point27, 60,67,1,r1)
+	dofrom(point26,point27, 60,67,2,r3)
+	dofrom(point22,point23, 60,67,3,b1)
+
+	task panicAt(point27)
+
+	# points 28 to 29
+
+	dofrom(point28,point29, 60,67,1,r3a)
+	dofrom(point28,point29, 60,67,2,r4a)
+	dofrom(point22,point23, 60,67,3,r2)
+
+	task panicAt(point29)
+	task panicAt(point30)
+	task panicAt(point31)
+
+	########
+	# Things below are not triggered by the bodysynth.
+	# Play various phrases at specific points in the piece.
+	########
+
+	# SECTION ONE
+	
+	playAt(point1,'p48v110d300c1 p60V80 p67')
+        playAt(point2,'p60v110d300c1 p55c15V80 p78c5')
+        playAt(point3,'p48v110d300c1 p64c11V80 p80c12')
+        playAt(point4,'p60v110d300c1 p69c8V80 p74c9')
+        #playAt(point5,'p36v110d300c1 p48V80 p67')
+        #playAt(point6,'p72v110d300c1 p55c15V79 p77c5')
+        #playAt(point7,'p48v110d300c1 p36c11V80 p74c12')
+        playAt(point8,'p60v110d300c1 p32c8V80 p72c9')
+
+	# SECTION TWO
+
+	playAt(point9,p1)
+	playAt(point11,'p45v110c10 55,ed20,f,a,g,55d40')
+	playAt(point13,'p50v110d19c10,55,67,44,66 80 22,100,20 51, 30,44,46,47,48,50 30 77')
+
+	# SECTION THREE
+
+	playAt(point16,r1)
+	playAt(point16,r4)
+	playAt(point18,r2)
+	playAt(point19,p3)
+	playAt(point20,r3)
+
+	# SECTION FOUR
+
+	playAt(point22,'p36v110d300c1 p48V80 p67')
+        playAt(point23,'p72v110d300c1 p55c15V79 p77c5')
+        playAt(point24,'p48v110d300c1 p36c11V80 p74c12')
+        playAt(point25,'p60v110d300c1 p32c8V80 p72c9')
+
+	# SECTION FIVE
+
+	playAt(point26,'p36v110d300c1 p48V80 p67')
+        playAt(point27,'p72v110d300c1 p55c15V79 p77c5')
+        playAt(point28,'p48v110d300c1 p36c11V80 p74c12')
+     	playAt(point29,'p60v110d300c1 p32c8V80 p72c9')
+
+	# Print messages at each point in the piece.
+
+	printAt(point1,"POINT 1")
+	printAt(point2,"POINT 2")
+	printAt(point3,"POINT 3")
+	printAt(point4,"POINT 4")
+	printAt(point5,"POINT 5")
+	printAt(point6,"POINT 6")
+	printAt(point7,"POINT 7")
+	printAt(point8,"POINT 8")
+	printAt(point9,"POINT 9")
+	printAt(point10,"POINT 10")
+	printAt(point11,"POINT 11")
+	printAt(point12,"POINT 12")
+	printAt(point13,"POINT 13")
+	printAt(point14,"POINT 14")
+	printAt(point15,"POINT 15")
+	printAt(point16,"POINT 16")
+	printAt(point17,"POINT 17")
+	printAt(point18,"POINT 18")
+	printAt(point19,"POINT 19")
+	printAt(point20,"POINT 20")
+	printAt(point21,"POINT 21")
+	printAt(point22,"POINT 22")
+	printAt(point23,"POINT 23")
+	printAt(point24,"POINT 24")
+	printAt(point25,"POINT 25")
+	printAt(point26,"POINT 26")
+	printAt(point27,"POINT 27")
+	printAt(point28,"POINT 28")
+	printAt(point29,"POINT 29")
+}
+
+###################################################################
+# printAt - print string s at time t
+###################################################################
+
+function printAt(t,s) {
+	task realprintAt(t,s)
+}
+
+function realprintAt(t,s) {
+	sleeptill(Start+seconds(t))
+	print(s)
+}
+
+###################################################################
+# playAt - play phrase p at time t (whose value is in seconds) 
+###################################################################
+
+function playAt(t,p) {
+	realtime(p,Start+seconds(t))
+}
+
+###################################################################
+# panicAt - send an all-notes-off message at time t.
+###################################################################
+
+function panicAt(t) {
+	sleeptill(start+seconds(t))
+	realtime(ano())
+	print("panicAt has sent all-notes-off")
+}
+
+function dofrom(tm1,tm2,pitch1,pitch2,ch,p1) {
+	task lookAndPlay(Start,tm1,tm2, pitch1,pitch2,ch,p1)
+}
+
+###################################################################
+# lookAndPlay - this function spawns a task that looks for notes
+# between pitch1 and pitch2 on channel ch, and plays phr when it
+# sees any.  The task is started at time1 and killed at time2.
+###################################################################
+
+function lookAndPlay(start,time1,time2,pitch1,pitch2,ch,phr) {
+
+	sleeptill(start+seconds(time1))
+
+	# spawn the task that will monitor midi input
+	# looking for notes between pitch1 and pitch2
+
+        t = task lookForNoteRange(pitch1,pitch2,ch,phr)
+
+	# The task looking for the note is now going on in parallel
+	# with this one.  So we just sleep till the appointed time
+	# and then kill the task.
+
+	sleeptill(start+seconds(time2))
+
+        kill(t)
+}
+
+###################################################################
+# lookForNoteRange - This function monitors MIDI input, looking
+# for notes between pitch1 and pitch2 on a specific channel (ch),
+# and when it sees one, it plays the phrase (phr).
+###################################################################
+
+function lookForNoteRange(pitch1,pitch2,ch,phr) {
+
+        # Arrange for fifo f to get a copy of Midi input,
+	# and make sure it's cleaned up when this task
+	# gets killed.
+
+	u = gettid()
+	Midiin[u] = f = open()
+	onexit(closemidi,u)
+
+	# Remember, the messages we're going to get
+	# here include both note-ons and note-offs.
+
+	while ( (m=get(f)) != Eof ) {
+
+		realtime(m,0)
+
+		if ( m.type == NOTEON
+			&& m.pitch >= pitch1
+			&& m.pitch <= pitch2
+			&& m.channel == ch) {
+
+			# It is assumed that the first note
+			# of phr is at time 0, so this should
+			# start playing right away.
+
+                        realtime(phr)
+
+		}
+	}
+}

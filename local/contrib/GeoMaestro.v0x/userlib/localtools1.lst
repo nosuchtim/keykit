@@ -1,0 +1,4 @@
+# local tools can be added here (see lib/tools.lst for format)
+
+Clavier:wclavier
+Interface GeoMaestro:wev

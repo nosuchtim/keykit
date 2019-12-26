@@ -1,0 +1,34 @@
+<tool name="Bounce" class="wbounce">
+The
+<b>Bounce</b>
+tools is an odd toy.  It consists of four
+<b>Riff</b>
+tools surrounding a bouncing line.  Press the 
+<b>On</b>
+toggle button to turn the bouncing line on and off.  You won't hear anything
+initially because there's nothing in any of the Riff
+tools.  Put a phrase into one of the Riff tools - see the documentation on
+the Riff tool for instructions on how to do that.
+Then start the bouncing line.  Each time the line touches the side of that
+Riff tool, it will send a
+<b>bang</b>
+message to the Riff tool, causing it to play its phrase.
+<blankline/>
+You'll normally want to put simple phrases (chords, or drum beats)
+into each Riff tool.  The
+<b>"Chord Palette"</b>
+tool is a good way of generating (and Snarfing) chords that can then
+be placed in each Riff tool.  Or you can just play something on your
+MIDI input device and use the
+<b>"Load Rec"</b>
+item in the Riff tool to grab and use it.
+<blankline/>
+You'll very likely want to use the
+<b>"Start Quant->"</b>
+item in the Riff tool to quantize the start time of each of the
+four Riffs that the Bounce tool is playing.
+<blankline/>
+The
+<b>Speed</b>
+slider can be used to adjust the speed of the bouncing line.
+</tool>

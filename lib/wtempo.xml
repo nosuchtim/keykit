@@ -1,0 +1,7 @@
+<tool name="Tempo" class="wtempo">
+The
+<b>Tempo</b>
+tool is a slider that you can use to control the tempo of all
+realtime phrase playback.
+The tempo can be adjusted at any time, and the effect is immediate.
+</tool>

@@ -1,0 +1,49 @@
+# To control your "local" configuration", you can create a file
+# named c:\keylocal.k (ie. in the root directory of the drive you
+# are running keykit from), and put a function keylocal() in it.
+# That function will be executed when keykit starts, and you 
+# can set things like the default MIDI input/output ports, etc.
+#
+# This is a sample.  You should copy this file to c:\keylocal.k
+# and then edit it as needed.  The Contribdir, if set, is where things
+# like GeoMaestro will be located.
+
+function keylocal() {
+
+	Contribdir = "c:\\contrib"
+
+	# You can add (multiple) things to be executed at the beginning and
+	# end of the boot process, by using addprerc and addpostrc, like this:
+	addprerc(global(localprerc))
+	addpostrc(global(localpostrc))
+
+	# To enable GeoMaestro, install the GeoMaestro directory in Contribdir
+	# (c:\contrib by default, see above), and then
+	# uncomment the following two lines:
+	#addprerc(global(geoprerc))
+	#addpostrc(global(geopostrc))
+
+	Drummapdefault = "gm"
+
+	SmtpServer = "ninja"
+
+	inport("SC-8850 MIDI IN 1")
+	sca = outport("SC-8850 PART A")
+	mapport(0,sca)			# default to output sca
+
+	# virus = outport("SC-8850 MIDI OUT 2")
+	# midi("portmap",0,2,virus)	# channel 2 to virus
+	# midi("portmap",0,3,virus)	# channel 3 to virus
+	# midi("portmap",0,4,virus)	# channel 4 to virus
+	# midi("portmap",0,5,virus)	# channel 5 to virus
+
+	# Inittask = remotecons(4444)  # would start remote console on port 444
+}
+
+function localprerc() {
+	# This would get executed at the beginning of keyrc()
+}
+
+function localpostrc() {
+	# This would get executed at the end of keyrc()
+}

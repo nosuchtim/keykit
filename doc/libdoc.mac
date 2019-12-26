@@ -1,0 +1,14 @@
+.\" These macros assume you're formatting with -man
+.TH KEYLIB 3
+.SH NAME
+KeyKit library functions
+.SH DESCRIPTION
+.de Nm
+..
+.de Us
+.IP "\\$1"
+.sp 1
+..
+.de De
+..
+.sp 1

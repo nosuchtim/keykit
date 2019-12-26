@@ -1,0 +1,92 @@
+The "Burn" tool is a simulator for the "Stars of Lyra"
+installation that Tim is building for Burning Man 2003.
+For pictures and details, see:
+
+	http://nosuch.com/images/bm2003
+
+The following describes how to use and write "lighter" modules
+for the Burn tool.
+
+---------------------------------------
+
+First create the tool with Tools2->Burn.
+
+You'll see the Lyre, surrounded by 4 simulated
+"dance pads".  Press the START button on any of the dance
+pads, and you should here music start playing,
+and the "strings" of the lyre will start flashing.
+
+You can select Music files with the Music menu - it should
+show the files in your .../music directory.   You can
+use "More->Add File" to browse for any MIDI file on your
+system and add it to the Music menu.
+
+Use the "Lighter" menu to control which "lighter module"
+is being used.  Here's a description of some of the
+first few lighter modules:
+
+    pitch scaled - pitches of the music are scaled to
+                   fit across the 24 strings
+
+    pitch modulo - pitches are used more directly to
+                   light the strings, and the pitch values
+                   are "modulo 24" so that all pitches
+                   will map to one of the strings.
+
+    scan1        - When no music is sounding, the strings
+                   will scan back and forth.  Every time
+                   a note plays, the direction of the
+                   scanning is reversed.
+
+    scan2        - Switches direction on every beat
+
+    scan3        - Scans the strings in from each side,
+		   switching on each note.
+
+    scan4        - Scans where the speed of the sweeps
+                   are dependent on the length of the notes.
+
+Each "lighter module" is a file containin a class whose name
+starts with lyre_lighter_, and the rest of the name is the
+name of the module (e.g. the "scan1" module is contained
+in lyre_lighter_scan1.k )
+
+The lighter module class should contain some conventional
+methods for
+
+	activate()
+	start()
+	stop()
+
+	notefunc()  - invoked for every note played or looped.
+
+	beatfunc()  - invoked for every beat, at least when
+			playing files.
+	padfunc()  - invoked when buttons on the dance pads are pressed
+
+
+To add a new "lighter module", just add a new file to the lib
+directory, with a name lyre_lighter_*.k, and it should show up
+in the "Lighter" menu in the Burn tool.
+
+-----------------------------------------------------------------
+
+LOOPING
+-------
+If you set the Player to "looper" (rather than "playfile"), and then
+start punching the various buttons on the dance pads, the notes
+should start looping.  As they loop, they will fade out.
+Various controls in this mode:
+
+	Press START to stop the looping of each pad.
+
+	Hold down START for a longer time to stop all looping.
+
+	Press SELECT to get more notes.
+
+	Hold down SELECT for more than 1 second, and then
+	press any other pad (on the same dance pad) to select
+	a different sound for that pad.
+
+-----------------------------------------------------------------
+

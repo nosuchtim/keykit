@@ -1,0 +1,95 @@
+This describes the multiport features of 7.0
+
+The GUI has a "Port Enabler" tool that lets you
+see and enable/disable each MIDI input and output port.
+Once you see what the names of the ports are, you can
+add lines like this to your lib/prerc.k:
+
+	inport("MIDI INPUT 1")
+	inport("MIDI INPUT 2")
+	outport("MIDI OUTPUT 1")
+	outport("MIDI OUTPUT 2")
+
+By changing lib/prerc.k, those ports will be opened by default, every
+time you start keykit.  As the argument to inport/outport, you can use
+the port names that you see in the "Port Enabler" tool. 
+It doesn't have to match the entire string, just some unique part
+of it.  Note that you can open multiple inputs and outputs.
+
+In lib/prerc.k, you'll see that on Windows (which is the only
+thing that supports 7.0 currently) the MIDI_MAPPER output device
+is opened by default, and it is made the default output port.
+You should adjust this to suite your own needs.
+
+You can also use the listports() function to list the ports on the
+console, but you'll usually have to scroll to see them all.
+
+There is now a .port attribute of notes.  The value
+of .port is a number.  0 is the default value, and has 
+special meaning as an unspecified/default port.
+MIDI output ports have numbers ranging from 1 to 64,
+and MIDI input ports have numbers ranging from 65 to 128.
+In a constant phrase expression, ports are specified with 'P'.
+For example:
+
+	ph = 'a'
+	print ph.port            # prints 0
+	ph = 'aP2'
+	print ph.port            # prints 2
+	ph = 'a,b,cP1,dP2,eP3'   # multiple ports in one phrase
+
+The GUI has a "Port Map" tool that can control how the "merging"
+of MIDI input-to-output is done, and also control the default
+destination of notes whose port number is set to 0 (the default).
+If you, for example, bring up this tool and set the input value
+to "MIDI INPUT 1" and the output value to "MIDI OUTPUT 2", then
+all MIDI arriving at that input will be routed (assuming Merge=1)
+to that output.  This routing applies to all 16 channels of the
+MIDI input.  You can also select "default" as the input value.
+The output port that you associate with input "default" will be
+used as the output port whenever the port number is 0 (i.e. this
+should be where most of the output ends up).
+
+There is also a "Port Map Complete" tool that is like "Port Map",
+except that it gives you per-channel control.
+
+Changes made in the "Port Map" tools are currently not "persistent",
+even if you save them on a page and restore them.
+
+The "Group" tool has a new button attached to each track that
+lets you adjust the port that that track will be sent to.
+
+There is a new built-in function called midi(), which is the primitive
+that controls the opening and mapping of MIDI ports, and which is
+used to build the GUI tools and the inport/output functions.  Usage:
+
+   midi("input","list")      - returns an array of input ports
+                               (index is port number, value is port name)
+   midi("input","open",n)    - opens input port n (an integer)
+   midi("input","close",n)   - closes input port n (an integer)
+   midi("input","isopen",n)  - returns non-zero if port n is open
+
+   midi("output","list")     - returns an array of output ports
+                               (index is port number, value is port name)
+   midi("output","open",n)   - opens output port n (an integer)
+   midi("output","close",n)  - closes output port n (an integer)
+   midi("output","isopen",n) - returns non-zero if port n is open
+
+   midi("portmap")           - returns an array describing
+                               current port mapping values
+                               (index is input port #, value is an
+                               array of 16 values (output port #'s),
+                               one for each channel)
+
+   midi("portmap",inport,chan,outport)
+                             - controls the port mapping of a single
+                               channel of an input port.  The input
+                               port can be 0, in which case it is
+                               controlling the default port mapping
+                               (when .port==0).
+
+There is a new global variable named "Forceinputport".  If its value
+is -1 (which is the default), it has no effect.   If Forceinputport
+has a non-negative value, the .port value of all MIDI input will be
+automatically forced to that value.  A Forceinputport value of 0
+would be the most common use of this feature.

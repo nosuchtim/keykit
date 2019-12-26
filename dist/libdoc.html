@@ -1,0 +1,998 @@
+<html><head>
+		<style type="text/css">
+		.big {margin: 0pt; font-family: "Arial"; font-size: 18pt}
+		.normal {margin: 0pt; font-family: "Arial"; font-size: 12pt}
+		.small {margin: 0pt; font-family: "Arial"; font-size: 10pt}
+		.tiny {margin: 0pt; font-family: "Arial"; font-size: 8pt}
+		</style>
+		</head><title>KeyKit Library Functions</title><body><table border=0 width=100% bgcolor=#ffcc99><tr><td><font class=big><a href=../index.html>KeyKit</a> :: Library Functions</td></tr></table>
+
+<dl>
+
+<p>
+<dt><b>addbootfunc(func)  </b><dd>
+</listitem>
+Adds a function to the list of functions that will be
+automatically invoked when KeyKit is rebooted.
+<p>
+<dt><b>allsusoff()  </b><dd>
+</listitem>
+Return a phrase containing a "sustain off" on all channels.
+  Useful for resetting things if you have a hanging note.
+<p>
+<dt><b>ano()  </b><dd>
+</listitem>
+Return a phrase containing all-notes-off messages on each channel.
+This does not include note-offs for each individual note, however.
+<p>
+<dt><b>apply(target,source,apptype,startquant)  </b><dd>
+</listitem>
+Apply stuff (pitch, volume, timing, etc.) from the source phrase
+to the target phrase.  The apptype is the bitwise-or of PITCH,
+VOLUME, DURATION, TIME, EXACTTIME, CHANNEL.
+Default apptype is TIME|DURATION
+<p>
+<dt><b>applyfunc(p,func,chunksize)  </b><dd>
+</listitem>
+This function splits a phrase into chunksize-sized chunks,
+applies the function func to some of them (every other one,
+by default), and returns the result, pasted back together.
+<p>
+<dt><b>arpeggio(phrase)  </b><dd>
+</listitem>
+Returns an arpeggiated version of the phrase.  One way of describing
+it is that all the notes have been separated and then put back
+together, back-to-back.
+<p>
+<dt><b>arrayprint(array)  </b><dd>
+</listitem>
+Prints all the elements in the given array.
+Works for arrays of any dimension.
+<p>
+<dt><b>arraysort  </b><dd>
+</listitem>
+Sorts the elements in the given array,
+and returns the sorted array.
+<p>
+<dt><b>attime(phrase,time)  </b><dd>
+</listitem>
+Returns those notes in the specified phrase that are
+sounding at the specified time.  If a note ends exactly
+at the specified time, it is not included.
+<p>
+<dt><b>bpm(beatsperminute)  </b><dd>
+</listitem>
+Changes the tempo based on beats per minute,
+rather than microseconds per beat
+<p>
+<dt><b>bsdemo()  </b><dd>
+</listitem>
+This is an example of using the bsguide() function.
+<p>
+<dt><b>bsguide(arr,arrkey,keyguide,noteguide,stepsize,lng)  </b><dd>
+</listitem>
+Synthesize a monophonic phrase based on these arguments:
+
+arr
+.br
+An array whose elements are phrases, each one specifying
+the allowable notes that can be used on a given step.
+For example, if bsarr contained these elements:
+arr[1]='c' ; arr[2]='c,e,g' ; arr[3]='c,g' ; arr[4]='g'
+then only a 'c' would be allowed in the first step, and
+the second step would allow a 'c', 'e', or 'g'.
+The arr array can be of any size; when it runs out,
+it is reused from the beginning.  For example, in the
+example above, the fifth step would allow only a 'c'.
+
+arrkey
+.br
+The key that the phrases in the arr array are meant
+to be in.  E.g. in the example above, the value of arrkey
+would most likely be 'c'.  This is needed so that
+the arr array can be transposed to other keys.
+
+keyguide
+.br
+A phrase that will determine the key (or really, chords)
+in the final result.  For example, if the value of
+keyguide was 'c,c,c,f', the notes picked during the first
+three beats would be based in C, and the final beat would
+be based in F.  Essentially the phrases in the arr array
+are transposed based on these notes.
+
+noteguide
+.br
+A phrase whose notes will be used as "guide" points in
+picking the pitches in the final result.  For example,
+if the guide phrase was 'co5,co4,co3', then the first note
+in the final result would be as close as possible to 'co5',
+and the note picked on the second beat would be as close as
+possible to 'co4'.  If the notes of guide are very close
+together, then they will strongly influence the general shape
+of the final result.  If instead the notes of guide are
+farther apart, then the final result will be allowed to meander
+more freely between the guide notes (but still subject to the
+contraints of the arr array described above).  E.g. a guide
+phrase of 'co5d384,co4' would allow 4 beats of meandering
+before being pushed back toward 'co4'.
+
+stepsize
+.br
+This is the step size of the final result.  E.g. a value
+of 1b/4 means the result would consist of sixteenth notes.
+
+lng
+.br
+The desired length of the final result.
+
+<p>
+<dt><b>canonic(note)  </b><dd>
+</listitem>
+Returns the canonical pitch of a note,
+ie. a number between 0 and 11.
+<p>
+<dt><b>chadjust(melody,chords)  </b><dd>
+</listitem>
+Adjusts the notes of the melody phrase so that they fall on the notes
+of the chords that are playing (at the same time) in the chords phrase.
+<p>
+<dt><b>changeprogchange(p,frompatchnum,topatchnum)  </b><dd>
+</listitem>
+Return p, where every program change message matching
+the frompatchnum is changed to topatchnum.
+The program change numbers are 1-based.
+<p>
+<dt><b>chaninfo(p)  </b><dd>
+</listitem>
+Return a string giving channel information about phrase p.
+<p>
+<dt><b>chfilter(melody,chord)  </b><dd>
+</listitem>
+Return a copy of the melody phrase, leaving only those notes that
+match the chords that occur in the chord phrase at the same time.
+<p>
+<dt><b>chord(root,type,oct)  </b><dd>
+</listitem>
+Return a chord, where root is the root note, oct is the
+octave number, and type is a string that identifies the
+type of chord - possible values are:
+"major", "minor", "maj7", "min7", "maj9", "min9", "sus", "dim", "aug", 
+"Maj69", "MajB769", "HalfDim", "Dim9", 
+"NModMaj1", "NModMaj2", "NModMaj3",
+"NModDom1", "NModDom2", "NModDom3", "NModDom4", 
+"ArtDim", "AOVoic1", "AOVoic2", "AllMaj", "Res", 
+"Vitr1", "Vitr2", "Fourths", "Pr1", "Pr2", "Pr3", "Pr4"
+<p>
+<dt><b>closest(note,scale [,direction] )  </b><dd>
+</listitem>
+Returns a note from the specified scale that is closest in pitch
+to the specified note.  If the optional direction argument is given,
+it specifies the direction (1==up, -1==down) that we want the
+chosen note to be in (relative to the original note).  Specifying
+the direction also guarantees that a note different from the
+original is chosen (if possible).
+<p>
+<dt><b>closestmap(nt,map)  </b><dd>
+</listitem>
+The map argument is a set of notes.  This function takes the
+single note nt and changes its pitch to the closest note in the map set.
+<p>
+<dt><b>closestt(phrase,time,limit)  </b><dd>
+</listitem>
+Return the single note in the specified phrase that is closest
+in time to the specified time.  If the limit argument is given,
+the search is limited to notes within that amount of time
+(i.e. to notes between (time-limit) and (time+limit)).
+<p>
+<dt><b>completescale(key,scalename)  </b><dd>
+</listitem>
+Return a phrase which is in the given key and scale, and extends
+from the lowest note (in the key/scale) to the highest note.
+<p>
+<dt><b>completescalephrase(p)  </b><dd>
+</listitem>
+Return a phrase which has the notes in p duplicated across all octaves.
+<p>
+<dt><b>consloop()  </b><dd>
+</listitem>
+This is intended to be the one-and-only task that reads from
+the Consinfifo, a special fifo that is automatically opened
+whenever KeyKit is booted, and to which KeyKit sends any characters
+typed on the console.  consloop() forwards the characters to whatever
+task is supposed to be reading the console.  If Consgrabfifo is
+set, it will send them there, otherwise it sends them to the
+main command interpreter, which is reading from interpfifo.
+<p>
+<dt><b>constant()  </b><dd>
+</listitem>
+This function initializes various constants that
+are needed by other funcitons.
+<p>
+<dt><b>controller(ch,cn,val)  </b><dd>
+</listitem>
+Return a controller message, where ch is the channel (1-based),
+cn is the controller number, and val is the value.
+Removes all bank-select controller messages (controller 0
+followed by controller 32) from a phrase.
+Note that it leaves the program change message
+which usually follows.
+<p>
+<dt><b>dedup(ph)  </b><dd>
+</listitem>
+Remove any duplicate notes (in time and pitch) from a phrase.
+<p>
+<dt><b>dedupdur(ph)  </b><dd>
+</listitem>
+Remove any duplicate notes (including comparison of duration)
+from a phrase.
+<p>
+<dt><b>delay(ph,tm)  </b><dd>
+</listitem>
+Return phrase ph, delayed by time tm.
+Removes all rests (sections where nothing is playing)
+from a phrase.
+Set up input/output ports.  Look for a file keylocal.k first,
+and if that doesn't exist, use some defaults
+<p>
+<dt><b>dupsof(p)  </b><dd>
+</listitem>
+Return a phrase containing one copy of any notes that
+are duplicated in phrase p
+<p>
+<dt><b>echo(ph,num,rtime,rfactor)  </b><dd>
+</listitem>
+Return phrase ph echoed num times, with rtime delay between
+each echo, and with the volume of each echo decreased by rfactor.
+NEW BEHAVIOUR - 8/9/99 - the length of the result is
+now explicitly set.  This is more "right", but some algorithms
+may have been depending (unknowingly) on the old semantic.
+<p>
+<dt><b>echomaster(ph,fnum,ftime,ffactor,bnum,btime,bfactor)  </b><dd>
+</listitem>
+Return phrase ph with echoes, forward and back.
+fnum is the number of forward echos, ftime is the echo time, ffactor
+is the volume reduction factor.  bnum/btime/bfactor is for the
+backward echos.
+<p>
+<dt><b>evalstring(s)  </b><dd>
+</listitem>
+Takes a string and evals it.  Useful when you want to
+put something in the background - you just "task evalstring(...)"
+<p>
+<dt><b>eventime(ph)  </b><dd>
+</listitem>
+Return phrase ph with all of its notes evenly spaced in time.
+<p>
+<dt><b>filetopitches(filename)  </b><dd>
+</listitem>
+<p>
+<dt><b>findroot(ph)  </b><dd>
+</listitem>
+Given a phrase, try to guess the root of what's being played.
+The algorithm was given to me by Christopher John Rolfe (rolfe@sfu.ca),
+who says it was culled from W.Russo, Jazz Composition and Orchestration,
+p.25, ex.7.
+<p>
+<dt><b>findtask(function_name)  </b><dd>
+</listitem>
+This function looks for a running task that is executing
+the named function (which is specified as a string, not as
+a function value).  If found, the task id is returned.
+If not found, the return value is -1.
+<p>
+<dt><b>flip(phrase [,about])  </b><dd>
+</listitem>
+Flip the pitches of the specified phrase about some intermediate
+pitch (i.e. high notes become lower, and low notes become higher).
+Given a single argument, the flip is done about the average pitch
+of the original phrase.  A second argument can specify a particular
+pitch about which to flip.
+<p>
+<dt><b>floor(f)  </b><dd>
+</listitem>
+Returns the floor (maximum integer that is less than f).
+<p>
+<dt><b>fractal(ph,depth)  </b><dd>
+</listitem>
+Returns phrase ph fractalized - each note becomes a miniature
+version of the entire phrase, transposed by the note's pitch.
+The depth determines how many times this process is repeated.
+Watch out, this will produce huge phrases.
+<p>
+<dt><b>gcd(n1,...)  </b><dd>
+</listitem>
+Returns the greatest common divisor of all of its arguments
+<p>
+<dt><b>gcd2(n1,n2)  </b><dd>
+</listitem>
+Returns the greatest common divisor of two integers
+<p>
+<dt><b>getsysexdump(sendmessage,tmout)  </b><dd>
+</listitem>
+This function retrieves a sysex dump from an attached MIDI device.
+The 'sendmessage' argument is expected to be a sysex message that,
+when sent to the device, will cause it to send back a sysex dump
+(or any sysex message, really).  For example, for a TX81Z, the
+value of 'xf0432004f7' will cause it to send back a sysex dump
+containing all patches.  The 'tmout' parameter is a timeout value
+in milliseconds - if this time elapses without receiving any output
+from MIDI input, the function will abort and return an empty phrase.
+<p>
+<dt><b>gmresetall()  </b><dd>
+</listitem>
+Returns a phrase containing controller messages that reset
+everything appropriately for the beginning of
+a General MIDI piece.
+<p>
+<dt><b>grabmouse()  </b><dd>
+</listitem>
+This function arranges for all mouse messages to be intercepted and
+sent to a particular window, rather than being routed to the windows
+underneath the mouse.  When you want to restore things to normal,
+call ungrabmouse().
+<p>
+<dt><b>grabmousefifo()  </b><dd>
+</listitem>
+This function arranges for all mouse messages to be intercepted and
+sent to a new fifo, rather than being routed to the windows underneath
+the mouse.  The fifo id of this new fifo is returned as the value
+of grabmousefifo().  When you want to restore things to normal,
+call ungrabmousefifo().
+<p>
+<dt><b>gridinit()  </b><dd>
+</listitem>
+This is the code that initializes the graphics mode of KeyKit.
+It starts up things like the mouseloop() task, which handles
+mouse input, and sets up the screen with the initial tool set
+by calling toolrc().
+<p>
+<dt><b>highest(phrase)  </b><dd>
+</listitem>
+Returns the highest-pitched note in the specified phrase.
+<p>
+<dt><b>highestnt(phrase)  </b><dd>
+</listitem>
+Returns the highest-pitched note in the specified phrase.
+<p>
+<dt><b>inport(port)  </b><dd>
+</listitem>
+Open a MIDI input port
+<p>
+<dt><b>interploop()  </b><dd>
+</listitem>
+This is the main command interpreter that executes the statements
+that a user types interactively on the console.  It reads from
+the interpfifo fifo, and characters are normally put on this fifo
+by consloop().
+<p>
+<dt><b>isinscale(note,scale)  </b><dd>
+</listitem>
+Return true (non-zero) if the specified note exists in the
+specified scale.  The scale phrase need only specify a give pitch
+once - it is assumed to be duplicated over all octaves.
+<p>
+<dt><b>isnearbeat(note ,beat_interval, tolerance )  </b><dd>
+</listitem>
+<p>
+<dt><b>isonbeat(note [,beat_interval] )  </b><dd>
+</listitem>
+Returns true (non-zero) if the given note lands on the beat.
+The default beat interval is 1b; a second argument can specify an
+different interval (e.g. isonbeat(note,4b) would return
+true if the note fell on any 4-beat mark).
+<p>
+<dt><b>keyrc()  </b><dd>
+</listitem>
+This is the very first function called by KeyKit,
+unless the -r option is specified when KeyKit is invoked.
+This function must initialize everything necessary
+for the proper running of KeyKit.  This is normally done
+by calling normboot() to set up the command interpreter and
+start other primary tasks.
+<p>
+<dt><b>khslider(vmin,vmax,vinit,invokefunc,args)  </b><dd>
+</listitem>
+Create a horizontal slider object and return its id.  When slider is
+moved, the invokefunc will be called with 2 arguments - the first
+will be the current value of the slider, and the second will be the
+args value.  The vmin, vmax, and vinit values are the minimum,
+maximum, and initial values for the slider.
+<p>
+<dt><b>kslider(vmin,vmax,vinit,invokefunc,args)  </b><dd>
+</listitem>
+Create a slider object and return its id.  When the slider is
+moved, the invokefunc will be called with 2 arguments - the first
+will be the current value of the slider, and the second will be the
+args value.  The vmin, vmax, and vinit values are the minimum,
+maximum, and initial values for the slider.
+<p>
+<dt><b>kvalbutton(vals)  </b><dd>
+</listitem>
+<p>
+<dt><b>lastbunch(ph,spc,types)  </b><dd>
+</listitem>
+Return the last "bunch" of notes in ph.  The value of spc is the time
+that determines where the bunch ends - as soon as a blank space of
+that size is detected, the bunch has ended.  This is useful for
+grabbing the last little bit of the Recorded phrase.
+If a third argument is given, it is a bitmask of note types
+to look for - all other types are ignored.
+<p>
+<dt><b>latest(phrase)  </b><dd>
+</listitem>
+Return the ending time of the latest note in the given phrase.
+<p>
+<dt><b>legato(phrase)  </b><dd>
+</listitem>
+Extends the duration of each note to abutt the start of the next note.
+Doesn't modify the duration of the last note.
+<p>
+<dt><b>limitval(v,minv,maxv)  </b><dd>
+</listitem>
+Takes a number and limits it to the specified range.
+<p>
+<dt><b>listports()  </b><dd>
+</listitem>
+A simple utility that lists the available MIDI ports to the console.
+<p>
+<dt><b>lowest(phrase)  </b><dd>
+</listitem>
+Returns the lowest pitch in the specified phrase.
+<p>
+<dt><b>lowestnt(phrase)  </b><dd>
+</listitem>
+Returns the lowest-pitched note in the specified phrase.
+<p>
+<dt><b>makenote(pitch [,duration [,volume [,chan]]] )  </b><dd>
+</listitem>
+A simple utility for generating a single-note phrase.
+The pitch is the only required argument; additional
+arguments specify the duration, velocity, and channel.
+<p>
+<dt><b>makerootevery(melody,intrvl)  </b><dd>
+</listitem>
+Figure out a root note (using findroot()) every intrvl beats,
+and return it.
+<p>
+<dt><b>maxvolume(phrase)  </b><dd>
+</listitem>
+Returns the largest volume in the specified phrase.
+<p>
+<dt><b>midiloop()  </b><dd>
+</listitem>
+This is intended to be the one-and-only task which reads messages
+from the Midiinfifo, a special fifo that is opened whenever KeyKit
+is rebooted, and to which KeyKit sends messages containing
+all MIDI input.  Any task wanting to read MIDI input should add
+an entry to the Midiin array.  The index of the Midiin array
+is normally the task id, and the value of the array element
+is the fifo id.
+<p>
+<dt><b>milliclicks(milli)  </b><dd>
+</listitem>
+Returns the number of clicks equivalent to the specified
+number of milliseconds.  Note that this is dependent upon
+the current tempo().
+<p>
+<dt><b>millisince(tm)  </b><dd>
+</listitem>
+Returns the number of milliseconds since a given time
+<p>
+<dt><b>millisleep(milli)  </b><dd>
+</listitem>
+Sleep (i.e. pause the task which calls this function)
+for the specified number of milliseconds.
+<p>
+<dt><b>minduration(phrase)  </b><dd>
+</listitem>
+Returns the smallest duration in the specified phrase.
+<p>
+<dt><b>minvolume(phrase)  </b><dd>
+</listitem>
+Returns the lowest volume in the specified phrase.
+<p>
+<dt><b>mono(phrase,type)  </b><dd>
+</listitem>
+Returns a monophonic version of the specified phrase.
+If type==0, high notes are given priority (e.g. if two notes are
+playing simultaneously, the higher note will be chosen).
+If type==1, low notes are given priority.  If type==2,
+the priority is randomized.
+<p>
+<dt><b>mouseloop()  </b><dd>
+</listitem>
+This task is intended to be the one-and-only task that reads
+directly from the Mousefifo, a special fifo that is opened
+whenever KeyKit is rebooted, and to which KeyKit sends messages
+about changes in the mouse state.  mouseloop() normally figures
+out which window is underneath the mouse, and sends the message
+to the Mousein fifo for that window.  If someone wants to grab the
+mouse, they should set Mousegrabwind, and mouseloop() will instead
+send the mouse messages to that window.  This procedure should be done
+with the grabmouse() and ungrabmouse() functions.
+<p>
+<dt><b>nanopatch(ch,bank,prog)  </b><dd>
+</listitem>
+Return sysex that changes a parts bank/program.
+Assumes that the 16 parts are assigned to channels 1-16.
+ch is 1-based
+bank is 0-based
+prog is 0-based
+<p>
+<dt><b>nextquant(number,quantize)  </b><dd>
+</listitem>
+This function quantizes the specified number using the specified
+quantize value, and returns the result.  The result is guaranteed to
+be greater than the original number; if quantization would produce
+a smaller number, it is increased by the quantize value.  This is
+typically used when you want to quantize a time value, and want to
+guarantee that the result will refer to some time in the future,
+not in the past.
+<p>
+<dt><b>nexttime(ph,st)  </b><dd>
+</listitem>
+Return the time of the next note AFTER time 'st', in phrase 'ph'
+If there are no notes after it, returns -1;
+<p>
+<dt><b>nonnotes(ph)  </b><dd>
+</listitem>
+Return all non-notes (i.e. controller, sysex, etc) of ph.
+<p>
+<dt><b>normboot()  </b><dd>
+</listitem>
+This is intended to be the default function that gets called
+when KeyKit initially boots or reboots.  KeyKit calls
+Rebootfunc() when it reboots, so in order for this function
+to be used, the statement "Rebootfunc=normboot" should be
+included in keyrc().  Any tasks that must always be
+active (for example, the loops that monitor mouse and
+console input) should be started here.  To register a
+function that will be automatically restarted upon a reboot, 
+you should add it to the Rebootfuncs array.
+<p>
+<dt><b>normexit()  </b><dd>
+</listitem>
+<p>
+<dt><b>normintr()  </b><dd>
+</listitem>
+This function is intended to be the default value of Intrfunc,
+which KeyKit calls when an interrupt is received, typically
+when the user presses the interrupt character on the console.
+This function forces a reboot.  If graphics mode is enabled,
+an attempt is made to save the current tool configuration
+in the file "keydump.lst", which will then be restored after
+the reboot.  In this way, a fairly clean restart is performed.
+<p>
+<dt><b>normredraw()  </b><dd>
+</listitem>
+This function is intended to be the default value of Redrawfunc,
+which KeyKit calls whenever the screen must be redrawn.
+It redraws the root window (i.e. erasing the screen), and
+then sends a redraw message to all children windows (i.e. all
+the active tools).
+<p>
+<dt><b>normresize()  </b><dd>
+</listitem>
+This function is intended to be the default value of Resizefunc,
+which KeyKit calls whenever the screen is resized.  Normally
+this function does nothing.  By setting the variable Autoresize
+to 1 (e.g. in liblocal/prerc.k), you can cause this function to
+automatically resize all the active tools to fit within the new
+screen size.
+<p>
+<dt><b>nrpn(ch,mm,ll)  </b><dd>
+</listitem>
+Return an NRPN message constructed from ch (channel, 1-based),
+mm (most-significant byte) and ll (least-significant byte).
+<p>
+<dt><b>nsimul(ph)  </b><dd>
+</listitem>
+Return the maximum number of simultaneously-sounding notes in a phrase.
+<p>
+<dt><b>numquant(number,quantize)  </b><dd>
+</listitem>
+This function quantizes the specified number using the specified
+quantize value, and returns the result.  The result may be less
+than the original number.  If you want to guarantee that the
+result is not less than the original (which is typical when you are
+quantizing a time value and want to guarantee that the result is
+some time in the future), use nextquant().
+<p>
+<dt><b>onlynotes(ph)  </b><dd>
+</listitem>
+Return only the regular notes (non-controller, non-sysex, etc) of ph.
+<p>
+<dt><b>ornament(ph,orn,doscaleng)  </b><dd>
+</listitem>
+Apply phrase orn to each note of phrase ph - i.e. each note of
+phrase ph will be turned into a copy of phrase orn.
+If doscaleng is non-zero, then the copy will be scaled to the
+duration of the notes in phrase orn.  If doscaleng is zero,
+the copy will have the original timing.
+<p>
+<dt><b>outport(port)  </b><dd>
+</listitem>
+Opena a MIDI output port
+<p>
+<dt><b>patchunmap_sc8850(p)  </b><dd>
+</listitem>
+If p is a patch change message, return its entry in the patchmap
+Return 0 if it's not a patch message.
+<p>
+<dt><b>patchunmap_sd80(p)  </b><dd>
+</listitem>
+If p is a patch change message, return its entry in the patchmap
+Return 0 if it's not a patch message.
+<p>
+<dt><b>pathescape(s)  </b><dd>
+</listitem>
+Takes a file pathname, and returns a version of
+the string that can be safely printed to a file and re-read.
+<p>
+<dt><b>picknote(phrase, n)  </b><dd>
+</listitem>
+Returns n random notes from the specified phrase.  If n is omitted,
+a single random note is returned.
+<p>
+<dt><b>pickphr(phrase1,phrase2,phrase3...)  </b><dd>
+</listitem>
+Randomly chooses and returns one of its argument phrases.
+<p>
+<dt><b>pitchbend(ch,val)  </b><dd>
+</listitem>
+ Construct a pitchbend message, where ch is the channel (1-based)
+ and val is the pitchbend value, input range is -8192 to 8191.
+<p>
+<dt><b>pitchlimit(p,p1,p2)  </b><dd>
+</listitem>
+Adjust the pitches of notes in phrase p so that they
+fall between p1 and p2, by shifting the notes in octave increments.
+<p>
+<dt><b>preecho(ph,num,rtime,factor)  </b><dd>
+</listitem>
+Return phrase ph with each note preceeded by 'pre' echoes.
+num is the number of echoes, rtime is the time between them,
+and rfactor is the volume factor (between 0.0 and 1.0)
+If not provided, rtime and rfactor default to 1b and 0.9
+<p>
+<dt><b>prelocaldefaults()  </b><dd>
+</listitem>
+This sets any default values before keylocal.k is called.
+<p>
+<dt><b>prevquant(number,quantize)  </b><dd>
+</listitem>
+This function quantizes the specified number using the specified
+quantize value, and returns a result that is equal to or less than
+the original number.
+<p>
+<dt><b>progchange(patchnum,ch)  </b><dd>
+</listitem>
+Return a program change message, where patchnum is the
+patch number (1-based), and ch is the channel (1-based).
+<p>
+<dt><b>quantize(phrase,quant [,limit] )  </b><dd>
+</listitem>
+Quantize a phrase.  Each note's starting time will be
+quantized by the specified quant value.  If a limit
+is specified, notes that would need to be moved by an
+amount larger than this limit will not be adjusted at all.
+<p>
+<dt><b>quantizedur(ph,qnt)  </b><dd>
+</listitem>
+Quantize the duration of all notes in ph.
+<p>
+<dt><b>quantizefirst(ph,qnt)  </b><dd>
+</listitem>
+Quantize the first note of ph, and shift the
+rest of the phrase by the same amount.
+<p>
+<dt><b>randdur(phrase,range)  </b><dd>
+</listitem>
+Returns the phrase with the duration of its notes randomly
+varied within the specified range.  For example, if the
+range value is 2, the note durations will be adjusted by
+values ranging from +2 to -2.
+<p>
+<dt><b>randpitch(phrase,range)  </b><dd>
+</listitem>
+Returns the phrase with the pitch of its notes randomly
+varied within the specified range.  For example, if the
+range value is 2, the note pitches will be adjusted by
+values ranging from +2 to -2.
+<p>
+<dt><b>randvol(phrase,range)  </b><dd>
+</listitem>
+Returns the phrase with the velocity of its notes randomly
+varied within the specified range.  For example, if the
+range value is 2, the note velocities will be adjusted by
+values ranging from +2 to -2.
+<p>
+<dt><b>rcdefaults()  </b><dd>
+</listitem>
+This sets any default values for which it is intended that
+they can be overridden by postrc().
+Machine-dependent rcdefault things
+<p>
+<dt><b>readedit(fifo,prompt [,history] )  </b><dd>
+</listitem>
+This function reads from a fifo, allowing line editing.
+When a complete line has been entered, it is returned.
+The optional third argument lets you access and maintain
+a history of previous lines (this feature is not yet implemented).
+<p>
+<dt><b>readedit2(fifo,prompt)  </b><dd>
+</listitem>
+This is a variation of readedit that allows you to press ESC
+and get put into "notepad" on the history.  To activate,
+set ConsoleReadedit=readedit2 in your liblocal/postrc.k
+When you're done writing your script in the text editor, save the file,
+close the editor (optional), then press ESC again. The whole KeyKit code
+you edited will be evaluated as a single line (so take care to end your 
+  lines with a ";")
+
+  Another feature of readedit2 is the TAB key which recalls previous
+<p>
+<dt><b>readfile(filename)  </b><dd>
+</listitem>
+This function reads an entire file (all lines of it)
+and returns it as a single string.
+  NOTE: might or might not read the newlines at the end of lines
+  Currently it gets rid of the newlines, but that's not good.
+  I'm reluctant to change it without checking whether it breaks something.
+<p>
+<dt><b>readkey(filename)  </b><dd>
+</listitem>
+This function reads a phrase from the specified file, which is
+is expected to contain a phrase in KeyKit format, i.e. the
+same as a phrase constant in the KeyKit language.
+<p>
+<dt><b>readmf(filename)  </b><dd>
+</listitem>
+Reads the specified Standard MIDI File and returns its
+contents as a single phrase (with all tracks merged).
+<p>
+<dt><b>readraw(filename)  </b><dd>
+</listitem>
+<p>
+<dt><b>repeat(phrase,num_times)  </b><dd>
+</listitem>
+Repeat a phrase as many times as specified.  The length attribute
+of the phrase determines the offset of the repetitions.
+<p>
+<dt><b>repfade(p,ntimes,inout)  </b><dd>
+</listitem>
+Repeat the phrase the specified number of times, gradually fading it
+in or out (by including or excluding more notes on each repeat).
+If inout>0, it starts out including only a couple of notes, and ends by
+including the entire phrase - ie. a fade in.  If inout is less than 0,
+it's a fade out.
+<p>
+<dt><b>repleng(phrase,length)  </b><dd>
+</listitem>
+Repeat the specified phrase as many times as it takes
+to fill the specified length of time.  The resultant
+phrase is truncated to the exact length, if it doesn't
+come out evenly.
+<p>
+<dt><b>resetall()  </b><dd>
+</listitem>
+Returns a phrase containing controller messages that reset
+pitch bend, modulation, breath control, sustain, and channel pressure
+on all 16 channels to nominal values (i.e. 0, or in the case
+of pitch bend, 0x40).
+<p>
+<dt><b>reverse(ph)  </b><dd>
+</listitem>
+Reverse the phrase in time, so the first notes come last,
+and the last notes come first.
+<p>
+<dt><b>revpitch(phrase)  </b><dd>
+</listitem>
+Reverse the pitches of a phrase (e.g. the pitch of the first note
+will become the pitch of the last note).  The timing is left intact.
+<p>
+<dt><b>round(f)  </b><dd>
+</listitem>
+Returns the rounded integer value of f.
+<p>
+<dt><b>sc8850patch(channel,patchnum,variation)  </b><dd>
+</listitem>
+Return the message that will set an sc8850/sc8820/scd-70 patch
+channel and patchnum are 1-based, variation is 0-based (to match
+<p>
+<dt><b>scadjust(melody,scale)  </b><dd>
+</listitem>
+Adjust the notes in the melody phrase so that each note falls on
+the closest note in the scale phrase.
+<p>
+<dt><b>scadur(phrase,factor)  </b><dd>
+</listitem>
+Scale the durations of a phrase by multiplying the duration of
+each note by a specified factor.
+<p>
+<dt><b>scafilt(melody,scale)  </b><dd>
+</listitem>
+Return a copy of the melody phrase, leaving only those notes
+that fall on the scale specified by the scale phrase.
+<p>
+<dt><b>scaleng(phrase,length)  </b><dd>
+</listitem>
+Scale the phrase to the specified length by expanding it length-wise,
+adjusting both the time and duration of the notes.
+<p>
+<dt><b>scatimes(phrase,factor)  </b><dd>
+</listitem>
+Scale a phrase by multiplying the time and duration of
+each note by a specified factor.
+<p>
+<dt><b>scavol(phrase,factor)  </b><dd>
+</listitem>
+Scale the volume of a phrase by multiplying the volume of
+each note by a specified factor.
+<p>
+<dt><b>sd80patch(channel,patchnum,variation)  </b><dd>
+</listitem>
+Return the message that will set an sd80/sc8820/scd-70 patch
+channel is 1-based, patchnum is 0-based (because the sd80
+patch list used 0-based), and variation is 0-based (to match
+the LCD display of the sd80.
+The soundset value is
+	80 (special 1)
+	81 (special 2)
+	96 (classical)
+	97 (contemporary)
+	98 (solo)
+	99 (enhanced)
+	87 (user)
+<p>
+<dt><b>seconds(secs)  </b><dd>
+</listitem>
+Returns the number of clicks in a given number of seconds.
+<p>
+<dt><b>setdefaults()  </b><dd>
+</listitem>
+This function sets various global default values.
+<p>
+<dt><b>shuffle(ph)  </b><dd>
+</listitem>
+This function takes a phrase, splits in in 2 halves (along time)
+and shuffles the result (ie. first a note from the first half, then
+a note from the second half, etc.).  The timing of the original
+phrase is applied to the result.
+<p>
+<dt><b>spread(ph,num,rtime,rfactor)  </b><dd>
+</listitem>
+Return phrase ph "spread" num times, with rtime delay between
+each iteration, and with the volume of each iteration decreased
+by rfactor.  A "spread" is like an echo, except that notes are
+repeated in BOTH directions, forward and back.
+<p>
+<dt><b>status([str])  </b><dd>
+</listitem>
+When called with no arguments, this function prints a list of all
+currently-running tasks.  If a string argument is given, the list
+will only contain those tasks whose stacktrace (the output of
+taskinfo(tid,"trace")) contains that string.
+<p>
+<dt><b>step(ph,stepdur)  </b><dd>
+</listitem>
+Convert a phrase to be in step time, ie. all notes with the same
+spacing and duration.  Overlapped notes (no matter how small the
+overlap) are played at the same time.
+<p>
+<dt><b>strip(ph)  </b><dd>
+</listitem>
+Strip off any leading and trailing rests from a phrase
+<p>
+<dt><b>sussect(time,channel)  </b><dd>
+</listitem>
+Generate a phrase with controller messages that press the sustain
+pedal on the specified channel and let it up after the specified
+amount of time.
+<p>
+<dt><b>swapnote(ph)  </b><dd>
+</listitem>
+Swap every two notes in the phrase ph.
+<p>
+<dt><b>syncphr(phrase)  </b><dd>
+</listitem>
+This function returns a copy of the specified phrase, shifting
+the starting time so that it is as close as possible to 0 (but not
+less than 0).  The amount by which the time is shifted must be a
+multiple of lng (which, if not specified, is the length of the Met.
+This is typically used when you want to play a phrase that has
+been taken from the middle of some other phrase.  The goal is
+that the playback should still be synchronized to the current Met.
+<p>
+<dt><b>tonerow(p)  </b><dd>
+</listitem>
+Better version of tonerow, works on all types of notes.
+Return a tone row of the notes in phrase p.
+Each note in the original phrase appears exactly
+once in the result, but in a random position.
+The original time/duration of the notes is retained.
+<p>
+<dt><b>tonerow_old(p)  </b><dd>
+</listitem>
+Return a tone row of the notes in phrase p.
+Each note in the original phrase appears exactly
+once in the result, but in a random position.
+The original time/duration of the notes is retained.
+<p>
+<dt><b>transpose(phrase,amount)  </b><dd>
+</listitem>
+Transposes the phrase by the specified amount.
+<p>
+<dt><b>trrackpatch(ch,bank,prog)  </b><dd>
+</listitem>
+Return sysex that changes a parts bank/program.
+Assumes that the 16 parts are assigned to channels 1-16.
+ch is 1-based
+bank is 0-based
+prog is 0-based
+<p>
+<dt><b>ungrabmouse(w)  </b><dd>
+</listitem>
+This is the complement to grabmouse(), releasing the mouse so that
+mouse events are distributed normally.  The w (window) argument
+should be the same as that passed to grabmouse().
+<p>
+<dt><b>ungrabmousefifo(fifo)  </b><dd>
+</listitem>
+This is the complement to grabmouse(), releasing the mouse so that
+mouse events are distributed normally.  The fifo argument should be
+the fifo that was created and returned by grabmouse().
+<p>
+<dt><b>uniqnum()  </b><dd>
+</listitem>
+This function returns a new unique number.  Useful for inventing
+id numbers for menus, or for any other purpose.
+<p>
+<dt><b>virusbpatch(part,bank,prog)  </b><dd>
+</listitem>
+Return sysex that changes a parts bank/program.
+Assumes that the 16 parts are assigned to channels 1-16.
+ch is 1-based
+bank is 1-based
+prog is 0-based
+<p>
+<dt><b>virusbunpatch(p)  </b><dd>
+</listitem>
+If p is a patch change message, return its name.
+Return "" if it's not a patch message.
+<p>
+<dt><b>warrange(args)  </b><dd>
+</listitem>
+This is used to let you interactively rearrange windows.
+<p>
+<dt><b>wconsole(window)  </b><dd>
+</listitem>
+This tool is a console window, allowing interaction with
+the interactive command interpreter.
+<p>
+<dt><b>wdelete()  </b><dd>
+</listitem>
+This utility lets you point to and delete an object.
+<p>
+<dt><b>wgroup()  </b><dd>
+</listitem>
+Create a phrase group for multi-track editing.
+<p>
+<dt><b>wpack(args)  </b><dd>
+</listitem>
+This is used to let you interactively pack windows.
+<p>
+<dt><b>wsmmgroup()  </b><dd>
+</listitem>
+Create a phrase group for multi-track editing.
+<p>
+<dt><b>xystr(xyarray)  </b><dd>
+</listitem>
+This function is used when you want to print(the value of an xyarray.
+It returns a string version of the specified xyarray.
+For example, xystr(xy(0,0,4,4)) would equal "0,0,4,4".
+It works for 2-element xyarrays (i.e. with subscripts "x" and "y")
+as well as 4-element xyarrays ("x0", "y0", "x1", "y1").
+</dl>
+</body>

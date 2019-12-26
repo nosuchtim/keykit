@@ -1,0 +1,122 @@
+LoopyCam - by Tim Thompson
+
+
+Button Notation
+
+	LL       is the lower-left trigger button
+	UL       is the upper-left trigger button
+	LR       is the lower-right trigger button
+	UR       is the upper-right trigger button
+
+	DirUp    is Up on the directional pad (the left side)
+	DirDown  is Down on the directional pad
+	DirLeft  is Left on the directional pad
+	DirRight is Right on the directional pad
+
+	ActUp    is Up on the action buttons (the right side)
+	ActDown  is Down on the action buttons
+	ActLeft  is Left on the action buttons
+	ActRight is Right on the action buttons
+
+Quiting
+
+	Pressing all four trigger buttons (LL,UL,LR,UR) quits.
+
+Creating loops
+
+	Pressing LR starts a loop, length is determined by
+	how long you hold the button down
+
+	If LL is held down when you press LR,
+	the new video is inserted/overlaid with the existing loop
+	rather than creating a new loop.
+
+	Pressing UR moves to the next loop (but only if there is more than
+	one window/loop).  This is only needed if AUTONEXT mode is off.
+	If AUTONEXT mode is enabled (the default), pressing LR (to record
+	a loop) will automatically go to (and record) the next loop.
+
+Selecting Presets
+	
+	Pressing LL will select a random preset.
+
+Movement Speed
+
+	Pressing/holding LL and then pressing UL will make the
+	window movement speed (when moving windows around) faster.
+
+	Pressing/holding UL and then pressing LL will make the
+	window movement speed (when moving windows around) slower.
+
+Randomizing Parameters
+	
+	Pressing UL will randomize the parameters of the current preset.
+
+Selecting Preset Family
+
+	Pressing/holding LL and then pressing ActLeft will load
+	the "mild" presets.
+
+	Pressing/holding LL and then pressing ActRight will load
+	the "bold" presets.
+
+	Pressing/holding LL and then pressing DirUp will save the
+	current setting as a new preset.
+
+Controlling Effects
+
+	Pressing/holding UL and then pressing ActUp will
+	create a new random effect setting.
+
+	Pressing/holding UL and then pressing ActDown will
+	remove all effects.
+
+	Pressing/holding UL and then pressing ActLeft will
+	decrease the amount of "time blur".
+
+	Pressing/holding UL and then pressing ActRight will
+	increase the amount of "time blur".
+
+Window Mode
+
+	Pressing DirUp puts it in "Window" mode, after which:
+
+		ActLeft will delete one of the windows/loops
+		(but will not delete the last window/loop).
+
+		ActRight will add a new window/loop.
+
+		ActDown will go to "all live" mode - all windows will show
+		the live camera image (with effects, unless you
+		turn effects off with UL-ActDown as described above)
+
+Display Mode
+
+	Pressing DirDown puts it in "Display" mode, after which:
+
+	        ActDown will move all windows to random size/positions.
+
+		ActLeft will move windows to a 4-quadrant arrangement.
+
+		ActRight will move 1 window to a random size/position.
+
+		ActUp will make windows full-screen.
+
+Preset Mode
+
+	Pressing DirRight puts it in "Preset" mode, after which:
+
+		ActDown will save the current effects as a new preset.
+
+Option Mode
+
+	Pressing DirLeft puts it in "Options" mode, after which:
+
+		ActDown toggles "smooth versus jump" window motion.
+
+		ActLeft toggles the visual way in which windows overlap.
+
+		ActRight toggles AUTONEXT mode.
+
+		ActUp toggles whether or not window borders are drawn.
+

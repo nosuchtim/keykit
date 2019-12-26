@@ -1,0 +1,60 @@
+PROGRAM	      = byacc.exe
+
+
+LIB=C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\LIB;C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\ATLMFC\LIB;C:\Program Files (x86)\Windows Kits\10\lib\10.0.17763.0\ucrt\x86;C:\Program Files (x86)\Windows Kits\NETFXSDK\4.6.1\lib\um\x86;C:\Program Files (x86)\Windows Kits\10\lib\10.0.17763.0\um\x86;C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\VC\Tools\MSVC\14.16.27023\ATLMFC\lib\x64;C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\VC\Tools\MSVC\14.16.27023\lib\x64;C:\Program Files (x86)\Windows Kits\NETFXSDK\4.6.1\lib\um\x64;C:\Program Files (x86)\Windows Kits\10\lib\10.0.17763.0\ucrt\x64;C:\Program Files (x86)\Windows Kits\10\lib\10.0.17763.0\um\x64;
+
+MSVS="\program files (x86)\microsoft visual studio 14.0"
+
+VC=$(MSVS)\vc
+DEBUGCC = /D "_DEBUG" /D "_CRT_SECURE_NO_WARNINGS" /nologo
+
+CC=$(VC)/bin/cl.exe
+LINK=$(VC)/bin/link.exe
+INC=$(VC)\include
+
+VCPATHS="/libpath:\program files (x86)\microsoft visual studio 14.0\vc\lib"
+
+VCINCS=/I $(INC)
+
+.c.obj:
+	$(CC) -c $(DEBUGCC) $*.c
+
+OBJS	      = closure.obj \
+		error.obj \
+		lalr.obj \
+		lr0.obj \
+		main.obj \
+		mkpar.obj \
+		output.obj \
+		reader.obj \
+		skeleton.obj \
+		symtab.obj \
+		verbose.obj \
+		warshall.obj
+
+all:		$(PROGRAM)
+
+LIBS =  libcmt.lib libvcruntime.lib libucrt.lib kernel32.lib user32.lib gdi32.lib winmm.lib comdlg32.lib
+
+$(PROGRAM):     $(OBJS)
+	$(LINK) -out:byacc.exe $(OBJS) $(VCPATHS) $(LIBS)
+	@echo "done"
+
+clean:;		del *.obj
+
+clobber:;	del *.obj
+		del $(PROGRAM)
+
+###
+closure.obj: defs.h
+error.obj: defs.h
+lalr.obj: defs.h
+lr0.obj: defs.h
+main.obj: defs.h
+mkpar.obj: defs.h
+output.obj: defs.h
+reader.obj: defs.h
+skeleton.obj: defs.h
+symtab.obj: defs.h
+verbose.obj: defs.h
+warshall.obj: defs.h

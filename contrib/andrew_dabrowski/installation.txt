@@ -1,0 +1,3 @@
+This folder contains lisp code for combining a melody with existing music, and an interface to that program in a Keykit tool, wmeld.k.  The two communicate using named pipes in a convenient directory.  So for everything to work properly you must create your own named pipes and alter the lines in the in cp06.lisp containing the string "fifo", so the program can find the pipes.
+
+The script "cpserver" starts up the lisp program from the command line, which must be running in order for the meld tool in keykit to work.  It assumes you are using SBCL, but you can probably alter the script to use other lisps.  You could also start the program by loading "cp06.lisp" in an interactive session and running the command "listenForCmds".

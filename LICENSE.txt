@@ -1,0 +1,189 @@
+<TITLE>KeyKit License Agreement</TITLE>
+<body bgcolor=white>
+<P>
+<CENTER><U><B>NON-EXCLUSIVE LICENSE AGREEMENT<BR>
+</B></U></CENTER>
+<P>
+ This Non-Exclusive License Agreement (the &quot;Agreement&quot;)
+provides the terms and conditions under which AT&amp;T Corp. (&quot;AT&amp;T&quot;)
+is willing to grant you a royalty-free, non-exclusive right to
+use certain copyrighted source code and related executables and documentation
+(the &quot;Source Code&quot;) for any purpose directed solely
+to education or research and not involving any monetary compensation
+(a &quot;Non-Commercial Purpose&quot;).  PLEASE READ THIS AGREEMENT
+CAREFULLY BEFORE YOU ACKNOWLEDGE YOUR ACCEPTANCE OF THIS OFFER.
+ If you agree to only use the Source Code in accordance with the
+following terms and conditions and are willing to be bound by
+this Agreement, acknowledge your acceptance of this offer by clicking
+on the acceptance bar provided below.  AT&amp;T will then
+permit you to download a single copy of the Source Code.  IF YOU
+DO NOT WISH TO BE BOUND BY THIS AGREEMENT, YOU WILL NOT BE PERMITTED
+TO DOWNLOAD THE SOURCE CODE.<BR>
+<OL>
+<LI>By this Agreement, AT&amp;T grants you a non-exclusive, non-transferable
+right to use the Source Code as follows only for a Non-Commercial
+Purpose:
+<P>
+<dl>
+<dd>(a) You may prepare source code derivative works which are based,
+in whole or in part, on the Source Code, or on concepts or methods
+from the Source Code, and may compile the Source Code or such
+source code derivative works to make object code derivative works,
+provided that, you treat all such source code and object code
+derivative works as Source Code and only as permitted under this
+Agreement.  All such source code and object code derivative works
+are collectively referred to in this Agreement as the &quot;Derivative
+Works&quot;;
+<P>
+<dd>(b) You may make the following copies of the Source Code and the
+Derivative Works:
+<P>
+<dl>
+<dd>(i) a single operational copy for execution on a central processing
+unit (a &quot;CPU&quot;);
+<P>
+<dd>(ii) developmental copies as necessary for your development of
+the Derivative Works; and
+<P>
+<dd>(iii) any copies necessary for archival purposes; and
+</dl>
+<P>
+<dd>(c) You may transfer a Derivative Work to a person who has been
+granted a right to use the Source Code by AT&amp;T (such person
+being referred to in this Agreement as a "Licensed User"), provided that,
+such person treats such Derivative Work as Source Code under their
+agreement with AT&amp;T.
+</dl>
+<P>
+<LI>You shall treat as Source Code under this Agreement any Derivative Work
+you may receive from a Licensed User.
+<P>
+<LI>For purposes of this Agreement, musical works which are created
+as the output of the Source Code or the Derivative Works are not
+themselves deemed &quot;Derivative Works.&quot;
+<P>
+<LI>All copies of the Source Code prepared in accordance with
+paragraph 1 shall retain the copyright notice appearing in the
+Source Code.  Each Derivative Work prepared in accordance with
+paragraph 1 shall, to the extent possible, bear conspicuous notice
+which reflects that the Derivative Work is prepared from copyrighted software
+owned by AT&amp;T Corp.
+<P>
+<LI>EXCEPT AS OTHERWISE EXPRESSLY AUTHORIZED UNDER THIS AGREEMENT,
+YOU SHALL NOT USE, COPY, DISTRIBUTE OR TRANSFER THE SOURCE CODE
+OR DERIVATIVE WORKS IN ANY FORM, AND NO LICENSES ARE GRANTED OR
+IMPLIED.  By way of example, but without limitation:
+<P>
+<dl>
+<dd>(a) You shall not use the Source Code or any Derivative Work for
+any purpose that involves monetary compensation;
+<P>
+<dd>(b) Except as otherwise expressly permitted under paragraph 1(c),
+you shall not transfer or in any way distribute the Source Code
+or any Derivative Work to any person and shall not make the Source
+Code or any Derivative Work accessible on a computer network or
+on a disk drive shared with other persons; and
+<P>
+<dd>(c) Except as otherwise expressly permitted under paragraph 7
+of this Agreement, you shall not offer to sell, sell, license
+or otherwise convey or purport to convey any right in the Source
+Code or any Derivative Work, nor permit any company, corporation
+or other commercial organization to use the Source Code or any
+Derivative Work.
+</dl>
+<P>
+<LI>The Source Code contains information, ideas, concepts and
+methods (collectively, &quot;Information&quot;) which are confidential
+and proprietary to AT&amp;T.  You shall hold all Information in
+confidence for AT&amp;T and may only use the Information to the
+extent necessary to make use of the rights granted under paragraph
+1.  You may disclose Information only to Licensed Users.
+<P>
+<LI>You hereby grant AT&amp;T a non-exclusive, royalty-free, fully
+paid-up, worldwide, perpetual license to:  (a) Reproduce, prepare
+derivative works based on, distribute and transmit all or portions
+of the Derivative Works; and (b) Make, have made, use, offer to
+sell, sell, license or import any products or services (including
+computer software) under any and all intellectual property rights
+(whether protected by patent, copyright, trade secret or otherwise)
+owned or licensed by you and which cover (i) all or a portion
+of the Derivative Works (including as executed by a CPU), or (ii)
+any methods or concepts embodied in, or implemented through the
+execution by a CPU of, the Derivative Works (whether or not as
+part of a larger combination).  Upon written notice from AT&amp;T,
+you will provide AT&amp;T with a copy of the source code for any
+Derivative Work which AT&amp;T may request under this license.
+<P>
+<LI>AT&amp;T Corp. has no obligation to support or maintain the
+Source Code and grants you this right to use the Source Code &quot;<B>AS
+IS</B>&quot;.
+<P>
+<P>
+<dl>
+<dd>
+<B>YOU ASSUME TOTAL RESPONSIBILITY AND RISK FOR YOUR USE OF THE
+SOURCE CODE.  AT&amp;T DOES NOT MAKE, AND EXPRESSLY DISCLAIMS,
+ANY</B> <B>EXPRESS OR IMPLIED WARRANTIES, REPRESENTATIONS OR ENDORSEMENTS
+ OF ANY KIND WHATSOEVER, INCLUDING, WITHOUT LIMITATION, THE IMPLIED
+WARRANTIES OF MERCHANTABILITY OR FITNESS FOR A PARTICULAR PURPOSE,
+WARRANTIES OF TITLE OR NON-INFRINGEMENT, AND ANY WARRANTY THAT
+THE SOURCE CODE IS &quot;ERROR-FREE.&quot;<BR>
+</B>
+<p>
+<dd>
+<B>IN NO EVENT SHALL AT&amp;T BE LIABLE FOR (i) ANY INCIDENTAL,
+CONSEQUENTIAL, OR INDIRECT DAMAGES (INCLUDING, WITHOUT LIMITATION,
+DAMAGES FOR LOSS OF PROFITS, BUSINESS INTERRUPTION, LOSS OF PROGRAMS
+OR INFORMATION, AND THE LIKE) ARISING OUT OF THE USE OF OR INABILITY
+TO USE THE SOURCE CODE, EVEN IF AT&amp;T OR ANY OF ITS AUTHORIZED
+REPRESENTATIVES HAS BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGES,
+(ii) ANY CLAIM ATTRIBUTABLE TO ERRORS, OMISSIONS, OR OTHER INACCURACIES
+IN THE SOURCE CODE, OR (iii) ANY CLAIM BY ANY THIRD PARTY.</B>
+ <B>BECAUSE SOME STATES DO NOT ALLOW THE EXCLUSION OR LIMITATION
+OF LIABILITY FOR CONSEQUENTIAL OR INCIDENTAL DAMAGES, THE ABOVE
+LIMITATION MAY NOT APPLY TO YOU.  IN SUCH STATES, AT&amp;T'S LIABILITY
+IS LIMITED TO THE GREATEST EXTENT PERMITTED BY LAW.<BR>
+</dl>
+<p>
+</B>
+<LI>This Agreement is personal between AT&amp;T and you acting
+in your own capacity as an individual.  You may not accept this
+Agreement on behalf of any company, corporation or other organization.
+<P>
+<LI>AT&amp;T may at any time assign or transfer
+to any company or person, or grant to any company or
+person a license or sublicense under,
+all or part of its interest in any rights
+to the Source Code, this Agreement, or any license granted hereunder.
+ You may not assign, transfer or sublicense your rights hereunder
+without the written consent of AT&amp;T.
+<P>
+<LI>AT&amp;T MAY MODIFY THIS AGREEMENT AT ANY TIME, AND SUCH MODIFICATIONS
+SHALL BE EFFECTIVE AND BINDING IMMEDIATELY UPON POSTING THE MODIFIED
+AGREEMENT ON THIS WEB SITE.  YOU AGREE TO PERIODICALLY REVIEW
+THIS WEB SITE TO BE AWARE OF SUCH MODIFICATIONS.
+<P>
+<LI>You shall not, directly or indirectly, export the Source Code
+or any Derivative Work to any country to which such export is
+prohibited by law.  The term &quot;export&quot; means transferring
+or releasing to another country, or to a national of another country,
+the Source Code or any Derivative Work by any means -- physical,
+electronic or otherwise.
+<P>
+<LI>This Agreement shall be governed by and construed in accordance
+with the laws of the State of New York, USA, applicable to agreements
+made and to be performed wholly in the State of New York without
+regard to its conflicts of law rules.  You agree that any legal
+action or proceeding between AT&amp;T and you for any purpose
+concerning this Agreement or the obligations hereunder shall be
+brought exclusively in a federal or state court of competent jurisdiction
+sitting in New York.  Any cause of action or claim you may have
+with respect to the Source Code must be brought within one (1)
+year after the claim or cause of action arises or such claim or
+cause of action is barred.  AT&amp;T's failure to insist upon
+or enforce strict performance of any provision of this Agreement
+is not a waiver of any provision or right.
+</OL>
+<P>
+<h5>Copyright 1996 AT&T Corp.  All rights reserved.<h5>
+</body>

@@ -1,0 +1,199 @@
+FONCTIONS POUR LA COMPOSITION, GéoMaestro v0.5
+
+(... voir aussi catalogue.k pour les fonctions élémentaires ou de bas niveau)
+
+
+
+Projection: (geomaestro.k)
+-----------
+
+function EcouteC(cer,d,nT,...)	# Projection simple sur cercle (cer)
+				# EcouteC(cercle, point de départ, nbe tours (signé), duree, t0)
+
+function Spiro(cer,ray,sens,tht0,dthet,nC,pdep,...)	# Spirographe
+			# Spiro(cercle des centres, rayon, sens (1 ou -1), theta0 (signé), 
+			# deltatheta, nbe de cercles, pt départ)
+
+function Onde(cer1, cer2, nbecers, sens, pdep, ...)	# d'un cercle à l'autre
+		    # Onde(cercle départ, cercle d'arrivée, nbe de cercles, 
+		    # point de départ pour chaque cercle, duree, t0)
+
+
+
+function Ecoute(a,b,...)	# Projection simple (à fT=Clicks par défaut) sur segment (a,b)
+				# Ecoute(a, b, duree, t0)
+				# gaffe au format de durée (ex: -1 équivalent à 0)
+
+function Echelle(a1, a2, b1, b2, nb, ...)	# Echelle à N barreaux appuyés sur deux segments
+
+function Helice(centre, ray, theta0, deltath, nT, ...)	# Diamètre tournant
+		# centre, rayon, angle initial, pas angulaire, nbe tours (signe -> sens)
+
+function Brown(d1, d2, amp, dureerrance, ...)		# segment aux extrémités errantes
+
+function AversB(a,b,long,ouvert,...)	# ligne brisée de A vers B 
+							# (longueur des segments et angle de visée)
+
+
+
+function Vague(p1, p2, long, ouvert, ...)	 
+			     # Echelle brisée (AversB) à ? barreaux appuyés sur deux pistes
+
+
+
+function CercleRythm(a, b, npart, ...)
+
+
+
+
+Manipulation de collections & scènes: (data.k)
+-------------------------------------
+
+function CExport(m, nomf, ...)	# écrit la collection dans un fichier compatible Gnuplot
+
+function CImport(nomf)		# lit une collection et la retourne
+
+
+function CreScen(...)	# crée une scene en assemblant des collections
+
+function PlusCol(s, col)	# ajoute la collection col à la scène s
+
+function SaveScene(scene, fnom, ...)	# sauvegarde scene (fnom en .s)
+
+function ReadScene(nomf)		# lit une scene
+
+function ChoixScene(scene)
+
+function PlusScene(s)
+
+
+function EvPlot(fnom, ...)	# exporte Ev au format Gnuplot
+
+function WriteEv(fnom, ...)	# sauvegarde Ev (fnom en .ev)
+
+function LoadEv(nomf)		# lit les Ev
+
+function Init16()	# renvoie la phrase initialisant les 16 canaux
+
+
+function Convo(support, motif, ...)		# (...) pour options sur le nodur 
+
+function Rot(collec, centre, angle)		# coll peut aussi être une piste
+
+function Trans(collec, vx, vy)		# coll peut aussi être une piste
+
+function Sca(collec, centre, facteur)	# coll peut aussi être une piste
+
+function ScaXY(collec, fx, fy)		# coll peut aussi être une piste
+
+
+
+
+Maillages: (data.k)
+----------
+
+function Maillage(maille, xgerme, ygerme, reg, canal)	# initialise un maillage sur un canal 
+
+function MHexa(rayon, theta0)	# maille hexagonale
+
+function MRect(cx, cy, theta0)	# maille rectangulaire
+
+
+function Idem(maillage, nodur)			# une note pour tous !
+
+function DansChoix(coll, choix, nb, dispersion)	# comme son nom l'indique...
+
+function RandomNotes(coll,pmin,pmax,dmin,dmax,vmin,vmax)
+
+
+
+Génération de nodur/phrases: (audiocompositor.k)
+----------------------------
+
+function ReadPatches(fnom)	# lit un fichier définissant un ensemble de patches
+					# et leurs paramètres d'utilisation (retourne un "choix")
+
+function RandomMix(choix, nbinst, dispersion, ...)	# retourne une phrase aléatoire 
+							# de nbinst notes
+							# extraites de "choix", 
+							# débutant chacune dans "dispersion"
+# (le résultat utilise les canaux 17-nbinst à 16, sauf si (...) donne le premier canal)
+
+
+
+Définition de régions: (geometrie.k)
+----------------------
+
+function RCanal(can, ...)
+
+function RDisque(centre, rayon, ...)
+
+function RRect(a, b, ...)
+
+function RTri(a, b, c, ...)
+
+function RegionET(reg1, reg2, ...)	
+
+function RegionOU(reg1, reg2)		
+
+
+
+I/O: (interfaces.k)
+----
+
+function Geo(fname)	# points & cercles seuls implémentés pour l'instant
+
+
+function ExMIDI(ligne, fnom, ...)	# ... pour un événtuel autre répertoire de destination
+						# que MDOP (par exemple: VRAC)
+						# la phrase doit se trouver dans ligne["ph"]
+
+function GrosMIDI(fnom, ...)	# la même avec autant de lignes qu'on veut (dans MDOP)
+
+
+function RacineN(preums,...) 	# RacineN("bouh.gloup",Rep)
+					#  renvoie "bouh(258)" si 257 autres "bouh.gloup" sont
+					#  déjà présents dans le répertoire Rep (DEFDIR par défaut)
+					# (numéroteur de fichiers)
+
+function FichierN(preums,...)	# le même, renvoyant le nom complet avec Path et extension
+
+
+
+Listes: (graphisme.k)
+-------
+
+function InitList(fnom, ...)	# fnom: nom (racine) du fichier .dat associé
+				# si (...) présent, l'ancien fichier s'il existe est écrasé
+
+function ListColl(liste, coll, ...)	# ajoute collection à liste
+
+function ListScEv(liste, sev, ...)	# ajoute scène/Ev à liste
+
+function ListGen(liste, gen, leg)	# ajoute une description issue d'un générateur
+					# (in champs "inter" de la ligne résultat)
+
+function ListGeo(liste, fnom)		# ajoute un fichier Geo() à liste
+
+function ListAjout(liste, ajout)	# ajoute la liste "ajout" à liste
+
+function ListSeg(liste, a, b, ...)		# ajoute le segment (a,b) à liste
+
+function ListCer(liste, c, r, ...)		# ajoute le cercle (c,r) à liste
+
+function ListPiste(liste, piste, ...)	# ajoute piste à liste
+
+function GnuPlot(liste, fnom,...)	# exporte les commandes Gnuplot
+
+
+
+
+Programmation: (interfaces.k)
+--------------
+
+function Bprint(...)	# commentaire du mode bavard... (Bavard = 1)
+
+function DEBUG(...)	# commentaire du mode debug (Debug = 1)
+
+
+function KKSR(scene, region, kkfunc)

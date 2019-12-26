@@ -1,0 +1,37 @@
+
+
+Xylo		70	0
+WXylo 	70 	3 
+Viola 	50 	0 
+Violin 	50 	10 
+
+Contrabass 	50 	20 
+SlapBass 	30 	6 
+JazzBass 	30 	10 
+PanPipes 	11 	0 
+
+Harpsichord 21 	0 
+PianoWT 	20 	0 
+Guitar 	51 	24 
+EGuitar 	52 	11 
+
+FFlute	10	1
+# à
+FFlute	10	12
+
+Flute 1 	10	0
+Flute 2	10	73
+
+Flute Pan	11	0
+
+
+
+
+
+
+
+
+
+
+
+

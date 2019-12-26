@@ -1,0 +1,68 @@
+<tool name="Bang" class="wbang">
+The
+<b>Bang</b>
+tool is a utility for sending messages to other tools.
+The
+<b>Add</b>
+and
+<b>Del</b>
+buttons are used to add and delete connections between the Bang tool
+and other tools.  To make a connection, press and hold the mouse on the
+<b>Add</b>
+button, and drag the mouse away.  You will see a line stretching as you
+drag the mouse.  Drag the line so that it ends up on the desired tool,
+and release the mouse.  The connection is now made.  To check the connection,
+press the
+<b>Add</b>
+button - all of the current connections will be displayed until you release
+the button.  The
+<b>Del</b>
+button is used just like the
+<b>Add</b>
+button, except that it removes connections - you drag the line to the
+tool whose connection you want to delete.
+<blankline/>
+Pressing the
+<b>Bang</b>
+button will cause the Bang tool to send a message to all of the connected
+tools.  The default message is "bang".  In essence, this will invoke the
+<b>bang</b>
+method in each of the connected tools.
+If a tool does not have a
+<b>bang</b>
+method, a warning message will be printed in the console window.
+<blankline/>
+The
+<b>More</b>
+menu lets you set things up so that the Bang tool will monitor MIDI
+input and trigger itself automatically when a particular MIDI message is seen.
+To set up this capability, you should first play on your MIDI input
+device the desired MIDI message (e.g. a particular note on your keyboard).
+Then, invoke the
+<b>"Load Recorded"</b>
+menu item in the
+<b>More</b>
+menu.  This will load the MIDI message that you just played.  To have the
+Bang tool then continuously monitor MIDI input for this message,
+press the
+<b>On</b>
+button.  This button is a toggle - pressing it again will turn it off.
+When the Bang tool is
+<b>On,</b>
+all MIDI input is monitored, and each occurrence of the
+specified MIDI message will cause the Bang tool to trigger and send a
+message to all of its connections.
+<blankline/>
+You can change the message that the Bang tool sends by invoking
+the
+<b>"Set Message"</b>
+item in the
+<b>More</b>
+menu.  After invoking it, you will see a window in which you can enter
+the message name.  The
+<b>"Set Comment"</b>
+item lets you change the text that is displayed in the center of the Bang
+tool.  The
+<b>"Delete ALL Trigees"</b>
+item will remove all of the Bang tool's connections.
+</tool>

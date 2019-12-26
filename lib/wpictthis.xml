@@ -1,0 +1,36 @@
+<tool name="Picture This" class="wpictthis">
+The
+<b>"Picture This"</b>
+tool lets you generate music using a picture.
+The picture must be in .ppm format (you can find conversion
+programs fairly easily, to convert other common formats to a .ppm file).
+<blankline/>
+The phrase shown in the upper window of the tool is the "Line phrase".
+As you draw lines on the picture, the notes in that phrase are
+spread across the line that you draw, and the pixels underneath
+that line will determine which notes are actually played.
+Basically, it looks for the "most red" or "most green"
+or "most blue" parts of the line.
+<blankline/>
+Using the "More" menu, you can read a new Line phrase from a MIDI file,
+or set it to a particular scale.  You can also read a new picture.
+<blankline/>
+The right half of the screen shows the "segments" that comprise your
+composition.  The current segment is indicated by a hilighted number,
+and when you draw a line on the image (by clicking and sweeping the mouse),
+that segment will be affected.
+<blankline/>
+There are a variety of parameters on each segment, which you can adjust -
+each time you adjust one, the results (for that segment) will be
+updated and played.  You can click inside the phrase windows of each
+segment to play or stop the playback.
+<blankline/>
+Next to each segment are four buttons with the letters
+X, A, C, and P.  The "X" button will delete the segment.
+The "A" button will add a new segment by making a copy of the segment.
+The "C" button will "copy" the contents of a segment, and the
+"P" button is used to "paste" that copy into another segment.
+<blankline/>
+You can create any number of segments.  Use the up and down
+arrows to scroll the display of segments.
+</tool>

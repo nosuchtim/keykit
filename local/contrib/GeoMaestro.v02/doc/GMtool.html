@@ -1,0 +1,330 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
+
+<HTML>
+<HEAD>
+<TITLE>GeoMaestro v1.0</TITLE>
+<META NAME="Author" CONTENT="Stéphane Rollandin">
+<META NAME="Description" CONTENT="GeoMaestro for KeyKit, v1.0 manual">
+<META NAME="Keywords" CONTENT="KeyKit, MIDI, GeoMaestro">
+</HEAD>
+<BODY>
+
+<H1>GeoMaestro</H1>
+
+<H2>Using the graphic tool</H2>
+
+<A HREF="#part1">presentation</A><BR>
+<A HREF="#part2">basics</A><BR>
+<A HREF="#EvButtons">Ev scene management</A><BR>
+<A HREF="#DisplayOptions">display options</A><BR>
+<A HREF="#part3">projections</A><BR>
+<A HREF="#part4">channels management</A><BR><BR><BR>
+<BR><BR>
+
+<A NAME="part1"><H2>Presentation</H2></A>
+
+
+The graphic tool is implemented in class wev(). The code is stored in the file "winterface.k"<BR>
+You can make it available in your <B>Tools1</B> menu by adding this line in your "liblocal/localtools1.lst" file:<BR><BR>
+
+<B>NiceTool:wev</B><BR><BR>
+
+... where of course you can replace NiceTool by any name you want (that's the sad truth: this lovely tool has no official name !)<BR><BR>
+Here is how it looks like:<BR>
+<BR>
+
+
+<MAP NAME="GUI">
+  <AREA SHAPE="RECT" COORDS="456,0,607,45" HREF="#mousemenu">
+  <AREA SHAPE="RECT" COORDS="519,53,599,83" HREF="#selmode">
+  <AREA SHAPE="RECT" COORDS="400,84,518,106" HREF="#operation">
+  <AREA SHAPE="RECT" COORDS="521,85,597,103" HREF="#delete">
+  <AREA SHAPE="RECT" COORDS="400,105,600,129" HREF="#transfert">
+  <AREA SHAPE="RECT" COORDS="406,249,487,294" HREF="#actif">
+  <AREA SHAPE="RECT" COORDS="488,272,526,294" HREF="#ev">
+  <AREA SHAPE="RECT" COORDS="527,272,608,316" HREF="#ev">
+  <AREA SHAPE="RECT" COORDS="527,250,608,272" HREF="#add">
+  <AREA SHAPE="RECT" COORDS="407,362,525,405" HREF="#bof">
+  <AREA SHAPE="RECT" COORDS="527,340,606,361" HREF="#display">
+  <AREA SHAPE="RECT" COORDS="527,362,605,406" HREF="#options">
+  <AREA SHAPE="RECT" COORDS="488,302,514,320" HREF="#EvButtons">
+  <AREA SHAPE="RECT" COORDS="489,320,514,339" HREF="#bpj">
+  <AREA SHAPE="RECT" COORDS="488,339,514,357" HREF="#bfn">
+</MAP>
+<IMG SRC="images/snaptoolEv.jpg" WIDTH="608" HEIGHT="407" BORDER = "0" USEMAP="#GUI">
+<BR><BR>
+(The image is clickable: if you click on a button, you will be brought were it's talked about. But this is a presentation better than a reference document, so I strongly recommend that you read at least once everything here from the beginning to the end)<BR><BR>
+The left area is used to display a part of the event scene, along with an optionnal grid. It can also display any geometrical element you previously defined in a global variable, such as points, segments or circles. And it can also display the geometrical elements associated with a projector (more of this below)<BR><BR>
+All black symbols are events (red if selected), and each type of symbol refers to a particular channel, at least for the 20 first ones (remember, GeoMaestro channel are not only MIDI channels, so you can have more than 16 ones)<BR><BR>
+
+The other objects displayed are not part of the scene. They are here because I used the <B>display</B> button and ask to see them. On this exemple you can see the axes and grid, a few circles and segments and also some lines showing the way two selected events are projected on the segments. See <A HREF="#DisplayOptions">display options</A> for more about that. <BR><BR>
+The right area can be seen as three functionnal parts: the upper one is always present and is used to select  the mouse mode and the selection mode, and also to performs actions on the current selection. The bottom part is also always here; it is used to set the display options. The middle part (just above and right to the <B>REDRAW</B> button) can change, if you click on one of the three smallest buttons; so it as three configurations: one to manage the <B>Ev </B>scene (save or read Ev files, clear everything, activate or inactivate specific events), another one to manipulate projections (<B>pj</B>) and produce phrases or MIDI files, and the last one to set the channels parameters (<B>fn</B>). <BR><BR> 
+Here is the way it looks for the second and third configurations:<BR><BR>
+<A HREF="#part3"><IMG SRC="images/buttonspj.jpg" BORDER=0 WIDTH=200 HEIGHT=113></A>      <A HREF="#part4"><IMG SRC="images/buttonsfn.jpg" BORDER=0 WIDTH=201 HEIGHT=113></A><BR><BR>
+<BR><BR>
+
+<A NAME="part2"><H2>Basics</H2></A>
+
+The main operations are made using the mouse. Each mouse button can be affected a mode, using the two upper-right menu button (in the example above they show "zoom" for button 1 and "selection" for button 2)<BR><BR>
+
+<A NAME="mousemenu">Here's the menu for mouse modes (the image is clickable):<BR><BR></A>
+
+<MAP NAME="mousemenu">
+  <AREA SHAPE="RECT" COORDS="48,10,195,29" HREF="#infos">
+  <AREA SHAPE="RECT" COORDS="48,29,195,49" HREF="#zoom">
+  <AREA SHAPE="RECT" COORDS="47,48,195,66" HREF="#around">
+  <AREA SHAPE="RECT" COORDS="47,67,194,86" HREF="#newpoint">
+  <AREA SHAPE="RECT" COORDS="48,86,195,106" HREF="#newevent">
+  <AREA SHAPE="RECT" COORDS="48,105,195,124" HREF="#selection">
+  <AREA SHAPE="RECT" COORDS="47,124,195,144" HREF="#movesel">
+  <AREA SHAPE="RECT" COORDS="47,144,195,162" HREF="#rotate">
+  <AREA SHAPE="RECT" COORDS="48,162,196,181" HREF="#copy">
+  <AREA SHAPE="RECT" COORDS="248,133,396,151" HREF="#phtoseg">
+  <AREA SHAPE="RECT" COORDS="247,151,396,170" HREF="#phtocir">
+  <AREA SHAPE="RECT" COORDS="247,170,396,189" HREF="#hearev">
+  <AREA SHAPE="RECT" COORDS="247,190,395,209" HREF="#zonedef">
+  <AREA SHAPE="RECT" COORDS="247,209,396,228" HREF="#dynseg">
+  <AREA SHAPE="RECT" COORDS="247,228,396,246" HREF="#evgen">
+</MAP>
+<IMG SRC="images/mousemenu.jpg" WIDTH="400" HEIGHT="250" USEMAP="#mousemenu">
+
+<BR><BR>
+<A NAME="infos"><B>infos </B> lets you define a rectangular area then print (in the console) a description of all events and points it contains. Note that only active events are displayed (See reference on <A HREF="GMstructures.html#events">data structures</A> to see what is an active event. But never mind: if you don't care about that, all events will always stay active !). You can also have info on a circle if its center is in the area.<BR><BR></A>
+<A NAME="zoom"><B>zoom</B> gets you more or less inside the area you define (rather exactly if you draw a square, otherwise it's ajusted to keep the x/y ratio, so the circles always looks circular). If you simply click once somewhere, this sets the new center of the window. If you click once close enough to a point, a circle center or an event, then the center of the window will be set exactly to the coordinates of that point. <BR><BR></A>
+<A NAME="around"><B>move around </B>lets you do exactly that: move around the scene (get rid of the grid with the <B>grid</B> button if the motion looks ugly)<BR><BR></A>
+<A NAME="newpoint">with <B>new point</B> when you click anywhere in the scene area a window appears and ask for a GLOBAL variable name (a Name, then). If you give one, it will become a new point and will be immediately displayed as a blue circle.<BR><BR></A>
+<A NAME="newevent"><B>new event </B>does the same with events ! so this time you are asked a nodur (that is: a phrase) and  a channel number. You must give both of them in the same line, with a "#" in between. Note that you can give any kind of valid KeyKit formulas as long as the first one returns a phrase value and the second one an integer value (and don't forget the "#" !). So if you want to define a nodur with a complicated definition, just type it in the console and store it into a global variable. You'll just have to give the variable, then (for exemple: <B>Snarf</B>). If you only give a nodur, the channel number will be the current channel (as defined in the <A HREF="#bfn">fn</A> menu). If you simply type "<B>*</B>", the nodur will be the last chunk in Recorded, as used in the Group Tool, with a 2b space (to have another space value, just enter it, an integer, as the nodur value), and the channel will be the current channel. <BR><BR></A>
+<A NAME="selmode"><A NAME="selection"><B>selection</B> selected events get red, selected points get red with an inner circle. There are three modes for selecting everything, plus three other modes for selecting only events, or only non-event objects, or only events from the current channel. You choose the one you want from the mode menubutton (in the example image <A HREF="#part1">above</A>, it shows "plus"):<BR><BR></A></A>
+
+<CENTER><IMG SRC="images/snapselmodemenu.jpg" BORDER=0 ></CENTER>
+<DIV ALIGN=right>... their names say all. Just try and see !</DIV>
+<BR><BR>
+<A NAME="delete">By the way, the <B>!DELETE!</B> button kills the selected events. In the early times, there was no undo, that's why we have "!DELETE!" instead of "delete"... but now you can <B>UNDO</B> the last undoable operation (the console issues a message everytime such an operation is performed), and you an also <B>STO</B>re the current state if you want to be able to go back to it with UNDO (but after coming back once, STOre it again or it will be lost)</A>
+<BR><BR>
+<A NAME="movesel"><B>move selection</B>: with the mouse you can draw a segment anywhere in the scene area: it represents the vector used for translating the selection. When you stop dragging the mouse, the translation is done.  </A>
+<BR><BR>
+<A NAME="rotate"><B>rotate selection</B>: a bit more complicated, so here is a picture:<BR><BR></A>
+<CENTER><IMG SRC="images/snaprotsel0.jpg" BORDER=0 WIDTH=358 HEIGHT=334></CENTER><BR>
+...as you can see, there's a blue target-like thingy in the middle of the scene area. <BR><BR>
+<I><B>Important</B></I>: the rotation will be done around the center of the area, so you have to set this center first. To do that, use <B>zoom</B> and simply click once on the point you want to be the area center (you can click anywhere, but if you click close enough to an event or a point, its coordinates will precisely define the new center. Useful to scale circles)<BR><BR>
+So now you have these two circles: one follows the mouse (its radius change) and the other doesn't change (it was defined when you first clicked somehere). There's also the little segment going from the center to the mouse. When you stop dragging the mouse, the selection is rotated according to the motion of the segment, and it is also scaled according to the difference in radius between the two circles (so that if the last one is inside the first one, it's scaled down). Try it to get the feeling, it's easier to understand than to explain !<BR><BR>
+For the example above, you would get that in the end:<BR><BR>
+<CENTER><IMG SRC="images/snaprotsel1.jpg" BORDER=0 WIDTH=358 HEIGHT=334></CENTER>
+<BR><BR>
+<A NAME="copy"><B>copy selection</B> works in the same way as <B>move selection</B>, but the selection stays in place and a copy is created according to the vector you draw. Since the selection doesn't change at all, you can use it several times in all directions. If there are points/circles in the selection, you will be asked to give names to their copies (if you give "", the point/circle will not be copied)<BR><BR></A>
+
+<A NAME="transfert">While we are on selection stuff, let's talk about the two buttons below the !DELETE! one (we'll go back to the mouse button menu a bit <A HREF="#back">later on</A>):<BR><BR></A>
+
+<BLOCKQUOTE>The <B>"arrow"</B> button is used to transfert selected data from a format to another, and the second button let you choose among different transfert modes:<BR><BR>
+<CENTER><IMG SRC="images/tmenu.jpg" BORDER=0 WIDTH=143 HEIGHT=86></CENTER><BR><BR>
+<B>points to piste</B>: selected points are used to create a piste (that is, an ordered collection of points). You must give a name to the piste. If it is an already existing piste, the new points are added to it. Points are always arranged in the order they got initialized in the tool, so if you want to define a specific order (this is very likely if the piste is going to be used as an argument for a projector call), just use the "display " button once to remove the points from the tool, then use it another time to display them again, and this time type their names in the order you want them to have in the piste.
+<BR><BR>
+<B>events to scene</B>: selected events are copied to a new scene, or added to an existing one. You must give a name for the scene. Channel  attributes are kept identical, so you may want to change them before (use the "operation" button)<BR><BR>
+<B>points to events</B>: here we use each selected point as coordinates for a new event. You have to give a channel and a nodur for each newly created event, in the same way as in the "<A HREF="#newevent">new event</A>" mouse mode.<BR><BR>
+<B>events to points</B>: here we use the coordinates of each selected event to create a new point. You have to give a name for each new point. <BR><BR>
+Note that, in both of the previous modes, selected points or events are not deleted. It's more a kind of copy.<BR><BR><BR></BLOCKQUOTE>
+<A NAME="back">Back to the mouse button menu:</A>
+<BR><BR>
+
+<A NAME="phtoseg"><B>phrase to segment</B>: here you can draw a segment, then you are prompted for a phrase and a channel (don't forget the "#" in between !). The phrase will be displayed along the segment, splitted in as many events as there are notes in it, and according to their time values. Note that all notes will become events affected to the channel you gave as argument: their previous channel values are overridden. The non-notes MIDI messages in the phrase are ignored and forgotten. If you give a third argument (after a second "#"), then the length of the segment will be arranged (we only keep the starting point and the direction) so that it's corresponding to the length of the phrase (this depends directly on the value of the global variable CPCM... see the <A HREF="GMprojectors.html">projectors stuff </A>elsewhere in this manual)<BR><BR></A>
+Special syntax: type "<B>*</B>" as a phrase to get the last chunk in Recorded (provided that you have Resched == 1). Beware that all nonnotes in it will be forgotten, and that all notes will be affected to the choosen channel.<BR><BR>
+Note that the segment you just draw with the mouse is stored in the global variable PhS_, so that you can <A HREF="#display">display</A> it or use it as a parameter for a <A HREF="#bpj">projection</A>. It will be replaced if you do another phrase to segment, so if you intend to use it make a copy at the console ("SegAnyName = PhS_")<BR><BR><BR>
+<A NAME="phtocir"><B>phrase to circle</B>: same thing, along a circle. When you draw the circle, the segment starting from the center indicates were will be spotted the first note/event of the phrase. And a third argument makes automatic ajustment of the radius so that the perimeter of the circle is corresponding to the length of the phrase.</A><BR><BR>
+The circle is temporarily stored in the global variable PhC_
+<BR><BR>
+<BR>
+<A NAME="hearev"><B>hear ev/seg</B> sends nodur to midi out; if you click on an event symbol, you'll hear its nodur, if you draw a segment with the mouse you'll hear Ecoute() performed on that segment. The GUI use the temporary global variables Ma and Mb to store the extremities of the segment. So if you liked the sound and want to keep these two points, copy them at the console (type <B>A=Ma; B=Mb</B> for example) BEFORE you use the "hear ev/seg" mode again ! Otherwise this information will be lost.<BR><BR><BR></A>
+
+
+<A NAME="zonedef"><B>define zone</B> allows you to draw a rectangular area which will be refered to as a zone. The only interest of  zones is to clearly separate different sets of events, which can be useful depending on the way you use GeoMaestro for composition.  You are asked for an optional zone number, and any kind of information or name you may want to associate with that zone. If no number is given, one is automatically affected. The zone then appears like a rectangle with a small circle in one corner. If you do an<A HREF="#infos"> infos</A> request on the circle, the console will display the zone number (useful to know if you didn't give one) along with the info string, and you will be asked weither you want to change the info or keep it as it is. <BR><BR></A>
+Displaying zones: <B>µ</B>n and <B>-µ</B>n shows/hide zone number n, <B>µ</B> and <B>-µ</B> shows/hide all zones<BR><BR>
+Using zones: you can active/inactive all events in zone n by using the syntax <B>µ</B>n as argument for the <A HREF="#actif">active/inactive buttons</A>. This allows you to very easily manage independent sets of events in the same Ev scene. It also speeds up projection as you can desactivate events which wouldn't be heard anyway, for example because there are too far away from the supports.<BR><BR>
+<BR>
+<A NAME="dynseg"><B>dynamic segment</B> (to do...)</A>
+<BR><BR>
+<A NAME="evgen"><B>event generator</B> (to do...)</A>
+<BR><BR>
+<BR><BR>
+Ok, that's it for the mouse button menu !
+<BR><BR><BR>
+<A NAME="operation">There's one important and powerful button we have to see now: the <B>operation</B> button. It only works on the selected (red) events.<BR><BR></A>
+It asks for a valid KeyKit formula, evaluate it and redraw the tool. That's it. So it's very powerful, because you can ask for anything and transform the selection in an infinite number of ways.<BR><BR>
+Syntax: you have to use X_, Y_, C_ and N_ to represent the position, channel and nodur for each events in the selection.<BR><BR>
+For example, if you give "C_ = 4", all events in the selection will be attributed to channel 4. <BR>
+Or if you type "Temp = X_; X_ = Y_; Y_= Temp" then the selection will be mirrored along the x=y axis. Etc, etc..<BR><BR>
+Also, because N_ is representing the nodurs, which are phrases, you can type "N_.vol = 127" to set the velocity of the events. It could be more complicated, like: "N_.vol = 127-10*X_" <BR><BR>
+And of course you can use all global variables you previously defined.<BR><BR>
+There's more: it's a bit subtle, but very useful. Here it is:
+<BR><BR>
+ If what you typed starts with a "<B>:</B>", then what follows will be evaluated once to get the formula to use, then a second time to apply the formula. Get it ? <BR><BR> 
+Use: that's mainly because you may want to do a very complicated operation on the selection. So the best way to do that is to use the console to define a string global variable that will contain the code for the operation. And then you give the name of this variable at the prompt.<BR><BR>
+Example: in the console, you type: <BR><BR>
+
+<B>Formula = "if (C_==4) {X_=X_+1; Y_=0.1*N.dur; transpose(N_,2)} else if (C_==2) transpose(N_,3) else {X_=0; print(Y_) }"<BR><BR></B>
+
+Now if you click on "operation" and, at the prompt, type:<BR><BR>
+
+<B>:Formula</B><BR><BR>
+
+... the whole big thing will be evaluated on the selection. <BR><BR>
+You could actually write whole programs this way. But if that's what you're into, then it's better to have a look at the whole GeoMaestro <A HREF="GMfunctions.html">set of functions</A> and do everything at the console or in a text editor. There's much more to have fun with !<BR>
+<BR>
+As an application to this feature, there's an history management for the "operation"  button: <BR>
+history is kept in array<B> FKK</B> <BR>
+<B>:</B>n recalls formula indexed n (it's the same as typing <B>FKK[</B>n<B>] </B>as a formula)<BR>
+<B>:: </B>recalls the last one<BR><BR>
+(Note: as for any array, you can edit FKK with the console command <B>Notepad()</B> if you properly set the global variables NOTEPAD1 and NOTEPAD2 which are used to call a text editor from the shell. See installation for details)<BR>
+<BR><BR><BR><BR>
+
+<A NAME="EvButtons"><H2>Ev scene management</H2></A>
+
+As I said before, three different sets of buttons can appear in the middle section. We are now interested in the firts one, the one you get by clicking on the <B>ev</B> button:<BR><BR>
+<IMG SRC="images/buttonsev.jpg" BORDER=0 WIDTH=201 HEIGHT=68>
+<BR><BR>
+<A NAME="actif">"<B>active</B>" and "<B>inactive</B>" buttons are used to decide which part of the event scene is to be displayed. They ask for a valid KeyKit test on the variables X_,Y_,C_,N_ and S_, in the same principle as the "operation" button. (here, S_ is the selection flag: it's 1 if the event is selected, 0 or "" otherwise)<BR><BR></A>
+If you give <B>C_==2</B> on "inactive", events affected to channel 2 will be removed from the display. They are not deleted, but you can't select them, modify them nor hear them until they're activated again. <B>S_==1</B> would affect only selected events, <B>(S_==1)&&(C_==2) </B>would affect selected events from channel 2, etc...<BR><BR>
+
+As for "operation", there's an history to the "active/inactive" tests: (It is kept in array<B> FIF</B>)<BR>
+<B>:</B>n recalls test number n (same as typing <B>:FIF[</B>n<B>]</B>)<BR>
+<B>::</B> recalls the last test<BR><BR>
+(note that if you want to give as a test a string global variable containing the test itself, you also need a "<B>:</B>" , exactly as  the "operation" button syntax. Example: if <B>Test="C_==2"</B>, you can give <B>:Test </B>as a parameter)<BR>
+<BR><BR>
+
+<A NAME="add"><B>add scene</B> adds another scene (you have to give its name) to the Ev. There's no difference in structure between a scene and the Ev array (to say it another way, the Ev array is merely a scene); but the Ev scene is the only active scene. Other scenes are simply stored for  later recall. To save a scene on a file, you must either make it the current Ev scene (by using the <B>new </B>and the <B>add scene</B> buttons) then use the <B>write .ev</B> button, or directly use the proper command at the console (the command is SaveScene(). See the<A HREF="GMfunctions.html"> functions reference</A> for more details) <BR><BR></A>
+<BR>
+<A NAME="ev">The <B>new</B>, <B>read .ev </B>and <B>write .ev</B> are self-explanatory. Just have a look at the reference on data structure to understand clearly what are the Ev events. The most important thing is that there's only one scene at a same time in GeoMaestro. You can open many tools, but they will all work on the same scene. Any event selected in one tool will be selected in the others, etc... Note that when a tool is dumped (if you write a page which contains it), the events are dumped with it. So if you're working on several scenes, or with several tools on different pages, be careful when you restore a page: it will erase your current Ev ! <BR><BR></A>
+<BR><BR>
+
+<A NAME="DisplayOptions"><H2>Display options</H2></A>
+
+<A NAME="display">Next: the <B>display</B> button. It asks for names, I mean Names, global variables, separated with commas ",". If they are names of points, circles, segments or pistes, these are displayed. If you give it names of lignes coming from a generator, then the tool looks at the "inter" or "rac" fields to display the appropriate content (See <A HREF="GMprojectors.html#C4">projector</A> and <A HREF="GMstructures.html#lignes">data structure</A> documentations for details).<BR><BR></A>
+If you type a "<B>-</B>" just before the name, the element is suppressed from the display.<BR>
+Ex: "<B>Or</B>" will show the origin, "<B>-Or</B>" will hide it back.<BR>
+If you type "<B>--</B>", everything disappear !<BR><BR>
+
+Exemples of  valid command for display:<BR><BR>
+<B>--, Or, C1</B>  clear everything, then show point Or and circle C1<BR><BR>
+
+<B>-Joe, Joe</B> hide Joe, then show Joe gain (whatever is Joe... but I guess it's something which value just changed, so we want to refresh the view)<BR><BR>
+
+Now there are two useful special syntaxes:<BR><BR>One is used to display lignes which have just been projected using the tool. You'll see <A HREF="#part3">later</A> that these lignes are kept in an ordered list; so to display ligne number n you can use the internal name <B>£</B>n (it is actually a shortcut for the real name <B>RL[</B>n<B>]</B> ), with a special syntax to access internal elements in the lignes: <B>£</B>n<B>c</B>, <B>£</B>n<B>a</B>, <B>£</B>n<B>b</B>,<B> £</B>n<B>i</B>... See <A HREF="#Lsyntax">here</A> for a complete description.<BR><BR>
+
+The other one is used to define dynamic segments, that is: segment automatically generated and updated by the tool from two points. Let's say that points <B>A</B> and<B> B</B> are displayed; you can ask to see <B>A-B</B>. Now, if you select A with the mouse then move it somewhere else, you'll see that the segment A-B follows the motion. This is specially useful when used with the <B>proj </B>button (we're going to see that button right now). Note that you can ask A-B-C-D if A, B, C and D are existing points (not necessarily currently displayed, though). You will then have defined the three dynamic segments A-B, B-C and C-D.<BR><BR>
+<BR>
+<BLOCKQUOTE><U>Important point here:</U><BR><BR>
+When something (point, segment, circle, whatever) is displayed in the GUI, it is always associated to both an internal variable and a global variable. The global variables are the ones displayed in the console when you click on the "display" button. You can use and manipulate these variables at the console in any way you want, but it will not change the value of the internal variable associated to the same object. So what you see in the GUI will not change unless you ask to hide and display again the concerned object, because hiding an object kills its internal implementation. But be careful: on the other way round, any change to an internal variable is immediately repercuted on the corresponding global variable. That's why when you move point A around in the GUI, global variable A follows the motion. So the basic rules are the following: <BR><BR>1) changes in the GUI have priority<BR> <BR>2) if you want to change the value of an object at the console, it's safer to hide it from the GUI in the meantime.
+<BR><BR>
+Note that this is not true for events ! Events have one and only implementation, weither they appear on the GUI or not: it's the <B>Ev</B> array.<BR><BR>
+
+<U>Second important point here:</U><BR><BR>
+When you dump a GUI, all its internals are dumped along. So reading a .kp page with a GUI in it restores even the global variables associated to displayed objects. But it does not necessarily restore objects you did not display. To be sure that an object you need or want to use later on is dumped with the tool, you must check that its name is an index of the <B>GVARS</B> array (to do so, the best is to give this command at the console: <B>Notepad(GVARS)</B>). If it is not, use the <B>RemVAR()</B> function to register it. This function is automatically called by the GUI in a number of cases, so don't be surprised to see your object/variable already registered. But don't rely on this and manually register all important data !<BR><BR>
+
+<U>Third (less) important point:</U><BR><BR>
+Now, concerning the special syntaxes for lignes and dynamic segments. This time, global variables are created to match what's on the sceen, and sometimes you may find them useful to use later on. For example, any ligne created by a projector in the GUI (go <A HREF="#bpj">here</A> to see how this happens) is stored in the global variable <B>RL</B>, which is an array. Let's say that in the ligne whose RL index number is 5 we're interesting in a certain circle that appears in the "inter" field of the ligne, at index 18. Sounds complicated, but is simple ! (I can't emphasize enough how it's a good idea to use the Notepad() function to have a look at the way big arrays are arranged. In this case, if you have a few lignes stored in your GUI, try <B>Notepad(RL)</B> at the console) <BR><BR>
+We could display this circle by using its real name, that is: <B>RL[5]["inter"][18]["cer"]</B><BR>
+But we could also use the special shortcut: <B>£5i18c</B><BR>
+<BR>
+Both give the same result in the GUI: the famous circle is displayed. But as you could see in this example by reading the console messages, the second methods lead to the creation of a new global variable <B>C_5i18c</B>. This defines the very circle displayed on the GUI. As a consequence, you can now <A HREF="#bpj">kill</A> the ligne number 5 (which means that RL[5] will no longer refers to it) while keeping this circle at your disposal through its new name C_5i18c (of course, you can also rename it at the console !)
+<BR><BR>
+With dynamic segments it's more radical: this time a segment global variable is created for an object that didn't exist before. If A and B are existing points, displaying A-B leads to the creation of the variable <B>S_A_B </B>whose value will be actualized every time you move A or B at the GUI. But when you stop moving them or hide the segment from the tool,  you can still use S_A_B for that segment.<BR><BR> 
+<BR><BR></BLOCKQUOTE>
+Ok, back to the display options topic:<BR>
+<BR><BR>
+<A NAME="options">The <B>grid </B>button lets you toggle between four types of axes representations: no axes; only axes; axes and broad grid (units); axes and precise grid (0.1 units)<BR></A><BR><BR>
+The <B>size</B> button change the size of the symbols representing points and events.<BR><BR><BR>
+
+The <B>snap</B> button toggles between free positioning mode and stick-to-grid mode. In the last one, the mouse will tend to stick to the displayed grid lines, if it's close to them. Note that in both modes, clicking close enough to an event symbol or a point does the job. Try and see, it's the best way to understand the mouse behaviour. <BR><BR>
+<BR>
+The <B>proj </B>button provides the most powerful display option: it sets the mode for showing how projections are done on a given segment. So by simply looking at the screen you will have a precise idea of the way events are going to become notes in a phrase.<BR><BR>
+The button is again a toggle between four modes: no projection displayed; all projections displayed (in red); all projections displayed (in a different shade of green for each segment); only projections of selected events displayed (in a different shade of green for each selected event). At the moment there's no way to select a specific segment: projections will be displayed on every displayed segment.<BR><BR>
+Let's see how it looks like on an exemple:<BR><BR>
+
+<IMG SRC="images/proj1.jpg" BORDER=0 WIDTH=334 HEIGHT=334><BR><BR>
+
+Here's the Ev scene (a few events on two differents channels) with three points A, B, C and the dynamic segment A-B-C<BR>
+The <B>proj</B> mode is: show nothing.<BR><BR>
+Now we click once on <B>proj</B>, and here is what we get:<BR><BR>
+<IMG SRC="images/proj2.jpg" BORDER=0 WIDTH=334 HEIGHT=334><BR><BR>
+
+The red lines are all the projections that would happen if we used the Ecoute() projector on the two segments.<BR><BR>
+(we have also selected the point B in this exemple; that's because we're going to move it):<BR><BR>
+So let's move B (with the <B>move selection </B>mode) and click on <B>proj </B>again (just for fun):<BR><BR>
+
+<IMG SRC="images/proj4.jpg" BORDER=0 WIDTH=334 HEIGHT=334><BR><BR>
+
+The two dynamic segments have been updated, so the projections are completely different now. Also, there are two shades of green, one for each segment, but it's not really obvious here (this feature is more useful when many segments are presents).<BR><BR>
+
+Finally, let's select a couple of events and click <B>proj</B> again:<BR><BR>
+
+<IMG SRC="images/proj5.jpg" BORDER=0 WIDTH=334 HEIGHT=334><BR><BR>
+
+... we now only see the projections from these events to the segments.<BR><BR><BR><BR>
+
+
+<A NAME="bof">To finish with the display options, we have the<B> zoom </B>buttons: their function is trivial ! Just play with them, that will do the documenting job ! <BR><BR><BR></A>
+
+
+
+
+
+<A NAME="part3"><H2>Projections</H2></A>
+
+<A NAME="bpj">Here are the buttons available when the GUI is set in the projections mode:</A><BR><BR>
+
+<IMG SRC="images/buttonspj.jpg" BORDER=0 WIDTH=200 HEIGHT=113><BR><BR>
+
+<B>First line</B>: the button here labelled PROJECTORS is a menu button which allows you to choose a projector among the registered ones (see <A HREF="GMadvanced.html">advanced features</A> for registering a home-made projector)<BR><BR>
+Once this is done, the arrow button at the left actually performs the projection. You will be asked for the arguments required by the projector (with the help of the console which reminds you what they are). 
+<BR><BR>
+Syntax: what you give here will be used <I>as is</I> in the projector call. So arguments must be separated with commas "," but can be any kind of valid KeyKit formulas and global variables.<BR><BR>
+(Moreover, you can use a global variable not defined yet ! This is useful if you suddenly decide that you want to play with an argument values. So you can give a variable name instead of a fixed value. Then the projection will not be performed, and you will be asked at the console to define the variable. When it's done, just click on <B>redo</B> to perform the projection.)<BR><BR>  
+There is one special syntax available here, but first let's see the other buttons:<BR><BR>
+<B>Second line</B>:<BR>
+The result of the projection is a ligne. It will be indexed and stored in the <B>RL</B> array. Items from that array are directly accessible from the second menu button we have here: the one labelled "2: CercleRythm(.." in the above image. So you have here all the lignes you produced by projection, with an id number and the actual command used to create them. If no lignes are there yet, Snarf is displayed.<BR><BR>
+All the others buttons are used to work on the selected ligne (<B>RL[2]</B> in our example):<BR><BR>
+<B>hear</B>: click here to hear the phrase in the ligne (<B>R(2]["ph"]</B> in our example), or to stop the realmidi task.<BR><BR>
+<B>redo</B>: re-calculate the ligne, using the same command. You may have changed a point, circle or segment position, or the value of a variable, or the Ev scene itself, so you can refresh the projection this way.<BR><BR>
+<B>snarf</B>: put the phrase from the ligne into Snarf<BR><BR>
+<B>kill</B>: erase the current ligne, and recalculate ids for the remaining ones (you cannot UNDO that !). Be careful about possible conflicts if you're using the <B>RL</B> array somewhere else, since the lignes indexes are going to change.<BR><BR>
+<B>Ex</B>: exports the list of lignes as (in order of proposal, just type ENTER to skip one): an array of lignes, an array of phrases, a set of midi files. In the two first cases, you must give a name to the array, in the last case you must give a root name for the midi files. Their actual names will be <B>MDOP</B>+rootname+(id number)+".mid". The default value for MDOP is set in the <I>initialisations.k</I> file<BR><BR>
+The arrow button beside the Ex button does the same, but only for the selected ligne.<BR><BR>
+<BR><BR>
+<A NAME="Lsyntax">OK, now let's see the special syntax in the projector arguments: as you now know (at least I hope so !), a ligne is a specific <A HREF="GMstructures.html">data format</A>: it's an array containing, along with the musical phrase rendered by the projection, many other useful informations. For example, if you used the projector <A HREF="GMprojectors.html#Ond">Ondes</A>, which takes as projection supports a set of N circles regularly defined between two given circles C1 and C2, the resulting ligne contains the coordinates for all these circles. <BR><BR></A>
+As I said <A HREF="#display">before</A>, you can display this information with the <B>£</B> syntax (which is actually a shorcut to navigate in the <B>RL</B> array of "R"endered "L"ignes). This same syntax can be used here to take intermediary circles or points as arguments in a projector call. <BR><BR>More precisely, with ligne 2 as an exemple:<BR><BR>
+<B>£2c</B> refers to the last (or only) circle of ligne 2 (shortcut for <B>RL[2]["rac"]["cer"]</B>)<BR>
+<B>£2s</B> refers to the last (or only) segment of ligne 2 (shortcut for <B>RL[2]["rac"]["A"]-RL[2]["rac"]["B"]</B>)<BR>
+<B>£2a</B> refers to the starting point of the last segment in ligne 2 (shortcut for <B>RL[2]["rac"]["A"]</B>)<BR>
+<B>£2b</B> same for the ending point (shortcut for <B>RL[2]["rac"]["B"]</B>)<BR>
+<B>£2d</B> is the starting time of ligne 2 (shortcut for <B>RL[2][0]</B>)<BR>
+<B>£2f </B>is the ending time (shortcut for <B>RL[2][1]</B>)<BR>
+<B>£2i5c</B> refers to the fifth intermediary circle (shorcut for <B>RL[2]["inter"][5]["cer"]</B>)<BR>
+<B>£2i17a</B> refers to the starting point of the seventeenth intermediary segment (shorcut for <B>RL[2]["inter"][17]["A"]</B>)<BR>
+<B>£2i17i5a</B> refers to... guess what ? Yes, you can have nested "inter" arrays, depending of what operation the projector does (so here it's a shortcut to <B>RL[2]["inter"][17][5]["A"]</B>)<BR><BR>
+etc...<BR>
+<BR>
+Note that, as it is the case with <A HREF="#display">display</A>, any request using the <B>£</B> shorcuts leads to the creation of a new global variable which make it much more handy to later manipulate the point/segment/circle it refers to. The console displays a message giving the name of this variable. For example, using <B>£2i5c</B> gives birth to the circle variable called <B>C_2i5c</B>, which is really easier to use than the original array element called <B>RL[2]["inter"][5]["cer"]</B> !. Other names start with S_ (segments), I_ (integers), or P_ (points)<BR>
+<BR><BR>
+
+
+<A NAME="part4"><H2>Channels management</H2></A>
+
+Here are the buttons available when the GUI is set in the channels management mode:<BR><BR>
+<A NAME="bfn"><IMG SRC="images/buttonsfn.jpg" BORDER=0 WIDTH=201 HEIGHT=113><BR><BR>
+
+Here you can set the options for every channel in GeoMaestro. The "<B>ch</B> n" button is a menu button selecting the current channel n, the <B>current </B>button displays at the console the current options for channel n.</A><BR><BR>
+The button labelled Xylo is a menu that should display your patchmap (the one you see in the KeyKit "prog change" tool). Choose here the instrument you want to associate to channel n, and click on the arrow button beside to perform the association. If you want to give a specific<A HREF="GMstructures.html#events"> "PAC"</A> that is not in the patchmap, use the <B>PAC</B> button and enter it  at the prompt (don't forget it's a phrase: '' are required).<BR><BR>
+Below, the NoChanges button is another menu giving access to the <A HREF="GMadvanced.html">registered </A>distortion functions, which are the fonctions used to change the nodurs depending of distance, etc... during the projection. The Vol button is again a menu button: you can toggle between Vol, Pit, Dur and Pan. The middle arrow button performs the associations. I know this is very short as an explanation (well, ok, there's no explanation at all!), but you simply need to read<A HREF="GMprojectors.html#C3"> this</A> and it will hopefully become crystal clear.<BR><BR>
+<BR><BR>
+
+We're done with the GUI tool ! So:<BR><BR>
+<CENTER>To see what are the principles, syntax and properties of the projectors, <A HREF="GMprojectors.html">go here</A><BR>
+To have a presentation of the data structures for GeoMaestro (including Ev and lignes), <A HREF="GMstructures.html">go there</A><BR>
+To read a short tutorial on a basic example, <A HREF="GMtut1.html">go there</A><BR>
+To see what are the console and programming commands of GeoMaestro,<A HREF="GMfunctions.html"> go here</A><BR><BR> </CENTER>
+
+
+<BR><BR><BR><BR><BR>
+<CENTER>-- <A HREF="eGM0.html">Back </A>--</CENTER>
+
+</BODY>
+</HTML>

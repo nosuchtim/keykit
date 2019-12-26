@@ -1,0 +1,7 @@
+To port KeyKit 6.2a to FreeBSD 2.1.7, the linux mdep files were modified
+in a single afternoon. Therefore, while the program appears to work well,
+there may be lurking bugs because of the speed of the port. Please
+report any FreeBSD-specific bugs with KeyKit 6.2a to both Tim Thompson
+(tjt@nosuch.com) and Warren Toomey (wkt@cs.adfa.oz.au).
+
+Warren Toomey, 11th October 1997

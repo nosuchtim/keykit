@@ -1,0 +1,205 @@
+#
+# Install script for Smid device driver package
+#
+
+if [ "$1" = -f ]
+then
+	force=true
+else
+	force=false
+fi
+
+TMP=/tmp/smid.err
+rm -f $TMP
+ERROR1=" Errors have been written to the file $TMP."
+ERROR2=" The Smid Driver software was not installed, and the System has not been modified."
+
+if [ "`id | grep root`" = "" ]
+then
+	message "You have to be 'root' in order to install the driver! $ERROR2"
+	exit 1
+fi
+
+echo "Installing Smid Device Driver Package..."
+
+if [ -f master -a ! -f Master ]
+then
+	mv master Master
+fi
+
+# BEGIN DYNAMIC CREATION OF Space.c, System, and Node
+# based on interface info entered interactively
+
+cat <<EOF > Space.c
+/* THIS FILE WAS CREATED BY THE Install SCRIPT. */
+#include "config.h"
+#include "sys/types.h"
+#include "sys/stream.h"
+#include "sys/smid.h"
+
+int Smid_nctlr = SMID_UNITS;
+struct smid_stream Smid_stream[SMID_STREAMS];
+struct smid_stream *Smid_end = &Smid_stream[SMID_STREAMS];
+struct smid_ctlr Smid_ctlr[SMID_UNITS];
+int Irq_to_ctlr[NUMIRQ];	/* to be filled in by smid_init */
+
+EOF
+
+echo "\nHow many MPU-compatible interfaces do you have? [1] --> \c"
+read nctlr
+if [ "$nctlr" = "" ]
+then
+	nctlr=1
+fi
+n=0
+while [ "$n" -lt $nctlr ]
+do
+	cn=`expr $n + 1`
+	echo "\nWhat is the IRQ # for interface number $cn ? [2] --> \c"
+	read vect
+	if [ "$vect" = "" ]
+	then
+		vect=2
+	fi
+	# On the 6386, vector 2 gets linked to 9
+	if [ "$vect" = 2 ]
+	then
+		vect=9
+	fi
+	eval vect$n=$vect
+
+	echo "Starting address (in hex) for interface number $cn ? [330] --> \c"
+	read addr
+	if [ "$addr" = "" ]
+	then
+		addr=330
+	fi
+	eval saddr$n=$addr
+
+	addr=`echo "16\no\n16\ni\n$addr\n1\n+\np" | tr '[a-f]' '[A-F]' | dc`
+	if [ "$addr" = "" ]
+	then
+		echo "Error in converting address?!"
+		exit 1
+	fi
+	eval eaddr$n=$addr
+	echo "Ending address for interface number $cn is assumed to be $addr"
+
+	n=`expr $n + 1`
+done
+
+n=0
+rm -f system System
+> System
+while [ "$n" -lt $nctlr ]
+do
+	eval echo "smid:Y:1:7:1:\$vect$n:\$saddr$n:\$eaddr$n:0:0" |
+		sed "s/:/	/g" >> System
+	n=`expr $n + 1`
+done
+
+echo "int Ctlr_to_irq[] = {" >> Space.c
+echo SMID_0_VECT >> Space.c
+n=1
+while [ "$n" -lt $nctlr ]
+do
+	echo ",SMID_${n}_VECT" >> Space.c
+	n=`expr $n + 1`
+done
+echo "};" >> Space.c
+
+echo "int Ctlr_to_data_port[] = {" >> Space.c
+echo SMID_0_SIOA >> Space.c
+n=1
+while [ "$n" -lt $nctlr ]
+do
+	echo ",SMID_${n}_SIOA" >> Space.c
+	n=`expr $n + 1`
+done
+echo "};" >> Space.c
+
+echo "int Ctlr_to_status_port[] = {" >> Space.c
+echo "SMID_0_SIOA + 1" >> Space.c
+n=1
+while [ "$n" -lt $nctlr ]
+do
+	echo ", SMID_${n}_SIOA + 1" >> Space.c
+	n=`expr $n + 1`
+done
+echo "};" >> Space.c
+
+echo "smid	smid	c	0" > Node
+n=1
+while [ "$n" -lt $nctlr ]
+do
+	echo "smid	smid`expr $n + 1`	c	$n" >> Node
+	n=`expr $n + 1`
+done
+
+echo ""
+
+# END OF DYNAMIC CREATION OF Space.c, System, and Node
+
+/etc/conf/bin/idcheck -p smid 2>> $TMP
+if [ $? != 0 ]
+then
+	if [ $force = true ]
+	then
+		/etc/conf/bin/idinstall -d smid
+	else
+		message -cu "The Smid Device Driver is already installed (or partially installed).
+Do you wish to overwrite the existing device driver software?"
+		if [ $? = 0 ]
+		then
+			/etc/conf/bin/idinstall -d smid
+		else
+			exit 1
+		fi
+	fi
+fi
+
+inc=/usr/include/sys/smid.h
+cp smid.h $inc
+chown bin $inc
+chgrp bin $inc
+chmod 444 $inc
+
+if [ -f driver.c ]
+then
+	FUDGE1=10
+	FUDGE2=10
+	echo "Compiling driver.c (FUDGE1=$FUDGE1 FUDGE2=$FUDGE2) ..."
+	cc -D_KERNEL -DFUDGE1=$FUDGE1 -DFUDGE2=$FUDGE2 -c driver.c 2>> $TMP
+	if [ $? != 0 ]
+	then
+		message "There was an error while compiling driver.c. $ERROR1 $ERROR2"
+		exit 1
+	fi
+	mv driver.o Driver.o
+fi
+
+if [ ! -f Driver.o ]
+then
+	message "There's no Driver.o file!?  $ERROR1 $ERROR2"
+	exit 1
+fi
+
+/etc/conf/bin/idinstall -a -k smid 2>> $TMP
+if [ $? != 0 ]
+then
+	message "There was an error during package installation. $ERROR1 $ERROR2"
+	exit 1
+fi
+
+/etc/conf/bin/idbuild 2>> $TMP
+if [ $? != 0 ]
+then
+	# if an error occurs here, remove the driver components
+	/etc/conf/bin/idinstall -d smid
+	rm -f $inc
+	message "There was an error during Kernel reconfiguration. $ERROR1 $ERROR2"
+	exit 1
+fi
+
+rm -f $TMP
+exit 0

@@ -1,0 +1,110 @@
+KEYCHAOS V 1.0 for Keykit - by Alberto Zin, 2006
+
+README NOTES
+
+KEYCHAOS is (yet another!) tool for generating music from fractal algorithms.
+The tool is based on a three voice generator activated by the outcomes of fractals 
+that are displayed on the screen. Several 2D and 3D algorithms can be "played" 
+(Henon, De Jong, Rossler, Hopalong, Lorenz, Duffing, Clifford...), each of them
+having different musical character. 
+
+There are three main controllers for this tool:
+
+- "Spd" (Speed), which controls the velocity of the fractal drawing and 
+  therefore of the music generation.
+- "Dyn" (Dynamic Factor), which is a parameter to deal with the "dynamic" 
+  of the sound algorithm, to be intended as "pitch dynamics"
+- "Roo", the root note. Altering this will alter the overall pitch generation.
+
+Among the sound possibilities (organized in the "Music" menu) there are: 
+- choice of the algorithm (Music->Fractal)
+- mute of the tool (Music->Audio), in order to quickly visualize the fractals without hanging up audio
+- selection of the mapping scale (Music->Scale)
+- Strength (Music->Strength), which add "intensity" to the musical outcome
+- Unipolar/Bipolar Algorithm (Music->Algorithm): since some algorithm tend to have bipolar (or unipolar) 
+  outcomes that may not be the optimum for musical results, the outcome is converted 
+  from bipolar to unipolar by taking the absolute value of X, Y, and Z before converting them to pitches
+- Note Length (Music->Notelength): can be selected among a set of lengths for each voice (1,2,3)
+- selection of patch (Music->PatchManager)
+
+Among the "graphic" capabilities (organized in the "Display" menu) there are: 
+- selection of the drawing color (Display->Drw Color)
+- drawing point size (Display->Pt size)
+- background color (Display->Bkg Color)
+- show 2D (resp. 3D) fractal or single X, Y, Z components (Display->Display)
+
+(Nice results by setting Black as background color and Green as drawing color !) 
+
+Some features of the gui are activated on the basis on the particular fractal algorithm chosen. 
+In particular, if the fractals are 3D (Lorenz, Rossler) there is the possibility 
+to select the camera view through the azimuth and elevation sliders.
+For some other fractals (De Jong, Clifford) there is the possibility of
+changing the algorithm parameters (a,b,c,d). This allows the user to generate always 
+different graphical and musical features.
+
+It is clear that the sonification of an algorithm is always something 
+personal. The interesting aspect is that the same algorithm can be used in 
+totally different contexts and to control different audio or musical parameters. 
+In this case the implementation is based on three voices, that are driven from the outcomes 
+of X, Y, and Z (when applicable) of the algorithm. Here the algorithm is unique, 
+and, for example, the X outcome of the algorithm is used to select the pitch and velocity 
+through simple numeric mappings. 
+This approach is equivalent to dividing the (X,Y,Z) space in small cells, each of them
+generating a (pitch,velocity) output. The pitch values are mapped to a particular (user selectable) scale. 
+The probability of activation of a particular voice is based on a special "Strength" 
+parameters which, based on random outcomes, drives the Voice 1, 2 and 3 activation. 
+
+------------------------------------------------------------------------------------
+
+GETTING STARTED - TIPS
+
+- Open KeyChaos
+- Select "Duffing" from "Music->Fractal" Menu
+- Press On, the sound will start flowing using the preselected GM patches (Harp, Marimba,   Vibraphone)
+- Move the "Spd" slider to see the effects of improving drawing speed, note flow will speed up
+- Move the "Roo" slider; you'll hear the changing of the root (base) note on which 
+  the musical algorithm is based; this has an "harmonic modulation" effect.
+- Change now the "Dyn" slider: this has the effect of "compressing" (<1) 
+  and "expanding" (>1) the "pitch dynamic".
+- A useful parameter is "Strength" in Music->Strength. There the amount of playing of each   single voice can be modified. Strength zero means that each voice
+  plays seldom, Strength 5 means that with good probability the three voices play each
+  time they are triggered.
+- In order to change the background color: go to Display->Bkg Color->Random, then Redraw.
+- To change also the point size (thickness) and to apply a gradient to the drawing color: 
+    go to Display->Pt Size->Large, then Display->Drw Color->Gradient 1
+- To visualize the single Y component of the resulting algorithm: Display->Display->Y
+
+In order to quikly visualize a full fractal, deactivate the audio (Music->Audio->OFF) 
+and set the speed "Spd" slider to high values. For example, DeJong fractal offers 
+4 parameters (a,b,c,d) to be changed, selectable from the GUI and the resulting 
+fractal can easily visualized by changing them and redrawing.
+
+If you start playing and the musical pitch is too low/high, act on root parameter.
+
+Starting the DeJong algorithm will illustrate the use of unipolar/bipolar algorithm parameter. 
+Using the default (a,b,c,d) settings, DeJong algorithm produces an X outcome which is ~ always < 0. 
+Mapped to pitches this means an octave range of -1, -2 and so on w.r.t. the current root note. 
+In this case taking the absolute value of X, |X| can be helpful in terms of musical outcome,
+and this is achieved using Music->Algorithm->Unipolar.
+
+NOTE: if the Speed parameter is high and "Strength" is 4 or 5 the polyfony 
+can be very high. 
+
+In case you want to keep track of the performance, the following actions are suggested:
+
+1) At the keykit prompt type "Recsched = 1"
+2) start playing keychaos
+3) when you have finished, stop keychaos
+4) at the keykit prompt type "Snarf = Recorded"
+5) at the keykit prompt type "Recsched = 0"
+5) open a "Group" Tool
+6) File->Read->Snarf in Group and you'll have it ready for further modifications.
+
+
+Comments, questions, feedback, bugs to Alberto.Zin@poste.it
+
+Enjoy !
+
+Thanks to Tim Thompson, for releasing Keykit and making it available to the community.
+
+

@@ -1,0 +1,208 @@
+<html>
+	<head>
+		<title>Additional functionalities</title>
+	</head>
+	<body>
+	Here is documentation for additional functionalities to Keykit. The functions are contained in files revised.k, phrasef.k, binf.k, sc.k, seqf.k, sessions.k. Phrase functions uses a global variable named <b>Td</b> that sets the length of a tick in click. You should set it in keylocal.k. Note that the value of <b>Td</b> should not be an integer but a float for some operations to work so add a line that looks like this in keylocal.k: Td=24.0 <br>
+	Some examples are included in sessions.k<br>
+
+		<dl>
+		<b><u>Phrase functions</u></b> (* marked functions also work with sequences.)
+		<dt><b>bounce(inp,mini,amp)*</b><dd>
+		Pitch values of phrases of values of sequences are bounced into limits.
+		<dt><b>chop(ph,ln,[start])*</b><dd>
+		Chops a phrase of sequence. ln is length (in ticks for phrases), start is where to begin (in ticks for phrases).
+		<dt><b>chopl(ph,l)</b><dd>
+		Chops a phrase in chunks of l ticks, returns the sequence of chunks. l should divide the length of the phrase in ticks.
+		<dt><b>chopp(ph,n)</b><dd>
+		Chops a phrase in n chunks of equal length, returns the sequence of chunks. n should divide the length of the phrase in ticks.
+		<dt><b>filt(ph,f,t)</b><dd>
+		Phrase filter. f is filter as a sequence, t is type; "p" is pitch, "n" is note number, "t" is time in steps, "d" is duration in steps. The function returns an array. At index 0 is the result when the concerned notes are kept, at index 1 is the result when the concerned notes are removed.
+		<dt><b>gen(p,d,[t])</b><dd>
+		Generates a phrase using a pitch sequence, a duration sequence in ticks and an optional total length in ticks. p and d may be single values.
+		<dt><b>info(ph)</b><dd>
+		Prints length of phrase in ticks.
+		<dt><b>mel_time(mel_ph,time_ph)</b><dd>
+		Combines the melody of mel_ph with the rythm of time_ph.
+                <dt><b>mergeph(l, ph1, ph2...)</b><dd>
+                Merges phrases using chunks of l ticks.
+		<dt><b>overwrite(a,b,pos)*</b><dd>
+	 	Overwrites phrase or sequence a with phrase or sequence b at position pos.
+		<dt><b>om(ph,[m])</b><dd>
+		Octave map. without map - prints pitches and number of occurences. With map - applies new pitches [a=x, b=y, c=z].
+		<dt><b>phtoseq(ph)</b><dd>
+		Turns a phrase into a sequence of smaller phrases using starting times as a basis.
+		<dt><b>phns(ph,n,s)</b><dd>
+		Chops a phrase in n equal chunks and pastes it back together using sequence s.
+		<dt><b>pm(ph,[m])</b><dd>
+		Pitch map. without map - prints pitches and number of occurences. With map - applies new pitches [a=x, b=y, c=z].
+		<dt><b>rot(a,len)*</b><dd>
+		Rotates sequence or phrase.
+		<dt><b>seqtoph(seq)</b><dd>
+		Pastes a sequence of phrases one after the other.
+		<dt><b>swing(ph,ncl)</b><dd>
+		Every notes that falls on a odd tick number gets shifted ncl clicks.
+		<dt><b>shuffl(ph,l)</b><dd>
+		Shuffles a phrase using chunks of l ticks.
+		<dt><b>trans(ph, t, [ite])</b><dd>
+		Transposes a phrase t steps. t may be a sequence and if so, you can specify the number of times you want the sequence repeated (ite).
+		<dt><b>wr(ph,a,b)</b><dd>
+		Window resize. Chops a phrase in chunks of a ticks and pastes it back together as if chunks were b ticks long.
+		<dt><b>wrap(inp,mini,amp)*</b><dd>
+                Pitch values of phrases of values of sequences are wrapped into limits.
+		</dl>
+		<dl>
+		<b><u>Sequence functions</u></b>
+		<dt><b>asum(a)</b><dd>
+		Returns the sum of a sequence.
+                <dt><b>diff(a)</b><dd>
+                Differentiate the sequence. The result is a sequence of equal length - 1 containing the differences. For example : diff(seq(1,4,3)) returns seq(3,-1).
+		<dt><b>factorial(n)</b><dd>
+		Returns the factorial of n, that is n!.
+		<dt><b>flipseq(s)</b><dd>
+		Flips a sequence.
+		<dt><b>inte(a,k)</b><dd>
+		"Integrates" a sequence starting with k. The opposite of diff().
+		<dt><b>juxt()</b><dd>
+		Juxtaposes sequences.
+		<dt><b>kisins(k,s)</b><dd>
+		Returns true if k is in sequence s.
+		<dt><b>mergeseq()</b><dd>
+		Merge sequences of same length. For example : merge(seq(1,2,3),seq(4,5,6),seq(7,8,9)) returns seq(1,4,7,2,5,8,3,6,9).
+		<dt><b>mods()</b><dd>
+		<br>
+		<dt><b>perm(k,n)</b><dd>
+		Generates the permutation of k elements number n. 0 is smaller than n is smaller than k!
+		<dt><b>randcomp(n,percent)</b><dd>
+		Generates a random composition (mathematical) of n. The higher percent is, the more values there will be in the composition. It won't work for values of n greater than 502
+                <dt><b>randseq0(n,min,amp)</b><dd>
+                Random sequence 0 : simple random sequence ranging from minimum to minimum + amp.
+		<dt><b>randseq1(n,min,amp,[nodup])</b><dd>
+		Random sequence 1 : no successive repetition and possibly no duplicates in sequence. If you wand a sequence with no duplicates, make sure amp is greater than n.
+		<dt><b>randseq2(n, min, amp, minabsdiff, diffrangeamp, [illegaldiff])</b><dd>
+		Random sequence 2 : minabsdiff is smaller or equal to absolute difference between to successive values is smaller to minabsdiff + diffrangeamp. Illegal diff is an illegal difference that can be specified.
+		<dt><b>randseq3(min, amp, s, k)</b><dd>
+                Random sequence 3 : s is an integer sequence ranging from -1 to 1 determining if the difference is negative, null or positive. The result is integrated using k.
+                <dt><b>repseq(s,n)</b><dd>
+                Repeats sequence s n times.
+		<dt><b>revseq(arr)</b><dd>
+		Reverses sequence.
+		<dt><b>saddk(s,k)</b><dd>
+		Adds k to sequence s. If k is a sequence then the result is the juxtaposition of saddk(a,k[0]), saddk(a,k[1]) ...
+		<dt><b>seq()</b><dd>
+		Creates a sequence using arguments.
+		<dt><b>seqmax(s)</b><dd>
+		Returns the maximum value of sequence s.
+		<dt><b>seqmin(s)</b><dd>
+		Returns the minimum value of sequence s.
+		<dt><b>seqrem(s,n)</b><dd>
+		Removes all occurences of n in sequence s.
+		<dt><b>shuffseq(arr)</b><dd>
+		Shuffles a sequence.
+		<dt><b>seqi(s,i)</b><dd>
+		Sequence and index sequence. For example seqi(seq(1,2,3),seq(2,1,0)) returns seq(3,2,1).
+		<dt><b>sm(s,[m])</b><dd>
+		Sequence map. without map - prints values and number of occurences. With map - applies new values [a=x, b=y, c=z].
+		<dt><b>smulk(s,k)</b><dd>
+		Multiplies s by k. If k is a sequence then the result is the juxtaposition of smulk(a,k[0]), smulk(a,k[1]) ...
+		<dt><b>spi(seq,perm,ite)</b><dd>
+		Sequence, permutation, number of iterations. Applies permutation perm to sequence seq ite times and juxtaposes the results.
+		<dt><b>stair(o,l,[d])</b><dd>
+		Stair function. o is origin, l is length, d is optional difference.
+		<dt><b>tr(tg,src)</b><dd>
+		Transfer source array into target array.
+		<dt><b>tri(o,l,[d])</b><dd>
+		Triangle function, juxtaposes two stair sequence, one the opposite of the other.
+		</dl>
+		<dl>
+		<b><u>Binary functions</u></b>
+		<dt><b>binab(a,b,mode,str,bitlen)</b><dd>
+		Using a binary sequence defined by mode and str, 0s are a, 1 are b, chunks are of length bitlen.
+		<dt><b>binabseq(a,b,mode,str)</b><dd>
+		Using a binary sequence defined by mode and str, 0s are a, 1 are b.
+		<dt><b>bindev(s)</b><dd>
+		The function counts from 0 to the length of s ^ 2 -1 and, using sequence s as replacement values for powers of 2, generates a sequence.
+		<dt><b>binfo(ph,mode)</b><dd>
+		Prints and returns the string of numbers corresponding to the phrase.
+		<dt><b>bingate(ph,mode,str, bitlen)</b><dd>
+		Using a binary sequence defined by mode and str, turns on or off chunks of length bitlen in the phrase ph.
+		<dt><b>convertn(n,mode)</b><dd>
+		Converts a number (octal, decimal, hexadecimal) into a string.
+		<dt><b>morphabseq(a,b)</b><dd>
+		Sequence a and sequence b must be of same size. Morphs sequence a into sequence b using binary numbers. 0s are a, 1s are b. Counts from 0 to 2^length-1.
+		<dt><b>ntobinseq(mode,str)</b><dd>
+		Converts a string of space separated numbers (modes 4 & 8 are hexadecimal, modes 3 & 6 are octal. All others are decimal.) into a binary sequence. (Basic function).
+		<dt><b>nnbits(n, nbits)</b><dd>
+		Converts n to a binary sequence of length nbits. n must be smaller 2^nbits
+		<dt><b>phsbin(pha,str,numlen)</b><dd>
+		Numbers determine the rows (or columns if you prefer to see it this way) of a binary matrix that determines whether of not a phrase plays at a certain moment. each column (or row if you prefer to see it this way) represents a duration of bitlen.
+		for example: <br>
+                str="0 1 2 3" with a pha of size 2 (0 means phrase doesn't play, 1 means it plays)<br>
+                pha(0) 0 1 0 1<br>
+                pha(1) 0 0 1 1<br>
+                result's length is equal to the least common multiplicator between the greatest length of the phrases and the number of numbers in str times numlen.
+		<dt><b>phbin(ph,mode,str)</b><dd>
+		This function uses the sequence of phrase ph and the rythm (each bit is a tick) of the binary sequence of ntobinseq(mode, str) to generate a phrase.
+		</dl>
+		<dl>
+		<b><u>Revised function</u></b>
+		<dt><b>bpm2(bpm)</b><dd>
+		Returns a tempo message using the bpm.
+		<dt><b>flip2(ph)</b><dd>
+		Pretty much the same as flip, but uses maximum and minimum pitches.
+		<dt><b>legato2(ph)</b><dd>
+		Legato that modifies the duration of the last note using the length of ph.
+		</dl>
+		<dl>
+		<b><u>Scale object methods</u></b>
+		<dt><b>bounce(inp,mini,amp)</b><dd>
+		Bounces pitches on the scale.
+		<dt><b>flip(ph)</b><dd>
+		Flips the phrase on scale.
+		<dt><b>gen(p,d,[t])</b><dd>
+		Generates a phrase using a pitch sequence (in scale steps), a duration sequence in ticks and an optional total length in ticks. p and d may be single values.
+		<dt><b>play()</b><dd>
+		Plays the scale.
+		<dt><b>set()</b><dd>
+		Set scale. Forms: set(scale, root), set(array), set(phrase)
+		<dt><b>trans(ph,t [,ite])</b><dd>
+		Transposes a phrase t scale steps. t may be a sequence and if so, you can specify the number of times you want the sequence repeated (ite).
+                <dt><b>wrap(inp,mini,amp)</b><dd>
+                Wraps pitches on the scale.
+		<br>
+		</dl>
+		<b><u>Scales</u></b>
+		<table width=300 border=1>
+			<tr>
+                        	<td width=100>
+
+					pent<br>
+					orient<br>
+					jazz<br>
+					harmin<br>
+					melmin<br>
+					egypt<br>
+					modes<br>
+				</td>
+				<td width=200>
+					00, 02, 04, 07, 11<br>
+					00, 02, 04, 07, 09<br>
+					00, 03, 05, 06, 07, 10<br>
+					00, 02, 03, 05, 07, 08, 11<br>
+					00, 02, 03, 05, 07, 09, 11<br>
+					00, 01, 04, 05, 07, 08, 11<br>
+					00, 02, 04, 05, 07, 09, 11<br>
+				</td>
+			</tr>
+		</table>
+
+         	</font>
+		<br><br><br>
+		2007/03/04
+		<br><br>
+		Feel free to <a href="mailto:greniernic@gmail.com">contact me</a>.
+
+
+	</body>
+</html>
+

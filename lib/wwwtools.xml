@@ -1,0 +1,60 @@
+<tool name="WWWtools" class="wwwtools">
+The
+<b>WWWtools</b>
+tool was written by
+Mehmet Okonsar (mokonsar@dominet.in.com.tr)
+as a wrapper around some of the algorithms used in
+the "Tune Toys" web-based applications written by Tim Thompson.
+In some sense it is a way of exploring those algorithms in much greater
+detail, and to use them in new ways.
+You use the buttons as follows:
+<blankline/>
+<b>Word</b>
+<blankline/>
+Use this button to enter a string for generating algorithms. One may also
+read a text file (*.txt). Long strings may produce (very) long sequences !
+<blankline/>
+<b>BSW</b>
+<blankline/>
+Here you may enter various options for key notes, key phrases and guide
+phrases.
+<blankline/>
+<b>ROOT</b>
+<blankline/>
+This button is for root notes patterns.  You may enter patterns
+(as time in clicks or beat) or you may cancel the entry to have the
+default values : 4b-2b-1b-2b.  Select "None" to not have any root added.
+<blankline/>
+<b>GEN</b>
+<blankline/>
+Here you "compose" by selecting the algorithms:
+"Algorithm I" requires a string (referred to as "WORD") and uses BSWWW
+with the options previously selected.
+"Algorithm II" requires a string and reads the first slider
+at left (which controls LENGTH), and uses ECHOVARIETY and POLISHIT algorithms.
+"Algorithm III" requires a string and reads the first
+slider at left (controlling LENGTH), and uses ECHOVARIETY only.
+"Rework phrase" gives the option of transforming by ECHOVARIETY
+and/or POLISHIT any phrase from the Snarf, or from a file.
+<blankline/>
+<b>Snarf</b>
+<blankline/>
+Snarf the resulting phrase (shown in the bottom window)
+<blankline/>
+<b>Write</b>
+<blankline/>
+Writes the resulting phrase (shown in the bottom window) as standard
+midi file
+<blankline/>
+The sliders are, from left to right:
+<br/>
+1.   Length of the total sequence 
+<br/>
+2.   Number of echoes for the first generator
+<br/>
+3.   Delay of the echoes for the first generator
+<br/>
+4.   Number of echoes for the second generator
+<br/>
+ ...etc...
+</tool>

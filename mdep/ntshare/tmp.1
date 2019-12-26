@@ -1,0 +1,32 @@
+10,11d9
+< void mdep_destroywindow(void);
+< 
+22d19
+< 	mdep_destroywindow();
+47c44
+< 	char buff[255];	/* should be MAX_PATH */
+---
+> 	char buff[MAX_PATH];
+56c53
+< 	while ( FindNextFile(h,&fd) == TRUE )
+---
+> 	while ( FindNextFile(h,&fd) == TRUE ) {
+57a55
+> 	}
+97d94
+< 	m.dwLength = sizeof(MEMORYSTATUS);
+117c114
+< 	char *p;
+---
+> 	char *p, *q;
+134,135d130
+< 
+< #ifdef OLDSTUFF
+143d137
+< #endif
+147,151d140
+< int
+< unlink(const char *path)
+< {
+< 	return remove(path);
+< }

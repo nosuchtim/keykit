@@ -1,0 +1,243 @@
+<html><head>
+		<style type="text/css">
+		.big {margin: 0pt; font-family: "Arial"; font-size: 18pt}
+		.normal {margin: 0pt; font-family: "Arial"; font-size: 12pt}
+		.small {margin: 0pt; font-family: "Arial"; font-size: 10pt}
+		.tiny {margin: 0pt; font-family: "Arial"; font-size: 8pt}
+		</style>
+		</head><title>Keykit Special Variables</title><body><table border=0 width=100% bgcolor=#ffcc99><tr><td><font class=big><a href=../index.html>KeyKit</a> :: Special Variables</td></tr></table>
+
+<blanklink ></blanklink>
+Below are descriptions of the global variables that have special
+meanings within KeyKit.  Most of these
+are built-in to KeyKit, but some are implemented with code in the
+user-defined library.
+<p>
+<dl>
+
+<dt><b>Abortonerr</b><dd>
+</listitem>
+When set to 1, KeyKit will abort when an error occurs.  The default is 0.
+<dt><b>Abortonint</b><dd>
+</listitem>
+When set to 1, KeyKit will abort when an interrupt is received.  The default is 1.
+<dt><b>Arraysort</b><dd>
+</listitem>
+When set to 1, the index values in
+the "for ( i in arr )" statement will be processed in sorted order.
+The default is 0, so that the order of index values is not sorted.
+<dt><b>Autoresize</b><dd>
+</listitem>
+When set to 1, resizing the main KeyKit window will result in the
+proportionate resizing of all the individual tool windows.
+Default is 0, so that making the main window bigger will get
+you more space for new tools rather than just making the existing
+tools bigger.
+<dt><b>Clicks</b><dd>
+</listitem>
+The number of clicks per beat.  Default is 96.
+<dt><b>Clicksperclock</b><dd>
+</listitem>
+When <font  face="Courier" >Sync!=0</font>, this is the number of KeyKit clicks per MIDI clock.
+Default is 1.
+<dt><b>Clocksperclick</b><dd>
+</listitem>
+When <font  face="Courier" >Sync!=0</font>, this is the number of MIDI clocks per KeyKit click.
+Default is 1.  To avoid confusion when adjusting
+<font  face="Courier" >Clicksperclock</font> and <font  face="Courier" >Clocksperclick</font>,
+you should ensure that at least one of those two variables
+has a value of 1.
+<dt><b>Consolefifo</b><dd>
+</listitem>
+The automatically-opened fifo that can be used
+to read characters from the console.
+<dt><b>Current</b><dd>
+</listitem>
+This phrase contains all currently-depressed notes.
+<dt><b>Defpriority</b><dd>
+</listitem>
+This is the default priority of new tasks (though normally,
+tasks inherit the priority of the task that spawns them).
+<dt><b>Dirseparator</b><dd>
+</listitem>
+This string is the machine-dependent value that separates directory
+entries within a pathname.  For example, on Unix, it is "/".
+<dt><b>Dragquant</b><dd>
+</listitem>
+This number is used to quantize the dragging of notes with the Group tool.
+<dt><b>Eof</b><dd>
+</listitem>
+This value is returned when you do a <font  face="Courier" >get()</font> on a closed (or nonexistent)
+fifo.
+<dt><b>Errorfunc</b><dd>
+</listitem>
+The function specified by this pointer is automatically called when
+a non-fatal execution error occurs.
+<dt><b>Filter</b><dd>
+</listitem>
+The value of this variable is a collection of bitflags that
+determines what MIDI messages are filtered out of received MIDI input.
+Macros for the bit values that can be set in the value of Filter
+are: CHANPRESSURE, CONTROLLER, PROGRAM, PRESSURE, PITCHBEND, SYSEX,
+POSITION, SONG, STARTSTOPCONT, and CLOCK.
+Default value is 0, i.e. nothing is filtered.
+<dt><b>Keypath</b><dd>
+</listitem>
+This string is the list of directories in which to search for
+KeyKit function libraries.  Default is machine-dependent, usually computed
+on the fly by the executable, though you can override it by defining a
+KEYPATH environment variable.  Note: if you change Keypath after KeyKit has
+started executing, you need to call the <font  face="Courier" >rekeylib()</font> function in order
+to rescan all the directories for their keylib.k files - otherwise the
+change will be ineffective.
+<dt><b>Loadverbose</b><dd>
+</listitem>
+If non-zero, the dynamic loading of each KeyKit function is announced.
+Default is 0.
+<dt><b>Lowcore</b><dd>
+</listitem>
+When the amount of free memory falls below this number, warnings begin to be
+issued to encourage exiting.  Default is 50000.
+<dt><b>Machine</b><dd>
+</listitem>
+This string holds the machine type (e.g. "win", "unix", "amiga").
+<dt><b>Maxatonce</b><dd>
+</listitem>
+This controls how many simultaneously-depressed notes can be handled
+on MIDI input.  Default value is 256.
+<dt><b>Merge</b><dd>
+</listitem>
+If non-zero, MIDI input is merged into MIDI output.  Default is 1.
+<dt><b>Mergefilter</b><dd>
+</listitem>
+If non-zero (and if Merge is non-zero), this value is a bitmask used
+to determine which channels are <b>not</b> merged from MIDI input to MIDI output.
+For example, if the value of Mergefilter is <font  face="Courier" >41<<4</font>, then channel
+5 will not be merged.  Any number of bits in Mergefilter can be set.
+<dt><b>Mfformat</b><dd>
+</listitem>
+The value of this variable is the type (0,1,2) of the last MIDI file read
+with <font  face="Courier" >midifile()</font>.
+<dt><b>Midififo</b><dd>
+</listitem>
+The automatically-opened fifo that can be used
+to read notes from MIDI input.
+<dt><b>Mousefifo</b><dd>
+</listitem>
+The automatically-opened fifo that can be used
+to read events from the mouse.  The items read from this fifo are
+arrays - the index values are <font  face="Courier" >"button"</font>, <font  face="Courier" >"x"</font>, and <font  face="Courier" >"y"</font>.
+<dt><b>Now</b><dd>
+</listitem>
+The current time, in clicks.
+<dt><b>Offsetfilter</b><dd>
+</listitem>
+If non-zero (and if Offsetpitch is non-zero), this value is a bitmask used
+to determine which channels are <b>not</b> pitch-shifted.
+For example, if the value of Offsetfilter is <font  face="Courier" >1<<9</font>, then channel
+10 will not be affected.  (And, in fact, 1<<9 is the default
+value of Offsetfilter.)  Any number of bits in Offsetfilter can be set.
+<dt><b>Offsetpitch</b><dd>
+</listitem>
+If non-zero, all scheduled MIDI output will be pitch-shifted by
+the value of Offsetpitch.
+<dt><b>Pathseparator</b><dd>
+</listitem>
+This string is the character that separates the components of <font  face="Courier" >Keypath</font>.
+Default is ":".
+<dt><b>Phraseflashnotes</b><dd>
+</listitem>
+If this value is non-zero, notes within phrase windows are flashed
+as they are played.  Default is 1.  If your CPU is too busy, setting
+this to 0 can help a bit.
+<dt><b>Printsplit</b><dd>
+</listitem>
+When long phrase values are printed, they are broken up on separate lines
+(each line terminated with a backslash),
+and Printsplit is the number of characters on each line.  The default
+value is 77.  To disable splitting of lines entirely, set Printsplit to 0.
+<dt><b>Record</b><dd>
+</listitem>
+When non-zero, recording of MIDI input is enabled.  Default is 1.
+<dt><b>Recorded</b><dd>
+</listitem>
+This phrase collects all MIDI input (when <font  face="Courier" >Record</font> is non-zero).
+<dt><b>Recsched</b><dd>
+</listitem>
+When non-zero, scheduled MIDI output is included
+in the <font  face="Courier" >Recorded</font> phrase.  Default is 0.
+<dt><b>Sync</b><dd>
+</listitem>
+If non-zero, time is advanced from clocks on MIDI input instead
+of being driven by the computer's clock.
+This allows synchronization with other MIDI devices (e.g. a drum machine
+or sequencer).
+Default is 0.
+<dt><b>Throttle</b><dd>
+</listitem>
+This determins how many KeyKit instructions (internal interpreted
+instructions, not KeyKit statements) are executed per each
+check for realtime activity.
+Default value is 100.
+<dt><b>Version</b><dd>
+</listitem>
+This string is the KeyKit version number (e.g. <font  face="Courier" >"6.0a"</font>).
+<p>
+<p>
+<h3>Variables used in Graphics</h3>
+</title2>
+<p>
+<dt><b>Bendrange</b><dd>
+</listitem>
+This number controls the relative size of pitch-bend controller lines in
+the Misc window.  Default is 16384.
+<dt><b>Bendoffset</b><dd>
+</listitem>
+This number controls the vertical offset of the beginning of pitch-bend controller
+lines in the Misc window.  Default is 64.
+<dt><b>Checkcount</b><dd>
+</listitem>
+This controls the frequency of garbage collection activities.  Default is 20.
+<dt><b>Colors</b><dd>
+</listitem>
+This is the number of colors (including black and white) available.
+<dt><b>Font</b><dd>
+</listitem>
+This string is the name of the font to be used.  Default is machine-dependent,
+and some machines may completely ignore it.
+<dt><b>Graphics</b><dd>
+</listitem>
+This number is non-zero whenever graphics mode is enabled.
+<dt><b>Menujump</b><dd>
+</listitem>
+If non-zero, moving the mouse into a menu's scroll bar will cause the
+menu to immediately jump to that position.  Otherwise, scroll bar movement
+is only relative.  Default is 0.  If you have trouble interacting with
+the scroll bar, try setting this to 1.
+<dt><b>Menuscrollwidth</b><dd>
+</listitem>
+This number controls the width of the scroll bar in scrolling
+menus.  Default is 20.  If you have trouble getting on the scroll bar,
+increase this value.
+<dt><b>Menusize</b><dd>
+</listitem>
+This is the default maximum number of items in a pop-up menu.
+When a menu becomes larger than this, it will display a scroll bar.
+Default is 12.
+<dt><b>Musicpath</b><dd>
+</listitem>
+This string is the list of directories in which to search for
+music files.  Default is machine-dependent.
+<dt><b>Showbar</b><dd>
+</listitem>
+The number of clicks between vertical measure bars.  Default is 4b.
+<dt><b>Sweepquant</b><dd>
+</listitem>
+This number is used to quantize the sweeping of areas with sweep() and gridsweep().
+<dt><b>Volstem</b><dd>
+</listitem>
+If non-zero, ``volume stems'' are displayed on notes.  Default is 0.
+<dt><b>Volstemsize</b><dd>
+</listitem>
+This number controls the relative scale of volume stems.  Default is 4.
+</dl></body>

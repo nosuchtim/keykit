@@ -1,0 +1,38 @@
+Loading keylib: keylib.k
+Loading keylib: C:\local\key76b\lib\keylib.k
+Loading example18.k
+Calling function: Rebootfunc
+Task=1 File=(NULL) Line=6
+Calling function: example18
+Task=1 File=example18.k Line=7
+Task=1 File=example18.k Line=8
+Task=1 File=example18.k Line=9
+Loading util1.k
+Task=1 File=(NULL) Line=293
+Task=1 File=(NULL) Line=802
+Task=1 File=(NULL) Line=900
+Task=1 File=(NULL) Line=1355
+Task=1 File=(NULL) Line=1356
+Task=1 File=(NULL) Line=1391
+Task=1 File=(NULL) Line=1392
+Task=1 File=(NULL) Line=1394
+Calling function: print
+Task=1 File=util1.k Line=977
+Task=1 File=util1.k Line=978
+Calling function: argv
+Calling function: string
+Calling function: printf
+Task=1 File=util1.k Line=990
+Calling function: Resizefunc
+Task=1 File=util1.k Line=991
+Task=1 File=util1.k Line=992
+Calling function: printf
+Task=1 File=util1.k Line=993
+Task=1 File=util1.k Line=994
+Task=1 File=example18.k Line=10
+Attempt to call object method (waitforconsolekey) on a non-object value!?
+key: Attempt to call object method (waitforconsolekey) on a non-object value!? 
+while executing near line 10 in file example18.k
+Function traceback:
+example18("c:\example18.mid")
+Calling function: Errorfunc

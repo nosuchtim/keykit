@@ -1,0 +1,228 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
+
+<HTML>
+<HEAD>
+<TITLE>GeoMaestro v0.6</TITLE>
+<META NAME="Author" CONTENT="Stéphane Rollandin">
+<META NAME="Description" CONTENT="GeoMaestro for KeyKit, v0.6 manual">
+<META NAME="Keywords" CONTENT="KeyKit, MIDI, GeoMaestro">
+</HEAD>
+<BODY>
+
+<H1>GeoMaestro</H1>
+
+<H2>Projectors: from events to MIDI phrases</H2>
+
+<BR><BR>
+<A HREF="#C1">Principles</A><BR>
+<A HREF="#C2">Fundamental functions: Ecoute() and EcouteC()</A><BR>
+<A HREF="#C3">The Volume[], Pit[], Pan[] and Dur[] arrays of functions</A><BR>
+<A HREF="#C4">Reference section: Projectors <BR></A>
+<BR><BR>
+
+<A NAME="C1"><H2>1: Principles</H2></A>
+
+Here are five events that could have been generated with the <A HREF="GMtool.html">graphic tool</A> (this image was actually taken from a screen snapshot):<BR><BR>
+<CENTER><IMG SRC="images/p0.jpg" BORDER=0 WIDTH=376 HEIGHT=376></CENTER><BR><BR>
+To get a musical phrase from these static events, we have to define first when each of them will be played. To do so, we give GeoMaestro a support (segment or circle) to project them onto.<BR><BR>
+Here are two segments we can use:<BR><BR>
+<CENTER><IMG SRC="images/p1.jpg" BORDER=0 WIDTH=376 HEIGHT=376><BR><BR></CENTER>
+Projection on the longest one is the operation represented below by red lines:<BR><BR>
+<CENTER><IMG SRC="images/p2.jpg" BORDER=0 WIDTH=376 HEIGHT=376><BR><BR></CENTER>
+... and here is projection on the other one:<BR><BR>
+<CENTER><IMG SRC="images/p3.jpg" BORDER=0 WIDTH=376 HEIGHT=376><BR><BR></CENTER>
+As you can see, projection means actually orthogonal projection (that is: a right angle is used to get the projecting line from the segment to the event)<BR><BR>
+Now, this operation only gives the order and the respective time values of the notes in the eventual phrase (once we have chosen whether the segment is going to be read from right to left or from left to right)  . There is much more to define: durations of notes, pitchs, panning, velocities. The event's nodur ("nodur" stands for "note and duration", but it can actually be any KeyKit phrase) contains such information, but it's only here to be changed (or not) !<BR> <BR>So these values are not automatically calculated, since GeoMaestro is intended to let the composer free to compose. Instead, we will define special functions which take as parameters the distance and side from the event to the segment, and of course the event nodur (note value) to calculate the different note attributes. Some of theses functions are already here, ready to use, but you are free and welcome to write your own.<BR><BR>
+Before we go on and see that in details, here are three other examples when  a circle is used for projection:<BR><BR>
+<CENTER><IMG SRC="images/p4.jpg" BORDER=0 WIDTH=376 HEIGHT=376></CENTER><BR><BR>
+<CENTER><IMG SRC="images/p5.jpg" BORDER=0 WIDTH=376 HEIGHT=376></CENTER><BR><BR>
+<CENTER><IMG SRC="images/p6.jpg" BORDER=0 WIDTH=376 HEIGHT=376></CENTER><BR><BR>
+... it's pretty much the same principle as with the segment projection, apart from the fact that you need to define one more thing here: the starting point of the rendered phrase.<BR><BR>
+So you can see that this simple set of  five events can very easily be "listened to" in a large variety of ways.<BR><BR><BR><BR>
+
+<A NAME="C2"><H2>2: Fundamental functions: Ecoute() and EcouteC()</H2></A>
+<BR>"ecoute" is French for "listen to"<BR><BR><BR>
+
+The <B>Ecoute() </B>and <B>EcouteC() </B>functions are the implementations of the principle we just saw before. Their syntax can be very simple:<BR><BR>
+L = Ecoute(A, B)<BR><BR>
+... is expecting that <B>A</B> and <B>B</B> are points (like ["x"= 1, "y"= 2] ). Projection is done onto the segment AB, with A as the starting point. Ecoute() returns a ligne L ("ligne" is French for "line", I'll keep it in French here to remind you that it is a specific data structure). The rendered phrase is stored in L["ph"]<BR><BR>
+For a projection on a circle, here's the basic syntax:<BR><BR>
+L = EcouteC(C, A, n)<BR><BR>
+... were<B> C</B> is a circle (like ["c"= ["x"= 0, "y"= 0], "r"= 1] ), <B>A</B> is a point and <B>n</B> is an integer. <BR><BR><B>A</B> is used to define the starting point for rendering (we draw the line defined by the center of the circle to A, and start rendering at the point were it cuts the circle).<BR><B>n </B>is the number of round we do. Usually it's 1 (since you can simply repeat the renderd phrase if you want more), but it is also used to define the sense of rotation: -1 go one way round, and +1 the other way round. <BR><BR>
+<BR><BR>
+You may wonder how the duration of the phrase is calculated. Good question !<BR><BR> By default, it is the length of the support multiplied by the global variable <B>CPCM</B>. CPCM stands for "Clicks per CentiMeter", but it actually means "Clicks per GeoMaestro Unit". If you have a look at the <I>initialisations.k</I> file, you'll see:<BR><BR>
+
+CPCM = seconds(1)<BR><BR>
+which means that, by default, one unit of length is corresponding to one second.<BR><BR>
+<BR><BR>
+Now you may want to set the length of the phrase rendered by Ecoute() or EcouteC(). To do so, you need to give it one more argument:<BR><BR>
+
+Ecoute(A, B, duration)  or EcouteC(C, A, n, duration)<BR><BR>
+
+Here <B>duration</B> is an integer, with a very specifix use. Let's say that the support's length is length, and the duration of the rendered phrase is phdur:<BR><BR>
+if duration is 0, we stick to the default:<BR> <CENTER>phdur = CPCM*length</CENTER><BR>
+if duration < 0, we are in <I>relative mode</I>: <BR><CENTER> phdur = |duration|*CPCM*length</CENTER><BR>
+if duration > 0, we are in <I>absolute mode</I>: <BR><CENTER> phdur = duration</CENTER><BR>
+Remember that the duration unit if the Click. To know how many Clicks you have in a second, type " print seconds(1) " in the console (See KeyKit help files). So in absolute mode, duration is a number of Clicks and it will be the length of the phrase, independently of the length of the support. You'll see the interest of this mode when we look at the CercleRythm() projector.<BR><BR>
+Note that duration = 0 and duration = -1 give the same results: the default relative mode.<BR>duration = 2 makes the "tempo" get divided by 2, while duration = 0.5 makes it double.<BR><BR>
+<BR><BR>
+Finally, there are two more optionnal argument: the starting time <B>t0</B> of the phrase (by default it's 0), and the <B>region</B> of the event scene we're listening to (by default, it's <B>Tout</B>, that is: everything). So the complete syntax with all possible parameters is:<BR><BR>
+
+Ecoute(A, B, duration, t0, region) <BR><BR> and <BR><BR>EcouteC(C, A, n, duration, t0, region)<BR><BR>
+<BR><BR>
+
+If you don't know what a region is, go and read the <A HREF="GMstructures.html#regions">data structures</A> documentation<BR><BR><BR><BR>
+
+<A NAME="C3"><H2>3: The Volume[], Pit[], Pan[] and Dur[] arrays of functions</H2></A>
+<BR>
+Now we will have a look at what's happening inside the Ecoute() and EcouteC() functions. <BR><BR>
+To decide how events are going to become notes when projected on a support, specific functions are used for each note attribute. They are contained in arrays because they are also specific to channels.<BR><BR>
+The function arrays are defined and initialized in the <I>initialisations.k</I> file. This is where you can set their default values.<BR>The functions themselves have their code written in the<I> lib_dist.k</I> file, and that's were you can had your home-made ones, in such a way that they will be smoothly integrated to the <A HREF="GMtool.html#bfn">GUI tool</A> (see <A HREF="GMadvanced.html">advanced features</A> for more).<BR><BR>
+
+So here's the idea: each projected event is associated with a distance (to the support) and a side (it comes from left or right). Each events also contains a nodur, that is a note or a phrase. So these three elements are the arguments we will use. A fourth argument is the channel number, which can be useful in many ways (for example to use channel-specific parameters)<BR><BR>
+Let's see that with an example:<BR><BR>
+suppose we have<BR><BR>
+<B> Volume[5] = "Vexp1"</B><BR>
+<B>Pit[5] = "NoChanges"</B><BR>
+<B>Dur[5]= "NoChanges"</B><BR>
+<B>Pan[5]= "BasicPan"</B><BR><BR>
+
+... this will completely define how is treated an event belonging to channel 5. The string values are the names of the used functions (we use KeyKit's <B>efunction() </B>to convert string to function)<BR><BR>
+Let's say the event's nodur is ph, its distance to the support is d, and its side is s (s is -1 for left or +1for right)<BR><BR>
+The corresponding note N on the rendered phrase will be initially set to ph (so it's identical to the event nodur), then have its attributes modified this way:<BR><BR>
+
+<B>N.pitch += NoChanges(ph, s, d, ch)</B><BR>
+<B>N.dur += NoChanges(ph, s, d, ch)</B><BR>
+<B>N.vol += Vexp1(ph, s, d, ch)</B><BR>
+<BR>
+Also, a pan message will be send for channel 5, setting the pan to<B> BasicPan(ph, s, d, ch)</B><BR><BR>
+What does that mean ? We have to look at the codes for these functions, in file <I>lid_dist.k</I>. Their names may be a bit weird, especially because they're an horrible mixure of Strange French and Broken English. But don't forget you're supposed to write your own functions ! The ones I provided here are very basic.<BR><BR>
+So  in <I>lid_dist.k</I> we see:<BR><BR>
+function Vexp1(ph, s, d) {  return (ph.vol*(exp(-d)-1))  }	<BR><BR>
+function NoChanges() { return (0) }<BR><BR>
+function BasicPan(ph,s, d) {return (64 + s*integer(Minimum(PAN_FDIST*d,63))) }<BR><BR>
+
+... so we see that NoChanges() is judiciously named, since it has no effect !  In this example,  both duration and pitch are the same for the event nodur as for the corresponding note.<BR><BR>
+The volume is affected, though: you can see that an event very close to the support keeps its initial volume, while it gets down very fast if the distance increase. (Note that there is a global variable SILENCE set in <I>initialisations.k</I> that defines the volume threshold for keeping the note. By default it is set to 10, which means that an event whose projected note has a volume less than 10 will be ignored as silent).<BR><BR>
+The pan value is calculated so that a left-hand event will sound at the left hear, while a right-hand event will sound at the right. Also, precise pan depends on the distance so that close events are in the middle of the pan area. The function use a global variable PAN_FDIST as a factor to the distance. As for any global variable parameter related to distortion functions, you can set this value in the <B>InitParameters()</B> function in the <I>lib_dist.k</I> file.<BR><BR><BR>
+So the overall effect of these example settings is that you hear events as if you were walking along the support: you hear them at the right or at the left, depending on where they are; and the closest the loudest. The speed of your "walk" would be set with the duration argument in the Ecoute() or EcouteC() function. <BR><BR><BR><BR>
+This was only a very basic example... you can easily create huge distortions and define very weird ways of  "walking" through an event scene by defining your own functions and mixing their effects.<BR><BR><BR><BR>
+
+
+<A NAME="C4"><H2>4: The projectors (or projection functions). Reference</H2></A>
+<BR>
+
+Well, the basics have been documented, we can now relax and enjoy a little visit of the different functions provided so far by GeoMaestro to articulate the fundamental Ecoute() and EcouteC().<BR><BR>
+I will call these <B>projectors</B>. They are simply little algorithms playing with Ecoute() and EcouteC(). They do not calculate any projection by themselves. They are also very easy to write and to understand, so you can look at their codes (in file <I>projection.k</I>) and get insights there for creating your own projectors. <BR><BR><BR>
+We will again take our five events as an example scene to describe the following projectors:<BR>
+<A HREF="#Spi">Spiro</A>, <A HREF="#Ond">Onde</A>, <A HREF="#Ech">Echelle</A>, <A HREF="#Hel">Helice</A>, <A HREF="#Bro">Brown</A>, <A HREF="#Ave">AversB</A>, <A HREF="#Vag">Vague</A>, <A HREF="#Cry">CercleRythm</A><BR><BR>
+I'll describe the specific arguments for each of them. Note that the "... " will stand for the three optionnal arguments of <A HREF="#C2">Ecoute()</A> and <A HREF="#C2">EcouteC()</A>, that is: <B>duration</B>, starting time <B>t0 </B>and <B>region</B>.<BR><BR>
+For all projectors here, when there are multiple calls to Ecoute() or EcouteC(), the rendered phrases are added (using the + operator for phrases, not the | one )<BR><BR> 
+About duration: the <B>duration</B> argument is transmitted to each internal call to the Ecoute functions, so if  for example you ask for an Helice with ten segments, the total duration will be ten times the duration of one segment. For other projectors, where the intermediary segments/circles are not necessarily of same length, it will depend on whether you use absolute or relative mode. And it's again something completely different with CercleRythm()... <BR><BR>
+If what I just said is not really clear, read the projectors desciptions first and come back. It should sound simpler !<BR><BR> 
+<BR><BR>
+
+<A NAME="Spi"><B>Spiro</B><BR><BR></A>
+L = Spiro(C, radius, s, theta0, dtheta, nC, D, ...)<BR><BR>
+<CENTER><IMG SRC="images/spiro.jpg" BORDER=0 WIDTH=376 HEIGHT=376></CENTER><BR>
+
+EcouteC() is called for <B>nC</B> circles of radius <B>radius</B> whose centers belong to a centers circle <B>C</B>. The first centers is at angle <B>theta0</B>, the angle between two consecutive centers being <B>dtheta</B>.  <B>D</B> is the starting point for <A HREF="#C2">EcouteC()</A>. <B>s</B> is the sense of rotation.<BR><BR>
+
+s, nC: integers<BR>
+radius, dtheta, theta0: floats<BR>
+C: circle<BR>
+D: point<BR><BR>
+Note: angle values range from 0 to 2*<B>Pi </B><BR>
+
+L["inter"] contains the fields "c" and "r" for each circle<BR><BR>
+
+
+<BR><BR>
+<A NAME="Ond"> <B>Onde</B><BR><BR></A>
+L = Onde(C1, C2, nC, s, D, ...)<BR><BR>
+<CENTER><IMG SRC="images/onde.jpg" BORDER=0 WIDTH=376 HEIGHT=376></CENTER><BR>
+
+EcouteC() is called for <B>nC</B> circles evenly distibuted from <B>C1</B> to <B>C2</B>. <B>s</B> is the sense of rotation, <B>D</B> the starting point.<BR><BR>
+C1, C2: circles<BR>
+nC, s: integers<BR> 
+D: point<BR>
+<BR>L["inter"] contains the fields "c" and "r" for each circle<BR><BR>
+<BR><BR>
+<A NAME="Ech"> <B>Echelle</B><BR><BR></A>
+L = Echelle(A1, A2, B1, B2, nS,  ...)<BR><BR>
+<CENTER><IMG SRC="images/echelle.jpg" BORDER=0 WIDTH=376 HEIGHT=376></CENTER><BR>
+
+Ecoute() is called for <B>nS</B> segments evenly distributed from (<B>A1</B> to <B>B1</B>) to (<B>A2</B> to <B>B2</B>).<BR><BR>
+
+A1, A2, B1, B2: points<BR>
+nS: integer<BR>
+
+<BR>
+L["inter"] contains the fields "A" and "B" for each segment<BR><BR>
+<BR><BR>
+<A NAME="Hel"> <B>Helice</B><BR><BR></A>
+L = Helice(A, radius,  theta0, dtheta, s,  ...)<BR><BR>
+<CENTER><IMG SRC="images/heli.jpg" BORDER=0 WIDTH=376 HEIGHT=376></CENTER><BR>
+
+Ecoute() is called on segments turning around their middle point <B>A</B>. Segments length is 2*<B>radius</B> and the angle between two consecutive segments in <B>dtheta</B>. The fist segment is at angle <B>theta0</B>. <B>s</B> is the sens of rotation.<BR><BR>
+A: point<BR>
+radius, theta, theta0: floats<BR>
+s: integer<BR>
+
+<BR>
+L["inter"] contains the fields "A" and "B" for each segment<BR><BR>
+<BR><BR>
+<A NAME="Bro"> <B>Brown</B><BR><BR></A>
+L = Brown(A, B, amplitude, lasting, {region,} ...)<BR><BR>
+<CENTER><IMG SRC="images/brown.jpg" BORDER=0 WIDTH=376 HEIGHT=376></CENTER><BR>
+Ecoute() is called for as many segments as is necessary to obtain a rendered phrase of duration <B>lasting</B>. The first segment is (<B>A</B> to <B>B</B>), then   A and B are randomly moved by a distance <B>amplitude</B>, so that we get the next segment, and the process is repeated for each new segment.<BR><BR>The motion of the points can be restricted to a geometrical <B>region </B>(optionnal argument. Note: if you need to give this argument only because you need to access the next optionnal ones, use the value <B>Tout</B> which is [0=0], the region covering everything. See <A HREF="GMstructures.html#regions">data structures</A> for the format of regions.)<BR><BR>
+
+A, B: points<BR>
+amplitude: float<BR>
+lasting: integer<BR>
+region: region<BR>
+
+<BR><BR>
+L["inter"] contains the fields "A" and "B" for each segment<BR>
+<BR><BR>
+<A NAME="Ave"> <B>AversB</B><BR><BR></A>
+L = AversB(A, B, length, theta,  ...)<BR><BR>
+<CENTER><IMG SRC="images/aversb.jpg" BORDER=0 WIDTH=376 HEIGHT=376></CENTER><BR>
+
+Ecoute() is called on segments whose length is <B>length</B>. We start from point <B>A</B>, ang go toward <B>B</B>. At each step, the direction taken is randomly choosen around the right direction, within a range of <B>theta</B> (the image above has been calculted with theta = 0.5*Pi)<BR><BR>
+A, B: points<BR>
+length, theta: integer<BR>
+<BR>
+L["inter"] contains the fields "A" and "B" for each segment<BR><BR>
+
+<BR><BR>
+<A NAME="Vag"> <B>Vague</B><BR><BR></A>
+L = Vague(P1, P2, length, theta,  ...)<BR><BR>
+<CENTER><IMG SRC="images/vague.jpg" BORDER=0 WIDTH=376 HEIGHT=376></CENTER><BR>
+
+Vague() is a kind of mixure of Echelle() and AversB(). <BR><BR>
+AversB() is called for points in <B>P1</B> to points in <B>P2</B>.<BR><BR>
+P1, P2: <A HREF="GMstructures.html#pistes">piste</A><BR>
+length, theta: integer<BR>
+<BR>
+L["inter"] contains the fields "inter" for each call to AversB()<BR><BR>
+
+<BR><BR>
+<A NAME="Cry"> <B>CercleRythm</B><BR><BR></A>
+L = CercleRythm(A, B, nS,  ...)<BR><BR>
+<CENTER><IMG SRC="images/cr.jpg" BORDER=0 WIDTH=376 HEIGHT=376></CENTER><BR>
+
+This projector is a very specific one, intended to generate interesting rythms. It is also the only one here that use the absolute mode for the <B>duration</B> parameter in <A HREF="#C2">Ecoute()</A><BR><BR>
+
+Ecoute() is called on a set of <B>nS</B> segments all starting at point <B>A</B> (at the right on the image). The duration parameter is set according to the length of the segment (A to <B>B</B>). Segments are calculated so that A and B are always the first and last points that are projected onto them. Geometrically, it means that, since they all start at A, their other extremity is on the circle of diameter AB. The projector evenly distribute them on that circle<BR><BR>
+The way we handle duration here implies that all events on the segment (A to B) will be rendered with the same time pattern for every segment. So if there are only events on that diameter segment, the result would be the same as repeating nS times Ecoute() on (A to B), apart from distortion effects coming from the distance/side changes. This gives a constant rythmic basis. Others events elsewhere in the scene may then sound at vey different times.   <BR><BR>
+A,B: points<BR>
+nS: integer<BR>
+
+<BR>
+L["inter"] contains the fields "A" and "B" for each segment<BR><BR>
+<BR><BR><BR><BR><BR>
+<CENTER>-- <A HREF="eGM0.html">Back </A>--</CENTER>
+<BR><BR>
+</BODY>
+</HTML>

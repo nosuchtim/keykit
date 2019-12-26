@@ -1,0 +1,23 @@
+<tool name="Console" class="wconsole">
+The
+<b>Console</b>
+tool creates a new interactive interpreter in which you can type KeyKit
+statements and have them executed.  You can have multiple Console
+tools on the screen simultaneously, though only one of them is the
+current Console, on which the output of
+<b>print</b>
+statements will appear, and to which keypresses are directed.
+If you create a new Console tool, it immediately becomes the current Console.
+Pressing the left mouse button within a Console tool causes it to become
+the current Console - this is the way you can switch between several
+Console windows.
+<blankline/>
+The scroll bar on the left side of the Console tool can be used to
+scroll backwards and forwards through its displayed text.
+The special variable
+<b>Textscrollsize</b>
+controls how many lines are available in the Console tool.  The default
+value is 200, although you can change this in your
+<b>prerc</b>
+function.
+</tool>

@@ -1,0 +1,53 @@
+## sauver les modifications puis invoquer TX = Padnote()
+##  pour récupérer le tableau dans TX
+## attention: toujours laisser deux espaces vides après les []
+##------->
+a0 ["-->"]
+s1        [1]  Histindex = 17
+s1        [2]  DumpChantier()
+s1        [3]  HLog(0)
+s1        [4]  DumpChantier()
+s1        [5]  a = "test"
+s1        [6]  FT[1] = "T=sin(T)"
+s1        [7]  DumpChantier()
+s1        [8]  LOG=[]
+s1        [9]  FT=[]
+s1        [10]  RestoreChantier()
+s1        [11]  #include console.k
+s1        [12]  RestoreChantier()
+s1        [13]  LOG
+s1        [14]  FT
+s1        [15]  FSKK
+s1        [16]  FKK
+s1        [17]  a = "test"
+s1        [18]  LOG
+s1        [19]  ph = '"*" "bof" a'
+s1        [20]  ph%1.attr
+s1        [21]  Colors
+s1        [22]  onchange()
+s1        [23]  A = 1
+s1        [24]  function B() {print("Coucou")}
+s1        [25]  B()
+s1        [26]  onchange(A, B())
+s1        [27]  onchange(B(), A)
+s1        [28]  Onchange(B(), B())
+s1        [29]  onchange(B())
+s1        [30]  onchange(B(),B())
+s1        [31]  #include console.k
+s1        [32]  Snarf = 'a,b,d'
+s1        [33]  SNARF
+s1        [34]  #include console.k
+s1        [35]  Snarph(Snarf)
+s1        [36]  SNARF = []
+s1        [37]  Snarph(Snarf)
+s1        [38]  SNARF
+s1        [39]  LOG
+s1        [40]  DumpChantier()
+s1        [41]  (vide)
+s1        [42]  Oj = ["x"=0, "y"=1]
+##
+||_ niveau de profondeur (indentation). Note: le niveau 0 est artificiel, donc
+|    l'édition porte toujours sur le niveau 1 (tableau simple) ou plus (tableaux imbriqués)
+|
+|__ type de variable: a(rray), s(tring), i(nteger), f(loat)
+                      la valeur d'un array est donnée dans les lignes qui suivent

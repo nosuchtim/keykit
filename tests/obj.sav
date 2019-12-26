@@ -1,0 +1,16 @@
+In oinit method is init
+In oinit2 method is init
+In oinit2 method is init
+In oinit2 method is init
+In oinit, sizeof children =  2
+a is  44 55
+ometh is defined
+dollar is defined!
+In ometh, method is ometh
+val= 99
+dollar is defined!
+In oinit2 method is init
+BEFORE objectlist= 5
+init is defined
+ometh is defined
+AFTER objectlist= [$2=2,$3=3,$4=4,$5=5]

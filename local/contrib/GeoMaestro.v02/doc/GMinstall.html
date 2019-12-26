@@ -1,0 +1,104 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
+
+<HTML>
+<HEAD>
+<TITLE>GeoMaestro v1.0</TITLE>
+<META NAME="Author" CONTENT="Stéphane Rollandin">
+<META NAME="Description" CONTENT="GeoMaestro for KeyKit,v1.0 manual">
+<META NAME="Keywords" CONTENT="KeyKit, MIDI, GeoMaestro">
+</HEAD>
+<BODY>
+
+<H1>GeoMaestro</H1>
+
+<CENTER><FONT COLOR="#FF0000"><H1>- Not finished yet ! Sorry... -</H1></FONT></CENTER>
+
+<H2>Installation</H2>
+<BR>
+GeoMaestro is now part of the <A HREF="http://thompsonresidence.com/keykit">KeyKit </A>distribution (you can find it at <A HREF="http://thompsonresidence.com/tjt/index.html">Tim Thompson's place</A>), although it lives in a separated downloadable file so that it can be covered by the General Public License. What you have here is the latest release of GeoMaestro which may be more recent that Tim's one (and possibly more buggy also). It should be unzipped in the KeyKit <B>/contrib</B> subdirectory. When you're upgrading the system, check that you removed all files from precedent versions, except for the content of the <B>/data</B> and <B>/userlib</B> directories which is where you're supposed to keep your own files and compositions.<BR><BR>
+
+<B>Supported systems</B>:<BR><BR>Since GeoMaestro is entirely written in the proprietary KeyKit langage (a kind of C specially dedicated to the programming of MIDI applications, with its own graphical features), you just have to check that KeyKit runs on your system, which is notably the case for Windows and Linux.  <BR><BR>
+The only system-specific feature is the Notepad() function, a very useful one indeed, that need to be informed of the way it can call a text editor through the system's shell. The default is configured to use Notepad for Windows (and I highly recommend that you replace your native Notepad with the wonderful and free <A HREF="http://welcome.to/metapad/">Metapad</A> from Alexander Davidson, if it's not already done). For other systems, or other editors, just change the NOTEPAD1 and NOTEPAD2 global variables (in file ?)<BR><BR>
+
+<BR>
+<H2>Directories and paths</H2>
+<BR>
+<BR>
+<H2>Setting up</H2>
+<BR>
+You can start right away with what you have now. But there's one setting that you may find useful: the definition of different sets of patchmaps.<BR><BR>
+By default, KeyKit uses the General MIDI patchmap, that is a set of 128 instruments located in bank 0. GeoMaestro includes hooks to change this behaviour and allow you to use many different user-defined patchmaps where are grouped instruments that can be located in differents banks, as long as you can address these banks with the LSB code only (it simply means that the bank numbers must range from 0 to 127). So now you can use KeyKit with any set of instruments from a potential collection of 128*128=16384 differents instruments.<BR><BR>
+Patchmaps must be edited in a text file named <B>ACpatchmap<I>n</I>.txt</B>, where <I><B>n</B></I> is an positive integer different from 0, located in your <B>GeoMaestro/userlib</B> directory, with the following format (here's an example file):
+lignes starting with <B>#</B> are ignored, fields must be separated by tabs (and not by space characters only !), and must be in the following order for each line: patch name, LSB number, patch number. That's it.<BR><BR>
+Now to select this specific set of patches, just set the global variable <B>ACPATCHES</B> to <I>n</I> in your prerc.k file. Default is ACPATCHES = 0 which means we just go on with the GM set.<BR>
+<BR><BR>
+<H2>A few changes in KeyKit's console</H2>
+<BR>
+As from KeyKit version 6.6b, the console history management has been improved and the following features are availables:<BR><BR>
+typing <B>!</B> lists the history of the session (that is the content of the Hist array)<BR>
+typing <B>!!</B> recalls the last command<BR>
+typing <B>!<I>n</I></B> recalls command number <I>n</I><BR>
+typing <B>!!!</B> erase the history and start another one from scratch<BR>
+typing a command <B>:</B><I><B>whatever </B></I> is equivalent to typing <B>print <I>whatever</I></B><BR>
+typing <B>::</B> toggles between a mode where every command is considered as being preceded by <B>print</B> and the usual mode<BR>
+
+<BR><BR>
+With GeoMaestro, the console have a few more features: you can use the TAB key to go back into the history and edit a previous command line; and you can use the ESC key to call a text editor which will present you the current command ligne along with the history, so that you can cut & paste and edit your command as you want. This is useful if you're doing complex calculations at the console... if you forgot an opening parenthese at the beginning of a long formula, pressed return and see KeyKit issuing an error message, no trouble: just type twice on TAB and once on ESC and here you have your formula, ready to be corrected or changed.<BR><BR>
+More precisely:<BR><BR>
+Pressing TAB once brings along the promp "edit:". At that point, if you type a number <I><B>n</B></I> and press RETURN, you will have the command number <I><B>n</B></I> in history available for editing changes. If instead you press TAB again, you will have the last command ready to be edited. In both cases, further TAB presses will get you back in history.<BR><BR>
+Now for the ESC thing: be careful here as it's a bit strange (I couldn't find another way to proceed!). Pressing ESC once opens the text editor through a shell call (see the Notepad() stuff in the first chapter). So now you have an open editor with, in the first line of its text, the command that you were editing, and in following lines, the content of the whole history of the session. Do your thing on the first line, and when it's okay, save the text (don't forget that ! and don't rename it !), check that the focus has come back to the KeyKit window (which for Win95 means:  click on the KeyKit window to be sure), and then press ESC again. You will not see anything at the prompt, but your command has been evaluated, and you can see it as the last command stored in history.<BR><BR>
+<BR>
+<H2>LOG features</H2>
+<BR>
+
+In many instances, what you have in your history could be very useful as a part of a function or anywhere else in a KeyKit program. The LOG array is here to help you manage transferts from commands you typed at the console to hard-coded commands in a function call. Here are a couple of functions working on LOG:<BR><BR>
+
+First of all, to start from scratch you just have to do a <B>LOG = []</B> at the console.<BR><BR>
+
+<B>HLog()</B> copies part of the history into the LOG array. It appends the commands indexed by its arguments to the current LOG content.<BR>
+Here's an example: <BR>
+<B>HLog("35-41",18,22,"1-5")</B><BR>
+This will copy history commands 35,36,37,38,39,40,41,18,22,1,2,3,4,5 (in that order) into the LOG array<BR>
+<BR>
+<B>EvaLog()</B> evaluates the content of the LOG, as if it was a KeyKit function<BR>
+Exemple: if you have LOG = [1= "a=2", 2= "b=7", 3= "print(a+b)"] then EvaLog() returns "9" at the console<BR>
+As arguments to EvaLog(), you can give an index for starting and an index for ending the evaluation: EvaLog(n1,n2).<BR>
+<BR>
+Note that you can easily edit the LOG array, like any array in KeyKit, with the <B>Notepad() </B>function (see next chapter)<BR><BR>
+
+<B>ExLog() </B>creates a KeyKit function from the content of the LOG.<BR>It has two string parameters: the first one is the function name, the second one is the name of the file it will be written into. By default, the name is "LastLog" and the file is "log.k" in directory BASE.<BR>
+On the previous example, if you do a ExLog("AplusB",BASE+"tests.k"), you will find appended to the tests.k file (created if it didn't exist already) the following code:<BR><BR>
+function AplusB() <BR>
+{<BR>
+<BLOCKQUOTE>    a=2<BR>
+    b=7<BR>
+    print(a+b)<BR></BLOCKQUOTE>
+}<BR>
+
+<BR>
+<BR>
+
+<H2>Notepad() and Padnote()</H2>
+<BR>
+
+If AnyArray is an array (what else could it be with such a name ?), the command <B>Notepad(AnyArray)</B> opens the text editor with the structure and content of AnyArray developped in such a way that it is very easy to look at the contents, understand the array structure and edit it.<BR><BR>
+When editing, be careful to the following points:<BR><BR>
+
+<BLOCKQUOTE>1- If you delete an item in the array, delete the whole line containing this item. Moreover, if this item is itself an array (you can tell that because the line starts with an "a"), you must also delete all the following lines (because they contain the content of this array), until you find another "a" followed by a level number inferior or equal to the level of the array you deleted. If the index number is superior, that means we are still in this same array you want to delete. Get it ? The indentation is supposed to make this quite obvious (so, by the way, use a non-proportionnal font in your editor !).<BR><BR>
+
+2- If you edit an item value, always leave two space characters between the last "]" and the content. Because two characters will be skipped anyway.<BR><BR>
+3- If the item you're editing is a string, do not use "", or they will be part of the string. Just use the letter "s".<BR><BR>
+4- If you add an item, check that the line starts with the correct code. The letter is used to specify the type of the value, and the number is used to give the depth level of the item in the array. The first level is number 1; number 0 is an artefact, don't touch it. You don't need to respect the indentation as long as the code is correct (well, if the indentation is good and the code wrong, guess what ? It's no good).<BR><BR>
+</BLOCKQUOTE>
+
+When you're done, save your texte file and use the Padnote() function to get your array back in KeyKit. You can say <B>AnyArray = Padnote()</B> if you want to get it back in the same variable, or <B>AnyOtherArray = Padnote()</B> if you want to copy it elsewhere.<BR><BR>
+
+You will soon find this feature unvaluable, as KeyKit makes big use of associated arrays. They're now as easy to edit as plain KeyKit code. <BR><BR>
+<BR>
+<H2>Snarph()</H2>
+
+<BR><BR><BR><BR><BR>
+<CENTER>-- <A HREF="eGM0.html">Back </A>--</CENTER>
+
+</BODY>
+</HTML>

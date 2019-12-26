@@ -1,0 +1,61 @@
+
+			KEYKIT 4.1 FOR AMIGA
+			    April 4, 1990
+
+
+KeyKit will run on any Amiga with at least 1 meg of RAM and a MIDI
+interface.  A hard disk or 2 floppy disk drives is strongly recommended.
+No additional software other than Workbench is required (previous versions
+of keykit used arp.library, but that is no longer required).
+
+Disk 1 contains the keykit executables, library functions, formatted
+documentation, and a few amiga-specific files.  Disk 2 contains an
+extensive collection of keykit music.
+
+On a hard disk system, copy disk 1 to an appropriate place on the hard
+disk, copy disk 2 to the "music" sub-directory, and assign keykit: to
+the directory where you copied disk 1.  On a floppy-only system, you will
+need to edit the lib/keykit.rc file on disk 1 and change any occurrances
+of "keykit:music" to "keymusic:".
+
+KeyKit should be run from a CLI or shell.  If ConMan or NEWCON are
+installed, command line editing and history will be available in the CLI
+window.  Editing and history are not available in graphics mode.
+
+Before running keykit, add keykit:bin to your path and use "stack 30000"
+to set the stack.  Documentation is in the keykit:fmt directory.  You
+should start by reading keytutor.doc.
+
+All of keykit's capabilities are available on the Amiga, with the
+exception of pipes (if anyone has an Amiga version of popen/pclose that
+actually works, please let me know).  Some of the library functions may
+contain commands specific to other machines, and may have to be modified
+to work on the Amiga.  One such file that has been changed is readinit.k.
+
+You can customize the screen resolution and number of colors used in
+graphics mode by setting the following variables:
+
+	Graphmode = 0		Open a 640x200 non-interlaced screen.
+
+	Graphmode = 1		Open a 640x400 interlaced screen (default).
+
+	Colors = 2,4,8,16	The Colors variable defines how many
+				colors keykit can use (default is 4).
+
+If you're short on memory, use the lower resolution screen or fewer
+colors, or both.
+
+Holding the left-amiga key will reveal the screen title bar and the
+standard screen manipulation gadgets.  While in graphics mode, output
+from the system() function will appear in the original CLI window
+rather than on the graphics screen.  Use the screen manipulation gadgets
+or the left-amiga M and N keys to move between screens.
+
+Direct your Amiga-specific comments, questions, and bug reports to me,
+and have fun!
+
+				Alan Bland
+				Usenet: mab@druwy.att.com
+				People Link: Allegro
+				CompuServe: 72707,3662
+

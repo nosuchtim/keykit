@@ -1,0 +1,18 @@
+<tool name="Comment" class="wcomment">
+The
+<b>Comment</b>
+tool lets you place arbitrary text on the screen.  When you first place
+the Comment tool, it contains the string "Comment...".  To change the text,
+press the left mouse button on the tool.  You will be asked to enter the
+new text.
+<blankline/>
+The
+<b>Comment</b>
+tool automatically resizes itself to fit the text it contains.  Even if you
+explicitly resize it to a larger size, the resulting size of the Comment
+tools will still be just enough to fit the text.
+<blankline/>
+The
+<b>Comment</b>
+tool is very crude.  It is limited to a single line of text.
+</tool>

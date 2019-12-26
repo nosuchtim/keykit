@@ -1,0 +1,290 @@
+\just center
+\style bold underline
+\size 115
+Keynote - Musical Fun with Windows, Tasks, and Objects
+\just center
+\style underline
+\size 110
+Tools and Menus Reference for Version 6.0f
+
+
+\str#
+\tcon Introduction
+\tag   1
+\style bold underline
+\size 110
+Introduction
+Keynote is a programming language and graphical interface for manipulating and generating music. This reference manual lists the individual tools and menus in the user interface.  All of these tools and menus are implemented with code in the "lib" directory.  Since the tools are so easy to change, the descriptions here may not be completely up to date, but they should be pretty close. 
+
+If you are just getting started with Keynote, this is not the first document you should be reading. 
+
+\str#
+\tcon Bang
+\tag   2
+\style bold underline
+\size 110
+Bang
+The "Bang" tool is a utility for sending messages to other tools. The "Add" and "Del" buttons are used to add and delete connections between the Bang tool and other tools.  To make a connection, press and hold the mouse on the "Add" button, and drag the mouse away.  You will see a line stretching as you drag the mouse.  Drag the line so that it ends up on the desired tool, and release the mouse.  The connection is now made.  To check the connection, press the "Add" button - all of the current connections will be displayed until you release the button.  The "Del" button is used just like the "Add" button, except that it removes connections - you drag the line to the tool whose connection you want to delete. 
+
+Pressing the "Bang" button will cause the Bang tool to send a message to all of the connected tools.  The default message is "bang".  In essence, this will invoke the "bang" method in each of the connected tools. If a tool does not have a "bang" method, a warning message will be printed in the console window. 
+
+The "More" menu lets you set things up so that the Bang tool will monitor MIDI input and trigger itself automatically when a particular MIDI message is seen. To set up this capability, you should first play on your MIDI input device the desired MIDI message (e.g. a particular note on your keyboard). Then, invoke the "Load Recorded" menu item in the "More" menu.  This will load the MIDI message that you just played.  To have the Bang tool then continuously monitor MIDI input for this message, press the "On" button.  This button is a toggle - pressing it again will turn it off. When the Bang tool is "On," all MIDI input is monitored, and each occurrence of the specified MIDI message will cause the Bang tool to trigger and send a message to all of its connections. 
+
+You can change the message that the Bang tool sends by invoking the "Set Message" item in the "More" menu.  After invoking it, you will see a window in which you can enter the message name.  The "Set Comment" item lets you change the text that is displayed in the center of the Bang tool.  The "Delete ALL Trigees" item will remove all of the Bang tool's connections. 
+
+\str#
+\tcon Blocks
+\tag   3
+\style bold underline
+\size 110
+Blocks
+The "Blocks" tool lets you manipulate a linear sequence of phrases (blocks).  Each phrase in the sequence comes from a "phrase collection".  The original intended use of this tool was for manipulating drum patterns, but it can be used for sequencing any type of phrase, including complete songs. 
+
+The default number of blocks is 4, but the button that is labelled "4" is actually a menu that lets you set the number of blocks. 
+
+The "Read Collection" item in the "More" menu lets you read in a "collection" file - these files have a ".kc" suffix by convention.  In your "lib" directory you should find a file named "drums1.kc" which you can use - it contains a variety of simple drum patterns. After reading a collection, you will then find that the button menus above each "block" (whose labels will initially read "One beat") will contain a list of names.  By pressing the button menu above a particular block and selecting one of these names, the corresponding drum pattern will be placed in that block. 
+
+To play the patterns you've placed in the blocks, press the left mouse button within one of the blocks (the phrase window part). Playback will begin in the block you've selected and continue to the right, ending at the rightmost block.  If you press the "Loop" button (which is a toggle), it will cause the playback to loop continuously. Pressing the left mouse button in any of the phrase windows will terminate the playback of the blocks. 
+
+Creating a new collection is also done with the "Blocks" tool.  To clear the current collection, use the "Clear Collection" item in the "More" menu. To add a phrase to the collection, you first assign the desired phrase to the current Snarf (using the "Snarf" item you'll find in most tools).  Then, invoke the "Add Snarf to Collection" item in the "More" menu. You will be requested to enter the name you want to assign to the phrase. This name will be added to the list in the menu button above each block, and you can use it like any other phrase in the collection. When you've added a number of new phrases to the collection, you can write the new collection to a file by using the "Write Collection" item in the "More" menu. 
+
+When creating a collection of drum patterns, you'll want to make sure the length of each phrase is quantized.  If you Snarf the current Pick in the Group tool, the length will not be quantized.  The better way to grab a phrase (in the Group tool) for use in a Blocks collection is to use the "Snarf->Aud" item you'll find in the track menus of the Group tool.  By Snarfing the Audition area, the length of the Snarf will be the exact length of the Audition area, and you can then make sure it has the desired length. 
+
+The "Start Quant-> " item in the "More" menu lets you control the quantization of the start time, whenever the blocks are played. 
+
+If you create a set of blocks that you like, you can use the "Snarf All" item in the "More" menu to Snarf the entire sequence, which you can then read into (for example) a Group tool for editing and other use. 
+
+\str#
+\tcon Bounce
+\tag   4
+\style bold underline
+\size 110
+Bounce
+The "Bounce" tools is an odd toy.  It consists of four "Riff" tools surrounding a bouncing line.  Press the  "On" toggle button to turn the bouncing line on and off.  You won't hear anything initially because there's nothing in any of the Riff tools.  Put a phrase into one of the Riff tools - see the documentation on the Riff tool for instructions on how to do that. Then start the bouncing line.  Each time the line touches the side of that Riff tool, it will send a "bang" message to the Riff tool, causing it to play its phrase. 
+
+You'll normally want to put simple phrases (chords, or drum beats) into each Riff tool.  The "Chord Palette" tool is a good way of generating (and Snarfing) chords that can then be placed in each Riff tool.  Or you can just play something on your MIDI input device and use the "Load Rec" item in the Riff tool to grab and use it. 
+
+You'll very likely want to use the "Start Quant->" item in the Riff tool to quantize the start time of each of the four Riffs that the Bounce tool is playing. 
+
+The "Speed" slider can be used to adjust the speed of the bouncing line. 
+
+\str#
+\tcon Chord Palette
+\tag   5
+\style bold underline
+\size 110
+Chord Palette
+The "Chord Palette" tool presents a matrix of cells that let you play (and Snarf) chords. Pressing the mouse button in a given cell will play a chord and automatically place it into the Snarf.  The rows of the matrix are labelled with the chord types (major, minor, etc.), and the columns are labelled with the chord keys (C,C#,D,etc.). 
+
+If the size of the window is too small, the column labels may be truncated. Resizing the window so it's larger will reveal the full labels. 
+
+The "Octave->" item in the "More" menu lets you control the octave of the played chords - the default is octave 3. 
+
+The "Mode->" item in the "More" menu lets you control whether the chords are played, automatically put into the Snarf, or both.  The default is to do both. 
+
+\str#
+\tcon Comment
+\tag   6
+\style bold underline
+\size 110
+Comment
+The "Comment" tool lets you place arbitrary text on the screen.  When you first place the Comment tool, it contains the string "Comment...".  To change the text, press the left mouse button on the tool.  You will be asked to enter the new text. 
+
+The "Comment" tool automatically resizes itself to fit the text it contains.  Even if you explicitly resize it to a larger size, the resulting size of the Comment tools will still be just enough to fit the text. 
+
+The "Comment" tool is very crude.  It is limited to a single line of text. 
+
+\str#
+\tcon Console
+\tag   7
+\style bold underline
+\size 110
+Console
+The "Console" tool creates a new interactive interpreter in which you can type Keynote statements and have them executed.  You can have multiple Console tools on the screen simultaneously, though only one of them is the current Console, on which the output of "print" statements will appear, and to which keypresses are directed. If you create a new Console tool, it immediately becomes the current Console. Pressing the left mouse button within a Console tool causes it to become the current Console - this is the way you can switch between several Console windows. 
+
+The scroll bar on the left side of the Console tool can be used to scroll backwards and forwards through its displayed text. The special variable "Textscrollsize" controls how many lines are available in the Console tool.  The default value is 200, although you can change this in your "prerc" function. 
+
+\str#
+\tcon Controller
+\tag   8
+\style bold underline
+\size 110
+Controller
+The "Controller" tool lets you generate MIDI controller messages, such as volume and pan. There are sixteen sliders, each corresponding to one of the sixteen MIDI channels.  Moving a slider will generate messages on that channel. The menu button in the upper-left corner lets you specify which type of message is generated.  Some of the message types (for example, "reverb depth") are specific to General MIDI devices. 
+
+The "Send" button, when pressed, will send the current controller values (as specified by the current settings of the 16 sliders) to MIDI output.  The "Snarf" button will take all of these messages and, rather than sending them to MIDI output, put them in the Snarf buffer. 
+
+\str#
+\tcon Echo
+\tag   9
+\style bold underline
+\size 110
+Echo
+The "Echo" tool is a realtime utility.  When you turn it "On" (the "On" button is a toggle switch), all MIDI input will be echoed to MIDI output. The default settings will echo each MIDI input note with a delay time of one beat, but you can control the delay and other factors by moving the sliders.  The "time" slider controls the delay time between echos.  The "trans" slider controls the pitch transposition of each echo.  For example, if the "trans" slider is set to 7, then the echoed notes will be transposed 7 steps up (i.e. a fifth).  Likewise, a value of -7 will transpose a fifth down. 
+
+The "vol" slider controls the volume decay.  For example, if it is set to 50%, then the volume of each echoed note will be decreased by 50 percent. 
+
+The "ntimes" slider controls how many echoes are generated.  For example, if it is set to 4, then each input MIDI note will be echoed 4 times.  If the "vol" slider was set to 50%, the volume of the 4th echo would be 1/16 the volume of the initial note.  Also, if the "trans" slider was set to 2, then the pitch of the 4th echo would be 8 steps above the original note. 
+
+Since Keynote is multi-tasking, it is possible (and great fun) to create multiple "Echo" tools and have them operating simultaneously, with different settings in each. 
+
+\str#
+\tcon Group
+\tag  10
+\style bold underline
+\size 110
+Group
+The "Group" tool is very much like a standard multi-track sequencer. It allows flexible editing of music, and is the most important (and largest) tool provided in the user interface of Keynote. 
+
+The "Read" item in the "File" menu lets you read things into the Group tool. For example, the "Read->Standard MIDI File" item will prompt you for the name of a Standard MIDI File. "Read->Snarf" will load the Group tool with the current contents of the Snarf buffer. "Read->Recorded" will load the Group tool by looking at the "Recorded" variable, which records MIDI input.  If you choose the "(2b space)" variation of this item, the Recorded MIDI input will be searched backwards until a two-beat space is located, and all MIDI input from that point forward will be grabbed and loaded into the Group tool. Likewise for the "(8b space)" variation, except that it looks for an eight-beat space. 
+
+The Group tool maintains a set of tracks.  The merged contents of all tracks is always displayed in the track named "Merged." The "View->Tracks" menu item controls what tracks are displayed. For example, selecting "View->Tracks->All" will cause all tracks to be displayed. Other items in the "View" menu control the region (time-wise) of the music that is displayed. For example, "View->In" lets you zoom in to get more detail. After invoking "View->In," you are expected to sweep out an area within one of the tracks in the Group tool. The mouse cursor will change to a left-right arrow, to give you a reminder that you are expected to sweep out a horizontal area. The area you sweep out will then fill the display. 
+
+The "View->Pan" item lets you move left and right within the phrase.  After invoking "View->Pan," you are then expected to press the left mouse button and drag the mouse. You will see the phrase within the Group tool move left and right as you drag the mouse left and right. 
+
+New tracks can be added with the "File->Add Track" menu.  For example, a new blank track can be added with "File->Add Track->Blank." If you play back some part of the music in the Group tool, and play something along with it on your MIDI input device, you will often want to add your overdubbed input as a new track. This is done with with "File->Add Track->Last Overdub." Note that you don't have to do anything in preparation for adding an Overdub track.  Every time you play back something in the Group tool, Keynote is recording MIDI input, and if you happen to play something you like, you can immediatly save it as a new track. 
+
+At the upper-left corner of each track (including the merged track) is a menu button, and the menu it reveals is called the "track menu." The items in a track menu apply only to the corresponding track. For example, the "Unshow" item in the track menu will cause that track to be removed from the display (though it still exists, and its music will still be shown in the Merged track.  The "Showonly" item will cause only that track to be display (in addition to the Merged track, which is always shown.  If you want to go back to seeing only the Merged track, select "Showonly" in the track menu for the Merged track. 
+
+The text within the track menu buttons are the track names. You can change a track name by using the "Label" item in the track menu. 
+
+Within each track window, the 2 mouse buttons (left and right) are used for a variety of operations.  Instead of being fixed, the meaning of each mouse button can be changed, and in practice you should expect to change their meanings often. The meanings of the mouse buttons are assigned with the 3 menu buttons in the upper-right corner of the Group tool. Each mouse button actually has three meanings - one when the shift key is pressed, one when the control key is pressed, and one when no keys are pressed. The keys that can modify the mouse button meanings are called "modifiers". The leftmost of the 3 menu buttons in the upper right corner of the Group tool controls the "modifier" that currently applies to the other two menu buttons - the modifier value can be "Normal," "Shift," or "Control." When the modifier is set to "Shift," then the other two menu buttons will control the meanings of the left and right mouse buttons when the Shift key is pressed.  Likewise, when the modifier is set to "Control," then the other two menu buttons control the meanings of the mouse buttons when the Control key is pressed.  And when the modifier is set to "Normal," then the other two menu buttons control the meanings of the mouse buttons when no key is pressed. The label of each button reveals the current meaning of that mouse button (for the current modifier setting). To change the operation of a button, you select the operation you want from the corresponding mouse button menu, and from then on that mouse button (combined with the appropriate modifier) will perform that operation. 
+
+The default operation for the left mouse button, when a Group tool is first created, is "Aud Sweep" (where "Aud" is short for "Audition" ). This means that when you press and drag the left mouse button within a track window, you will be sweeping out the audition area.  Try it, making sure that the mouse is within a track window when you start sweeping.  While you sweep, you will see vertical bars that indicate the audition area.  When you release, there is no visible indication of the current audition area (though someday there probably should be).  The default operation for the right mouse button is "Aud Play" - to play the current audition area. So, if you use the left mouse button to sweep some part of the music, and then press the right mouse button, you should hear that music played via MIDI output, and you should see the notes flash as they play. To stop the playback, press the right mouse button again.  This shows that "Aud Play" is a toggle - it starts and stops playback. 
+
+Now, try changing the meaning of the left mouse button.  Use the menu button labeled "L:," and select "Pick->Sweep." From then on, the left mouse button will sweep out the current "Pick." The term Pick refers to the selected notes of the music that will be affected whenever an Edit operation is used.  Try using the left mouse button to sweep an area of the music. After you sweep, you should see the notes in that area turn red.  The notes of the current Pick are always drawn in red. 
+
+The "View->In" menu item lets you zoom in to get a closer look at the music.  After you select this item, the mouse cursor will change to a left-right arrow, meaning that you are then expected to sweep out an area within one of the tracks.  Do this.  You should see the display redrawn with that area of the track filling the display.  Note that "View->In" changes the meaning of the left mouse button only temporarily - it then reverts to the operation specified in the "L:" menu button. "View->Out" will return to viewing the entire piece of music. 
+
+Zoom in on part of the music, so that you can easily see individual notes. Pick a few notes (i.e. make sure the left mouse button is set to "Pick->Sweep," and then sweep the notes). Now, select "Edit->Delete," and the notes in the current Pick will be removed. Do it again - pick some more notes and delete them. Now, select "Edit->Undo." You will see your last deletion undone. Select "Edit->Undo" again, and you will see your first deletion undone, so your music is back to its original state.  The "Undo" operation can undo the last 32 editing operations, by default, and you can easily increase this number, subject to memory limitations. 
+
+The "Edit->Undo" item is one of the most common menu items to pull off and make into a real button.  It's important to realize that when you do this, that "Undo" button will only affect the Group tool from which you pulled it - it will not affect any other Group tools that are on the screen. This is true of any of the buttons that you pull from menus in any given tool.  There is currently no visible or other indication of the relationship between pulled-off buttons and the tools they control, so it's obviously a good idea to position the buttons in ways that make it obvious as to which tool they belong. 
+
+\str#
+\tcon Kboom
+\tag  11
+\style bold underline
+\size 110
+Kboom
+The "Kboom" tool is a drum pattern editor that has taken on a life of its own - it has a lot of features that are a lot of fun to play with. It displays a grid where each row represents a drum and each column represents a step. The drums, however, are not restricted to single notes that trigger drum sounds.  A "drum" can be set to an arbitrary MIDI message, or even a complete phrase.  New drums can be added and set on the fly, while the pattern is playing. 
+
+The menu button at the left end of each row will reveal a list of drums.  The default drum list is appropriate for a General MIDI synthesizer, but if you want you can change this list by editing the "lib/maps.k" file as appropriate for your situation. 
+
+To use an arbitrary MIDI note as a drum, just play the note on your MIDI input device, and then invoke the "Use Rec'd Note/Chord" item in the menu button for one of the rows.  From then on, cells in that row will trigger the note that you just played.  The same method can be used to set the drum to a complete chord rather than a note.  In essence, all notes that overlap the last-played note will be grabbed and used as the drum.  If you want to use a phrase (i.e. several notes in sequence), just play the phrase on your MIDI input device and then invoke "Use Rec'd Phrase" in the drum's menu button.  This will look backwards in time for the first two-beat space - everything played after that space will be taken as the "phrase" that will be used for that drum. Another way to set a drum note is to invoke "Use Snarf," in which case the current contents of the Snarf buffer will be used. 
+
+When you set a drum value using MIDI input or via the Snarf buffer, the label on the drum button will show a "constant phrase" representation of the value.  To change this label, invoke the "Set Label" item in the drum button menu.  You will be prompted to enter the text for a new label. 
+
+The "More" menu in the Kboom tool controls a variety of things.  The "Snarf" item will grab a copy of the current drum pattern and put it into the Snarf buffer (for use in other tools).  The "Clear" item will clear all of the cells in the drum grid. The "Read Drumkit" menu item will read a file that initializes the drum set. An example of the file that "Read Drumkit" uses can be found in the "lib:drums.kbm" file - it is an ASCII file that specifies the channel, pitches, and labels for the drums.  You can use a text editor to create other such files, making it easy to use a particular set of drums without having to set them up manually with the drum buttons. 
+
+The "Flash" item lets you turn off the flashing indication of the current beat at the top of the Kboom tool.  Turning it off may be appropriate if you have a slow machine, or if there is just too much activity on your screen. 
+
+Instead of having each step be just on and off, you can use "More->Toggle Mode->Gradual" to turn  on a mode in which each cell can be filled in gradually.  If a cell is filled in 25% of the way, then that "hit" of the drum will only occur 25% (randomly) of the time.  This can add variety to a pattern. Another way of adding variety is to create a second "Kboom" tool with a different number of steps, and playing the two patterns at the same time. 
+
+The "# of Drums ->" and "# of Steps ->" items in the "More" menu let you change the number of rows and columns in the grid. The "Shift ->" item lets you shift the entire contents of the grid, forward and backward. The shift is done in a circular fashion, so no drum hits are actually lost. 
+
+\str#
+\tcon Markov Maker
+\tag  12
+\style bold underline
+\size 110
+Markov Maker
+The "Markov Maker" tool lets you create music with markov-chain techniques. The top phrase window displays some existing piece of music that you read in, and the bottom phrase window display a "similar" piece of music that is created by the "Markov Maker." 
+
+First, use the "Read->File" item of the "Orig" menu to read in a piece of music.  (Try one of the Bach pieces in the "music" directory.) 
+
+Then use the nested menus under "Orig->Set Sim" to initialize the Markov model of the music.  You can experiment with the values, but for good initial results, try "Win 1b/2" and "Inc 1b/4." The "Win" value is the "window" that is swept across the phrase, and the "Inc" value is the increment by which the window is moved across the phrase.  (See the source code in "lib/setsim.k" for more details.) 
+
+Now, use the "Sim->Make Sim->" menu to select the size of the "similar" phrase that you want to generate. Pressing the mouse button inside either phrase window will start (and stop) its playing. You can use "Sim->Snarf" to grab the generated phrase and then (for example) read it it into a "Group" tool for further editing. 
+
+The "Markov Maker" tool is perhaps the easiest thing to impress people with.  As an example, use "music/prelude.mid" as the music, and "Win 1b/2" and "Inc 1b/4" as the values, and generate a fairly long piece.  It's surprising how interesting the results are. 
+
+\str#
+\tcon Mouse Matrix
+\tag  13
+\style bold underline
+\size 110
+Mouse Matrix
+The "Mouse Matrix" tool is an interactive toy.  Each cell of the grid it displays contains a different chord.  Pressing the left mouse button within a cell plays its chord.  Dragging the mouse (while its button is pressed) across the grid generates interesting sounds. 
+
+The left mouse button plays notes on channel 1, by default. The right mouse button plays notes on channel 10, by default, which is the drum channel of General MIDI synthesizers.  You can change these two defaults by setting the values of the "Mmchan1" and "Mmchan2" variables - either interactively, by typing in the Console window, or by putting statements into your "prerc" function. 
+
+For each cell, four notes are played as a chord.  You can change the number of notes in the chord by setting the "Mmsize" variable (again, interactively or in "prerc" ).  Valid values for "Mmsize" are 4, 3, 2 and 1. For example, typing "Mmsize=1" in the Console window would cause the "Mouse Matrix" tool to produce single notes for each cell. 
+
+\str#
+\tcon Parameters
+\tag  14
+\style bold underline
+\size 110
+Parameters
+The "Parameters" tool lets you set values for various global parameters. The left button is a menu for selecting the parameter, and the right button is a menu for selecting the parameter's value. 
+
+The "Autoresize" parameter, when on, causes tools to automatically resize themselves when the main Keynote window is resized.  For example, if you enlarge the main Keynote window, the size of all tools will be enlarged proportionately. 
+
+The "Dragquant" parameters controls the quantization of the "Drag" operation in the Group tool. 
+
+The "Menujump" parameter affects the operation of menu scroll bars.  When this parameter is on, the scroll bar will immediately jump to the mouse position when the mouse enters the scroll bar. 
+
+The "Merge" parameter controls whether MIDI input is automatically merged into MIDI output.  If you have a MIDI keyboard connected directly to the input of your computer, and your synthesizer modules are connected directly to the output of your computer, then you would want the Merge value to be On (the default value), so that notes you played on the MIDI keyboard would be sent to the MIDI synthesizers. If, on the other hand, you have your routing of MIDI cables set up so that messages from your MIDI keyboard are already reaching your synthesizers, then you would not want Keynote to Merge MIDI input with MIDI output, and you would set the Merge parameter value to Off. 
+
+The "Record" parameter, when on, causes all MIDI input to be added to the value of the "Recorded" phrase. 
+
+The "Recsched" parameter controls whether MIDI data that is generated by Keynote will be recorded in the "Recorded" variable.  Normally, only MIDI input is saved in the "Recorded" variable which is used, for example, when you use the "Load Rec" item in the Riff tool to load something you've just played on MIDI input. Sometimes, you want to record the output that Keynote is generating (for example, when you're playing with the Mouse Matrix tool). By turning the "Recsched" parameter on, all generated MIDI output will be saved (along with MIDI input) in the "Recorded" variable, and you can then load it into a tool for further editing. You should only turn on "Recsched" for relatively short periods of time, since if you leave it on all the time, the Recorded phrase will accumulated everything you play back. 
+
+The "Sweepquant" parameter controls the quantization of sweeping within the Group tool (and any other tool that involves sweeping within a phrase window). For example, if you wanted to sweep out Pick phrases and you wanted to only use complete measures, you could set the Sweepquant value to "Whole." From then on, when sweeping within a phrase window, the vertical sweep bars would only move in whole-note increments. 
+
+The "Volstem" parameter controls whether volume stems are displayed on notes within phrase windows. Volume stems are vertical lines at the front of each note.  The vertical size of the line represents the relative volume of each note.  You can also set (manually) the special variable "Volstemsize" to control the scaling of the volume stem lines. 
+
+\str#
+\tcon Prog Change
+\tag  15
+\style bold underline
+\size 110
+Prog Change
+The "Prog Change" tool lets you generate program change messages.  There is a separate menu button for each of the 16 MIDI channels. When you press these buttons, you will see the General MIDI patch list. When you select a patch from the list, the appropriate program change message will be transmitted on MIDI output. 
+
+Although the default list of patches is intended for use with General MIDI synthesizers, you can change the list of patches by editing the "lib/maps.k" file (there are comments in that file that explain what to do). The functions in "maps.k" are used by several Keynote tools (e.g. the "Group" and "Kboom" tools also use the program and drum maps specified there). 
+
+\str#
+\tcon Riff
+\tag  16
+\style bold underline
+\size 110
+Riff
+The "Riff" tool is a simple utility for playing and recording phrases. It has no real editing functions - that role is filled by the "Group" tool.  The Riff tool is useful for looping phrases (repeating them endlessly), and is often used as a target of the "Bang" tool. 
+
+The "Load Rec" item in the "More" menu will load the Riff tool with the most recently recorded MIDI input. If you select "Load Rec (1b space)," it will look back in time to find the first one-beat space, and will load the Riff tool with all MIDI input recorded after that.  The "Load Rec (4b space)" does the same thing except it looks for a four-beat space. The "Load From Snarf" and "Load from File" items in the "More" menu let you load the Riff tool from the Snarf buffer and from a Standard MIDI File, respectively. 
+
+After loading a phrase into the Riff tool, you can play it by clicking the mouse button anywhere within the phrase window.  Clicking the mouse again, while the phrase is playing, will terminate playback.  The "Loop" button is a toggle switch - if you turn it on, the phrase will be played repeatedly until you explicitly terminate it, either by turning the "Loop" mode off or by clicking the mouse within the phrase window. 
+
+The "Loop Quant->" item lets you select the value by which the loop repeat time will be quantized. For example, if the Riff tool contains a phrase whose length is not exactly a multiple of 4 beats, you will probably want to set the loop quantization value to 4b. Similarly, the "Start Quant->" item lets you select the quantization value used whenever the riff is started. 
+
+The "Snarf" item in the "More" menu will put the current phrase into the Snarf buffer. The "Strip" item will strip the current phrase - all leading and trailing space (rests) will be removed. 
+
+\str#
+\tcon RiffRaff
+\tag  17
+\style bold underline
+\size 110
+RiffRaff
+The "Riffraff" tool is an interactive toy that lets you trade licks with yourself.  The "On" button is a toggle that turns it on and off.  If you turn it on, you should hear a rhythm (assuming you have a General Midi synth, or at the very least assuming you have drum sounds on channel 10).  If you play something on your MIDI keyboard, you will hear it echoed with about an 8 beat delay. However, it is not echoed verbatim - what you hear is a variation of what you played.  The default rhythm has bass notes as well, so you will need to improvise in the key of G. 
+
+The "More" menu lets you alter the rhythms - there are two rhythms that are alternated, and you can set them independently.  The rhythms have no bass notes, so you can improvise more freely if you change the rhythms. 
+
+\str#
+\tcon Tempo
+\tag  18
+\style bold underline
+\size 110
+Tempo
+The "Tempo" tool is a slider that you can use to control the tempo of all realtime phrase playback. The tempo can be adjusted at any time, and the effect is immediate. 
+
+\str#
+\tcon Volume
+\tag  19
+\style bold underline
+\size 110
+Volume
+The "Volume" tool is a slider that you can use to control the volume of MIDI output. Moving the slider will generate volume controller messages on all 16 channels. 
+
+The button immedately below the slider controls whether the generated messages are added to the Recorded phrase. The default value of this button is "NoRec," so that the controller messages are not recorded. Changing the value to "Rec" (by pressing the button and selecting "Rec") will cause all of the controller message to be recorded. This would mean, for example, that you could play back something in the Group tool, adjust the volume in realtime by moving the slider of the "Volume" tool, and then use the "File->Add Track->Last Overdub" feature of the Group tool to add the volume controller messages as a new track. 
+\itcon 19

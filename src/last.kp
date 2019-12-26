@@ -1,0 +1,10 @@
+Pageobj=$1
+Pagenm="last"
+Pagesz=["x0"=1024,"x1"=1824,"y0"=50,"y1"=650]
+function keypage_create(r) {
+r.restore(["Autoresize"=1,"Chancolors"=0,"Dragquant"=24,"Flashquick"=1,"Menujump"=0,"Merge"=1,"Playquant"=96,"Record"=1,"Recsched"=0,"Showbar"=384,"Sweepquant"=24,"Sync"=0,"Volstem"=0])
+# recreate object $4
+o=wconsole($4)
+r.addtool(o,["x0"=8,"x1"=776,"y0"=420,"y1"=554])
+
+}

@@ -1,0 +1,69 @@
+<html><head>
+		<style type="text/css">
+		.big {margin: 0pt; font-family: "Arial"; font-size: 18pt}
+		.normal {margin: 0pt; font-family: "Arial"; font-size: 12pt}
+		.small {margin: 0pt; font-family: "Arial"; font-size: 10pt}
+		.tiny {margin: 0pt; font-family: "Arial"; font-size: 8pt}
+		</style>
+		</head><title>Keykit tool: Markov Maker</title><table border=0 width=100% bgcolor=#ffcc99><tr><td><font class=big><a href=../index.html>KeyKit</a> :: <a href=index.html>Tools</a> :: Markov Maker</td></tr></table>
+<p/>
+The
+<b>"Markov Maker"</b>
+tool lets you create music with markov-chain techniques.
+The top phrase window displays some existing piece of music that you read in,
+and the bottom phrase window display a "similar" piece of music
+that is created by the
+<b>"Markov Maker."</b>
+<p>
+First, use the
+<b>"Read->File"</b>
+item of the
+<b>Orig</b>
+menu to read in a piece of music.  (Try one of the Bach pieces in the
+<b>music</b>
+directory.)
+<p>
+Then use the nested menus under
+<b>"Orig->Set Sim"</b>
+to initialize the
+Markov model of the music.  You can experiment with the values, but
+for good initial results, try
+<b>"Win 1b/2"</b>
+and
+<b>"Inc 1b/4."</b>
+The
+<b>Win</b>
+value is the "window" that is
+swept across the phrase, and the
+<b>Inc</b>
+value is the increment by which
+the window is moved across the phrase.  (See the source code
+in
+<font  class="fixed" >lib/setsim.k</font>
+for more details.)
+<p>
+Now, use the
+<b>"Sim->Make Sim->"</b>
+menu to select the size of the "similar" phrase that you want to generate.
+Pressing the mouse button inside either phrase window will start
+(and stop) its playing.
+You can use
+<b>Sim->Snarf</b>
+to grab the generated phrase and then
+(for example) read it it into a
+<b>Group</b>
+tool for further editing.
+<p>
+The
+<b>"Markov Maker"</b>
+tool is perhaps the easiest thing to impress
+people with.  As an example, use
+<font  class="fixed" >music/prelude.mid</font>
+as the music,
+and
+<b>"Win 1b/2"</b>
+and
+<b>"Inc 1b/4"</b>
+as the values, and generate a fairly
+long piece.  It's surprising how interesting the results are.
+</tool>

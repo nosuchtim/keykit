@@ -1,0 +1,7 @@
+In f1, nargs= 5
+In f1, a= 11   b= 22
+In f2, nargs= 4
+In f2, r= 11   s= 33   t= 44   u= 55
+In f3, nargs= 1
+b is undefined
+e is undefined
