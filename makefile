@@ -226,6 +226,7 @@ clean_nt :
 	cd byacc && $(MK) -f makefile.$(MSTYPE) clobber
 	cd doc && $(MK) clean
 	cd tests && $(MK) clean
+	rm -f bin/last.kp
 
 clobber_nt : clean_nt
 	rm -f *~
