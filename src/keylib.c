@@ -69,8 +69,11 @@ cback(char *fname,int type)
 
 	eprint("Scanning %s...\n",lowfname);
 
-	errno_t err;
-	err = fopen_s(&f, fname,"r");	/* not lowfname */
+	errno_t err = 0;
+	f = fopen(fname,"r");	/* not lowfname */
+	if ( f == NULL ) {
+		err = errno;
+	}
 
 	if ( err != 0 || f == NULL ) {
 		eprint("Unable to open %s\n",fname);
@@ -104,8 +107,11 @@ cback(char *fname,int type)
 int
 main()
 {
-	errno_t err;
-	err = fopen_s(&Kf, Kl, "w");
+	errno_t err = 0;
+	Kf = fopen(Kl, "w");
+	if ( Kf == NULL ) {
+		err = errno;
+	}
 
 	if ( err != 0 || Kf == NULL ) {
 		eprint("Unable to open %s\n",Kl);
@@ -124,8 +130,11 @@ keyerrfile(char *fmt, ...)
 	static FILE *f = NULL;
 
 	if (f == NULL) {
-		errno_t err;
-		err = fopen_s(&f, "key.dbg", "w");
+		errno_t err = 0;
+		f = fopen("key.dbg", "w");
+		if ( f == NULL ) {
+			err = errno;
+		}
 		if (err != 0) {
 			fprintf(stderr, "UNABLE TO OPEN key.dbg!?\n");
 			exit(1);
