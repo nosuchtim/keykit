@@ -1,12 +1,12 @@
-nttest :
+test_nt :
 	keytest
 
-ntclean :
+clean_nt :
 	del *.out
 
-stdiotest :
+test_stdio :
 	flip -u *.k *.sav *.sh
 	sh ./keytest.sh
 
-stdioclean :
+clean_stdio :
 	rm -f *.out
