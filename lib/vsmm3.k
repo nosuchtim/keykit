@@ -310,7 +310,7 @@ method restore(st) {
 	$.compplay(ph)
 	$.ph2.auditionall()
 	$.resize()
-}
+}
 
 method resetbarplay (){
 	$.showstartbars=[]
@@ -855,7 +855,7 @@ method variationb (){
 	$.updatepatches()
 	$.ph2.set('')
 	$.emptybars()
-	$.setmake()
+	$.setmake()
 	$.tunesource="From Current Variation"
 	$.ph2.setgroupname($.tunesource)
 	$.newvar=0
@@ -865,7 +865,7 @@ method variationb (){
 }
 
 
-
+
 method mychadjust1(p) {
 
 	movers=[]
@@ -992,7 +992,7 @@ method ntadjust (nt,tr){
 			ch=4
 			if(npb)ch--
 		}
-	}
+	}
 	if($.makescale==1 || $.makescale==2){
 		if(np==3||np==8)npb=1
 		if(tr == 1){
@@ -1029,7 +1029,7 @@ method compplay(p1){
 method setNumBars(b){
 	$.bbars.set(b)
 	$.numbars=b
-	$.nbrMeasures = integer($.barArray[b])
+	$.nbrMeasures = integer($.barArray[b])
 }
 
 
@@ -1557,7 +1557,7 @@ min++
 p1=''
 tpose1 = [0=0,1=2,2=4,3=0]
 tpose2 = [0=0,1=4,2=2,3=0]
-
+
 tpose3 = [0=0,1=2,2=0,3=4]
 tpose4 = [0=0,1=4,2=0,3=2]
 
@@ -2118,7 +2118,7 @@ method tsigbars(thistime) {
 	ntstr=substr(thistime,1,c-2)
 	barstr=substr(thistime,c,len)
 	nv=integer(ntstr)
-	bval=integer(barstr)
+	bval=integer(barstr)
 	
 	if(bval==2)notebase=16
 		
@@ -2326,7 +2326,7 @@ method changemakekey1(){
 method chooseharmseq (){
 	return (rand(2))
 }
- method changemakekey(chosen){
+ method changemakekey(chosen){
 	arr=[]
 	arrmax=7
 	trans=[0=0,1=5,2=0,3=7,4=9,5=5,6=2,7=11,8=0,9=2,10=4,11=9,12=2,13=7,14=0]
@@ -2613,7 +2613,7 @@ method mychadjust3(p) {
 				movers[2]=third
 				if(y>2)movers[2]=fifth
 			}
-			movers[3]=third
+			movers[3]=third
 			if(movers[2]==third && x >1)movers[3]=fifth
 			movers[4]=npitch
 		}

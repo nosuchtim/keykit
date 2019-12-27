@@ -6,6 +6,7 @@
 #include <sys/types.h>
 #ifdef linux
 #include <sys/time.h>
+#include <time.h>
 #include <unistd.h>
 #define TRY_RLIMIT_DATA
 #endif
@@ -158,4 +159,13 @@ strerror(int e)
 	else
 		return sys_errlist[e];
 }
+
+#ifdef LOCALUNLINK
+int
+unlink(const char* path)
+{
+	return remove(path)
+}
+#endif
+
 #endif

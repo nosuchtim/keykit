@@ -17,23 +17,8 @@
 #
 #                    This will compile and put binaries in the bin directory.
 #
-#	Linux (X Windows) - To compile, use "make install_linux".  This will
-#	            compile both an ALSA and (possibly) a devmidi version,
-#                   and will create /usr/local/bin/key.  You can compile
-#                   the ALSA and devmidi versions explicitly by using
-#                   "make install_linux_alsa" and "make install_linux_devmidi".
-#
 #	UNIX/Linux (stdio) - To compile, "make install_stdio".
 #                    Use "make regress_stdio" to run the regression tests.
-#
-#	UNIX (X Windows) - To compile, follow the instructions above for
-#                    the stdio version, then use "make install_x".
-#
-#	FreeBSD (stdio) - To compile, follow the instructions above for
-#                    the stdio version, then use "make install_fbsd_stdio".
-#
-#	FreeBSD (X Windows) - To compile, follow the instructions above for
-#                    the stdio version, then use "make install_fbsd_x".
 #
 #       The machine-dependent parts of KeyKit have not changed much
 #       over the years, so many of the previous ports
@@ -51,7 +36,6 @@ CHMOD = c:\cygwin64\bin\chmod.exe
 ZIP32 = c:\local\bin\zip32.exe
 
 # set RMCR to the name of a program that will remove carriage-returns
-# (i.e. flip text files to "unix" mode)
 RMCR = mdep/stdio/rmcr
 # WINRMCR = flip -u
 WINRMCR = dos2unix
@@ -81,18 +65,21 @@ install : default
 
 clean :
 	@echo "No default for 'make clean'."
-	@echo "Use 'make clean_nt' or 'make clean_linux'."
+	@echo "Use 'make clean_nt' or 'make clean_stdio'."
 
 clobber :
 	@echo "No default for 'make clobber'."
-	@echo "Use 'make clobber_nt' or 'make clobber_linux'."
+	@echo "Use 'make clobber_nt' or 'make clobber_stdio'."
 
 clean_linux : 
 	$(MK) -C src clean
 	$(MK) -C doc clean
 	$(MK) -C tests clean
 
-regress : regress_nt
+test : regress_nt
+
+test_nt : regress_nt
+test_stdio : regress_stdio
 
 install_nt :
 	$(MK) install_nt_1
@@ -249,19 +236,19 @@ regress_nt :
 	cd src && $(MK) clean && $(MK) install
 	cd tests && $(MK)
 
-# clean for unix
-clean_unix :
+# clean for linux
+clean_stdio :
 	$(MK) copy_stdio
 	cd src ; $(MK) clean
-	cd byacc ; $(MK) -f makefile.sun clobber
+	cd byacc ; $(MK) -f makefile.stdio clobber
 	cd doc ; $(MK) clean
-	cd tests ; $(MK) unixclean
+	cd tests ; $(MK) stdioclean
 
-clobber_unix : clean_unix
+clobber_stdio : clean_stdio
 	rm -f */core
 	cd src ; $(MK) clobber
 	rm -f bin/lowkey bin/key
-	cd byacc ; $(MK) -f makefile.sun clobber
+	cd byacc ; $(MK) -f makefile.stdio clobber
 
 bindir :
 	if [ ! -d bin ] ; then mkdir bin ; fi
@@ -458,7 +445,7 @@ copy_stdio : bindir
 
 install_stdio :
 	$(MK) copy_stdio
-	cd byacc ; $(MK) -f makefile.sun clobber ; $(MK) -f makefile.sun
+	cd byacc ; $(MK) -f makefile.stdio clobber ; $(MK) -f makefile.stdio
 	cd src ; $(MK) clean ; $(MK) install
 
 regress_stdio :
@@ -485,33 +472,6 @@ copy_x : bindir
 	$(RMCR) bin/resetkeylib
 	chmod +x bin/resetkeylib
 	-$(RMCR) tests/*
-
-# For X Windows (with GNU C):
-install_x: bindir
-	$(MK) copy_x
-	cd byacc ; $(MK) -f makefile.sun clobber ; $(MK) -f makefile.sun
-	cd src ; $(MK) clobber ; $(MK) install
-
-#########################################################
-# FreeBSD X Windows and stdio versions
-#########################################################
-
-src/makefile_freebsd:
-	$(MK) copy_stdio
-	cp mdep/freebsd/makefile_stdio src/makefile
-	ln src/makefile src/makefile_freebsd
-
-install_fbsd_stdio: src/makefile_freebsd
-	cd src ; $(MK) clean ; $(MK) install
-
-src/freebsd_mdep.h:
-	$(MK) copy_x
-	cp mdep/freebsd/* src
-	ln src/mdep.h src/freebsd_mdep.h
-
-# For FreeBSD and X Windows (with GNU C):
-install_fbsd_x: src/freebsd_mdep.h
-	cd src ; $(MK) clobber ; $(MK) install
 
 #########################################################
 # Linux X Windows version with MIDI

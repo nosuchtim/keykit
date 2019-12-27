@@ -1,165 +1,171 @@
-#include <windows.h>
-#include <malloc.h>
-#include <dos.h>
+#ifndef __FreeBSD__
+#include <termio.h>
+#endif
+#include <fcntl.h>
+#include <sys/stat.h>
+#include <sys/types.h>
+#ifdef linux
+#include <sys/time.h>
 #include <time.h>
-#include <io.h>
-#include <direct.h>
+#include <unistd.h>
+#define TRY_RLIMIT_DATA
+#endif
+#ifdef __sgi
+#define TRY_RLIMIT_DATA
+#endif
+#ifdef __FreeBSD__
+#define TRY_RLIMIT_DATA
+#endif
+#ifdef TRY_RLIMIT_DATA
+#include <sys/resource.h>
+#endif
 
-#include "mdep.h"
+#include "key.h"
 
-void mdep_destroywindow(void);
-
-#define SEPARATOR "\\"
+/* hello - This function does anything that needs to be done when */
+/*         keykit first starts up. */
 
 void
 mdep_hello(int argc,char **argv)
 {
+#ifdef TTYSTUFF
+	struct termio t;
+
+	dummyusage(argc);
+	dummyusage(argv);
+
+	if ( ioctl(0,TCGETA,&t) == 0 ) {
+		Killchar = t.c_cc[VKILL];
+		Erasechar = t.c_cc[VERASE];
+		Intrchar = t.c_cc[VINTR];
+	}
+	else {
+		Intrchar = 0x7f;
+	}
+
+	Isatty = isatty(Consolefd);
+	if ( Isatty )
+		setbuf(stdout,(char*)NULL);
+
+	if ( Isatty )
+		ttysetraw();
+#endif
+
 }
 
+/* bye -   This function does any cleanup, before final exit. */
 void
 mdep_bye(void)
 {
-	mdep_destroywindow();
+#ifdef TRYWITHOUT
+	if ( Initdone ) {
+		int fd = 0;
+		if ( ioctl(fd,TCSETA,&Initterm) < 0 ) {
+			sprintf(Msg1,"Error in ioctl(%d,TCSETA) in bye()?  errno=%d\n",fd,errno);
+			eprint(Msg1);
+		}
+	}
+#endif
+}
+
+/* filetime - Return the modification time of a file in seconds. */
+long
+mdep_filetime(char *fn)
+{
+        struct stat s;
+ 
+        if ( stat(fn,&s) == -1 )
+                return(-1);
+        return(s.st_mtime);
+}
+
+/* Return current time in seconds (consistent with filetime()) */
+long
+mdep_currtime(void)
+{
+        return ( time((long *)0) );
+}
+
+/* coreleft - Return memory available */
+long
+mdep_coreleft(void)
+{
+#ifdef TRY_RLIMIT_DATA
+	struct rlimit rl;
+	if ( getrlimit(RLIMIT_DATA,&rl) < 0 || (long)(rl.rlim_cur) < 0 ) {
+		return(MAXLONG);
+	}
+	return (long)rl.rlim_cur;
+#else
+	long max = ulimit(3, 0);
+	char *cur = (char*)sbrk(0);
+	return max - (long)cur;
+#endif
+}
+
+/* fisatty - Return non-zero if the given file is attached to a TTY */
+/*           (ie. not a normal file) */
+int
+mdep_fisatty(FILE *f)
+{
+	return isatty(fileno(f));
 }
 
 int
 mdep_changedir(char *d)
 {
-	return _chdir(d);
+	return chdir(d);
 }
 
 char *
-mdep_currentdir(char *buff,int leng)
+mdep_currentdir(char *buff, int leng)
 {
-	if ( GetCurrentDirectory(leng,buff) == 0 )
-		return NULL;
-	else
-		return buff;
-}
-
-#define fileisdir(fd) (((fd).dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY)!=0)
-
-int
-mdep_lsdir(char *dir, char *exp, void (*callback)(char *,int))
-{
-	WIN32_FIND_DATA fd;
-	HANDLE h;
-	char buff[255];	/* should be MAX_PATH */
-
-	strcpy(buff,dir);
-	strcat(buff,SEPARATOR);
-	strcat(buff,exp);
-	h = FindFirstFile(buff,&fd);
-	if ( h == INVALID_HANDLE_VALUE )
-		return(0);	/* okay, there's just nothing that matches */
-	callback(fd.cFileName,fileisdir(fd)?1:0);
-	while ( FindNextFile(h,&fd) == TRUE )
-		callback(fd.cFileName,fileisdir(fd)?1:0);
-	return(0);
-}
-
-long
-mdep_filetime(char *fn)
-{
-	struct _stat s;
-
-	if ( _stat(fn,&s) == -1 )
-		return(-1);
-
-	/*
-	 * Win98 (and 95?, probably) returns a -1 in the st_mtime
-	 * field when then modification time of the file is
-	 * either way in the past or future (I had a file for
-	 * which "DIR" said it was 8/7/72 and mks's "ls -l"
-	 * said it was modified in 2115, so I'm not sure which it
-	 * was, but it was returning -1 in the st_mtime field.
-	 */
-	if ( s.st_mtime < 0 )
-		s.st_mtime = 0;
-
-	return((long)(s.st_mtime));
+	return getcwd(buff,leng);
 }
 
 int
-mdep_fisatty(FILE *f)
+mdep_lsdir(char *dir, char *exp, void (*callback)(char*,int))
 {
-	if ( f == stdin )
+	char buff[BUFSIZ];
+	FILE *f;
+	struct stat sb;
+
+	sprintf(buff,"ls %s/%s",dir,exp);
+	f = popen(buff,"r");
+	if ( f == NULL ) {
 		return 1;
-	else
-		return _isatty(_fileno(f));
-}
-
-long
-mdep_currtime(void)
-{
-	SYSTEMTIME st;
-	GetSystemTime(&st);
-	return (
-		(3600*24*30)*st.wMonth
-		+ (3600*24)*st.wDay
-		+ 3600*st.wHour
-		+ 60*st.wMinute
-		+ st.wSecond);
-}
-
-long
-mdep_coreleft(void)
-{
-	MEMORYSTATUS m;
-	m.dwLength = sizeof(MEMORYSTATUS);
-	GlobalMemoryStatus(&m);
-	return (long) m.dwAvailPageFile;
-}
-
-int
-mdep_full_or_relative_path(char *path)
-{
-	if ( *path == '/'
-		|| *path=='\\'
-		|| *(path+1)==':'
-		|| *path == '.' )
-		return 1;
-	else
-		return 0;
-}
-
-int
-mdep_makepath(char *dirname, char *filename, char *result, int resultsize)
-{
-	char *p;
-
-	if ( resultsize < (int)(strlen(dirname)+strlen(filename)+5) )
-		return 1;
-
-	/* special case for current directory, */
-	/* since ./file doesn't always work? */
-	if ( strcmp(dirname,".") == 0 ) {
-		strcpy(result,filename);
-		return 0;
 	}
-
-	strcpy(result,dirname);
-	if ( *dirname != '\0' )
-		strcat(result,SEPARATOR);
-	p = strchr(result,'\0');
-	strcat(result,filename);
-
-#ifdef OLDSTUFF
-	/* If filename is of form *.*, enforce 8.3 character limits */
-	if ( (q=strchr(p,'.')) != NULL ) {
-		if ( strlen(q+1) > 3 )
-			*(q+4) = '\0';
-		if ( (q-p) > 8 )
-			strcpy(p+8,q);
+	while ( fgets(buff,BUFSIZ,f) != NULL ) {
+		char *p = strchr(buff,'\n');
+		if ( p )
+			*p = '\0';
+		if ( stat(buff,&sb) < 0 )
+			continue;
+		callback(buff,S_ISDIR(sb.st_mode)?1:0);
 	}
-#endif
+	pclose(f);
 	return 0;
+}
+
+#if !(defined(__FreeBSD__) || defined(linux))
+char *
+strerror(int e)
+{
+	extern int sys_nerr;
+	extern char *sys_errlist[];
+
+	if ( e < 0 || e >= sys_nerr )
+		return("Bad errno!?");
+	else
+		return sys_errlist[e];
 }
 
 #ifdef LOCALUNLINK
 int
-unlink(const char *path)
+unlink(const char* path)
 {
-	return remove(path);
+	return remove(path)
 }
+#endif
+
 #endif

@@ -2,33 +2,33 @@
  *	Copyright 1996 AT&T Corp.  All rights reserved.
  */
 
-#define MACHINE "win"	/* value of keykit's Machine variable */
+#define MACHINE "stdio"	/* value of keykit's Machine variable */
 
 #include <stdio.h>
+#ifdef __STDC__
 #include <stdlib.h>
-#include <ctype.h>
-#include <fcntl.h>
-#include <errno.h>
-#include <string.h>
-#include <signal.h>
-#include <sys/types.h>
-#include <sys/stat.h>
-#include <setjmp.h>
-#include <conio.h>
-#include <limits.h>
+#endif
 #include <stdarg.h>
+#include <unistd.h>
+#include <string.h>
+#ifdef __FreeBSD__
+# include <limits.h>
+#else
+# include <values.h>
+#endif
+#include <setjmp.h>
+#include <errno.h>
 
-#ifndef DONTDEBUG
-#include <crtdbg.h>
+#if !(defined(__FreeBSD__) || defined(linux))
+extern int sys_nerr;
+extern char *sys_errlist[];
 #endif
 
 #ifndef MAXLONG
 #define MAXLONG LONG_MAX
 #endif
 
-#define MOVEBITMAP
-
-#define MAIN(ac,av) keymain(ac,av)
+#define LINETRACK
 
 #define OPENFILE(f,name,mode,binmode) {char m[3]; \
 	m[0] = mode[0]; \
@@ -44,15 +44,20 @@
 #define STACKSIZE 512
 #define ARRAYHASHSIZE 503
 #define STRHASHSIZE 503
-#define PATHSEP ";"
 
-typedef void (*SIGFUNCTYPE)(int);
+#define SEPARATOR "/"
+#define PATHSEP ":"
 
-typedef struct myportinfo *Myporthandle;
+#ifdef __STDC__
+typedef void (*SIGFUNCTYPE)();
+#define CONST const
+#else
+typedef int (*SIGFUNCTYPE)();
+#define CONST
+#endif
 
-#define PORTHANDLE Myporthandle
-#define SEPARATOR "\\"
+#ifndef _MAX_PATH
+#define _MAX_PATH 256
+#endif
 
-#define MDEP_MIDI_PROVIDED
-
-#define MDEP_OSC_SUPPORT
+#define PORTHANDLE int

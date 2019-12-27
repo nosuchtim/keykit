@@ -205,7 +205,7 @@ minkeysigs = ["0" = "A","251" = "Bb","2" = "B","253" = "C","4" = "C#","255" = "D
 
 # name: ksinfo2(ph)
 # desc: returns the Key Signatures in a phrase
-function ksinfo2(ph) {
+function ksinfo2(ph) {
 	p = stripsystext(ph,"Key")
 	a=""
 	b=""
@@ -594,7 +594,7 @@ function smmharmonise3(p, currchord, scale,tr) {
 				if(seventh || y>2)movers[2]=fifth
 			}
 			if(seventh)movers[2]=fifth
-			movers[3]=third
+			movers[3]=third
 			if(movers[2]==third && x >1)movers[3]=fifth
 			movers[4]=npitch
 		}

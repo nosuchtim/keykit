@@ -16,6 +16,9 @@ function updatelib(forceit,forcerekeylib,path,reread) {
 		dir = dirs[i]
 		if ( dir == "" )
 			continue
+		if ( ! fileexists(dir) ) {
+			continue
+		}
 		keylibfn = dir + Dirseparator + "keylib.k"
 		keylibtime = filetime(keylibfn)
 		updateit = forceit

@@ -90,7 +90,7 @@ to32bit(int c1,int c2,int c3,int c4)
 	return (value);
 }
 
-static
+static int
 to16bit(int c1,int c2)
 {
 	return ((c1 & 0xff ) << 8) + (c2 & 0xff);

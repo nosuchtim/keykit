@@ -259,7 +259,7 @@ mdep_boxfill(int x0,int y0,int x1,int y1)
 }
 
 void
-mdep_fillpolygon(int *xarr, int *yarr, Datum *pd)
+mdep_fillpolygon(int *xarr, int *yarr, int arrsize)
 {
 }
 

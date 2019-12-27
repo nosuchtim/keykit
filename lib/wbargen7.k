@@ -610,7 +610,7 @@ method ntadjust (nt,tr){
 			ch=4
 			if(npb)ch--
 		}
-	}
+	}
 	if($.scale==1 || $.scale==2){
 		if(np==3||np==8)npb=1
 		if(tr == 1){
@@ -642,7 +642,7 @@ method compplay(p1){
 #picks up from the Bars menu
 method setNumBars(b){
 	$.bbars.set(b)
-	$.nbrMeasures = integer($.barArray[b])
+	$.nbrMeasures = integer($.barArray[b])
 }
 
 

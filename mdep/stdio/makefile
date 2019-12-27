@@ -37,6 +37,9 @@ protoflp : protoflp.c
 keylib : keylib.o mdep1.o misc.o
 	$(CC) $(STATIC) keylib.o mdep1.o misc.o -o keylib
 
+.c.o:
+	gcc -c $*.c
+
 yacc.c : gram.y
 	../byacc/byacc -d gram.y
 	mv y_tab.c yacc.c

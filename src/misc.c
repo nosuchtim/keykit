@@ -27,8 +27,11 @@ exists(char *fname)
 	if ( fname==NULL || *fname=='\0' )
 		return 0;
 
-	errno_t err;
-	err = fopen_s(&f, fname, "r");
+	int err = 0;
+	f = fopen(fname, "r");
+	if ( f == NULL ) {
+		err = errno;
+	}
 	if ( err == 0 && f != NULL ) {
 		myfclose(f);
 		return(1);

@@ -696,7 +696,7 @@ method ntadjust (nt,tr){
 			ch=4
 			if(npb)ch--
 		}
-	}
+	}
 	if($.scale==1 || $.scale==2){
 		if(np==3||np==8)npb=1
 		if(tr == 1){
@@ -732,7 +732,7 @@ method compplay(p1){
 #picks up from the Bars menu
 method setNumBars(b){
 	$.bbars.set(b)
-	$.nbrMeasures = integer($.barArray[b])
+	$.nbrMeasures = integer($.barArray[b])
 }
 
 
@@ -1205,7 +1205,7 @@ min++
 p1=''
 tpose1 = [0=0,1=2,2=4,3=0]
 tpose2 = [0=0,1=4,2=2,3=0]
-
+
 tpose3 = [0=0,1=2,2=0,3=4]
 tpose4 = [0=0,1=4,2=0,3=2]
 

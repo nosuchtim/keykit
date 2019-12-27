@@ -667,6 +667,7 @@ installvar(Symstr up)
 	return s;
 }
 
+int
 yylex()
 {
 	register int c;

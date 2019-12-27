@@ -1,17 +1,14 @@
-#include <windows.h>
-#include <mmsystem.h>
 
-static long tm0;
-long Firsttime = 0;
+static long Mclock = 0;
 
 long
-mdep_milliclock(void)
+mdep_milliclock()
 {
-	return ((long)timeGetTime())-tm0;
+	return Mclock++;
 }
 
 void
-mdep_resetclock(void)
+mdep_resetclock()
 {
-	Firsttime = tm0 = (long)timeGetTime();
+	Mclock = 0;
 }

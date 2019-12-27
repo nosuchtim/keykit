@@ -2,6 +2,8 @@
 #include <signal.h>
 #include "defs.h"
 
+void exit(int status);
+
 char dflag;
 char lflag;
 char rflag;

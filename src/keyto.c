@@ -29,7 +29,7 @@ static double Clickfactor = 1.0;
 static int Laststat = 0;	/* NOTEON, NOTEOFF, PRESSURE, etc. */
 
 static void
-trackbyte(c)	/* must be used by everything that writes track data */
+trackbyte(int c)	/* must be used by everything that writes track data */
 {
 	c = c & 0xff;
 	putc(c,Trktmp);
@@ -142,6 +142,7 @@ metatype(char *s)
 
 static void
 putmetatext(type,contents)  /* generate a standard midifile meta text message */
+int type;
 char *contents;	/* ends with 0xf7, NOT 0x00 */
 {
 	char *q;
@@ -470,7 +471,7 @@ maketemp()	/* find a temporary file name (inefficient but portable) */
 static void
 rmtemp(void)
 {
-	(void) _unlink(Tmpfname);
+	(void) unlink(Tmpfname);
 }
 
 static void

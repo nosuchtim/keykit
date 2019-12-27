@@ -1122,7 +1122,7 @@ loadkeylibk(void)
 {
 	/* Go through all the directories in the Keypath, and load all the */
 	/* keylib.k files (if they exist) */
-	static int pathsize = 0;
+	static long pathsize = 0;
 	static char **pathparts = NULL;
 	static char *lastkeypath = NULL;
 	static char *pathfname = NULL;	/* result is kept here */
@@ -1514,7 +1514,7 @@ filetoph(FILE *f,char *fname)
 char *
 kpathsearch(char *fname)
 {
-	static int pathsize = 0;
+	static long pathsize = 0;
 	static char **pathparts = NULL;
 	static char *lastkeypath = NULL;
 	static char *pathfname = NULL;	/* result is kept here */
@@ -1526,7 +1526,7 @@ kpathsearch(char *fname)
 char *
 mpathsearch(char *fname)
 {
-	static int pathsize = 0;
+	static long pathsize = 0;
 	static char **pathparts = NULL;
 	static char *lastkeypath = NULL;
 	static char *pathfname = NULL;	/* result is kept here */

@@ -555,7 +555,7 @@ bi_pathsearch(int argc)
 	Datum d;
 	char *fname;
 	char *path, *s;
-	static int pathsize = 0;
+	static long pathsize = 0;
 	static char **pathparts = NULL;
 	static char *lastkeypath = NULL;
 	static char *pathfname = NULL;
