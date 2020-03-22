@@ -16,7 +16,8 @@ LINK=link
 LIB=lib
 CC=cl
 
-VCPATHS="/libpath:\program files (x86)\microsoft visual studio 14.0\vc\lib\amd64" "/libpath:\program files (x86)\windows kits\10\lib\10.0.15063.0\ucrt\x64" "/libpath:\program files (x86)\windows kits\10\lib\10.0.15063.0\um\x64"
+WINDOWS10SDK = 10.0.17763.0
+VCPATHS="/libpath:\program files (x86)\microsoft visual studio 14.0\vc\lib\amd64" "/libpath:\program files (x86)\windows kits\10\lib\$(WINDOWS10SDK)\ucrt\x64" "/libpath:\program files (x86)\windows kits\10\lib\$(WINDOWS10SDK)\um\x64"
 
 
 # Reverse the order of these statements to toggle debug info

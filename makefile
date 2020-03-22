@@ -346,8 +346,9 @@ PREDIR2 = mdep\winsetup\key$(SUFF)
 # This 'find' command must be the MKS toolkit find, or something similar
 FIND = c:\cygwin64\bin\find
 
+WINDOWS10SDK = 10.0.17763.0
 REDIST = "c:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\redist\debug_nonredist\x64\Microsoft.VC140.DebugCRT"
-UCRT = "c:\Program Files (x86)\Windows Kits\10\bin\10.0.15063.0\x64\ucrt"
+UCRT = "c:\Program Files (x86)\Windows Kits\10\bin\$(WINDOWS10SKD)\x64\ucrt"
 
 packitup :
 	copy $(REDIST)\vcruntime140d.dll bin
