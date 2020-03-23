@@ -471,7 +471,7 @@ maketemp()	/* find a temporary file name (inefficient but portable) */
 static void
 rmtemp(void)
 {
-	(void) unlink(Tmpfname);
+	(void) _unlink(Tmpfname);	/* POSIX name for unlink is deprecated? */
 }
 
 static void

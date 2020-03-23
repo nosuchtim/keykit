@@ -40,10 +40,10 @@ $(PROGRAM):     $(OBJS)
 	$(LINK) -out:byacc.exe $(OBJS) $(VCPATHS) $(LIBS)
 	@echo "done"
 
-clean:;		del *.obj
+clean:;		del /q *.obj
 
-clobber:;	del *.obj
-		del $(PROGRAM)
+clobber:;	del /q *.obj
+		del /q $(PROGRAM)
 
 ###
 closure.obj: defs.h
