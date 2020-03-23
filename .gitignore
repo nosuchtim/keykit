@@ -1,5 +1,6 @@
 *~
 *.swp
+src/.vs
 
 fingerworks
 local/oscwin32

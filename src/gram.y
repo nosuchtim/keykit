@@ -32,8 +32,8 @@ static char* Methtemp;
 	Phrasep	phr;	/* phrase constant */
 }
 %token	<sym>	VAR UNDEF MACRO TOGLOBSYM QMARK2 DOLLAR2 WHILE DOTDOTDOT
-%token	<sym>	IF ELSE FOR IN BEINGREAD EVAL BREAK CONTINUE TASK
-%token	<sym>	DELETE UNDEFINE RETURN FUNC DEFINED READONLY ONCHANGE GLOBALDEC
+%token	<sym>	IF ELSE FOR SYM_IN BEINGREAD EVAL BREAK CONTINUE TASK
+%token	<sym>	SYM_DELETE UNDEFINE RETURN FUNC DEFINED READONLY ONCHANGE GLOBALDEC
 %token	<sym>	CLASS METHOD KW_NEW NARGS TYPEOF XY
 %token	<sym>	DUR VOL TIME CHAN PITCH LENGTH NUMBER TYPE ATTRIB FLAGS VARG PORT
 %token	<phr>	PHRASE
@@ -108,7 +108,7 @@ stmtnv	: RETURN		{ yyerror("'return' statement needs parentheses!");
 	;
 expr	: '{' stmts '}'		{ $$ = $2; fakeval(); }
 
-	| DELETE expr
+	| SYM_DELETE expr
 		{
 		  if ( recodedelete($2,code(funcinst(I_DELETEIT))) != 0 ) {
 			yyerror("Bad 'delete' statement!");
@@ -145,7 +145,7 @@ expr	: '{' stmts '}'		{ $$ = $2; fakeval(); }
 		fakeval();
 		}
 
-	| FOR '(' var IN {loopstart();} expr forin1 forin2 ')' stmt goto forinend {
+	| FOR '(' var SYM_IN {loopstart();} expr forin1 forin2 ')' stmt goto forinend {
 		STUFFCODE($7,1, syminst($3));
 		STUFFCODE($7,2, instnodeinst($12));
 		STUFFCODE($11,1, instnodeinst($8));
@@ -254,7 +254,7 @@ expr	: '{' stmts '}'		{ $$ = $2; fakeval(); }
 	| expr REGEXEQ expr	{ code(funcinst(I_REGEXEQ)); }
 	| expr NE expr		{ code(funcinst(I_NE)); }
 	| BANG expr		{ code(funcinst(I_NOT)); $$=$2; }
-	| expr IN expr		{ code(funcinst(I_INCOND)); }
+	| expr SYM_IN expr		{ code(funcinst(I_INCOND)); }
 	| expr and expr end	{ STUFFCODE($2,1, instnodeinst($4)); }
 	| expr or expr end	{ STUFFCODE($2,1, instnodeinst($4)); }
 
@@ -568,11 +568,11 @@ var	: NAME		{ $$ = installvar($1); }
 	| CLASS		{ $$ = installvar($1->name.u.str); }
 	;
 methname: NAME		{ $$ = $1;  }
-	| DELETE	{ $$ = $1->name.u.str;  }
+	| SYM_DELETE	{ $$ = $1->name.u.str;  }
 	| CLASS	{ $$ = $1->name.u.str;  }
 	;
 method	: NAME	  { $$ = code2(funcinst(I_STRINGPUSH),strinst($1));  }
-	| DELETE  { $$ = code2(funcinst(I_STRINGPUSH),strinst($1->name.u.str));  }
+	| SYM_DELETE  { $$ = code2(funcinst(I_STRINGPUSH),strinst($1->name.u.str));  }
 	| CLASS	  { $$ = code2(funcinst(I_STRINGPUSH),strinst($1->name.u.str));  }
 	| '(' expr ')'	{ $$ = $2; }
 	;

@@ -38,3 +38,6 @@ clean :
 	rm -f libdoc.html
 	rm -f faq.html
 
+clobber : clean
+	rm -f *.html
+

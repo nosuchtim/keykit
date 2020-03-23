@@ -16,10 +16,11 @@
 /* We do NOT want the malloc call, here, to be replace with _malloc_dbg */
 #define DONTDEBUG
 
-#include "keydll.h"
 #include "keymidi.h"
 #include "key.h"
 #include "d_mdep2.h"
+
+int udp_send(PORTHANDLE mp, char* msg, int msgsize);
 
 BOOL GetButtonInput(int,int,BOOL *);
 void key_start_capture();
@@ -37,24 +38,19 @@ void key_stop_capture();
 /* extern FILE *df; */
 
 extern HWND Khwnd;
-
-#define devnoOutIndex(d) (((d)==MIDI_MAPPER)?(MidimapperOutIndex):(d))
-
 HMIDIIN Kmidiin[MIDI_IN_DEVICES];
 HMIDIOUT Kmidiout[MIDI_OUT_DEVICES];
 int MidimapperOutIndex;
 MIDIINCAPS midiInCaps[MIDI_IN_DEVICES];
 MIDIOUTCAPS midiOutCaps[MIDI_OUT_DEVICES];
-int Nmidiin = 0;
-int Nmidiout = 0;
-LPCIRCULARBUFFER MidiInputBuffer;
-
-typedef struct mymidiinbuff {
-	LPMIDIHDR midihdr;
-} MY_MIDI_BUFF;
 
 static MY_MIDI_BUFF *MidiInBuff = NULL;
 
+HWND     hwndNotify;
+int Nmidiin = 0;
+int Nmidiout = 0;
+
+LPCIRCULARBUFFER MidiInputBuffer;
 LPCALLBACKINSTANCEDATA CallbackInputData[MIDI_IN_DEVICES];
 LPCALLBACKINSTANCEDATA CallbackOutputData[MIDI_OUT_DEVICES];
 
@@ -187,7 +183,7 @@ mdep_putnmidi(int n, char *cp, Midiport * pport)
 	LPMIDIHDR midihdr;
 	int r;
 	union {
-		DWORD dwData;
+		DWORD dwData;  // DWORD here is okay, I think
 		BYTE bData[4];
 	} u;
 	HMIDIOUT km;
@@ -236,6 +232,8 @@ mdep_putnmidi(int n, char *cp, Midiport * pport)
 	}
 }
 
+static DWORD Inputdata = 99;
+
 int
 openmidiin(int i)
 {
@@ -248,7 +246,7 @@ openmidiin(int i)
 	r = midiInOpen((LPHMIDIIN)&(Kmidiin[i]),
 			  i,
 			  (DWORD_PTR)midiInputHandler,
-			  (DWORD_PTR)(CallbackInputData[i]),
+			  i, // (DWORD_PTR)(CallbackInputData[i]),
 			  CALLBACK_FUNCTION);
 	if(r) {
 		char msg[256];
@@ -331,7 +329,7 @@ mdep_initmidi(Midiport *inputs, Midiport *outputs)
 	 * is filled by the low-level callback function and emptied by the
 	 * application when it receives MM_MIDIINPUT messages.
 	 */
-	MidiInputBuffer = AllocCircularBuffer((DWORD)(CIRCULAR_BUFF_SIZE));
+	MidiInputBuffer = AllocCircularBuffer((DWORD)(CIRCULAR_BUFF_SIZE));	// DWORD here is okay, I think
 	if (MidiInputBuffer == NULL) {
 		mdep_popup("Not enough memory available for input buffer.");
 		return 1;
@@ -412,11 +410,11 @@ newmidihdr(int sz)
 	LPMIDIHDR lpMidi;
 	HPSTR lpData;
 
-	lpData = (HPSTR) GlobalAlloc(0, (DWORD)sz);
+	lpData = (HPSTR) GlobalAlloc(0, (DWORD)sz);	// DWORD is okay here, I think
 	if(lpData == NULL)
 		return 0;
 	    
-	lpMidi = (LPMIDIHDR) GlobalAlloc(0, (DWORD)sizeof(MIDIHDR));
+	lpMidi = (LPMIDIHDR) GlobalAlloc(0, (DWORD)sizeof(MIDIHDR));	// DWORD is okay here, I think
 	if(lpMidi == NULL)
 		return 0;
 	    
@@ -557,7 +555,7 @@ FreeCircularBuffer(LPCIRCULARBUFFER lpBuf)
  *   events to get.
  */
 
-static WORD FAR PASCAL
+static WORD
 GetEvent(LPCIRCULARBUFFER lpBuf, LPEVENT lpEvent)
 {
     /* If no event available, return.
@@ -591,7 +589,7 @@ GetEvent(LPCIRCULARBUFFER lpBuf, LPEVENT lpEvent)
  * Return:  A pointer to the allocated CALLBACKINSTANCE data structure.
  */
 
-static LPCALLBACKINSTANCEDATA FAR PASCAL
+static LPCALLBACKINSTANCEDATA
 AllocCallbackInstanceData(void)
 {
     LPCALLBACKINSTANCEDATA lpBuf;
@@ -607,7 +605,7 @@ AllocCallbackInstanceData(void)
  * Return:  void
  */
 
-static void FAR PASCAL
+static void
 FreeCallbackInstanceData(LPCALLBACKINSTANCEDATA lpBuf)
 {
     GlobalFree(lpBuf);
@@ -1296,3 +1294,170 @@ mdep_midi(int openclose, Midiport * p)
 	return r;
 }
 
+#if 0
+#include <windows.h>
+#include <mmsystem.h>
+#include <string.h>
+#include "keydll.h"
+#include <stdio.h>
+#include <varargs.h>
+#endif
+
+int KeySetupDll(HWND hwnd) {
+
+	hwndNotify = hwnd;           // Save window handle for notification
+	return 0;
+}
+
+void
+KeyTimerFunc(UINT  wID, UINT  wMsg, DWORD dwUser, DWORD dw1, DWORD dw2) {
+
+	PostMessage(hwndNotify, WM_KEY_TIMEOUT, 0, timeGetTime());
+}
+
+/* midiInputHandler - Low-level callback function to handle MIDI input.
+ *      Installed by midiInOpen().  The input handler takes incoming
+ *      MIDI events and places them in the circular input buffer.  It then
+ *      notifies the application by posting a WM_KEY_MIDIINPUT message.
+ *
+ *      This function is accessed at interrupt time, so it should be as
+ *      fast and efficient as possible.  You can't make any
+ *      Windows calls here, except PostMessage().  The only Multimedia
+ *      Windows call you can make are timeGetSystemTime(), midiOutShortMsg().
+ *
+ *
+ * Param:   hMidiIn - Handle for the associated input device.
+ *          wMsg - One of the MIM_***** messages.
+ *          dwInstance - Points to CALLBACKINSTANCEDATA structure.
+ *          dwParam1 - MIDI data.
+ *          dwParam2 - Timestamp (in milliseconds)
+ *
+ * Return:  void
+ */
+void midiInputHandler(
+	HMIDIIN hMidiIn,
+	WORD wMsg,
+	DWORD dwInstance,
+	DWORD dwParam1,
+	DWORD dwParam2)
+{
+	static EVENT event;
+	HWND h;
+	LPCALLBACKINSTANCEDATA lpc;
+
+	void keyerrfile(char* fmt, ...);
+
+	switch (wMsg) {
+	case MIM_DATA:
+		/* ignore active sensing */
+		if (LOBYTE(LOWORD(dwParam1)) == (BYTE)0xfe)
+			break;
+		/* fall through */
+	case MIM_LONGDATA:
+		// lpc = (LPCALLBACKINSTANCEDATA)dwInstance;
+		lpc = CallbackInputData[dwInstance];
+		h = lpc->hWnd;
+		if (h == 0) {
+			// e.g. when we're shutting down
+			break;
+		}
+		event.dwDevice = lpc->dwDevice;
+		event.data = dwParam1;		/* real MIDI data */
+#ifdef EVENT_TIMESTAMP
+		event.timestamp = dwParam2;
+#endif
+		event.islong = (wMsg == MIM_LONGDATA);
+		PutEvent(lpc->lpBuf, (LPEVENT) & event);
+		PostMessage(h,
+			WM_KEY_MIDIINPUT,
+			lpc->dwDevice,
+			(DWORD)dwInstance);
+		break;
+	case MIM_OPEN:
+		break;
+	case MIM_CLOSE:
+		break;
+	case MIM_ERROR:
+	case MIM_LONGERROR:
+		// lpc = (LPCALLBACKINSTANCEDATA)dwInstance;
+		lpc = CallbackInputData[dwInstance];
+		PostMessage(lpc->hWnd,
+			WM_KEY_ERROR,
+			lpc->dwDevice,
+			(DWORD)dwInstance);
+		break;
+	default:
+		break;
+	}
+}
+
+/* midiOutputHandler - Low-level callback function to handle MIDI output.
+ *
+ * Param:   hMidiOut - Handle for the associated output device.
+ *          wMsg - One of the MOM_***** messages.
+ *          dwInstance - Points to CALLBACKINSTANCEDATA structure.
+ *          dwParam1 - MIDI data.
+ *          dwParam2 - Timestamp (in milliseconds)
+ *
+ * Return:  void
+ */
+void midiOutputHandler(
+	HMIDIIN hMidiOut,
+	WORD wMsg,
+	DWORD dwInstance,
+	DWORD dwParam1,
+	DWORD dwParam2)
+{
+	LPCALLBACKINSTANCEDATA lpc;
+
+	switch (wMsg) {
+	case MOM_OPEN:
+	case MOM_CLOSE:
+		break;
+
+	case MOM_DONE:
+		/* The dwParam1 is a pointer to the MIDIHDR structure for */
+		/* the block that was just completed */
+		// lpc = (LPCALLBACKINSTANCEDATA)dwInstance;
+		lpc = CallbackInputData[dwInstance];
+		PostMessage(lpc->hWnd,
+			WM_KEY_MIDIOUTPUT,
+			lpc->dwDevice,
+			(DWORD)dwParam1);
+		break;
+
+	default:
+		break;
+	}
+}
+
+void PutEvent(LPCIRCULARBUFFER lpBuf, LPEVENT lpEvent)
+{
+
+/*
+ * PutEvent - Puts an EVENT in a CIRCULARBUFFER.  If the buffer is full,
+ *      it sets the wError element of the CIRCULARBUFFER structure
+ *      to be non-zero.
+ *
+ * Params:  lpBuf - Points to the CIRCULARBUFFER.
+ *          lpEvent - Points to the EVENT.
+ *
+ * Return:  void
+ */
+
+	/* If the buffer is full, set an error and return. */
+	if (lpBuf->dwCount >= lpBuf->dwSize) {
+		lpBuf->wError = 1;
+		return;
+	}
+
+	/* Put the event in the buffer, bump the head pointer and byte count.*/
+	*lpBuf->lpHead = *lpEvent;
+
+	++lpBuf->lpHead;
+	++lpBuf->dwCount;
+
+	/* Wrap the head pointer, if necessary. */
+	if (lpBuf->lpHead >= lpBuf->lpEnd)
+		lpBuf->lpHead = lpBuf->lpStart;
+}

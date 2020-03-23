@@ -300,7 +300,7 @@ static struct {		/* Keywords */
 	"else",		ELSE,
 	"while",	WHILE,
 	"for",		FOR,
-	"in",		IN,
+	"in",		SYM_IN,  /* to avoid conflict on windows */
 	"break",	BREAK,
 	"continue",	CONTINUE,
 	"task",		TASK,
@@ -320,7 +320,7 @@ static struct {		/* Keywords */
 	"type",		TYPE,
 	"defined",	DEFINED,
 	"undefine",	UNDEFINE,
-	"delete",	DELETE,
+	"delete",	SYM_DELETE,
 	"readonly",	READONLY,
 	"onchange",	ONCHANGE,
 	"flags",	FLAGS,

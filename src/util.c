@@ -911,6 +911,10 @@ getnumval(Datum d,int round)
 	case D_CODEP:
 		// XXX - This code truncates the value of codep on a 64-bit system
 		// XXX - It seems to work, but it might not work at some point.
+		// XXX - Perhaps some code should be added here to make sure that
+		// XXX - the truncated part is 0 (i.e. not significant)?  Not sure.
+		// XXX - Maybe this means that numbers in KeyKit are 32-bit,
+		// XXX - even on a 64-bit system?  Just thinking out loud here.
 		v = (long)(d.u.codep);
 		break;
 	case D_ARR:

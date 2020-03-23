@@ -19,7 +19,6 @@
 #include <io.h>
 #include <direct.h>
 #include "key.h"
-#include "keydll.h"
 
 #define K_JOYBUTTON 0
 #define K_JOYANALOG 1
@@ -138,7 +137,7 @@ static int tcpip_recv(SOCKET,char *,int);
 static int tcpip_send(PORTHANDLE,char *,int);
 #endif
 
-void handlemidioutput(long long,long long);
+void handlemidioutput(long long,int);
 
 // int errno;
 /* int __mb_cur_max = 0x00100000L; */
@@ -576,7 +575,7 @@ joycheck(int t)
 	}
 }
 
-static BOOL FAR PASCAL
+static BOOL
 AboutDlgProc (HWND hDlg, UINT message, UINT wParam, LONG lParam)
 {
 	switch(message) {
@@ -807,11 +806,12 @@ WndProc (HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam)
 	case WM_SYSCOMMAND:
 		switch (wParam) {
 		case IDM_ABOUT: {
-			FARPROC lpfnDlgProc = 
-				MakeProcInstance (AboutDlgProc, Khinstance);
-			DialogBox(Khinstance, "AboutBox", Khwnd,
-				(MYDLGPROC) lpfnDlgProc);
-			FreeProcInstance(lpfnDlgProc);
+			eprint("ABOUT Dialog has been disabled\n");
+			// FARPROC lpfnDlgProc = 
+			//	MakeProcInstance (AboutDlgProc, Khinstance);
+			// DialogBoxA(Khinstance, "AboutBox", Khwnd,
+			//	(MYDLGPROC) lpfnDlgProc);
+			// FreeProcInstance(lpfnDlgProc);
 			}
 			return 0;
 		case IDM_KEY_ABORT:
@@ -1245,7 +1245,7 @@ mdep_waitfor(int tmout)
 		return K_TIMEOUT;
 	}
 	timerid = timeSetEvent((UINT)tmout,(UINT)(*Millires),
-		(LPTIMECALLBACK)KeyTimerFunc, (DWORD)0, TIME_ONESHOT);
+		(LPTIMECALLBACK)KeyTimerFunc, (DWORD_PTR)0, TIME_ONESHOT);
 	if ( timerid == 0 ) {
 		usetimer = 0;
 
@@ -1386,7 +1386,7 @@ mdep_startgraphics(int argc,char **argv)
 			your hosts file (in system/drivers/etc/hosts. */
 
 		dwSize = sizeof(myname);
-		if ( GetComputerName(myname,&dwSize) == FALSE ) {
+		if ( GetComputerNameA(myname,&dwSize) == FALSE ) {
 			if ( gethostname(myname,sizeof(myname)) < 0 ) {
 				sockerror(INVALID_SOCKET,"GetComputerName() AND gethostname() failed!?  Using 'localhost'");
 				strcpy(myname,"localhost");
@@ -3192,7 +3192,7 @@ CreateChildProcess()
 static char *
 ReadFromPipe(HANDLE hRead, HANDLE hWrite, Datum d)
 {
-    DWORD dwRead;
+    DWORD dwRead;	// DWORD here is okay, I think
     char buff[BUFSIZE]; 
 	char word1[BUFSIZ];
 	char word3[BUFSIZ];

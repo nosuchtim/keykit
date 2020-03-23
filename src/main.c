@@ -409,7 +409,7 @@ stacktrace(Datum *dp,int full,int newlines,Ktaskp t)
 			varsize = (int)((dp - FRAME_VARSIZE_OFFSET)->u.val);
 			arg0 = (dp - FRAMEHEADER - varsize);
 			stackbuff("(");
-			for ( n=0; n<npassed; n++ ) {
+			for ( n=0; n<npassed; n++ )  {
 				long limit;
 				if ( n > 0 )
 					stackbuff(",");
@@ -455,7 +455,7 @@ keyerrfile(char *fmt,...)
 		vfprintf(stderr,fmt,args);	/* last resort */
 	else {
 		vfprintf(stdout,fmt,args);
-		// vfprintf(f,fmt,args);
+		vfprintf(f,fmt,args);
 		fflush(f);
 	}
 	va_end(args);

@@ -133,6 +133,8 @@ install_nt_2 :
 
 # Windows NT (and 95) version
 copy_nt :
+	cp mdep/nt/key64.sln src/key64.sln
+	cp mdep/nt/key64.vcxproj src/key64.vcxproj
 	cp mdep/nt/makefile src/makefile
 	cp mdep/nt/mdep1.c src/mdep1.c
 	cp mdep/nt/mdep2.c src/mdep2.c
@@ -141,9 +143,6 @@ copy_nt :
 	cp mdep/nt/midi.c src/midi.c
 	cp mdep/nt/clock.c src/clock.c
 	cp mdep/nt/keycap.cpp src/keycap.cpp
-	cp mdep/nt/keydll.c src/keydll.c
-	cp mdep/nt/keydll.h src/keydll.h
-	cp mdep/nt/keydll.def src/keydll.def
 	cp mdep/nt/key.rc src/key.rc
 	cp mdep/nt/*.cur src
 	cp mdep/nt/*.ico src
@@ -164,9 +163,6 @@ copy_nt_python :
 	cp mdep/winpython/midi.c src/midi.c
 	cp mdep/winpython/clock.c src/clock.c
 	cp mdep/winpython/keycap.cpp src/keycap.cpp
-	cp mdep/winpython/keydll.c src/keydll.c
-	cp mdep/winpython/keydll.h src/keydll.h
-	cp mdep/winpython/keydll.def src/keydll.def
 	cp mdep/winpython/key.rc src/key.rc
 	cp mdep/winpython/*.cur src
 	cp mdep/winpython/*.ico src
@@ -181,9 +177,6 @@ copy_ntshare :
 	cp mdep/ntshare/values.h src/values.h
 	cp mdep/ntshare/midi.c src/midi.c
 	cp mdep/ntshare/clock.c src/clock.c
-	cp mdep/ntshare/keydll.c src/keydll.c
-	cp mdep/ntshare/keydll.h src/keydll.h
-	cp mdep/ntshare/keydll.def src/keydll.def
 	cp mdep/ntshare/key.rc src/key.rc
 	cp mdep/ntshare/*.cur src
 	cp mdep/ntshare/*.ico src
@@ -218,9 +211,10 @@ clean_nt :
 clobber_nt : clean_nt
 	rm -f *~
 	cd src && $(MK) clobber
+	cd doc && $(MK) clobber
+	cd lib && $(MK) clobber
 	rm -f mdep/winsetup//key.exe
 	rm -f bin/key.exe
-	rm -f bin/keydll.dll
 	rm -f bin/keylib.exe
 	rm -f bin/*.ico
 	rm -f bin/*.cur
@@ -359,7 +353,6 @@ packitup :
 	$(FIND) ./bin/resetkeylib.bat >> tmp.lst
 	$(FIND) ./bin/key.exe>> tmp.lst
 	$(FIND) ./bin/lowkey.exe>> tmp.lst
-	$(FIND) ./bin/keydll.dll>> tmp.lst
 	$(FIND) ./bin/vcruntime140d.dll >> tmp.lst
 	$(FIND) ./bin/ucrtbased.dll >> tmp.lst
 	$(FIND) ./bin -name "*.py" >> tmp.lst
