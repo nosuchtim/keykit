@@ -7,9 +7,9 @@
 #       Windows -    To compile the windows version, you'll need:
 #
 #                    0) Windows 10
-#                    1) Microsoft Visual Studio 2017
-#                    2) Cygwin64 (in c:\cygwin64)
-#                    3) Git (in c:\program files\Git)
+#                    1) Microsoft Visual Studio 2019
+#                    2) Cygwin64 (in c:\cygwin64, only needed for perl and an XML parsing library for docs)
+#                    3) Git (in c:\program files\Git, for a few unix utilities)
 #
 #                    Once you have these, execute this command in a DOS window:
 #
@@ -214,6 +214,7 @@ clobber_nt : clean_nt
 	cd doc && $(MK) clobber
 	cd lib && $(MK) clobber
 	rm -f mdep/winsetup//key.exe
+	rm -f bin/key.dbg
 	rm -f bin/key.exe
 	rm -f bin/keylib.exe
 	rm -f bin/*.ico
