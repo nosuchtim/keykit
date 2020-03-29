@@ -10,7 +10,7 @@ STATIC =
 SOUNDLIBS = /usr/lib/arm-linux-gnueabihf/libasound.so.2 -L/usr/lib/ -lpthread -ldl
 XLIBS = /usr/lib/arm-linux-gnueabihf/libX11.so.6 -lm
 INC = -I/usr/include/
-KEY = key_alsa
+KEY = key
 
 # Valid values of PROTO are -n (don't use prototypes) and -p (use prototypes).
 # After changing PROTO, run "make protoproc".

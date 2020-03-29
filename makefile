@@ -238,7 +238,7 @@ clean_stdio :
 	cd src ; $(MK) clean
 	cd byacc ; $(MK) -f makefile.stdio clobber
 	cd doc ; $(MK) clean
-	cd tests ; $(MK) stdioclean
+	cd tests ; $(MK) clean_stdio
 
 clobber_stdio : clean_stdio
 	rm -f */core
@@ -528,9 +528,8 @@ LINUXBIN = /usr/local/bin
 
 install_raspbian:
 	$(MK) install_stdio
-	$(MK) clobber_stdio
 	$(MK) copy_raspbian
-	cd src ; $(MK)
+	cd src ; $(MK) install
 
 clean_raspbian :
 	$(MK) copy_raspbian
