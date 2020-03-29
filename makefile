@@ -7,9 +7,9 @@
 #       Windows -    To compile the windows version, you'll need:
 #
 #                    0) Windows 10
-#                    1) Microsoft Visual Studio 2017
-#                    2) Cygwin64 (in c:\cygwin64)
-#                    3) Git (in c:\program files\Git)
+#                    1) Microsoft Visual Studio 2019
+#                    2) Cygwin64 (in c:\cygwin64, only needed for perl and an XML parsing library for docs)
+#                    3) Git (in c:\program files\Git, for a few unix utilities)
 #
 #                    Once you have these, execute this command in a DOS window:
 #
@@ -214,6 +214,7 @@ clobber_nt : clean_nt
 	cd doc && $(MK) clobber
 	cd lib && $(MK) clobber
 	rm -f mdep/winsetup//key.exe
+	rm -f bin/key.dbg
 	rm -f bin/key.exe
 	rm -f bin/keylib.exe
 	rm -f bin/*.ico
@@ -237,7 +238,7 @@ clean_stdio :
 	cd src ; $(MK) clean
 	cd byacc ; $(MK) -f makefile.stdio clobber
 	cd doc ; $(MK) clean
-	cd tests ; $(MK) stdioclean
+	cd tests ; $(MK) clean_stdio
 
 clobber_stdio : clean_stdio
 	rm -f */core
@@ -506,7 +507,47 @@ copy_linux_alsa : bindir
 	chmod ugo+w */keylib.k
 	-$(RMCR) tests/*
 
+copy_raspbian : bindir
+	cp mdep/raspbian/mdep1.c src/mdep1.c
+	cp mdep/raspbian/mdep2.c src/mdep2.c
+	cp mdep/raspbian/mdep.h src/mdep.h
+	cp mdep/raspbian/makefile src/makefile
+	cp mdep/raspbian/bsdclock.c src/clock.c
+	cp mdep/raspbian/tjt.ico src/tjt.ico
+	cp mdep/raspbian/keykit.ico src/keykit.ico
+	cp mdep/raspbian/midi.c src/midi.c
+	$(RMCR) src/*.c src/*.h src/*.ico src/makefile
+	$(RMCR) lib/* tests/makefile
+	cp mdep/stdio/resetkeylib bin
+	$(RMCR) bin/resetkeylib
+	chmod +x bin/resetkeylib
+	chmod ugo+w */keylib.k
+	-$(RMCR) tests/*
+
 LINUXBIN = /usr/local/bin
+
+install_raspbian:
+	$(MK) install_stdio
+	$(MK) copy_raspbian
+	cd src ; $(MK) install
+
+clean_raspbian :
+	$(MK) copy_raspbian
+	cd src ; $(MK) clean
+	cd byacc ; $(MK) -f makefile.stdio clobber
+	cd doc ; $(MK) clean
+	cd tests ; $(MK) clean_stdio
+
+clobber_raspbian : clean_raspbian
+	rm -f */core
+	cd src && $(MK) clobber
+	cd doc && $(MK) clobber
+	cd lib && $(MK) clobber
+	rm -f bin/lowkey bin/key
+	cd byacc ; $(MK) -f makefile.stdio clobber
+	rm -f src/makefile
+
+bindir :
 
 install_linux install_Linux install_linux-gnu:
 	if [ -d byacc ] ; then cd byacc ; $(MK) -f makefile.sun clobber ; $(MK) -f makefile.sun ; fi

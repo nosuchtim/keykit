@@ -342,7 +342,7 @@ k_header(int f,int n,int d)
 		/* It's SMPTE, frame-per-second and ticks per frame */
 		int frames_per_second = (d >> 8) & 0x7f;
 		int ticks_per_frame = d & 0xff;
-		Clickfactor = (double)(frames_per_second * ticks_per_frame) / ((double)(*Clicks) * (1000000.0 / Tempo));
+		Clickfactor = ((double)frames_per_second * ticks_per_frame) / ((double)(*Clicks) * (1000000.0 / Tempo));
 	} else {
 		Clickfactor = (double)d / (double)(*Clicks);
 	}

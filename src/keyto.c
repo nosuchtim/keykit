@@ -10,6 +10,7 @@
 
 #include <stdio.h>
 #include <errno.h>
+#include "mdep.h"
 #include "key.h"
 #include "keymidi.h"
 
@@ -471,7 +472,7 @@ maketemp()	/* find a temporary file name (inefficient but portable) */
 static void
 rmtemp(void)
 {
-	(void) _unlink(Tmpfname);	/* POSIX name for unlink is deprecated? */
+	(void) unlink(Tmpfname);
 }
 
 static void

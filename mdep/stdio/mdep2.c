@@ -142,7 +142,9 @@ mdep_musicpath(void)
 	char *r = keyroot();
 
 	p = (char *) kmalloc((unsigned)(3*strlen(r)+64),"mdep_musicpath");
-	sprintf(p,".%s%s%smusic",PATHSEP,r,SEPARATOR);
+	sprintf(p,".%s%s%smusic%s%s%smidifiles",
+		PATHSEP,r,SEPARATOR,
+		PATHSEP,r,SEPARATOR);
         str = uniqstr(p);
         kfree(p);
         return str;

@@ -25,7 +25,7 @@ addtobechecked(register Phrasep p)
 
 	/* Workaround to detect a bug. */
 	if ( p->p_tobe < -1000 ) {
-		eprint("Ignoring possible bad phrase in addtobechecked!?  Potential memory leak.  p=%lld  tobe=%ld\n",(long long)p,(long)(p->p_tobe));
+		eprint("Ignoring possible bad phrase in addtobechecked!?  Potential memory leak.  p=%lld  tobe=%ld\n",(intptr_t)p,(long)(p->p_tobe));
 		return;
 	}
 
@@ -197,7 +197,7 @@ ph1dump(Phrasep p)
 	for ( n=firstnote(p); n!=NULL; n=n->next )
 		num++;
 	sprintf(Msg1,"phrase=%lld numnotes=%d used=%d tobe=%d\n",
-		(long long)p,num,(int)(p->p_used),(int)(p->p_tobe));tprint(Msg1);
+		(intptr_t)p,num,(int)(p->p_used),(int)(p->p_tobe));tprint(Msg1);
 }
 
 void
@@ -264,7 +264,7 @@ if(*Debugmalloc>1)eprint("HTCHECK START\n");
 		nxt = h->h_next;
 
 		h->h_used += h->h_tobe;
-if(*Debug>1)eprint("SUMMED h=%lld used=%d\n",(long long)h,h->h_used);
+if(*Debug>1)eprint("SUMMED h=%lld used=%d\n",(intptr_t)h,h->h_used);
 		h->h_tobe = 0;
 
 		/* remove it from Tobechecked list */
@@ -275,7 +275,7 @@ if(*Debug>1)eprint("SUMMED h=%lld used=%d\n",(long long)h,h->h_used);
 		h->h_state = 0;
 
 		if ( h->h_used > 0 ) {
-if(*Debug>1)eprint("htcheck, h=%lld still used\n",(long long)h);
+if(*Debug>1)eprint("htcheck, h=%lld still used\n",(intptr_t)h);
 			/* and add it back to Topht list */
 			h->h_next = Topht;
 			h->h_prev = NULL;
@@ -288,7 +288,7 @@ if(*Debug>1)eprint("htcheck, h=%lld still used\n",(long long)h);
 			tprint("h_used < 0, not freeing h\n");
 			break;
 		} else {
-if(*Debug>1)eprint("htcheck calling freeht on %lld used=%d tobe=%d\n",(long long)h,h->h_used,h->h_tobe);
+if(*Debug>1)eprint("htcheck calling freeht on %lld used=%d tobe=%d\n",(intptr_t)h,h->h_used,h->h_tobe);
 			freeht(h);
 		}
 	}
@@ -920,7 +920,7 @@ getnumval(Datum d,int round)
 	case D_ARR:
 		execerror("getnumval() doesn't work for D_ARR!");
 #ifdef OLDCODE
-		// I'm not sure this case is still used, it might be vestigal code.  Changing getnumval to be 64-bit (i.e. long long)
+		// I'm not sure this case is still used, it might be vestigal code.  Changing getnumval to be 64-bit (i.e. long long or intptr_t)
 		// is a lot of work, so making it an execution error will detect whether it's actually used.
 		v = (long)(d.u.arr);
 #endif
@@ -1608,7 +1608,7 @@ put_ipcode(Codep ip, Unchar *p)
 Unchar *
 put_funccode(BYTEFUNC func, Unchar *p)
 {
-	*p++ = (Unchar)func;
+	*p++ = (Unchar)(intptr_t)func;
 	return p;
 }
 
