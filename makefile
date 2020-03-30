@@ -217,6 +217,7 @@ clobber_nt : clean_nt
 	rm -f bin/key.dbg
 	rm -f bin/key.exe
 	rm -f bin/keylib.exe
+	rm -f bin/keydll.dll
 	rm -f bin/*.ico
 	rm -f bin/*.cur
 	rm -f bin/keykit.py
@@ -224,6 +225,9 @@ clobber_nt : clean_nt
 	rm -f bin/lowkey.exe
 	rm -f src/d_*.h
 	rm -f src/win32.mak
+	rm -f src/clock.c
+	rm -f src/makefile
+	rm -f tmp.diff
 	cd byacc && $(MK) -f makefile.$(MSTYPE) clobber
 
 # complete compile/regression test (for NT and 95)
