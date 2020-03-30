@@ -547,6 +547,19 @@ clobber_raspbian : clean_raspbian
 	cd byacc ; $(MK) -f makefile.stdio clobber
 	rm -f src/makefile
 
+distribution_raspbian :
+	rm -fr dist/raspbian dist/key_raspbian.zip
+	mkdir dist/raspbian
+	mkdir dist/raspbian/key
+	mkdir dist/raspbian/key/bin
+	mkdir dist/raspbian/key/lib
+	mkdir dist/raspbian/key/music
+	cp bin/key bin/lowkey dist/raspbian/key/bin
+	cp lib/* dist/raspbian/key/lib
+	cp music/* dist/raspbian/key/music
+	cd dist/raspbian ; zip -r ../key_raspbian.zip key
+	rm -fr dist/raspbian
+
 bindir :
 
 install_linux install_Linux install_linux-gnu:
