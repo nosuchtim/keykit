@@ -7,10 +7,10 @@
 DEMOTIMEOUT=0
 CC = gcc
 STATIC =
-SOUNDLIBS = /usr/lib/i386-linux-gnu/libasound.so.2 -L/usr/lib/ -lpthread -ldl
-XLIBS = /usr/lib/i386-linux-gnu/libX11.so.6 -lm
+SOUNDLIBS = /usr/lib/x86_64-linux-gnu/libasound.so.2 -L/usr/lib/ -lpthread -ldl
+XLIBS = /usr/lib/x86_64-linux-gnu/libX11.so.6 -lm
 INC = -I/usr/include/
-KEY = key_alsa
+KEY = key
 
 # Valid values of PROTO are -n (don't use prototypes) and -p (use prototypes).
 # After changing PROTO, run "make protoproc".
@@ -25,7 +25,7 @@ SRC = real.c yacc.c code.c code2.c sym.c main.c util.c mdep1.c mfin.c \
 	phrase.c misc.c fsm.c grid.c view.c midi.c clock.c mdep2.c \
 	keyto.c regex.c task.c fifo.c kwind.c menu.c bltin.c meth.c
 PROFILE = -g
-CFLAGS = -m32 -O $(INC) $(PROFILE) -DDEMOTIMEOUT=$(DEMOTIMEOUT)
+CFLAGS = -O $(INC) $(PROFILE) -DDEMOTIMEOUT=$(DEMOTIMEOUT)
 
 all : $(EXECS)
 
@@ -190,5 +190,8 @@ clean:
 
 clobber: clean
 	rm -f d_*.h yacc.c yacc.h
+	rm -f mdep.h mdep1.c mdep2.c midi.c clock.c
+	rm -f key.dbg lowkey tjt.ico keykit.ico
+	rm -f key.dbg tmp.c
 	rm -f *.arc setjmp.h setjmp.s pc-ints.asm y_output tmp.lint
 	if [ $(BIN) != "." ] ; then cd $(BIN) ; rm -f $(EXECS) ; fi

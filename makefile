@@ -203,7 +203,7 @@ install_ntcons :
 clean_nt :
 	$(MK) copy_nt
 	cd src && $(MK) clean
-	cd byacc && $(MK) -f makefile.$(MSTYPE) clobber
+	cd byacc && $(MK) -f makefile.stdio clobber
 	cd doc && $(MK) clean
 	cd tests && $(MK) clean_nt
 	rm -f bin/last.kp
@@ -554,7 +554,7 @@ clobber_raspbian : clean_raspbian
 bindir :
 
 install_linux install_Linux install_linux-gnu:
-	if [ -d byacc ] ; then cd byacc ; $(MK) -f makefile.sun clobber ; $(MK) -f makefile.sun ; fi
+	if [ -d byacc ] ; then cd byacc ; $(MK) -f makefile.stdio clobber ; $(MK) -f makefile.stdio ; fi
 	if [ "`uname -a | grep 2.0.36`" != "" -o ! -d /usr/include/alsa ] ; then \
 		if [ -d src ] ; then $(MK) install_linux_devmidi ; fi ; \
 		dollar="$$" ; echo -e "#!/bin/sh\n$(LDLIB)\nexport KEYROOT=`pwd`\n$${dollar}KEYROOT/bin/key_devmidi $${dollar}@ </dev/tty >/dev/tty 2>/dev/tty &" > $(LINUXBIN)/key ; \
@@ -574,10 +574,9 @@ install_linux_devmidi install_linux_x : bindir
 	chmod +x bin/lowkey
 
 install_linux_alsa: bindir
+	if [ -d byacc ] ; then cd byacc ; $(MK) -f makefile.stdio clobber ; $(MK) -f makefile.stdio ; fi
 	$(MK) copy_linux_alsa
-	cd src ; $(MK) clobber ; $(MK) install
-	dollar="$$" ; echo -e "#!/bin/sh\n$(LDLIB)\nexport DISPLAY=\"\"\nexport KEYROOT=`pwd`\n$${dollar}KEYROOT/bin/key_alsa $${dollar}@" > bin/lowkey
-	chmod +x bin/lowkey
+	cd src ; $(MK) install
 
 ##########################################
 # The targets below here are old - probably still largely usable, but
