@@ -247,7 +247,7 @@ optiseg(Instnodep t)
 	if ( *Debuginst ) {
 		keyerrfile("ISEG BEFORE Optimization\n");
 		for ( i=t; i!=NULL; i=nextinode(i) ) {
-			keyerrfile("  i=%lld f=",(long long)i);
+			keyerrfile("  i=%lld f=",(intptr_t)i);
 			eprfunc(i->code.u.func);
 			keyerrfile("\n");
 		}
@@ -276,7 +276,7 @@ optiseg(Instnodep t)
 			&& codeis(i5->code,I_POPIGNORE) ) {
 
 			if ( *Debuginst )
-				keyerrfile("Optimization X at i1=%lld\n",(long long)i1);
+				keyerrfile("Optimization X at i1=%lld\n",(intptr_t)i1);
 
 			/* A global var is being pushed and then ignored. */
 			/* It's probably a standalone function definition. */
@@ -298,7 +298,7 @@ optiseg(Instnodep t)
 			&& i2 && i3 && codeis(i3->code,I_LINENUM) ) {
 
 			if ( *Debuginst )
-				keyerrfile("Optimization A at i1=%lld\n",(long long)i1);
+				keyerrfile("Optimization A at i1=%lld\n",(intptr_t)i1);
 
 			/* multiple consecutive I_LINENUMS, delete the first */
 			oldi1 = i1;
@@ -314,7 +314,7 @@ optiseg(Instnodep t)
 			&& i2 && i3 && codeis(i3->code,I_POPIGNORE) ) {
 
 			if ( *Debuginst )
-				keyerrfile("Optimization B at i1=%lld\n",(long long)i1);
+				keyerrfile("Optimization B at i1=%lld\n",(intptr_t)i1);
 
 			/* A constant is being pushed and then ignored. */
 			/* It's probably the fakeval/popignore that we */
@@ -337,7 +337,7 @@ optiseg(Instnodep t)
 			&& i2 && i3 && codeis(i3->code,I_POPIGNORE) ) {
 
 			if ( *Debuginst )
-				keyerrfile("Optimization C at i1=%lld\n",(long long)i1);
+				keyerrfile("Optimization C at i1=%lld\n",(intptr_t)i1);
 
 			/* It's a varassign whose result is being ignored, */
 			/* so we get rid of the popignore, and adjust */
@@ -351,7 +351,7 @@ optiseg(Instnodep t)
 		}
 		if ( codeis(i1->code,I_NOOP) ) {
 			if ( *Debuginst )
-				keyerrfile("Optimization D at i1=%lld\n",(long long)i1);
+				keyerrfile("Optimization D at i1=%lld\n",(intptr_t)i1);
 			rminstnode(t,pi,1);
 			i1 = nextinode(pi);
 			anyopt++;
@@ -364,7 +364,7 @@ optiseg(Instnodep t)
 	if ( *Debuginst ) {
 		keyerrfile("ISEG AFTER Optimization\n");
 		for ( i=t; i!=NULL; i=nextinode(i) ) {
-			keyerrfile("  i=%lld f=",(long long)i);
+			keyerrfile("  i=%lld f=",(intptr_t)i);
 			eprfunc(i->code.u.func);
 			keyerrfile("\n");
 		}
@@ -915,7 +915,7 @@ callfuncd(Symbolp s)
 
 	if ( *Linetrace > 1 ) {
 		char *ipf = ipfuncname(funcd.u.codep);
-		eprint("Calling function: %s  Pc=%lld\n",ipf==NULL?"(NULL?)":ipf, (long long)T->pc);
+		eprint("Calling function: %s  Pc=%lld\n",ipf==NULL?"(NULL?)":ipf, (intptr_t)T->pc);
 	}
 
 	if ( bi != 0 ) {
@@ -1506,12 +1506,12 @@ prstack(Datum *d)
 			}
 			s2 = datumstr(*d);
 		}
-		sprintf(Msg1,"tid=%ld Stack[top-%d] (%lld) = %s %s",T->tid,n,(long long)d,s1,s2);
+		sprintf(Msg1,"tid=%ld Stack[top-%d] (%lld) = %s %s",T->tid,n,(intptr_t)d,s1,s2);
 		if ( (*d).type == D_PHR ) {
-			sprintf(strend(Msg1)," %lld used=%d tobe=%d",(long long)((*d).u.phr),(*d).u.phr->p_used,(*d).u.phr->p_tobe);
+			sprintf(strend(Msg1)," %lld used=%d tobe=%d",(intptr_t)((*d).u.phr),(*d).u.phr->p_used,(*d).u.phr->p_tobe);
 		}
 		if ( (*d).type == D_CODEP )
-			sprintf(strend(Msg1)," fnc=%lld",(long long)((*d).u.codep));
+			sprintf(strend(Msg1)," fnc=%lld",(intptr_t)((*d).u.codep));
 		eprint(Msg1);
 	}
 	if ( n >= PRSTACKLIMIT ) eprint("STACK LIST TRUNCATED!!!\n");

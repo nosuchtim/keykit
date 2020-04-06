@@ -139,7 +139,7 @@ windlist(void)
 
 	for ( w=Topwind; w!=NULL; w=w->next ) {
 		tprint("window w=%lld  wnum=%d  xy01=%d,%d,%d,%d\n",
-			(long long)w,windnum(w),w->x0,w->y0,w->x1,w->y1);
+			(intptr_t)w,windnum(w),w->x0,w->y0,w->x1,w->y1);
 	}
 }
 

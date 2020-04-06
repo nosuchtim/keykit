@@ -103,7 +103,7 @@ showsane(Kwind *w)
 void
 redrawpwind(Kwind *w)
 {
-	if ( (long long)(*(w->pph)) < 1000 ) {
+	if ( (intptr_t)(*(w->pph)) < 1000 ) {
 		execerror("Internal error, redrawpwind (trk=%s) has bad phrase!?\n",w->trk);
 	}
 	drawph(w,*(w->pph));

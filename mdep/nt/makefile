@@ -63,7 +63,7 @@ all : key.exe keylib.exe
 demo :
 	rm -f real.obj
 	rm -f sym.obj
-	nmake DEMOTIMEOUT=10 install
+	nmake install
 	rm -f real.obj
 	rm -f sym.obj
 

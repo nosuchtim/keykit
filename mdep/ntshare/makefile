@@ -4,7 +4,6 @@ MIDISHARE=c:\mdk32\include
 MIDISHARELIB=c:\mdk32\lib\mshare32.lib
 MIDISHARE=c:\mdk3216\Include
 MIDISHARELIB=c:\mdk3216\Libraries\MShare3216.lib
-DEMOTIMEOUT=0
 CPU=i386
 
 ########
@@ -20,8 +19,8 @@ LIBC = libcd
 LIBC = libc
 
 # Reverse the order of these statements to toggle debug info
-DEBUGCC = $(cdebug) /nologo /DDEMOTIMEOUT=$(DEMOTIMEOUT) $(OTHER)
-DEBUGCC = /Ox /nologo /DDEMOTIMEOUT=$(DEMOTIMEOUT) $(OTHER)
+DEBUGCC = $(cdebug) /nologo $(OTHER)
+DEBUGCC = /Ox /nologo $(OTHER)
 
 # Reverse the order of these statements to toggle debug info
 DEBUGLINK = /MAP $(linkdebug) /nologo
@@ -54,7 +53,7 @@ all : key.exe keydll.dll keylib.exe
 demo :
 	deltree /y real.obj
 	deltree /y sym.obj
-	nmake DEMOTIMEOUT=10 install
+	nmake install
 	deltree /y real.obj
 	deltree /y sym.obj
 

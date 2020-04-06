@@ -1519,7 +1519,7 @@ int
 mdep_screensize(int *x0, int *y0, int *x1, int *y1)
 {
 	if ( Nographics )
-		return;
+		return 1;
 	/* Make sure any pending ConfigureNotify events get read */
 	handleinput();
 
