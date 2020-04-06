@@ -2388,17 +2388,17 @@ void
 eprfunc(BYTEFUNC i)
 {
 	char *p;
-	long long ii;
+	intptr_t ii;
 
-	ii = (long long)i;
+	ii = (intptr_t)i;
 	if ( ii>=0 && ii < (sizeof(Bytenames)/sizeof(Bytenames[0])) ) {
-		keyerrfile("%s (%d)",Bytenames[ii],ii);
+		keyerrfile("%s (%ld)",Bytenames[ii],ii);
 	}
 	else {
 		p = funcnameof(i);
 		if ( p )
 			keyerrfile("%s",p);
 		else
-			keyerrfile("??? %lld",(long long)i);
+			keyerrfile("??? %ld",(intptr_t)i);
 	}
 }

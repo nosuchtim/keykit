@@ -4,7 +4,6 @@
 #	keykit - a language for musical expressions
 #
 
-DEMOTIMEOUT=0
 CC = gcc
 XLIBS = -L/usr/X11R6/lib -lX11 -lm
 INC = -I/usr/X11R6/include
@@ -23,14 +22,14 @@ SRC = real.c yacc.c code.c code2.c sym.c main.c util.c mdep1.c mfin.c \
 	phrase.c misc.c fsm.c grid.c view.c midi.c clock.c mdep2.c \
 	keyto.c regex.c task.c fifo.c kwind.c menu.c bltin.c meth.c
 PROFILE = -g
-CFLAGS = -O $(INC) $(PROFILE) -DDEMOTIMEOUT=$(DEMOTIMEOUT)
+CFLAGS = -O $(INC) $(PROFILE)
 
 all : $(EXECS)
 
 demo :
 	del real.obj
 	del sym.obj
-	make DEMOTIMEOUT=10 install
+	make install
 	del real.obj
 	del sym.obj
 

@@ -23,8 +23,8 @@ SRC = real.c yacc.c code.c code2.c sym.c main.c util.c mdep1.c mfin.c \
 	keyto.c regex.c task.c fifo.c kwind.c menu.c bltin.c meth.c
 #PROFILE = -g
 #LDFLAGS= -g -static
-#CFLAGS = $(INC) $(PROFILE) -DDEMOTIMEOUT=0
-CFLAGS = -O $(INC) -DDEMOTIMEOUT=0
+#CFLAGS = $(INC) $(PROFILE)
+CFLAGS = -O $(INC)
 
 all : $(EXECS)
 

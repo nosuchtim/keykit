@@ -55,7 +55,8 @@ connect_to_sequencer ()
 }
 
 int
-mdep_initmidi(Midiport *inputs, Midiport *outputs) {
+mdep_initmidi(Midiport *inputs, Midiport *outputs)
+{
 	struct pollfd pfds[1];
 	int i;
 	char* env;
@@ -237,7 +238,9 @@ mdep_endmidi(void)
 	}
 }
 
-/* must return -1 if there is nothing to read */ int mdep_getnmidi(char *buff, int buffsize, int *port) {
+int
+mdep_getnmidi(char *buff, int buffsize, int *port)
+{
 	snd_seq_event_t *ev;
 	int nbytes;
 
@@ -276,7 +279,8 @@ mdep_endmidi(void)
 }
 
 void
-mdep_putnmidi(int n,char *p, Midiport * port) {
+mdep_putnmidi(int n,char *p, Midiport * port)
+{
 	AlsaPortInfo * a = &outports[port->private1];
 
 	snd_midi_event_reset_encode (a->parser);

@@ -921,7 +921,7 @@ funcdp(Symbolp s, BLTINCODE f)
 
 	sz = Codesize[IC_BLTIN] + varinum_size(0) + Codesize[IC_SYM];
 	cp = (Codep) kmalloc(sz,"funcdp");
-	// keyerrfile("CP 0 = %lld, sz=%d\n", (long long)cp,sz);
+	// keyerrfile("CP 0 = %lld, sz=%d\n", (intptr_t)cp,sz);
 
 	*Numinst1 += sz;
 
@@ -929,11 +929,11 @@ funcdp(Symbolp s, BLTINCODE f)
 	d.u.codep = cp;
 
 	cp = put_bltincode(f,cp);
-	// keyerrfile("CP 3 = %lld\n", (long long)cp);
+	// keyerrfile("CP 3 = %lld\n", (intptr_t)cp);
 	cp = put_numcode(0,cp);
-	// keyerrfile("CP 4 = %lld\n", (long long)cp);
+	// keyerrfile("CP 4 = %lld\n", (intptr_t)cp);
 	cp = put_symcode(s,cp);
-	// keyerrfile("CP 5 = %lld\n", (long long)cp);
+	// keyerrfile("CP 5 = %lld\n", (intptr_t)cp);
 	return d;
 }
 
@@ -1449,7 +1449,7 @@ freeht(Htablep ht)
 
 	for ( ht2=Freeht; ht2!=NULL; ht2=ht2->h_next ) {
 		if ( ht == ht2 ) {
-			eprint("HEY!, Trying to free an ht node (%lld) that's already in the Free list!!\n",(long long)ht);
+			eprint("HEY!, Trying to free an ht node (%lld) that's already in the Free list!!\n",(intptr_t)ht);
 			abort();
 		}
 	}
@@ -1469,13 +1469,13 @@ htlists(void)
 {
 	Htablep ht3;
 	eprint("   Here's the Freeht list:");
-	for(ht3=Freeht;ht3!=NULL;ht3=ht3->h_next)eprint("(%lld,sz%d,u%d,t%d)",(long long)ht3,ht3->size,ht3->h_used,ht3->h_tobe);
+	for(ht3=Freeht;ht3!=NULL;ht3=ht3->h_next)eprint("(%lld,sz%d,u%d,t%d)",(intptr_t)ht3,ht3->size,ht3->h_used,ht3->h_tobe);
 	eprint("\n");
 	eprint("   Here's the Htobechecked list:");
-	for(ht3=Htobechecked;ht3!=NULL;ht3=ht3->h_next)eprint("(%lld,sz%d,u%d,t%d)",(long long)ht3,ht3->size,ht3->h_used,ht3->h_tobe);
+	for(ht3=Htobechecked;ht3!=NULL;ht3=ht3->h_next)eprint("(%lld,sz%d,u%d,t%d)",(intptr_t)ht3,ht3->size,ht3->h_used,ht3->h_tobe);
 	eprint("\n");
 	eprint("   Here's the Topht list:");
-	for(ht3=Topht;ht3!=NULL;ht3=ht3->h_next)eprint("(%lld,sz%d,u%d,t%d)",(long long)ht3,ht3->size,ht3->h_used,ht3->h_tobe);
+	for(ht3=Topht;ht3!=NULL;ht3=ht3->h_next)eprint("(%lld,sz%d,u%d,t%d)",(intptr_t)ht3,ht3->size,ht3->h_used,ht3->h_tobe);
 	eprint("\n");
 }
 
@@ -1593,7 +1593,7 @@ int cnt = 0;
 		v = ((unsigned int)(key.u.val)) % (ht->size);
 		break;
 	case D_STR:
-		v = ((unsigned long long)(key.u.str)>>2) % (ht->size);
+		v = ((intptr_t)(key.u.str)>>2) % (ht->size);
 		break;
 	case D_OBJ:
 		v = ((unsigned int)(key.u.obj->id)>>2) % (ht->size);

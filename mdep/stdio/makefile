@@ -1,5 +1,5 @@
 CC = gcc
-CFLAGS = -O -DDEMOTIMEOUT=0
+CFLAGS = -O
 STATIC = -static
 
 PROTO = -p

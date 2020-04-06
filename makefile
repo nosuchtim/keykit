@@ -514,7 +514,9 @@ copy_raspbian : bindir
 LINUXBIN = /usr/local/bin
 
 install_raspbian:
+	$(MK) clean_stdio
 	$(MK) install_stdio
+	$(MK) clean_raspbian
 	$(MK) copy_raspbian
 	cd src ; $(MK) install
 
@@ -535,6 +537,7 @@ clobber_raspbian : clean_raspbian
 	rm -f src/makefile
 
 distribution_raspbian :
+	$(MK) install_raspbian
 	rm -fr dist/raspbian dist/key_raspbian.zip
 	mkdir dist/raspbian
 	mkdir dist/raspbian/key

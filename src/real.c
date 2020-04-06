@@ -38,7 +38,7 @@ psched(void)
 	Sched *s;
 	eprint("(sched=");
 	for ( s=Topsched; s!=NULL; s=s->next ) {
-		eprint("(%ld=%lld)",s->clicks,(long long)s);
+		eprint("(%ld=%lld)",s->clicks,(intptr_t)s);
 	}
 	eprint(";)\n");
 }
