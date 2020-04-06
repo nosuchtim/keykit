@@ -203,7 +203,7 @@ install_ntcons :
 clean_nt :
 	$(MK) copy_nt
 	cd src && $(MK) clean
-	cd byacc && $(MK) -f makefile.$(MSTYPE) clobber
+	cd byacc && $(MK) -f makefile.stdio clobber
 	cd doc && $(MK) clean
 	cd tests && $(MK) clean_nt
 	rm -f bin/last.kp
@@ -217,6 +217,7 @@ clobber_nt : clean_nt
 	rm -f bin/key.dbg
 	rm -f bin/key.exe
 	rm -f bin/keylib.exe
+	rm -f bin/keydll.dll
 	rm -f bin/*.ico
 	rm -f bin/*.cur
 	rm -f bin/keykit.py
@@ -224,6 +225,9 @@ clobber_nt : clean_nt
 	rm -f bin/lowkey.exe
 	rm -f src/d_*.h
 	rm -f src/win32.mak
+	rm -f src/clock.c
+	rm -f src/makefile
+	rm -f tmp.diff
 	cd byacc && $(MK) -f makefile.$(MSTYPE) clobber
 
 # complete compile/regression test (for NT and 95)
@@ -473,23 +477,6 @@ copy_x : bindir
 # Linux X Windows version with MIDI
 #########################################################
 
-copy_linux_devmidi : bindir
-	cp mdep/linux_devmidi/mdep1.c src/mdep1.c
-	cp mdep/linux_devmidi/mdep2.c src/mdep2.c
-	cp mdep/linux_devmidi/mdep.h src/mdep.h
-	cp mdep/linux_devmidi/makefile src/makefile
-	cp mdep/linux_devmidi/bsdclock.c src/clock.c
-	cp mdep/linux_devmidi/tjt.ico src/tjt.ico
-	cp mdep/linux_devmidi/keykit.ico src/keykit.ico
-	cp mdep/linux_devmidi/midi.c src/midi.c
-	$(RMCR) src/*.c src/*.h src/*.ico src/makefile
-	$(RMCR) lib/* tests/makefile
-	cp mdep/stdio/resetkeylib bin
-	$(RMCR) bin/resetkeylib
-	chmod +x bin/resetkeylib
-	chmod ugo+w */keylib.k
-	-$(RMCR) tests/*
-
 copy_linux_alsa : bindir
 	cp mdep/linux_alsa/mdep1.c src/mdep1.c
 	cp mdep/linux_alsa/mdep2.c src/mdep2.c
@@ -565,31 +552,24 @@ distribution_raspbian :
 
 bindir :
 
-install_linux install_Linux install_linux-gnu:
-	if [ -d byacc ] ; then cd byacc ; $(MK) -f makefile.sun clobber ; $(MK) -f makefile.sun ; fi
-	if [ "`uname -a | grep 2.0.36`" != "" -o ! -d /usr/include/alsa ] ; then \
-		if [ -d src ] ; then $(MK) install_linux_devmidi ; fi ; \
-		dollar="$$" ; echo -e "#!/bin/sh\n$(LDLIB)\nexport KEYROOT=`pwd`\n$${dollar}KEYROOT/bin/key_devmidi $${dollar}@ </dev/tty >/dev/tty 2>/dev/tty &" > $(LINUXBIN)/key ; \
-		echo -e "#!/bin/sh\n$(LDLIB)\nexport DISPLAY=\"\"\nexport KEYROOT=`pwd`\n$${dollar}KEYROOT/bin/key_devmidi $${dollar}@" > $(LINUXBIN)/lowkey ; \
-	else \
-		if [ -d src ] ; then $(MK) install_linux_alsa ; fi ; \
-		dollar="$$" ; echo -e "#!/bin/sh\n$(LDLIB)\nexport KEYROOT=`pwd`\n$${dollar}KEYROOT/bin/key_alsa $${dollar}* </dev/tty >/dev/tty 2>/dev/tty &" > $(LINUXBIN)/key ; \
-		echo -e "#!/bin/sh\n$(LDLIB)\nexport DISPLAY=\"\"\nexport KEYROOT=`pwd`\n$${dollar}KEYROOT/bin/key_alsa $${dollar}@" > $(LINUXBIN)/lowkey ; \
-	fi
-	chmod +x $(LINUXBIN)/key
-	chmod +x $(LINUXBIN)/lowkey
-
-install_linux_devmidi install_linux_x : bindir
-	$(MK) copy_linux_devmidi
-	cd src ; $(MK) clobber ; $(MK) install
-	dollar="$$" ; echo -e "#!/bin/sh\n$(LDLIB)\nexport DISPLAY=\"\"\nexport KEYROOT=`pwd`\n$${dollar}KEYROOT/bin/key_devmidi $${dollar}@" > bin/lowkey
-	chmod +x bin/lowkey
-
 install_linux_alsa: bindir
+	$(MK) install_stdio
 	$(MK) copy_linux_alsa
-	cd src ; $(MK) clobber ; $(MK) install
-	dollar="$$" ; echo -e "#!/bin/sh\n$(LDLIB)\nexport DISPLAY=\"\"\nexport KEYROOT=`pwd`\n$${dollar}KEYROOT/bin/key_alsa $${dollar}@" > bin/lowkey
-	chmod +x bin/lowkey
+	cd src ; $(MK) install
+
+distribution_linux_alsa :
+	rm -fr dist/linux_alsa dist/key_linux_alsa.zip
+	mkdir dist/linux_alsa
+	mkdir dist/linux_alsa/key
+	mkdir dist/linux_alsa/key/bin
+	mkdir dist/linux_alsa/key/lib
+	mkdir dist/linux_alsa/key/music
+	cp bin/key bin/lowkey dist/linux_alsa/key/bin
+	cp lib/* dist/linux_alsa/key/lib
+	cp music/* dist/linux_alsa/key/music
+	cd dist/linux_alsa ; zip -r ../key_linux_alsa.zip key
+	rm -fr dist/linux_alsa
+
 
 ##########################################
 # The targets below here are old - probably still largely usable, but

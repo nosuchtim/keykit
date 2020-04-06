@@ -10,7 +10,20 @@
 #include <sys/errno.h>
 #include <fcntl.h>
 #include <unistd.h>
-#include <alsa/asoundlib.h>
+
+// #include <sound/asound.h>
+#include <asm-generic/poll.h>
+#include <alsa/input.h>
+#include <alsa/output.h>
+#include <alsa/conf.h>
+#include <alsa/seq_event.h>
+#include <alsa/global.h>
+#include <alsa/timer.h>
+#include <alsa/seq_midi_event.h>
+#include <alsa/seq.h>
+#include <alsa/seqmid.h>
+#include <alsa/rawmidi.h>
+#include <alsa/error.h>
 
 typedef struct AlsaPortInfo {
     snd_midi_event_t *parser;

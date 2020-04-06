@@ -10,7 +10,6 @@
 
 #include <stdio.h>
 #include <errno.h>
-#include "mdep.h"
 #include "key.h"
 #include "keymidi.h"
 
