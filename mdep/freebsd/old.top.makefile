@@ -42,7 +42,7 @@
 #       See the doc directory for more documentation - in particular
 #       the "porting" file gives detailed porting guidelines.
 #
-#	Any questions, email to tjt@nosuch.com
+#	Any questions, email to me@timthompson.com
 
 # set MK to the preferred version of the make utility on your system
 MK = nmake

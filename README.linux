@@ -95,6 +95,6 @@ of the software and run regression tests.
 ----------------------------------------------------------------------------
 
 Steve Falco (sfalco@lucent.com) produced the first Linux port
-in January 1997.   Tim Thompson (tjt@nosuch.com) produced the
+in January 1997.   Tim Thompson (me@timthompson.com) produced the
 ALSA port in April, 2000.  Paul Davis (paul@linuxaudiosystems.com)
 provided the sequencer version of the ALSA port.
