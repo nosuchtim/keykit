@@ -28,12 +28,12 @@
 #       See the doc directory for more documentation - in particular
 #       the "porting" file gives detailed porting guidelines.
 #
-#	Any questions, email to tjt@nosuch.com
+#	Any questions, email to me@timthompson.com
 
 # set MK to the preferred version of the make utility on your system
 MK = $(MAKE)
-CHMOD = c:\cygwin64\bin\chmod.exe
-ZIP32 = c:\local\bin\zip32.exe
+CHMOD = chmod.exe
+ZIP32 = zip32.exe
 
 # set RMCR to the name of a program that will remove carriage-returns
 RMCR = mdep/stdio/rmcr
@@ -133,8 +133,8 @@ install_nt_2 :
 
 # Windows NT (and 95) version
 copy_nt :
-	cp mdep/nt/key64.sln src/key64.sln
-	cp mdep/nt/key64.vcxproj src/key64.vcxproj
+	cp mdep/nt/key.sln src/key.sln
+	cp mdep/nt/key.vcxproj src/key.vcxproj
 	cp mdep/nt/makefile src/makefile
 	cp mdep/nt/mdep1.c src/mdep1.c
 	cp mdep/nt/mdep2.c src/mdep2.c
@@ -213,7 +213,7 @@ clobber_nt : clean_nt
 	cd src && $(MK) clobber
 	cd doc && $(MK) clobber
 	cd lib && $(MK) clobber
-	rm -f mdep/winsetup//key.exe
+	rm -fr mdep/nt/x64
 	rm -f bin/key.dbg
 	rm -f bin/key.exe
 	rm -f bin/keylib.exe
@@ -257,50 +257,26 @@ bindir :
 # The stuff here is specific to constructing the distribution.
 ###################
 
-distribution0 : updateversion
-	$(WINRMCR) makefile
-	rename MAKEFILE makefile
-	$(MK) winsetup
-	$(MK) netdownload
+distribution_nt :
+	$(MK) install_nt
+	rm -fr dist/nt dist/key_nt.zip
+	mkdir dist/nt
+	mkdir dist/nt/key
+	mkdir dist/nt/key/bin
+	mkdir dist/nt/key/lib
+	mkdir dist/nt/key/music
+	cp bin/key bin/lowkey dist/nt/key/bin
+	cp lib/* dist/nt/key/lib
+	cp music/* dist/nt/key/music
+	cd dist/nt && $(ZIP32) -r ../key_nt.zip key
+	rm -fr dist/nt
 
-distribution1 :
-	cd mdep\winsetup && $(MK) clean
-	$(MK) toninja
-	$(MK) senddownload
-
-distribution : updateversion
-	nmake clobber_nt
-	$(WINRMCR) makefile
-	rename MAKEFILE makefile
-	chmod -R ugo+w .
-	$(MK) winsetup
-	$(MK) netdownload
-	chmod -R ugo+w .
-	cd mdep\winsetup && $(MK) clean
-	$(MK) toninja
-	$(MK) senddownload
-
-NINJADIR=c:\tmp\download
+tjt :
+	cd dist/nt && $(ZIP32) -r ../key_nt.zip key
+	rm -fr dist/nt
 
 senddownload :
 	senddownload
-
-toninja :
-	rm -fr $(NINJADIR)
-	mkdir $(NINJADIR)
-	cp dist/$(KS)_win.zip $(NINJADIR)
-	cp dist/$(KS)_src.zip $(NINJADIR)
-	cp dist/$(KS)_src.tar $(NINJADIR)
-	cp dist/$(KS)_linux.tar $(NINJADIR)
-	gzip -f $(NINJADIR)\$(KS)_src.tar
-	gzip -f $(NINJADIR)\$(KS)_linux.tar
-	cd \tmp && $(CHMOD) -R u+rwx download && $(CHMOD) -R go+rx download
-
-# Complete a complete Windows distribution from scratch
-winsetup :
-	$(MK) clobber
-	$(MK) install_nt
-	$(MK) setup
 
 updateversion :
 	sed -e "/KEYKITVERSION/s/Version ..../Version $(VERSION)/" < index.html > tmp.html
@@ -510,8 +486,6 @@ copy_raspbian : bindir
 	chmod +x bin/resetkeylib
 	chmod ugo+w */keylib.k
 	-$(RMCR) tests/*
-
-LINUXBIN = /usr/local/bin
 
 install_raspbian:
 	$(MK) clean_stdio
