@@ -265,8 +265,10 @@ distribution_nt :
 	mkdir dist/nt/key/bin
 	mkdir dist/nt/key/lib
 	mkdir dist/nt/key/music
+	mkdir dist/nt/key/doc
 	cp bin/key bin/lowkey dist/nt/key/bin
 	cp bin/ucrtbased.dll bin/vcruntime140d.dll dist/nt/key/bin
+	cp doc/*.html dist/nt/key/doc
 	cp lib/* dist/nt/key/lib
 	cp music/* dist/nt/key/music
 	cd dist/nt && $(ZIP32) -r ../key_nt.zip key
@@ -308,11 +310,6 @@ updateversion :
 
 DISTPREFIX=dist\$(KS)
 
-setup :
-	cd doc && $(MK) all
-	$(MK) packitup
-	$(MK) ziponly
-
 ziponly :
 	mv mdep\winsetup\key$(SUFF).zip dist\key$(SUFF)_win.zip
 
@@ -325,75 +322,6 @@ FIND = c:\cygwin64\bin\find
 WINDOWS10SDK = 10.0.17763.0
 REDIST = "c:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\redist\debug_nonredist\x64\Microsoft.VC140.DebugCRT"
 UCRT = "c:\Program Files (x86)\Windows Kits\10\bin\$(WINDOWS10SKD)\x64\ucrt"
-
-packitup :
-	copy $(REDIST)\vcruntime140d.dll bin
-	copy $(UCRT)\ucrtbased.dll bin
-	rm -fr $(PREDIR)
-	mkdir $(PREDIR2)
-	$(FIND) ./lib ./music $(OTHERDIRS) | grep -v .doc$$ > tmp.lst
-	$(FIND) ./bin/resetkeylib.bat >> tmp.lst
-	$(FIND) ./bin/key.exe>> tmp.lst
-	$(FIND) ./bin/lowkey.exe>> tmp.lst
-	$(FIND) ./bin/vcruntime140d.dll >> tmp.lst
-	$(FIND) ./bin/ucrtbased.dll >> tmp.lst
-	$(FIND) ./bin -name "*.py" >> tmp.lst
-	$(FIND) ./bin -name "*.ico" >> tmp.lst
-	$(FIND) ./bin -name "*.cur" >> tmp.lst
-	$(FIND) ./bin -name "*.pyd" >> tmp.lst
-	$(FIND) ./doc -name "*.html" >> tmp.lst
-	$(FIND) ./lib -name "*.html" >> tmp.lst
-	$(FIND) ./contrib >> tmp.lst
-	$(FIND) ./index.html>> tmp.lst
-	$(FIND) ./doc/history>> tmp.lst
-	$(FIND) ./doc/multiport>> tmp.lst
-	$(FIND) ./LICENSE.txt>> tmp.lst
-	$(WINRMCR) tmp.lst
-	-cat tmp.lst | xargs -n 1 --replace=xxx cp -r --parents xxx $(PREDIR)
-	cd mdep\winsetup && chmod ugo+rwx key$(SUFF) && $(ZIP32) -r key$(SUFF).zip key$(SUFF)
-
-netdownload :
-	-cd doc && cp *.html ..\dist
-	$(MK) clobber_nt
-	pwd
-	$(FIND) mdep\winsetup\$(KS) -print | grep -vi $(KS)/local | grep -vi $(KS)/dist | grep -vi /mdep/winsetup | grep -vi /mdep/old | grep -vi /doc/electromusic2005 | grep -vi $(KS)/win > tmp.lst
-	cat tmp.lst | grep -vi /bin/ | grep -vi /sh_histo > tmp2.lst
-	cat tmp2.lst | grep -vi /mdep/mac/.*.macbin | grep -vi /mdep/mac/.*.sit | grep -vi /doc/fulltalk | grep -vi /doc/keykit2002.ppt | grep -vi /doc/examp*.bmp > tmp.lst
-	$(WINRMCR) tmp.lst
-	-tar --files-from=tmp.lst --no-recursion --create --file=dist/$(KS)_src.tar
-	cd dist
-	rm -fr $(KS)
-	mkdir $(KS)
-	cd $(KS) && tar xf ../$(KS)_src.tar
-	pwd
-	rm -f $(KS)_src.zip
-	chmod ugo+rwx $(KS)
-	$(ZIP32) -rq $(KS)_src.zip $(KS)
-	rm -fr $(KS)
-	rm -fr linux
-	mkdir linux
-	cd linux
-	rm -fr $(KS)
-	mkdir $(KS)
-	mkdir $(KS)\bin
-	mkdir $(KS)\lib
-	mkdir $(KS)\doc
-	mkdir $(KS)\music
-	cp ../../music/* $(KS)/music
-	cp ../../dist/*.html $(KS)/doc
-	cp ../../doc/history $(KS)/doc
-	cp ../../doc/keykit2003.ppt $(KS)/doc
-	-cp ../../lib/* $(KS)/lib
-	rm -fr $(KS)/lib/*.doc
-	cp ../../README.linux $(KS)
-	cp ../../makefile $(KS)
-	cp ../../LICENSE.txt $(KS)
-	cp ../../bin/resetkeylib $(KS)/bin
-	tar cf $(KS)_linux.tar $(KS)
-	mv $(KS)_linux.tar ..
-	rm -fr $(KS)
-	cd ..
-	cd ..
 
 flip_all:
 	$(RMCR) src/*.c src/*.h src/makefile
@@ -518,10 +446,12 @@ distribution_raspbian :
 	mkdir dist/raspbian/key
 	mkdir dist/raspbian/key/bin
 	mkdir dist/raspbian/key/lib
+	mkdir dist/raspbian/key/doc
 	mkdir dist/raspbian/key/music
 	cp bin/key bin/lowkey dist/raspbian/key/bin
 	cp lib/* dist/raspbian/key/lib
 	cp music/* dist/raspbian/key/music
+	cp doc/*.html dist/raspbian/key/doc
 	cd dist/raspbian ; zip -r ../key_raspbian.zip key
 	rm -fr dist/raspbian
 
@@ -539,9 +469,11 @@ distribution_linux_alsa :
 	mkdir dist/linux_alsa/key/bin
 	mkdir dist/linux_alsa/key/lib
 	mkdir dist/linux_alsa/key/music
+	mkdir dist/linux_alsa/key/doc
 	cp bin/key bin/lowkey dist/linux_alsa/key/bin
 	cp lib/* dist/linux_alsa/key/lib
 	cp music/* dist/linux_alsa/key/music
+	cp doc/*.html dist/linux_alsa/key/doc
 	cd dist/linux_alsa ; zip -r ../key_linux_alsa.zip key
 	rm -fr dist/linux_alsa
 
