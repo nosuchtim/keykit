@@ -1,0 +1,54 @@
+<html><head>
+		<style type="text/css">
+		.big {margin: 0pt; font-family: "Arial"; font-size: 18pt}
+		.normal {margin: 0pt; font-family: "Arial"; font-size: 12pt}
+		.small {margin: 0pt; font-family: "Arial"; font-size: 10pt}
+		.tiny {margin: 0pt; font-family: "Arial"; font-size: 8pt}
+		</style>
+		</head><title>Keykit tool: Echo</title><table border=0 width=100% bgcolor=#ffcc99><tr><td><font class=big><a href=../index.html>KeyKit</a> :: <a href=index.html>Tools</a> :: Echo</td></tr></table>
+<p/>
+The
+<b>Echo</b>
+tool is a realtime utility.  When you turn it
+<b>On</b>
+(the
+<b>On</b>
+button is a toggle switch), all MIDI input will be echoed to MIDI output.
+The default settings will echo each MIDI input note with a delay time
+of one beat, but you can control the delay and other factors by moving
+the sliders.  The
+<b>time</b>
+slider controls the delay time between echos.  The
+<b>trans</b>
+slider controls the pitch transposition of each echo.  For example, if the
+<b>trans</b>
+slider is set to 7, then the echoed notes will be transposed 7 steps up
+(i.e. a fifth).  Likewise, a value of -7 will transpose a fifth down.
+<p>
+The
+<b>vol</b>
+slider controls the volume decay.  For example, if it is set to 50%, then the
+volume of each echoed note will be decreased by 50 percent.
+<p>
+The
+<b>ntimes</b>
+slider controls how many echoes are generated.  For example, if it is
+set to 4, then each input MIDI note will be echoed 4 times.  If the
+<b>vol</b>
+slider was set to 50%, the volume of the 4th echo would be 1/16 the volume
+of the initial note.  Also, if the
+<b>trans</b>
+slider was set to 2, then the pitch of the 4th echo would be 8 steps
+above the original note.
+<p>
+Since KeyKit is multi-tasking, it is possible (and great fun) to create
+multiple
+<b>Echo</b>
+tools and have them operating simultaneously, with different settings in each.
+<p>
+There is also an
+<b>EchoInfinite</b>
+tool that works just like the Echo tool, but which echoes forever
+(or until each note's volume reaches 0).
+
+</tool>

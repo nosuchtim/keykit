@@ -1,0 +1,229 @@
+<html><head>
+		<style type="text/css">
+		.big {margin: 0pt; font-family: "Arial"; font-size: 18pt}
+		.normal {margin: 0pt; font-family: "Arial"; font-size: 12pt}
+		.small {margin: 0pt; font-family: "Arial"; font-size: 10pt}
+		.tiny {margin: 0pt; font-family: "Arial"; font-size: 8pt}
+		</style>
+		</head><title>KeyKit FAQ</title><body><table border=0 width=100% bgcolor=#ffcc99><tr><td><font class=big><a href=../index.html>KeyKit</a> :: Frequently Asked Questions</td></tr></table>
+
+
+<p>
+Please send suggestions for additions to <a href="mailto:me@timthompson.com" >me@timthompson.com</a>.
+<ol >
+<li ><b>What is this thing?</b>
+<p>
+KeyKit is both a programming language and a complete graphical environment
+containing a large variety
+of tools for both normal "sequencing" tasks as well as "algorithmic
+composition" tasks.
+The KeyKit download site can be found <a href="http://www.nosuch.com/keykit" >here</a>.
+</li>
+<p>
+<li ><b>Do I need to do any programming to use it?</b>
+<p>
+The graphical environment is complete enough to be easily used
+without doing any programming at all, and can be used to do a large
+variety of manipulations in a MIDI environment.  The system, however, is
+designed very much from a programmer's perspective.  It is designed
+to make it easy to add new tools and features, often with only
+a few lines of KeyKit code.
+For example, adding a new editing operation to the Group tool
+(the multi-track sequencer) can be done with 4 lines of code.
+See below for how to do this.
+</li>
+<p>
+<li ><b>I've lost my password for the download site, what do I do?</b>
+<p>
+Just register again with your same email address, and the new password
+you will be sent will override the old one.
+</li>
+<p>
+<li ><b>How do I get started?</b>
+<p>
+You should read the HTML documentation that comes with the system.
+</li>
+<p>
+<li ><b>How can I have the most fun with the smallest amount of effort?</b>
+<p>
+The <b>Mouse Matrix</b> tool is the simplest tool that you can have immediate
+(though perhaps brief) fun with.
+The <b>Kboom</b> tool is a drum pattern editor that is both a lot of fun
+and *very* deep in capability.
+</li>
+<p>
+<li ><b>What is the "Snarf"?</b>
+<p>
+Snarf is a single global variable that many tools
+can set and/or get, much like the clipboard on Windows.
+If you see a "Snarf" menu item in a tool, selecting that
+menu item will save the current contents of the
+tool in the Snarf variable.  You can then go to another
+tool, and use "Load->Snarf" (or whatever menu item the
+tool provides for reading the Snarf).  For example,
+the Group tool has a "File->Read->Snarf" menu item.
+<p>
+Besides being able to Snarf midi phrases and use them between tools,
+you can also Snarf an entire tool and its contents
+(with Window->Snarf Tool) and then create any number of
+copies of that tool (with Window->Paste Tool).
+Besides the obvious use, this can be useful to 
+copy a tool to a new page.
+</li>
+<p>
+<li ><b>How can I write a MIDI file?</b>
+<p>
+The Group tool has a "File->Write->Standard MIDI File" menu item.
+So, typically, you copy things to a Group tool in order to write them
+out as a MIDI file.
+However, you can also write a MIDI file from the console, or in a script,
+using the writemf function like this: writemf(Snarf,"file.mid");
+</li>
+<p>
+<li ><b>What is the "console" for?</b>
+<p>
+After starting KeyKit, you can type statements
+in the "console", but this is typically only
+used for:
+<ul >
+<li >
+Invoking functions that are defined
+by the files in the <b>lib</b> and <b>liblocal</b> directories.
+</li>
+<li >
+Using "#include" to re-read a file
+after making a change.
+</li>
+<li >
+Debugging (for example, typing
+"print Snarf" will print the current
+value in the Snarf variable).
+</li>
+</ul>
+</li>
+<p>
+<li ><b> How can I write and execute my own programs in KeyKit?</b>
+<p>
+The usual way of writing KeyKit code is to
+use the text editor of your choice on a file
+in the <b>liblocal</b> directory (say, "foo.k"), and when
+you want to execute that code (or load the
+function it defines) you type
+<pre>
+
+     #include foo.k
+</pre>
+in the KeyKit console.  Typically such a file will just
+define a function, and you can then execute it
+interactively from the console.  For example,
+if the foo.k file defines functions foo1() and
+foo2(), you could then type statements like this at
+the console:
+<p>
+<pre>
+
+     foo1()
+     Snarf = foo1()
+     Snarf = foo2() + foo1()
+</pre>
+<p>
+The first statement will actually schedule
+and play the return value of foo1(),
+assuming that the return value of foo1()
+is a phrase.  The second and third statements
+will assign values to the global Snarf variable,
+which is used as a conventional mechanism for
+transferring values between the GUI tools.
+For example, you could use "File->Read->Snarf"
+in the Group tool (the multi-track editor)
+to view and play the results of your foo1() function.
+</li>
+<p>
+<li ><b>How can I use KeyKit for sysex dumps?</b>
+<p>
+There is no GUI tool for this, but sample code
+for this can be found in lib/realutil.k -
+the getsysexdump() function is well-commented.
+The txpatches() and txperfs() functions use
+getsysexdump() for getting patch and performance
+dumps from a Yamaha TX81Z.
+</li>
+<p>
+<li ><b>How do I add a new editing operation to the Group tool?</b>
+<p>
+Let's say you want to add an editing operation that will shift the
+currently-picked notes up one octave in pitch.  You would add
+1 line to the <b>lib/mkmenus.k</b> file, in the <b>mkmenu_edit()</b>
+function, like this:
+<pre>
+
+     o.menucmd("Octave Up ->",po,"edit","cmd_octaveup")
+</pre>
+and then add a <b>cmd_octaveup()</b> function to the <b>lib/cmds.k</b>
+file like this:
+<pre>
+
+     function cmd_octaveup(p) {
+          p.pitch += 12
+     }
+</pre>
+That's it!
+And you can do this <b>while KeyKit is running!</b>.  Just
+make the additions described above, then type these statements in the
+console:
+<pre>
+
+     #include cmds.k
+     #include mkmenus.k
+</pre>
+The Group tools on your screen will <b>immediately</b> have access to the
+new editing operation.
+Obviously if you want sub-menus and other things, it isn't
+quite that simple, but you can use the existing commands as samples of
+what to do for more complex new commands.
+</li>
+<p>
+<li ><b>How well does it work on Linux?</b>
+<p>
+KeyKit works on Linux, but only with external MIDI devices (using the
+/dev/midi device driver).  Internal sound devices are not supported.
+If Linux developers write better support for MIDI, this might change.
+</li>
+<p>
+<li ><b>How do you use KeyKit in CGI and other scripts?</b>
+<p>
+"lowkey" is a version of the KeyKit interpreter that
+does not have graphics support, suitable for use
+from CGI and other scripts.
+Here's an example of using lowkey in a CGI script.  Write the KeyKit code
+you want to execute, and put it into a file, defined as a function.
+For example, put this in "foo.k":
+<pre>
+
+     function foogen(n) {
+          # Repeat C chord n times, as an example
+          p = repeat('c e g',n)
+          # Write the result as a standard midi file, in foo.mid
+          writemf(p,"foo.mid")
+     }
+</pre>
+Then execute lowkey like this:
+<pre>
+
+     lowkey foo.k -c "foogen(4)"
+</pre>
+This lets you write the function once and call it in different ways
+from your CGI script.  When you invoke lowkey, you either need
+to be in the bin directory, or you need to set the KEYROOT
+environment variable to the directory in which you've
+installed keykit.
+</li>
+<p>
+<li ><b>I can't figure out how to...</b>
+<p>
+Questions can be mailed to the KeyKit mailing list - keykit@nosuch.com -
+and answers will usually be provided.
+</li>
+<p>
+</ol>
+</body>

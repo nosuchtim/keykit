@@ -1,0 +1,102 @@
+<html><head>
+		<style type="text/css">
+		.big {margin: 0pt; font-family: "Arial"; font-size: 18pt}
+		.normal {margin: 0pt; font-family: "Arial"; font-size: 12pt}
+		.small {margin: 0pt; font-family: "Arial"; font-size: 10pt}
+		.tiny {margin: 0pt; font-family: "Arial"; font-size: 8pt}
+		</style>
+		</head><title>Keykit tool: Kboom</title><table border=0 width=100% bgcolor=#ffcc99><tr><td><font class=big><a href=../index.html>KeyKit</a> :: <a href=index.html>Tools</a> :: Kboom</td></tr></table>
+<p/>
+The
+<b>Kboom</b>
+tool is a drum pattern editor that has taken on a life of
+its own - it has a lot of features that are a lot of fun to play with.
+It displays a grid where each row represents a drum and each column
+represents a step.
+The drums, however, are not restricted to single notes that trigger
+drum sounds.  A "drum" can be set to an arbitrary MIDI message,
+or even a complete phrase.  New drums can be added and set on the fly,
+while the pattern is playing.
+<p>
+The menu button at the left end of each row will reveal a list of
+drums.  The default drum list is appropriate for a General MIDI synthesizer,
+but if you want you can change this list by editing the
+<font  class="fixed" >lib/maps.k</font>
+file as appropriate for your situation.
+<p>
+To use an arbitrary MIDI note as a drum, just play the note on your
+MIDI input device, and then invoke the
+<b>"Use Rec'd Note/Chord"</b>
+item in the menu button for one of the rows.  From then on, cells in that
+row will trigger the note that you just played.  The same method can be
+used to set the drum to a complete chord rather than a note.  In essence,
+all notes that overlap the last-played note will be grabbed and used
+as the drum.  If you want to use a phrase (i.e. several notes in sequence),
+just play the phrase on your MIDI input device and then invoke
+<b>"Use Rec'd Phrase"</b>
+in the drum's menu button.  This will look backwards in time for the
+first two-beat space - everything played after that space will be
+taken as the "phrase" that will be used for that drum.
+Another way to set a drum note is to invoke
+<b>"Use Snarf,"</b>
+in which case the current contents of the Snarf buffer will be used.
+<p>
+When you set a drum value using MIDI input or via the Snarf buffer,
+the label on the drum button will show a "constant phrase" representation
+of the value.  To change this label, invoke the
+<b>"Set Label"</b>
+item in the drum button menu.  You will be prompted to enter the text
+for a new label.
+<p>
+The
+<b>More</b>
+menu in the Kboom tool controls a variety of things.  The
+<b>Snarf</b>
+item will grab a copy of the current drum pattern and put it into the
+Snarf buffer (for use in other tools).  The
+<b>Clear</b>
+item will clear all of the cells in the drum grid.
+The
+<b>"Read Drumkit"</b>
+menu item will read a file that initializes the drum set.
+An example of the file that
+<b>"Read Drumkit"</b>
+uses can be found in the
+<font  class="fixed" >lib\*(Esdrums.kbm</font>
+file - it is an ASCII file that specifies the channel, pitches, and labels
+for the drums.  You can use a text editor to create other such files,
+making it easy to use a particular set of drums without having to
+set them up manually with the drum buttons.
+<p>
+The
+<b>Flash</b>
+item lets you turn off the flashing indication of the current beat
+at the top of the Kboom tool.  Turning it off may be appropriate if
+you have a slow machine, or if there is just too much activity on
+your screen.
+<p>
+Instead of having each step be
+just on and off, you can use
+<b>"More->Toggle Mode->Gradual"</b>
+to turn 
+on a mode in which each cell can be filled in gradually.  If a cell is filled
+in 250f the way, then that "hit" of the drum will only occur
+25% (randomly) of the time.  This can add variety to a pattern.
+Another way of adding variety is to create a second
+<b>Kboom</b>
+tool with
+a different number of steps, and playing the two patterns at the same
+time.
+<p>
+The
+<b>"# of Drums ->"</b>
+and
+<b>"# of Steps ->"</b>
+items in the
+<b>More</b>
+menu let you change the number of rows and columns in the grid.
+The
+<b>"Shift ->"</b>
+item lets you shift the entire contents of the grid, forward and backward.
+The shift is done in a circular fashion, so no drum hits are actually lost.
+</tool>

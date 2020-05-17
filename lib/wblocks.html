@@ -1,0 +1,94 @@
+<html><head>
+		<style type="text/css">
+		.big {margin: 0pt; font-family: "Arial"; font-size: 18pt}
+		.normal {margin: 0pt; font-family: "Arial"; font-size: 12pt}
+		.small {margin: 0pt; font-family: "Arial"; font-size: 10pt}
+		.tiny {margin: 0pt; font-family: "Arial"; font-size: 8pt}
+		</style>
+		</head><title>Keykit tool: Blocks</title><table border=0 width=100% bgcolor=#ffcc99><tr><td><font class=big><a href=../index.html>KeyKit</a> :: <a href=index.html>Tools</a> :: Blocks</td></tr></table>
+<p/>
+The
+<b>Blocks</b>
+tool lets you manipulate a linear sequence of phrases (blocks).  Each phrase
+in the sequence comes from a "phrase collection".  The original intended
+use of this tool was for manipulating drum patterns, but it can
+be used for sequencing any type of phrase, including complete songs.
+<p>
+The default number of blocks is 4, but the button that is labelled "4"
+is actually a menu that lets you set the number of blocks.
+<p>
+The
+<b>"Read Collection"</b>
+item in the
+<b>More</b>
+menu lets you read in a "collection" file - these files have a
+<font  class="fixed" >.kc</font>
+suffix by convention.  In your
+<b>lib</b>
+directory you should find a file named
+<b>drums1.kc</b>
+which you can use - it contains a variety of simple drum patterns.
+After reading a collection, you will then find that the button menus above
+each "block" (whose labels will initially read "One beat") will contain
+a list of names.  By pressing the button menu above a particular
+block and selecting one of these names, the corresponding drum pattern
+will be placed in that block.
+<p>
+To play the patterns you've placed in the blocks, press the
+left mouse button within one of the blocks (the phrase window part).
+Playback will begin in the block you've selected and continue to the
+right, ending at the rightmost block.  If you press the
+<b>Loop</b>
+button (which is a toggle), it will cause the playback to loop continuously.
+Pressing the left mouse button in any of the phrase windows will terminate
+the playback of the blocks.
+<p>
+Creating a new collection is also done with the
+<b>Blocks</b>
+tool.  To clear the current collection, use
+the
+<b>"Clear Collection"</b>
+item in the
+<b>More</b>
+menu.
+To add a phrase to the collection, you first assign the
+desired phrase to the current Snarf (using the "Snarf" item you'll find in
+most tools).  Then, invoke the
+<b>"Add Snarf to Collection"</b>
+item in the
+<b>More</b>
+menu.
+You will be requested to enter the name you want to assign to the phrase.
+This name will be added to the list in the menu button above each
+block, and you can use it like any other phrase in the collection.
+When you've added a number of new phrases to the collection, you can write
+the new collection to a file by using the
+<b>"Write Collection"</b>
+item in the
+<b>More</b>
+menu.
+<p>
+When creating a collection of drum patterns, you'll want to make
+sure the length of each phrase is quantized.  If you Snarf the current Pick
+in the Group tool, the length will not be quantized.  The better way to
+grab a phrase (in the Group tool) for use in a Blocks collection is to
+use the
+<b>"Snarf->Aud"</b>
+item you'll find in the track menus of the Group tool.  By Snarfing
+the Audition area, the length of the Snarf will be the exact length of
+the Audition area, and you can then make sure it has the desired length.
+<p>
+The
+<b>"Start Quant->" </b>
+item in the
+<b>More</b>
+menu lets you control the quantization of the start time, whenever
+the blocks are played.
+<p>
+If you create a set of blocks that you like, you can use the
+<b>"Snarf All"</b>
+item in the
+<b>More</b>
+menu to Snarf the entire sequence, which you can then read into
+(for example) a Group tool for editing and other use.
+</tool>

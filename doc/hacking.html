@@ -1,0 +1,482 @@
+<html><head>
+		<style type="text/css">
+		.big {margin: 0pt; font-family: "Arial"; font-size: 18pt}
+		.normal {margin: 0pt; font-family: "Arial"; font-size: 12pt}
+		.small {margin: 0pt; font-family: "Arial"; font-size: 10pt}
+		.tiny {margin: 0pt; font-family: "Arial"; font-size: 8pt}
+		</style>
+		</head><title>Hacking the KeyKit User Interface</title><body><table border=0 width=100% bgcolor=#ffcc99><tr><td><font class=big><a href=../index.html>KeyKit</a> :: Hacking the User Interface</td></tr></table>
+
+<p>
+
+<a name=intro desc="Introduction"></a>
+
+<a name=io desc="MIDI Input and Output"></a>
+
+<a name=library desc="The Library"></a>
+
+<a name=methods desc="Methods"></a>
+
+<a name=atool desc="Implementing a Tool"></a>
+
+<a name=doc desc="Documenting a Tool"></a>
+
+<a name=widgets desc="Widgets"></a>
+
+<a name=group desc="The Group Tool"></a>
+
+<a name=other desc="Other Tool Modifications"></a>
+
+<h2>Introduction</h2>
+
+KeyKit is a programming language and
+graphical interface for manipulating and generating music.
+This document covers the internals of its multi-window graphic interface,
+which is completely implemented in a user-accessible library
+of code written in the KeyKit language.  A separate reference manual
+describes the language, and this document assumes at least some
+familiarity with the language.
+<p>
+There are two ways to hack KeyKit - modifying the existing tools,
+and building new tools.  Building new tools is the best way
+that people can share their work, without getting
+in each others way.  If everyone started hacking the Riff tool, it would
+be difficult to merge all the changes into a single mega-Riff tool,
+and the result would be unwieldy.  Individual tools, on the other hand,
+can be encapsulated in a single file, are very easy to distribute,
+and can be selectively added to the Tools menus.  So, this guide will emphasize
+the creation of complete tools, rather than modifying the existing tools.
+That said, there will still be some discussion of the typical changes you
+might want to make to the existing tools, such as adding new editing
+operations to the Group tool.
+<h2>MIDI Input and Output</h2>
+
+If you are running on Microsoft Windows (either 95 or NT) and
+you have multiple MIDI input or output devices, you may
+have to make some adjustments.
+By default, KeyKit opens the first MIDI input device it finds, and
+opens the MIDIMAPPER for output.  Normally, the choice of MIDIMAPPER will
+for output
+will be correct, but if you have multiple input devices (e.g. a Soundblaster
+card and an MPU-401 that are both configured into your system), you may
+find that KeyKit is not using the desired MIDI input device.
+To explicitly connect MIDI input to a specific device, you first need
+to find out what input ports are available.  Type:
+<pre>
+
+listports()
+</pre>
+and you will see a list of the MIDI input and output ports available.
+By default, KeyKit uses input port 0.
+To use a different input port (for example, 2), type:
+<pre>
+
+inport(2)
+</pre>
+KeyKit will then be listening to input port number 2.  If you want to make
+this change permanent, you should add that statement to your
+<b>\keylocal.k</b>
+file.
+<h2>The Library</h2>
+
+The entire KeyKit user interface is implemented in user-accessible
+code in the
+<b>lib</b>
+directory.  When you add and change things in this source code, you
+can immediately use them in a currently-running invocation of KeyKit
+by just typing "#include file.k" in a Console window, where file.k is
+the name of the file that you have added or changed.  You can redefine
+functions on the fly, so the #include of a file will reread and redefine
+all of the functions and classes defined in that file.  However, if you
+have an instance of a tool on the screen already, and you change the
+source code for the tool and then #include the file, the already-existing
+instance of the tool will still be using the old tool class definition.
+You will need to create a new instance of the tool to test out any changes
+to the tool's class.
+<p>
+The
+<font  class="fixed" >keylib.k</font>
+file in the lib directory is an index that KeyKit uses to determine the
+mapping between functions and the files in which they are defined.
+When KeyKit sees a reference to an undefined function, it will look in
+<font  class="fixed" >keylib.k</font>
+and expect to find an entry for that function.  When you add new functions
+to any file in the
+<b>lib</b>
+directory, you can run the
+<b>rereadlib()</b>
+function in order to check for updates - if it detects changed files,
+it re-read those files and updates
+<font  class="fixed" >keylib.k.</font>
+Even more easily, you can use the "Misc->Reread Library" item in the main
+GUI menu to invoke rereadlib().  If you do a lot of development, tear off
+that menu item as a button.
+<p>
+If you want to create your own directory of library functions, and
+use it in addition to the standard library, you can do so by altering
+the value of
+<b>Keypath,</b>
+which is a list of the directories in which KeyKit searches for functions.
+Each directory in the Keypath should have its own keylib.k file.
+The easiest way of permanently altering the value of Keypath is to
+edit
+<b>\keylocal.k</b>
+and add statements such as this:
+<pre>
+
+Keypath = Keypath + ";C:\MYLIBDIR"
+rereadlib()
+</pre>
+to the
+<b>keylocal</b>
+function.  The call to <b>rereadlib()</b> is needed after any change
+to Keypath, and causes all of the
+directories to be rescanned for their keylib.k files.
+to 
+<h2>Methods</h2>
+
+The most recent version of the KeyKit language has explicit support
+for objects and methods.  A method is merely an element of an object
+that happens to have a function value, making it invokable with
+the syntax <b>object.method(</b><i >arguments</i><b>)</b>.  Each KeyKit tool is
+defined as an object, and there are by convention certain methods
+that tool objects should contain in order to fit into the KeyKit
+window interface.  These standard methods are:
+<dl>
+
+<dt><b>redraw</b><dd>
+</listitem>
+This method should completely redraw the tool.
+<dt><b>resize(size)</b><dd>
+</listitem>
+This method makes a request that the
+tool resize itself.  The tool doesn't
+have to abide by the request - it can adjust the size (for example, to
+enforce some minimum or maximum size, or to quantize things by the text size).
+This method does <b>not</b> redraw the tool.
+The <i >size</i> argument to this method is
+an <i >xyarray</i> (see the KeyKit language reference) for the desired tool
+size.  It is also possible for this method to be called with no arguments.
+In that case, the size of the tool isn't being changed, but the tool is
+still being requested to recompute the sizes of things inside the tool.
+This is usually only used when the tool reconfigures itself (e.g. when a
+new slider is added to a collection of sliders).
+<dt><b>dump</b><dd>
+</listitem>
+This method returns an array representing the current
+state of the tool.
+The array should contain all the information that a tool needs to
+recreate itself.  There are no real constraints on the contents of
+the array, although the values must be capable of being printed and
+restored by re-reading the printed value - hence function pointer values
+are (currently) not allowed in a state array, since function pointers
+get printed only as "(\|)".  Saving the name of the function, rather than
+its value, is a possible workaround.
+<dt><b>restore(state)</b><dd>
+</listitem>
+This method takes a <i >state</i> array (as
+returned by the <b>dump</b> method)
+and uses it to restore a tool to its previous state.  This method should
+not redraw the tool.
+<dt><b>get</b><dd>
+</listitem>
+This method returns a single data value that
+represents the current
+value of the tool.  The value is typically a phrase, though this
+is not a requirement.
+<dt><b>set(value)</b><dd>
+</listitem>
+This method sets the tool with a
+specified <i >value</i>.  The <b>get</b> and
+<b>set</b> methods should agree on what constitutes the tool's value.
+<dt><b>bang</b><dd>
+</listitem>
+This method causes the tool to do something.  In the
+case of the Riff tool,
+it causes the Riff's phrase to be played once.  In the case of the Kboom tool,
+it plays the Kboom's pattern once.
+</dl>
+<h2>Implementing a Tool</h2>
+
+Let's implement a volume slider tool - moving the slider will
+send MIDI volume controller messages.
+A tool is implemented by providing an object class with
+the standard methods described above.
+For example:
+<pre>
+
+class wvol {
+        method init {
+                $.w = new window()
+                $.inherit($.w)
+        }
+        method redraw {
+                $.w.redraw()
+                $.w.text("Hello World",$.w.size())
+        }
+        method resize (sz) {
+                if ( nargs() > 0 )
+                        $.w.resize(sz)
+        }
+}
+</pre>
+This class is actually complete enough for
+a ``Hello World'' tool (see <b>whello.k</b> in the <b>lib</b> directory for
+a working copy).  All tools are expected to act like window objects,
+with standard window methods such as <b>erase</b> and <b>size</b>.
+To get this behaviour, we use the <b>window</b> class and
+get a <b>new window()</b> object, from which we inherit all the
+normal window methods.
+Note that the inheritence is manually specified by calling the
+<b>inherit</b> method (one of the few built-in methods
+that all objects have).  This means that if someone invokes a method on
+our tool object that we haven't explicitly specified (like <b>erase</b>),
+the method in the <b>$.w</b> object will be used.
+<p>
+The example above provides all the functionality for drawing,
+resizing, saving, and restoring the tool.  But it doesn't do anything,
+and we wanted to build a volume slider.  To do that, we need to make
+use of a slider widget:
+<pre>
+
+class wvol {
+        method init {
+                $.w = new window()
+                $.inherit($.w)
+                # Add a slider widget as a child
+                $.slider = new kslider(0,127,120,$,"volchange")
+                $.addchild($.slider)
+        }
+        method redraw {
+                $.w.redraw()
+                methodbroadcast()
+        }
+        method resize (sz) {
+                if ( nargs() > 0 )
+                        $.w.resize(sz)
+                $.slider.resize($.w.size())
+        }
+        method volchange (v) {
+                p = controller(1,0x07,v)
+                realmidi(p)
+        }
+}
+</pre>
+This class now implements a completely functional volume slider.
+When an object of class <b>wvol</b> is created, its <b>init</b> method
+is called.  In the <b>init</b> method, the <b>kslider</b> class is used
+to create a new object whose value is assigned
+to <b>$.slider</b>, a new data element in the <b>wvol</b>
+object we're in the process of creating.
+The name of this data element is not special - we could have called
+it <b>$.s</b> if we wanted.  The <b>addchild</b> method (a built-in method
+provided for all classes) is used to add this new slider object
+to the list of children for the <b>wvol</b> object.  See the KeyKit language
+reference manual for a complete description of the children list.
+One of the primary uses of the children list is to provide a simple way
+to broadcast method invocations.  For example, the <b>methodbroadcast()</b>
+function that you see in the <b>redraw</b> method above makes use of this
+list -  it broadcasts a method (in this case, <b>redraw</b>)
+to all the children of the current object.  We could have explicitly
+called <b>$.slider.redraw()</b>, but
+<b>methodbroadcast</b> is easier in the long run because most tools have many
+children.
+<p>
+The <b>resize</b> method of our tool resizes both the window
+object (<b>$.w</b>) as well as the slider (<b>$.slider</b>).
+Note that the size of the slider is set to the size of the window.
+In this tool, it probably isn't necessary for the <b>resize</b> method
+to handle the situation where no arguments are passed, since that's only
+used from within a tool itself, and there are no such uses here.
+<p>
+The first 3 arguments to <b>kslider()</b> specify that we want a slider whose
+values range from 0 to 127, and that the initial value should be 120.
+The last 2 arguments to <b>kslider()</b>
+control what is done when the slider is moved - they specify an object
+and the name of a method (specified as a string value) to be
+invoked on that object.  In this case, we're indicating
+that we want to invoke the <b>volchange</b> method of the <b>$</b>
+object (which is the <b>wvol</b> object being initialized).
+So, everytime the slider is moved, it will invoke
+<b>$.volchange(</b><i >value</i><b>)</b>, where <i >value</i> is the new value of the
+slider.  And you can see that our <b>wvol</b> class includes
+the <b>volchange</b> method that will be invoked.  This method takes the
+value, produces a volume controller message for channel 1,
+and sends it out via MIDI output.  The <b>controller()</b> function can
+be found in <b>lib/basic2.k</b> and <b>realtime()</b> is the built-in function
+for sending a phrase as raw MIDI output.
+<p>
+Although the code above is completely functional, it doesn't provide the
+ability for the tool to be saved and restored (i.e. when using the <b>Page</b>
+feature of the user interface).  This can be provided by adding
+the following methods to our <b>wvol</b> class:
+<pre>
+
+        method get { return($.slider.get()) }
+        method set (v) { return($.slider.set(v)) }
+        method dump { return(["value"=string($.get())]) }
+        method restore (state) { $.set(state["value"]) }
+</pre>
+The first two methods are the standard methods which get and set the
+tool's value.  In this case, the value of the tool is just the value of
+the slider, so we merely make use of the slider object's <b>get</b> and
+<b>set</b> methods.
+<p>
+The <b>dump</b> method returns an array with 1 element.  The index of
+the array element is <b>"value"</b>, and the value of the array element
+is <b>$.get()</b> converted
+to a string.  (Note that <b>$.get()</b> actually results in a call
+to <b>$.slider.get()</b>.)  For example, if the value of the slider was
+120, the array returned by the <b>dump</b> method would
+be <b>["value"=120]</b>.  This would be the array given back
+to <b>$.restore()</b> when the tool was restored.  And, <b>$.restore()</b>
+merely takes the value out of the array and gives it to <b>$.set()</b>.
+<p>
+As you can see, it is very common for methods of a tool to reference other
+methods of the same object.  This should be the preferred way of working.
+Even though the <b>$.dump()</b> statement above could call <b>$.slider.get()</b>
+directly, it should not.  That way, future changes to the way in which
+the value of the tool is obtained can be made in a single place,
+in <b>$.get()</b>.
+<h2>Documenting a Tool</h2>
+
+Documentation for each tool is stored in a separate .xml
+file in the
+<b>lib</b>
+directory.  For example, the source code for the Volume tool is in
+<b>wvol.k</b>
+and its documentation is in
+<b>wvol.xml,</b>
+and both files are in the
+<b>lib</b>
+directory.
+All of the .xml files are converted by a script to .html files.
+<p>
+<h2>Widgets</h2>
+
+The <b>kslider</b> used above is an example of a widget that can be used
+in the construction of tools.  To be honest, there is no real
+difference between a widget and a tool.  In fact, a tool (such as the
+volume slider we just created) can easily be used
+within other tools - the <b>Bounce</b> tool is an example which uses
+4 <b>Riff</b> tools.  The word widget, however, is reserved for small
+things like buttons and sliders that are not intended to be
+used standalone.  Here is a list of the current widgets:
+<dl>
+
+<dt>kbutton<dd>
+</listitem>
+This is a simple button.  You can control what gets drawn inside
+the button, and you can control whether the action gets done on the
+mousedown or mouseup event.
+<dt>kmenubutton<dd>
+</listitem>
+This is a button that, when pressed, triggers a named
+pop-up menu.
+<dt>kslider<dd>
+</listitem>
+This is a slider.
+<dt>ktext<dd>
+</listitem>
+This is raw text, centered.
+<dt>ktoggle<dd>
+</listitem>
+This is a toggle button, whose value alternates between 0 and 1.
+When the value is 1, its display is inverted.
+<dt>krubber<dd>
+</listitem>
+This is a button that allows you to drag a line and get notified of
+the object over which it is released.  This is only used in
+the <b>Bang</b> tool.
+<dt>kmsg<dd>
+</listitem>
+This is text which is meant to be displayed momentarily - it
+saves a bitmap of what's underneath the text (before initial display),
+and when the kmsg widget is deleted, it restores the bitmap (so that
+it's unnecessary to redraw anything that's underneath).
+<dt>kvalbutton<dd>
+</listitem>
+This is like a menubutton, except that you give it a list
+of values, and when the button is pressed the values are used to construct
+the pop-up menu.  The values can be changed dynamically, after the
+widget is initially created.
+</dl>
+<h2>The Group Tool</h2>
+
+The <b>Group</b> tool is the largest tool by far, both in code size
+(several thousand lines so far) and capability.  As with all the other
+tools, complete source code is contained in the <b>lib</b> directory.
+Its internal implementation is fairly messy, and you
+should definitely not use its code as an example of how to
+write a KeyKit tool.  Still, there are features of the Group tool
+that you may want to customize.  In particular, you may want to add
+a new editing function, so here are instructions on how to do that.
+<p>
+Let's say you want to add a <b>Slowdown</b> command to the <b>Edit</b> menu
+that allows you to apply the following function to the current <b>Pick</b>:
+<pre>
+
+function slowdown(ph) {
+        tm1 = ph%1.time
+        sz = sizeof(ph)
+        leng = phz.time + phz.dur - tm1
+        start_factor = 1.0
+        end_factor = 4.0
+        df = end_factor - start_factor
+        r = nonnotes(ph)
+        ph = onlynotes(ph)
+        for ( nt in ph ) {
+                dt = nt.time - tm1
+                thisfactor = start_factor + (dt/float(leng)) * df
+                nt.time = tm1 + dt * thisfactor
+                nt.dur *= thisfactor
+                r |= nt
+        }
+        return(r)
+}
+</pre>
+This function implements a gradual slowing
+down by adjusting the time and duration of the
+notes.  First, put this function into a file in the <b>lib</b> directory,
+and run the <b>rereadlib()</b> function which updates the <b>keylib.k</b> index file.
+<p>
+Now, edit <b>lib/mkmenus.k</b> and find the <b>mkmenu_edit</b> function.
+Add the following line to that function, wherever you want it to appear
+in the <b>Edit</b> menu (presumably after <b>Shuffle</b>,
+to make it alphabetical):
+<pre>
+
+o.menucmd("Slowdown",po,"edit","cmd_slowdown")
+</pre>
+Now, edit <b>lib/cmds.k</b>, and add the following function:
+<pre>
+
+function cmd_slowdown(p) {
+        return(slowdown(p))
+}
+</pre>
+You should now be able to see a <b>Slowdown</b> item in the <b>Edit</b> menu
+of the <b>Group</b> tool, and should be able to invoke it and see the
+effect on whatever notes you have picked.
+<h2>Other Tool Modifications</h2>
+
+You may wish to make minor tweaks to some of the menus and settings in some
+of the tools.  You can often make such changes without having to
+understand how the tools are implemented.
+<p>
+For example, the
+<b># of Steps</b> menu in the <b>Kboom</b>
+tool currently only goes up to 32 steps, but there's really no limit in the
+implementation of <b>Kboom</b> other than the fact that the menu is
+initialized with values from 2 to 32.  Take a look at the source
+code for the <b>Kboom</b> tool, in <b>lib/wkboom.k</b>, and look for
+a 32.  Change it to 64.  You can now create drum patterns with 64 steps.
+<p>
+Another example - the <b>Riff</b> tool has a <b>Start Quant</b> menu with
+values that go from <b>None</b> to <b>8b</b>.  Let's say you want to add
+<b>16b</b> to that
+list.  Take a look at the source code, in <b>lib/wriff.k</b>.  Look for
+a line that has <b>8b</b> in it.  Add another line that looks
+just like it, except substitute <b>16b</b> for the two ocurrences of <b>8b</b>.
+You're done, and so is this document.
+</body>

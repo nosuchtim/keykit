@@ -6,20 +6,22 @@ For use on Windows, just unzip the dist/key_nt.zip and execute the bin/key.exe y
 
 Other platforms that should work: dist/key_raspbian.zip (Raspberry Pi/ARM) and dist/key_linux_alsa.zip (Linux/Intel).
 
-Formatted documentation is also in the dist directory:
+You'll find formatted documentation in:
 <ul>
 <li>
-<a href="http://htmlpreview.github.io/?https://github.com/nosuchtim/keykit/blob/master/dist/faq.html">dist/faq.html</a>
+dist/tutorial.html (Tutorial)
 <li>
-<a href="http://htmlpreview.github.io/?https://github.com/nosuchtim/keykit/blob/master/dist/hacking.html">dist/hacking.html</a>
+dist/language.html (Language Reference)
 <li>
-<a href="http://htmlpreview.github.io/?https://github.com/nosuchtim/keykit/blob/master/dist/keyvar.html">dist/keyvar.html</a>
+lib/index.html (GUI Tools)
 <li>
-<a href="http://htmlpreview.github.io/?https://github.com/nosuchtim/keykit/blob/master/dist/language.html">dist/language.html</a>
+dist/faq.html (FAQ)
 <li>
-<a href="http://htmlpreview.github.io/?https://github.com/nosuchtim/keykit/blob/master/dist/libdoc.html">dist/libdoc.html</a>
+dist/keyvar.html (Special Variables)
 <li>
-<a href="http://htmlpreview.github.io/?https://github.com/nosuchtim/keykit/blob/master/dist/tutorial.html">dist/tutorial.html</a>
+dist/libdoc.html (Library functions)
+<li>
+dist/hacking.html (Hacking guidance)
 </ul>
 
 See top-level makefile for instructions on compiling.  See the doc directory

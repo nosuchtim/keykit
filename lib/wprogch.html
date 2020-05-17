@@ -1,0 +1,29 @@
+<html><head>
+		<style type="text/css">
+		.big {margin: 0pt; font-family: "Arial"; font-size: 18pt}
+		.normal {margin: 0pt; font-family: "Arial"; font-size: 12pt}
+		.small {margin: 0pt; font-family: "Arial"; font-size: 10pt}
+		.tiny {margin: 0pt; font-family: "Arial"; font-size: 8pt}
+		</style>
+		</head><title>Keykit tool: Prog Change</title><table border=0 width=100% bgcolor=#ffcc99><tr><td><font class=big><a href=../index.html>KeyKit</a> :: <a href=index.html>Tools</a> :: Prog Change</td></tr></table>
+<p/>
+The
+<b>Prog Change</b>
+tool lets you generate program change messages.  There is a separate menu
+button for each of the 16 MIDI channels.
+When you press these buttons, you will see the General MIDI patch list.
+When you select a patch from the list, the appropriate program change
+message will be transmitted on MIDI output.
+<p>
+Although the default list of patches is intended for use with General MIDI
+synthesizers, you can change the list of patches by editing the
+<font  class="fixed" >lib/maps.k</font>
+file (there are comments in that file that explain what to do).
+The functions in
+<font  class="fixed" >maps.k</font>
+are used by several KeyKit tools (e.g. the
+<b>Group</b>
+and
+<b>Kboom</b>
+tools also use the program and drum maps specified there).
+</tool>

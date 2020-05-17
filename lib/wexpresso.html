@@ -1,0 +1,128 @@
+<html><head>
+		<style type="text/css">
+		.big {margin: 0pt; font-family: "Arial"; font-size: 18pt}
+		.normal {margin: 0pt; font-family: "Arial"; font-size: 12pt}
+		.small {margin: 0pt; font-family: "Arial"; font-size: 10pt}
+		.tiny {margin: 0pt; font-family: "Arial"; font-size: 8pt}
+		</style>
+		</head><title>Keykit tool: Expresso</title><table border=0 width=100% bgcolor=#ffcc99><tr><td><font class=big><a href=../index.html>KeyKit</a> :: <a href=index.html>Tools</a> :: Expresso</td></tr></table>
+<p/>
+The
+<b>Expresso</b>
+tool lets you play with an L-systems fractal generator,
+which takes a simple musical expression (literally the
+expression "X") and mutates it.
+In each generation, transformations are applied to 
+components of the expression.  The more generations there
+are, the larger and more complex the expression gets.
+The output varies wildly, from boring to fascinating.
+<p>
+To generate a new result in the Expresso tool, press
+the "Gen" button.  The default behaviour (as of 10/30/2000)
+of the Expresso tool is to immediately start playing
+*and* looping the result.  If you don't like this,
+you can use "More->AutoPlay->Off" to turn off the
+automatic-playing behaviour, and you can use
+"More->Loop->Off" to turn off the looping behaviour.
+<p>
+By default, the pitches in the result are not filtered
+in any way, so the result is fairly random sounding
+(especially since the default value of X is a single note).
+<p>
+Let's say you want to want to force the pitches to be in a
+particular scale (or just a particular set of notes).
+To do this, the easiest way is to use your MIDI input device.  First,
+you must select the "More->AutoApply->Scale all to Last Recorded"
+menu item.  From then on, every time you generate a new result, it will
+be automatically scaled to the last set of notes that
+were seen on MIDI input.  To try it, press a single note
+(say, middle C) on your keyboard, and then press "Gen".
+The new result should consist of only C notes.  (Remember,
+you need to select "More->AutoApply->Scale all to Last Recorded"
+to enable this mode.)
+<p>
+If you don't have a MIDI input device, it is still possible to
+set tne scale notes - first you put the desired notes into the Snarf,
+then use the "More->Load Grab from Snarf" item to put them
+in the "Grab" area, and then using "AutoApply->Scale all to Grabbed".
+You can use the "Chord" tool as a convenient way of setting the
+Snarf value to a chord, for use in this way.
+<p>
+By default, the Expresso result is truncated to 8 beats.
+You can modify this with the "More->AutoLength" menu.  If you
+set AutoLength to "off", the length of the result will vary
+(and will be longer if the number of generations is higher).
+<p>
+The default number of generations is 9.  The button that
+controls this is right below the "More" button - there is
+a "g" next to the button, "g" stands for "generations".
+The more generations you do, the more complex the results will be.
+<p>
+You can vary the overall pitch of the result by using the
+button next to the "o" ("o" for octave).  If you set the "o"
+value to "-2", then every generated result will be transposed
+down by 2 octaves.  Actually, you can change the "o"ctave dynamically,
+without generating a new result - when you change the "o"ctave,
+the change will take effect at the start of the next loop (assuming
+you have looping turned on).
+<p>
+By default, Expresso uses 3 MIDI channels for the output, starting with
+channel 1.  You can see the "3" value next to the "#" label.
+If you set this to "1", then only channel 1 will be used.  Likewise
+if you set it to "6", then channels 1 through 6 will be used.
+The "c" value controls the starting channel - the default is "1".
+If you set this to "5", and set the "#" value to "2", then
+the result will use two channels - 5 and 6.
+<p>
+By default, the results are "stepped" to sixteenth notes.
+You can change this by using the "More->AutoStep" menu.
+If you set AutoStep to "Off", the results will be quite dense,
+unless you set the "#" of channels to something low (like 1).
+If you set AutoStep to "Step some to 32nd", then the result will
+be 32nd notes for a measure, and unstepped for a measure,
+then 32nd notes again for a measure, etc.
+<p>
+By default, the result contains a continuous stream of notes.
+The "r" menu (whose default value is "All") can be used to
+select subsets of the notes.  For example, if you set the "r"
+value to "1 of 3", then only 1/3 of the notes will be selected
+in the result.  This can open up some space, and give interesting
+rhythmic elements.
+<p>
+KeyKit multitasks well, so you are encouraged to create
+multiple instances of the Expresso tool, and have them playing
+simultaneously.  By default, the "starting time" is quantized
+to 4-beat measures, so the loops of multiple Expresso tools,
+playing simulatenously, will be synchronized.  You can control
+the starting quantization with the "More->Start Quant" menu.
+<p>
+By default, Expresso results contain no patch change messages.
+If you select "More->Random Patches->On", the results will contain
+random patch change values on each channel.  The results will
+of course depend on what kind of synthesizer you have.
+<p>
+The "v" menu lets you adjust the volume of the result.  For example,
+if you set the "v" value to 90, then the velocity values of
+the results will be adjusted so that they average at least 90.
+<p>
+The expression transformations that Expresso uses are taken by
+default from the lib/default.exp file.  You can look at that file
+to see what they are, if you're curious.
+If you want to use a different set of transformations,
+you can produce your own *.exp file and use
+"More->Set Transformations" to load it.  Initially,
+though, you should use the default.
+<p>
+After generating a new result, if you are curious about
+the expression that produced the result, you can
+type "print Gexpr" in the console, and you will see the
+expression.
+<p>
+The value of phrase X, in the expression, is initially set to
+a single note.  You can see this note in the phrase
+window just below the "Gen" button.  To change this phrase,
+play something on your MIDI input controller, and then select
+"More->Load Rec (1b space)".  You should see the new phrase below
+the "Gen" button, and from then on, the value of X in any
+newly-generated results will be replaced with that phrase.
+</tool>
