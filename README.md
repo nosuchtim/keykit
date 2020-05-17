@@ -4,7 +4,7 @@ by Tim Thompson (me@timthompson.com)
 
 For use on Windows, just unzip the dist/key_nt.zip and execute the bin/key.exe you find inside.
 
-Other platforms that should work: dist/key_raspbian.zip (Raspberry Pi/ARM) and dist/key_linux_alsa (Linux/Intel).
+Other platforms that should work: dist/key_raspbian.zip (Raspberry Pi/ARM) and dist/key_linux_alsa.zip (Linux/Intel).
 
 See top-level makefile for instructions on compiling.  See the doc directory
 for other documentation.  In particular, see doc/porting for details
