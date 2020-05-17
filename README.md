@@ -6,6 +6,22 @@ For use on Windows, just unzip the dist/key_nt.zip and execute the bin/key.exe y
 
 Other platforms that should work: dist/key_raspbian.zip (Raspberry Pi/ARM) and dist/key_linux_alsa.zip (Linux/Intel).
 
+Formatted documentation is also in the dist directory:
+<ul>
+<li>
+<a href="http://htmlpreview.github.io/?https://github.com/nosuchtim/keykit/blob/master/dist/faq.html">dist/faq.html</a>
+<li>
+<a href="http://htmlpreview.github.io/?https://github.com/nosuchtim/keykit/blob/master/dist/hacking.html">dist/hacking.html</a>
+<li>
+<a href="http://htmlpreview.github.io/?https://github.com/nosuchtim/keykit/blob/master/dist/keyvar.html">dist/keyvar.html</a>
+<li>
+<a href="http://htmlpreview.github.io/?https://github.com/nosuchtim/keykit/blob/master/dist/language.html">dist/language.html</a>
+<li>
+<a href="http://htmlpreview.github.io/?https://github.com/nosuchtim/keykit/blob/master/dist/libdoc.html">dist/libdoc.html</a>
+<li>
+<a href="http://htmlpreview.github.io/?https://github.com/nosuchtim/keykit/blob/master/dist/tutorial.html">dist/tutorial.html</a>
+</ul>
+
 See top-level makefile for instructions on compiling.  See the doc directory
 for other documentation.  In particular, see doc/porting for details
 on the machine-dependent support needed for a given platform.
