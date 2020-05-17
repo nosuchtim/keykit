@@ -266,6 +266,7 @@ distribution_nt :
 	mkdir dist/nt/key/lib
 	mkdir dist/nt/key/music
 	cp bin/key bin/lowkey dist/nt/key/bin
+	cp bin/ucrtbased.dll bin/vcruntime140d.dll dist/nt/key/bin
 	cp lib/* dist/nt/key/lib
 	cp music/* dist/nt/key/music
 	cd dist/nt && $(ZIP32) -r ../key_nt.zip key
