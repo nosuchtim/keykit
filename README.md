@@ -9,19 +9,19 @@ Other platforms that should work: dist/key_raspbian.zip (Raspberry Pi/ARM) and d
 You'll find formatted documentation in:
 <ul>
 <li>
-dist/tutorial.html (Tutorial)
+doc/tutorial.html (Tutorial)
 <li>
-dist/language.html (Language Reference)
+doc/language.html (Language Reference)
 <li>
-lib/index.html (GUI Tools)
+lib/index.html (GUI Tools in the lib directory)
 <li>
-dist/faq.html (FAQ)
+doc/faq.html (FAQ)
 <li>
-dist/keyvar.html (Special Variables)
+doc/keyvar.html (Special Variables)
 <li>
-dist/libdoc.html (Library functions)
+doc/libdoc.html (Library functions)
 <li>
-dist/hacking.html (Hacking guidance)
+doc/hacking.html (Hacking guidance)
 </ul>
 
 See top-level makefile for instructions on compiling.  See the doc directory
