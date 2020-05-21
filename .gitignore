@@ -2,6 +2,7 @@
 *.swp
 src/.vs
 mdep/nt/.vs
+bin/keylocal.k
 
 fingerworks
 local/oscwin32

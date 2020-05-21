@@ -2,4 +2,4 @@ default :
 	c:\cygwin64\bin\perl.exe ../bin/xml2html.pl .
 
 clobber :
-	rm -f *.html
+	echo no longer removing html files in lib

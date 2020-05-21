@@ -30,14 +30,3 @@ maketools :
 .xml.html :
 	c:\cygwin64\bin\perl.exe ..\bin\xml2html.pl $*.xml
 
-clean :
-	rm -f tutorial.html
-	rm -f language.html
-	rm -f hacking.html
-	rm -f keyvar.html
-	rm -f libdoc.html
-	rm -f faq.html
-
-clobber : clean
-	rm -f *.html
-

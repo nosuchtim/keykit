@@ -204,14 +204,12 @@ clean_nt :
 	$(MK) copy_nt
 	cd src && $(MK) clean
 	cd byacc && $(MK) -f makefile.stdio clobber
-	cd doc && $(MK) clean
 	cd tests && $(MK) clean_nt
 	rm -f bin/last.kp
 
 clobber_nt : clean_nt
 	rm -f *~
 	cd src && $(MK) clobber
-	cd doc && $(MK) clobber
 	cd lib && $(MK) clobber
 	rm -fr mdep/nt/x64
 	rm -f bin/key.dbg
@@ -241,7 +239,6 @@ clean_stdio :
 	$(MK) copy_stdio
 	cd src ; $(MK) clean
 	cd byacc ; $(MK) -f makefile.stdio clobber
-	cd doc ; $(MK) clean
 	cd tests ; $(MK) clean_stdio
 
 clobber_stdio : clean_stdio
@@ -427,13 +424,11 @@ clean_raspbian :
 	$(MK) copy_raspbian
 	cd src ; $(MK) clean
 	cd byacc ; $(MK) -f makefile.stdio clobber
-	cd doc ; $(MK) clean
 	cd tests ; $(MK) clean_stdio
 
 clobber_raspbian : clean_raspbian
 	rm -f */core
 	cd src && $(MK) clobber
-	cd doc && $(MK) clobber
 	cd lib && $(MK) clobber
 	rm -f bin/lowkey bin/key
 	cd byacc ; $(MK) -f makefile.stdio clobber

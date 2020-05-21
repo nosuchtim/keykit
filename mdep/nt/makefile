@@ -137,6 +137,7 @@ protoproc : protoflp.exe
 clean :
 	rm -f key.err
 	rm -f key.dbg
+	rm -f d_*.h
 	rm -f *.obj
 	rm -f *.pbi
 	rm -f *.pbt
