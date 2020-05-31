@@ -26,15 +26,14 @@
 #       (most of which are included in the mdep directory) should
 #       be resurrected fairly easily.
 #
-#       See the doc directory for more documentation - in particular
-#       the "porting" file gives detailed porting guidelines.
+#       See the doc directory for:
+#            *.html - nicely formatted docs
+#            porting - gives detailed porting guidelines.
 #
 #	Any questions, email to me@timthompson.com
 
 # set MK to the preferred version of the make utility on your system
 MK = $(MAKE)
-CHMOD = chmod.exe
-ZIP32 = gzip.exe
 
 # set RMCR to the name of a program that will remove carriage-returns
 RMCR = mdep/stdio/rmcr
@@ -42,15 +41,11 @@ RMCR = mdep/stdio/rmcr
 WINRMCR = dos2unix
 
 VERSION=8.0
-SUFF=80
-KS = key$(SUFF)
 
 OTHERDIRS = 
-LDLIB="export LD_LIBRARY_PATH=/usr/X11R6/lib"
 
 ### This determines what type of makefile gets used on windows.
-### msvs is for Visual Studio 2003
-# MSTYPE=msc
+### msvs is for Visual Studio
 MSTYPE=msvs
 
 default :
@@ -59,8 +54,6 @@ default :
 	@echo "Typical usage on linux is 'make install_linux'."
 	@echo "Typical usage on windows is   'nmake install_nt'."
 	@echo "Read the makefile for more details."
-
-# The OSTYPE variable is only set on Linux.
 
 install : default
 
@@ -302,18 +295,6 @@ updateversion :
 	cd mdep/winsetup
 	cd ../..
 	echo $(VERSION) > VERSION
-
-DISTPREFIX=dist\$(KS)
-
-ziponly :
-	mv mdep\winsetup\key$(SUFF).zip dist\key$(SUFF)_win.zip
-
-PREDIR = mdep/winsetup/key$(SUFF)
-PREDIR2 = mdep\winsetup\key$(SUFF)
-
-WINDOWS10SDK = 10.0.17763.0
-REDIST = "c:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\redist\debug_nonredist\x64\Microsoft.VC140.DebugCRT"
-UCRT = "c:\Program Files (x86)\Windows Kits\10\bin\$(WINDOWS10SKD)\x64\ucrt"
 
 flip_all:
 	$(RMCR) src/*.c src/*.h src/makefile
