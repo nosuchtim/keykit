@@ -45,3 +45,5 @@ typedef void (*SIGFUNCTYPE)(int);
 
 #define PATHSEP ";"
 #define SEPARATOR "\\"
+
+#define unlink _unlink

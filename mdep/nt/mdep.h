@@ -126,3 +126,4 @@ typedef struct mymidiinbuff {
 	LPMIDIHDR midihdr;
 } MY_MIDI_BUFF;
 
+#define unlink _unlink

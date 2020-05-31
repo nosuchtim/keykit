@@ -1,6 +1,7 @@
-use XML::Parser;
 
-my $p = new XML::Parser(ErrorContext => 2);
+use XML::Parser::Lite;
+
+my $p = new XML::Parser::Lite(ErrorContext => 2);
 
 
 $p->setHandlers(
@@ -26,7 +27,11 @@ if ( -d $f ) {
 		$b =~ s/.xml$//;
 		open(OUT,">$b.html") || die("Unable to open $b.html\n");
 		&header(OUT);
-		$p->parsefile("$b.xml");
+
+		open my $fh, '<', "$b.xml" or die "Can't open file $!";
+		my $file_content = do { local $/; <$fh> };
+		$p->parse($file_content);
+
 		close(OUT);
 		$b =~ s/.*\///;
 		# Hack!
@@ -47,8 +52,10 @@ $b =~ s/.xml$//;
 open(OUT,">$b.html") || die("Unable to open $b.html\n");
 &header(OUT);
 
+open my $fh, '<', "$b.xml" or die "Can't open file $!";
+my $file_content = do { local $/; <$fh> };
+$p->parse($file_content);
 
-$p->parsefile("$b.xml");
 close(OUT);
 exit(0);
 

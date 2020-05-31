@@ -75,7 +75,7 @@ inport(2)
 </pre>
 KeyKit will then be listening to input port number 2.  If you want to make
 this change permanent, you should add that statement to your
-<b>\keylocal.k</b>
+<b>&#092;keylocal.k</b>
 file.
 <h2>The Library</h2>
 
@@ -120,11 +120,11 @@ which is a list of the directories in which KeyKit searches for functions.
 Each directory in the Keypath should have its own keylib.k file.
 The easiest way of permanently altering the value of Keypath is to
 edit
-<b>\keylocal.k</b>
+<b>&#092;keylocal.k</b>
 and add statements such as this:
 <pre>
 
-Keypath = Keypath + ";C:\MYLIBDIR"
+Keypath = Keypath + ";C:&#092;MYLIBDIR"
 rereadlib()
 </pre>
 to the
@@ -170,7 +170,7 @@ recreate itself.  There are no real constraints on the contents of
 the array, although the values must be capable of being printed and
 restored by re-reading the printed value - hence function pointer values
 are (currently) not allowed in a state array, since function pointers
-get printed only as "(\|)".  Saving the name of the function, rather than
+get printed only as "(&#092;|)".  Saving the name of the function, rather than
 its value, is a possible workaround.
 <dt><b>restore(state)</b><dd>
 </listitem>
@@ -205,20 +205,20 @@ the standard methods described above.
 For example:
 <pre>
 
-class wvol {
-        method init {
+class wvol &#123;
+        method init &#123;
                 $.w = new window()
                 $.inherit($.w)
-        }
-        method redraw {
+        &#125;
+        method redraw &#123;
                 $.w.redraw()
                 $.w.text("Hello World",$.w.size())
-        }
-        method resize (sz) {
+        &#125;
+        method resize (sz) &#123;
                 if ( nargs() > 0 )
                         $.w.resize(sz)
-        }
-}
+        &#125;
+&#125;
 </pre>
 This class is actually complete enough for
 a ``Hello World'' tool (see <b>whello.k</b> in the <b>lib</b> directory for
@@ -239,28 +239,28 @@ and we wanted to build a volume slider.  To do that, we need to make
 use of a slider widget:
 <pre>
 
-class wvol {
-        method init {
+class wvol &#123;
+        method init &#123;
                 $.w = new window()
                 $.inherit($.w)
                 # Add a slider widget as a child
                 $.slider = new kslider(0,127,120,$,"volchange")
                 $.addchild($.slider)
-        }
-        method redraw {
+        &#125;
+        method redraw &#123;
                 $.w.redraw()
                 methodbroadcast()
-        }
-        method resize (sz) {
+        &#125;
+        method resize (sz) &#123;
                 if ( nargs() > 0 )
                         $.w.resize(sz)
                 $.slider.resize($.w.size())
-        }
-        method volchange (v) {
+        &#125;
+        method volchange (v) &#123;
                 p = controller(1,0x07,v)
                 realmidi(p)
-        }
-}
+        &#125;
+&#125;
 </pre>
 This class now implements a completely functional volume slider.
 When an object of class <b>wvol</b> is created, its <b>init</b> method
@@ -312,10 +312,10 @@ feature of the user interface).  This can be provided by adding
 the following methods to our <b>wvol</b> class:
 <pre>
 
-        method get { return($.slider.get()) }
-        method set (v) { return($.slider.set(v)) }
-        method dump { return(["value"=string($.get())]) }
-        method restore (state) { $.set(state["value"]) }
+        method get &#123; return($.slider.get()) &#125;
+        method set (v) &#123; return($.slider.set(v)) &#125;
+        method dump &#123; return(["value"=string($.get())]) &#125;
+        method restore (state) &#123; $.set(state["value"]) &#125;
 </pre>
 The first two methods are the standard methods which get and set the
 tool's value.  In this case, the value of the tool is just the value of
@@ -416,7 +416,7 @@ Let's say you want to add a <b>Slowdown</b> command to the <b>Edit</b> menu
 that allows you to apply the following function to the current <b>Pick</b>:
 <pre>
 
-function slowdown(ph) {
+function slowdown(ph) &#123;
         tm1 = ph%1.time
         sz = sizeof(ph)
         leng = phz.time + phz.dur - tm1
@@ -425,15 +425,15 @@ function slowdown(ph) {
         df = end_factor - start_factor
         r = nonnotes(ph)
         ph = onlynotes(ph)
-        for ( nt in ph ) {
+        for ( nt in ph ) &#123;
                 dt = nt.time - tm1
                 thisfactor = start_factor + (dt/float(leng)) * df
                 nt.time = tm1 + dt * thisfactor
                 nt.dur *= thisfactor
                 r |= nt
-        }
+        &#125;
         return(r)
-}
+&#125;
 </pre>
 This function implements a gradual slowing
 down by adjusting the time and duration of the
@@ -451,9 +451,9 @@ o.menucmd("Slowdown",po,"edit","cmd_slowdown")
 Now, edit <b>lib/cmds.k</b>, and add the following function:
 <pre>
 
-function cmd_slowdown(p) {
+function cmd_slowdown(p) &#123;
         return(slowdown(p))
-}
+&#125;
 </pre>
 You should now be able to see a <b>Slowdown</b> item in the <b>Edit</b> menu
 of the <b>Group</b> tool, and should be able to invoke it and see the

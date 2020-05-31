@@ -23,10 +23,12 @@ html : faq.html tutorial.html language.html hacking.html keyvar.html libdoc.html
 maketools :
 	cd ..
 	cd lib
-	c:\cygwin64\bin\perl.exe ..\bin\xml2html.pl .
+	perl.exe -I ../doc ../doc/xml2html.pl .
+	unix2dos *.html
 	cd ..
 	cd doc
 
 .xml.html :
-	c:\cygwin64\bin\perl.exe ..\bin\xml2html.pl $*.xml
+	perl.exe -I . xml2html.pl $*.xml
+	unix2dos $*.html
 

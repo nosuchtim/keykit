@@ -112,7 +112,7 @@ If non-zero, MIDI input is merged into MIDI output.  Default is 1.
 </listitem>
 If non-zero (and if Merge is non-zero), this value is a bitmask used
 to determine which channels are <b>not</b> merged from MIDI input to MIDI output.
-For example, if the value of Mergefilter is <font  face="Courier" >41<<4</font>, then channel
+For example, if the value of Mergefilter is <font  face="Courier" >41&lt;&lt;4</font>, then channel
 5 will not be merged.  Any number of bits in Mergefilter can be set.
 <dt><b>Mfformat</b><dd>
 </listitem>
@@ -134,8 +134,8 @@ The current time, in clicks.
 </listitem>
 If non-zero (and if Offsetpitch is non-zero), this value is a bitmask used
 to determine which channels are <b>not</b> pitch-shifted.
-For example, if the value of Offsetfilter is <font  face="Courier" >1<<9</font>, then channel
-10 will not be affected.  (And, in fact, 1<<9 is the default
+For example, if the value of Offsetfilter is <font  face="Courier" >1&lt;&lt;9</font>, then channel
+10 will not be affected.  (And, in fact, 1&lt;&lt;9 is the default
 value of Offsetfilter.)  Any number of bits in Offsetfilter can be set.
 <dt><b>Offsetpitch</b><dd>
 </listitem>

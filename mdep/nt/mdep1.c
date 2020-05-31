@@ -14,6 +14,7 @@ void mdep_destroywindow(void);
 void
 mdep_hello(int argc,char **argv)
 {
+	_set_fmode(O_BINARY);
 }
 
 void

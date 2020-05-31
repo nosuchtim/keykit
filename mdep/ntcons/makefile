@@ -1,13 +1,6 @@
-# !include <ntwin32.mak>
-
 # This is the ntcons makefile
 
-MSVS="\program files (x86)\microsoft visual studio 14.0"
-
-DXSDK=\local\dx9sdk
-DXSDK=\local\dx8sdk
-
-BINMODE=$(MSVS)\vc\lib\amd64\binmode.obj
+BINMODE=binmode.obj
 VC7=$(MSVS)\vc
 DEBUGCC = /Ox /nologo
 DEBUGCC = /D "_DEBUG" /D "_CRT_SECURE_NO_WARNINGS" /W3 /nologo /MDd
@@ -19,8 +12,7 @@ DEBUGLINK = /DEBUG
 VC7LINK=link.exe
 VC7INC=$(VC7)\include
 
-VCPATHS=/libpath:\program files (x86)\microsoft visual studio 14.0\vc\lib\amd64 /libpath:\program files (x86)\windows kits\10\lib\10.0.17763.0\ucrt\x64
-VCINCS=/I $(VC7INC)
+# VCINCS=/I $(VC7INC)
 
 KEYOBJ = yacc.obj main.obj util.obj misc.obj phrase.obj sym.obj keyto.obj \
 	code.obj code2.obj grid.obj view.obj menu.obj task.obj fifo.obj \
@@ -49,16 +41,16 @@ install : all
 	cd ..\lib && ..\bin\keylib.exe
 
 lowkey.exe : protoflp.exe $(ALLDECS) $(KEYOBJ) key.res
-	$(VC7LINK) $(DEBUGLINK) $(conflags) "$(VCPATHS)" -map:key.map -out:lowkey.exe $(KEYOBJ) key.res $(BINMODE) $(conlibs)
+	$(VC7LINK) $(DEBUGLINK) $(conflags) -map:key.map -out:lowkey.exe $(KEYOBJ) key.res $(BINMODE) $(conlibs)
 
 key.res: key.rc
 	rc $(rcvars) -r key.rc
 
 protoflp.exe : protoflp.obj
-	$(VC7LINK) $(conflags) "$(VCPATHS)" -out:protoflp.exe protoflp.obj $(BINMODE)  $(conlibs)
+	$(VC7LINK) $(conflags) -out:protoflp.exe protoflp.obj $(BINMODE)  $(conlibs)
 
 keylib.exe : keylib.obj mdep1.obj misc.obj
-	$(VC7LINK) $(conflags) "$(VCPATHS)" -out:keylib.exe keylib.obj mdep1.obj misc.obj $(BINMODE) $(conlibs)
+	$(VC7LINK) $(conflags) -out:keylib.exe keylib.obj mdep1.obj misc.obj $(BINMODE) $(conlibs)
 
 .c.obj:
 	cl -c $(DEBUGCC) $(cflags) -I. $(VCINCS) $(cvars) $*.c

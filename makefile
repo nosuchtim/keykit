@@ -7,7 +7,8 @@
 #       Windows -    To compile the windows version, you'll need:
 #
 #                    0) Windows 10
-#                    1) Microsoft Visual Studio 2019
+#                    1) Microsoft Visual Studio 2019 (the most recent version that put things
+#                       in c:\Program Files (x86)\Microsoft Visual Studio\2019 )
 #                    2) Cygwin64 (in c:\cygwin64, only needed for perl and an XML parsing library for docs)
 #                    3) Git (in c:\program files\Git, for a few unix utilities)
 #
@@ -33,7 +34,7 @@
 # set MK to the preferred version of the make utility on your system
 MK = $(MAKE)
 CHMOD = chmod.exe
-ZIP32 = zip32.exe
+ZIP32 = gzip.exe
 
 # set RMCR to the name of a program that will remove carriage-returns
 RMCR = mdep/stdio/rmcr
@@ -254,6 +255,7 @@ bindir :
 # The stuff here is specific to constructing the distribution.
 ###################
 
+	
 distribution_nt :
 	$(MK) install_nt
 	rm -fr dist/nt dist/key_nt.zip
@@ -268,11 +270,7 @@ distribution_nt :
 	cp doc/*.html dist/nt/key/doc
 	cp lib/* dist/nt/key/lib
 	cp music/* dist/nt/key/music
-	cd dist/nt && $(ZIP32) -r ../key_nt.zip key
-	rm -fr dist/nt
-
-tjt :
-	cd dist/nt && $(ZIP32) -r ../key_nt.zip key
+	cd dist/nt && powershell "$$global:ProgressPreference = 'SilentlyContinue' ; compress-archive -literalpath key -destinationpath ../key_nt.zip"
 	rm -fr dist/nt
 
 senddownload :
@@ -312,9 +310,6 @@ ziponly :
 
 PREDIR = mdep/winsetup/key$(SUFF)
 PREDIR2 = mdep\winsetup\key$(SUFF)
-
-# This 'find' command must be the MKS toolkit find, or something similar
-FIND = c:\cygwin64\bin\find
 
 WINDOWS10SDK = 10.0.17763.0
 REDIST = "c:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\redist\debug_nonredist\x64\Microsoft.VC140.DebugCRT"
