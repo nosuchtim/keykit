@@ -1825,6 +1825,7 @@
 #library windutil.k areacontains
 #library wjoyballs.k wjoyballs
 #library wjoyballs.k mkmenu_joyballs_1
+#library wjoyballs.k mkmenu_joyballs_breakout
 #library wjoyballs.k mkmenu_joyballs_randwalls
 #library wjoyballs.k mkmenu_joyballs_key
 #library wjoyballs.k mkmenu_joyballs_scale

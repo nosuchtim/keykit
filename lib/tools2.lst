@@ -13,8 +13,6 @@ Bang:wbang
 Boomix:wboomix
 Boomix Simple:wboomixs
 Bounce:wbounce
-Bouncing Walls:wbouncing
-Bouncing Walls (numpad):wbouncing2
 Burn:wburn
 Comment:wcomment
 Console:wconsole
@@ -23,21 +21,17 @@ EchoInfinite:wecho2
 EchoX:wechox
 Echo4X:wecho4x
 Ellipse:wellipse
-Ergo:wergo
 Expresso:wexpresso
 FourPlay:w4play
 Fractal:wsimfrac
 Fractal Nest:wsfnest
 GenePool:wgene
-Gesture:wgesture
 Ginsu:wginsu
 Grab Bag:wgrabbag
-Graphics:graphics
 Grind:wgrind
 Harmony:wharmony
 Hues:whues
 Holder:toolholder
-Hoops:whoops
 Hoops2:whoops2
 JoyBalls:wjoyballs
 Kboom (old):wkboom:trackable
@@ -81,9 +75,6 @@ Techno3:wtechno3:trackable
 Timer:wtimer
 Trapped:wtrapped
 TrappedEllipse:wtr_ellipse
-Video Monitor:wvideo
-Video Trails:wtrails
-Video Threshold:wthreshold
 Virus Groups:wvirus
 Visual Notes:wvisual
 VSMM 3.0:vsmm3

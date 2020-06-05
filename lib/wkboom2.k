@@ -1316,7 +1316,7 @@ method step {
 }
 
 method restart(starttm) {
-	print("restart! ison=",$.ison)
+	# print("restart! ison=",$.ison)
 	if ( nargs() < 1 ) {
 		if ( $.startquant <= -100 ) {
 			starttm = waitforstart($,$.startquant)

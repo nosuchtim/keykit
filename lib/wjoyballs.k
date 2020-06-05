@@ -5,7 +5,6 @@ method init {
 	$.w = new window()
 	$.inherit($.w)
 
-	$.joy = getjoymonitor()
 	$.joyon = 0
 
 	# Figure Remember what ports each channel goes to
@@ -563,6 +562,7 @@ method loopback(v,n) {
 	}
 }
 method realtime(p,tm) {
+# print("realtime p=",p)
 	t = realtime(p,tm)
 	p.time += tm
 	# Keep the last so many beats of time
@@ -605,12 +605,11 @@ method moveballs(cl) {
 	lock($)
 	lim = $.colorlimit[cl]
 	$.lastx = -1
-	$.breakout = $.controldown
+	# $.breakout = $.controldown
 	for ( n=0; n<lim; n++ ) {
 		b = $.ball[cl][n]
 		if ( b["on"] == 0 )
 			break
-if($.debugmove>0){print("moveballs b=",b)}
 		r = b["row"]
 		c = b["col"]
 		realdfx = b["dfx"] * $.fdfactor * $.colorenergy[cl] / $.energydefault
@@ -915,7 +914,7 @@ method drawballs(mode) {
 	if ( nargs() < 1 )
 		mode = STORE
 	
-print("\nDrawballs start")
+# print("\nDrawballs start")
 	for ( cl in $.colorindex ) {
 		lim = $.colorlimit[cl]
 		$.lastx = -1
@@ -1040,19 +1039,12 @@ method editonoff(v) {
 }
 method setjoynum(v) {
 	# Unregister previous joynum
-	$.joy.unnotify($,$.joynum)
 	$.joynum = v
-	$.joy.notify($,v)
 }
 method joyonoff(v) {
 	if ( ! defined(v) )
 		v = 0
 	$.joyon = v
-	if ( v ) {
-		$.joy.notify($,$.joynum)
-	} else {
-		$.joy.unnotify($,$.joynum)
-	}
 }
 method patchup(v) {
 	if ( v == 0 )
@@ -1470,8 +1462,6 @@ method mazetask {
 	}
 }
 method delete {
-	if ( $.joy != $0 )
-		$.joy.unnotify($,$.joynum)
 	kill($.tid)
 	MazeTool = $0
 }
@@ -1696,7 +1686,7 @@ method realgotdown(dragged,m,ms,cl) {
 }
 
 method addball(cl,r,c,initfx,initfy) {
-	print("addball cl=",cl)
+	# print("addball cl=",cl)
 	if ( cl != "r" && cl != "g" && cl != "b" ) {
 		print("Hey, addball can't handle cl=",cl)
 		return()
@@ -1897,7 +1887,8 @@ function mkmenu_joyballs_1(o,po) {
 	o.submenu("Play Quant  ->","mkmenu_joyballs_playquant",po)
 	o.submenu("Moving Limit->","mkmenu_joyballs_moving",po)
 	o.submenu("From Scale  ->","mkmenu_joyballs_key",po)
-	o.submenu("Joystick    ->","mkmenu_joyballs_joynum",po)
+	o.submenu("Breakout    ->","mkmenu_joyballs_breakout",po)
+	# o.submenu("Joystick    ->","mkmenu_joyballs_joynum",po)
 	o.menucmd("From File (1 note/wall)",po,"readfile",1)
 	o.menucmd("From File (2 notes/wall)",po,"readfile",2)
 	o.menucmd("From File (3 notes/wall)",po,"readfile",3)
@@ -1906,6 +1897,10 @@ function mkmenu_joyballs_1(o,po) {
 	o.menucmd("From Snarf (3 notes/wall)",po,"setfromsnarf",3)
 	o.menucmd("Debug Print",po,"debugprint")
 	o.menucmd("All Walls Up",po,"allwallsup",1)
+}
+function mkmenu_joyballs_breakout(o,po) {
+	o.menucmd("on",po,"dobreakout",1)
+	o.menucmd("off",po,"dobreakout",0)
 }
 function mkmenu_joyballs_randwalls(o,po) {
 	o.menucmd("10%",po,"allwallsrand",1,0.1)
