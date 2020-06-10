@@ -140,11 +140,11 @@ method init {
 			1="prelude.mid",
 			2="bachinv1.mid",
 			3="bachinv2.mid",
-			4="c:\\local\\midi\\tjt\\state.mid",
-			5="c:\\local\\midi\\tjt\\caffeine.mid",
-			6="c:\\local\\midi\\tjt\\twinkle.mid",
-			7="c:\\local\\midi\\tjt\\autograp.mid",
-			8="c:\\local\\midi\\tjt\\friendly.mid"
+			4="..\\music\\state.mid",
+			5="..\\music\\stkans1.mid",
+			6="..\\music\\twinkle.mid",
+			7="..\\music\\stkans3.mid",
+			8="..\\music\\shamelss.mid"
 		]
 	}
 	$.nfiles = sizeof($.filenames)
