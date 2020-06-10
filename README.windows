@@ -7,8 +7,9 @@ To compile the windows version, you'll need:
     0) Windows 10
     1) Microsoft Visual Studio 2019 (the most recent version that put things
        in c:\Program Files (x86)\Microsoft Visual Studio\2019 )
-    2) Cygwin64 (in c:\cygwin64, only needed for perl and an XML parsing library for docs)
-    3) Git (in c:\program files\Git, for a few unix utilities)
+       Note: When installing, select "Desktop development with C++"
+       and also add the C++/CLI support for v142 tools (14.25)
+    2) Git (in c:\program files\Git, for a few unix utilities)
 
     Once you have these, execute this command in a DOS window:
 

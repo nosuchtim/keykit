@@ -919,6 +919,9 @@ callfuncd(Symbolp s)
 	}
 
 	if ( bi != 0 ) {
+		if (bi > 127) {
+			eprint("Internal error: bi=%d\n", bi);
+		}
 		/* it's a built-in function - execute it right away */
 		BLTINFUNC f = Bltinfuncs[bi];
 		(*(f))(npassed);

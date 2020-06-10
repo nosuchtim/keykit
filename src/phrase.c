@@ -1120,7 +1120,7 @@ strtont(char *s)
 	static int pitchvals[] = { 24, 26, 28, 29, 31, 33, 35};	/* octave 0 */
 	int vol, octave, chan;
 	DURATIONTYPE dur;
-	int val, pitch = -1, isrest = 0;
+	int val = 0, pitch = -1, isrest = 0;
 	long clicks = -1L;
 	Noteptr n;
 	char *att;
