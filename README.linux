@@ -1,38 +1,29 @@
-******************************************************
-*** NOTE *** This is old and potentially obsolete,
-*** though it will likely be resurrected shortly.
-******************************************************
-----------------------------------------------------------------------------
 
-Installing and Running KeyKit for Linux (using ALSA or /dev/midi*)
+Compiling and Running KeyKit for Linux (using ALSA)
 
-To install and run, just unpack the tar file somewhere (say, /usr/local/src),
-cd into the directory that is created, and type:
+To compile, make sure you have these packages installed:
+
+	sudo apt install libghc-alsa-core-dev
+	sudo apt install libghc-x11-dev
+
+then:
 
 	make install_linux
 
-This will install:
+This will produce:
 
-	/usr/local/bin/key		# The GUI version of keykit
-	/usr/local/bin/lowkey		# The text-only version of keykit,
-					# suitable for use in CGI scripts.
+	bin/key		# The GUI version of keykit
+	bin/lowkey	# The text-only version of keykit,
+			# suitable for use in CGI scripts.
 
-By default, exeucting 'key' will execute the ALSA version of keykit.
-If you want to execute the version that uses /dev/midi*, just
-edit /usr/local/bin/key and change key_alsa to key_devmidi.
+KeyKit is a client of the ALSA "sequencer" (it's really a
+MIDI routing system) which allows KeyKit to have as many
+input and output connections as you may desire.
 
-For the ALSA version, there are two different implementations of MIDI support.
-One uses "raw" MIDI ports, which generally means ports corresponding
-by MIDI hardware on your computer (though note that ALSA does have a way
-to create "virtual" "raw" MIDI ports as well; google for "snd-virmidi").
-Using this MIDI implementation limits KeyKit to a single input port
-and a single output port.
+You control the connections between KeyKit and hardware ports
+and/or soft synths or other applications using other utility
+applications such as aconnect or qjackctl.
 
-The other approach makes KeyKit a client of the ALSA "sequencer"
-(its really a MIDI routing system), and allows KeyKit to have as many
-input and output connections as you may desire. You control the connections
-between KeyKit and hardware ports and/or soft synths or other applications
-using other utility applications such as aconnect or qjackctl.
 By default, KeyKit will create one input port and one output port,
 but you can alter that by defining one or both of
 
@@ -41,28 +32,15 @@ but you can alter that by defining one or both of
 
 in your environment. Their value should be sanely-sized integer. You should
 read doc/multiport to understand how to use these multiple input and
-output ports. Note that KeyKit will *not* connect itself to any
-other destinations, so you will not be able to do anything until you have
-used aconnect/qjackctl/etc. to make connections.
+output ports.
 
-By default, KeyKit uses the ALSA sequencer implementation. To switch
-to the "raw" MIDI version, do this before compiling:
+Note that KeyKit will *not* connect itself automatically to
+any other destinations, so you will not be able to do anything
+until you have used aconnect/qjackctl/etc. to make connections.
 
-   cd mdep/linux_alsa
-   mv midi.c sequencer_midi.c
-   mv raw_midi.c midi.c
-   cd ../..
-
-For the rawmidi version, the default ALSA midi device will be used
-by default.  You can explicitly control the device used by setting
-the environment variable ALSA_RAWMIDI_DEVICE.  The value of
-ALSA_RAWMIDI_DEVICE should be of the form "hw:#,#", where the two numbers
-are the device and card numbers.  For example, a value of "hw:1,0"
-would use card1 and the 0-th (first) device on that card.  
-
-If you use the devmidi version, the default midi device is
-/dev/midi00.  If you want a different device, you can set the
-environment variable MIDIDEVICE to the full path of the device.
+Also note that the ports will not appear in qjackctl until you've
+actually opened them, either with "Tools1->Port Enabler" in the KeyKit GUI,
+or by putting calling outport() or inport() to open a port by default.
 
 You can also set the environment variable MUSICPATH to point to the
 directory(s) where you keep your .mid files.  For example:
@@ -73,24 +51,6 @@ would cause the current directory to be searched first, followed by
 /home/falco/mymusic1, followed by /home/falco/mymusic.
 
 Documentation is in the doc directory.
-
-----------------------------------------------------------------------------
-
-Compiling KeyKit for Linux
-
-If you have the 'src' directory and want to recompile keykit from scratch,
-execute:
-
-	make install_linux	# compiles/installs for both ALSA and devmidi
--or-
-	make install_linux_alsa       # for the ALSA version
--or-
-	make install_linux_devmidi    # for the devmidi version
-
-This will compile and install key and lowkey in /usr/local/bin.
-
-You can also "make regress_stdio" to build a text-only version
-of the software and run regression tests.
 
 ----------------------------------------------------------------------------
 

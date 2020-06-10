@@ -24,7 +24,7 @@ SRC = real.c yacc.c code.c code2.c sym.c main.c util.c mdep1.c mfin.c \
 	phrase.c misc.c fsm.c grid.c view.c midi.c clock.c mdep2.c \
 	keyto.c regex.c task.c fifo.c kwind.c menu.c bltin.c meth.c
 PROFILE = -g
-CFLAGS = -m32 -O $(INC) $(PROFILE)
+CFLAGS = -O $(INC) $(PROFILE)
 
 all : $(EXECS)
 
@@ -174,10 +174,10 @@ lint :
 	lint $(CFLAGS) $(SRC) | grep -v questionable | lintfilter
 
 mdepback :
-	cp mdep1.c mdep2.c mdep.h makefile ../mdep/linux_alsa
-	cp tjt.ico keykit.ico ../mdep/linux_alsa
-	cp clock.c ../mdep/linux_alsa/bsdclock.c
-	cp midi.c ../mdep/linux_alsa
+	cp mdep1.c mdep2.c mdep.h makefile ../mdep/linux
+	cp tjt.ico keykit.ico ../mdep/linux
+	cp clock.c ../mdep/linux/bsdclock.c
+	cp midi.c ../mdep/linux
 
 test :  all
 	cd ../tests ; sh keytest.sh

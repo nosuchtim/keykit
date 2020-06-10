@@ -1,35 +1,11 @@
 # Copyright 1996 AT&T Corp.  All rights reserved.
 #
 #       KeyKit has been ported to many environments in its lifetime,
-#       however the most recent version has only been tested in the
-#       environments described below.
+#       however the most recent version has only been tested on
+#       Windows and Linux.
 #
-#       Windows -    To compile the windows version, you'll need:
-#
-#                    0) Windows 10
-#                    1) Microsoft Visual Studio 2019 (the most recent version that put things
-#                       in c:\Program Files (x86)\Microsoft Visual Studio\2019 )
-#                    2) Cygwin64 (in c:\cygwin64, only needed for perl and an XML parsing library for docs)
-#                    3) Git (in c:\program files\Git, for a few unix utilities)
-#
-#                    Once you have these, execute this command in a DOS window:
-#
-#                        makewindows.bat
-#
-#                    This will compile and put binaries in the bin directory.
-#
-#	UNIX/Linux (stdio) - To compile, "make install_stdio".
-#                    Use "make regress_stdio" to run the regression tests.
-#
-#       The machine-dependent parts of KeyKit have not changed much
-#       over the years, so many of the previous ports
-#       (most of which are included in the mdep directory) should
-#       be resurrected fairly easily.
-#
-#       See the doc directory for:
-#            *.html - nicely formatted docs
-#            porting - gives detailed porting guidelines.
-#
+#       See the README.* files for platform-specific info.
+
 #	Any questions, email to me@timthompson.com
 
 # set MK to the preferred version of the make utility on your system
@@ -266,9 +242,6 @@ distribution_nt :
 	cd dist/nt && powershell "$$global:ProgressPreference = 'SilentlyContinue' ; compress-archive -literalpath key -destinationpath ../key_nt.zip"
 	rm -fr dist/nt
 
-senddownload :
-	senddownload
-
 updateversion :
 	sed -e "/KEYKITVERSION/s/Version ..../Version $(VERSION)/" < index.html > tmp.html
 	mv tmp.html index.html
@@ -355,15 +328,15 @@ copy_x : bindir
 # Linux X Windows version with MIDI
 #########################################################
 
-copy_linux_alsa : bindir
-	cp mdep/linux_alsa/mdep1.c src/mdep1.c
-	cp mdep/linux_alsa/mdep2.c src/mdep2.c
-	cp mdep/linux_alsa/mdep.h src/mdep.h
-	cp mdep/linux_alsa/makefile src/makefile
-	cp mdep/linux_alsa/bsdclock.c src/clock.c
-	cp mdep/linux_alsa/tjt.ico src/tjt.ico
-	cp mdep/linux_alsa/keykit.ico src/keykit.ico
-	cp mdep/linux_alsa/midi.c src/midi.c
+copy_linux : bindir
+	cp mdep/linux/mdep1.c src/mdep1.c
+	cp mdep/linux/mdep2.c src/mdep2.c
+	cp mdep/linux/mdep.h src/mdep.h
+	cp mdep/linux/makefile src/makefile
+	cp mdep/linux/bsdclock.c src/clock.c
+	cp mdep/linux/tjt.ico src/tjt.ico
+	cp mdep/linux/keykit.ico src/keykit.ico
+	cp mdep/linux/midi.c src/midi.c
 	$(RMCR) src/*.c src/*.h src/*.ico src/makefile
 	$(RMCR) lib/* tests/makefile
 	cp mdep/stdio/resetkeylib bin
@@ -428,25 +401,25 @@ distribution_raspbian :
 
 bindir :
 
-install_linux_alsa: bindir
+install_linux: bindir
 	$(MK) install_stdio
-	$(MK) copy_linux_alsa
+	$(MK) copy_linux
 	cd src ; $(MK) install
 
-distribution_linux_alsa :
-	rm -fr dist/linux_alsa dist/key_linux_alsa.zip
-	mkdir dist/linux_alsa
-	mkdir dist/linux_alsa/key
-	mkdir dist/linux_alsa/key/bin
-	mkdir dist/linux_alsa/key/lib
-	mkdir dist/linux_alsa/key/music
-	mkdir dist/linux_alsa/key/doc
-	cp bin/key bin/lowkey dist/linux_alsa/key/bin
-	cp lib/* dist/linux_alsa/key/lib
-	cp music/* dist/linux_alsa/key/music
-	cp doc/*.html dist/linux_alsa/key/doc
-	cd dist/linux_alsa ; zip -r ../key_linux_alsa.zip key
-	rm -fr dist/linux_alsa
+distribution_linux :
+	rm -fr dist/linux dist/key_linux.zip
+	mkdir dist/linux
+	mkdir dist/linux/key
+	mkdir dist/linux/key/bin
+	mkdir dist/linux/key/lib
+	mkdir dist/linux/key/music
+	mkdir dist/linux/key/doc
+	cp bin/key bin/lowkey dist/linux/key/bin
+	cp lib/* dist/linux/key/lib
+	cp music/* dist/linux/key/music
+	cp doc/*.html dist/linux/key/doc
+	cd dist/linux ; zip -r ../key_linux.zip key
+	rm -fr dist/linux
 
 
 ##########################################
