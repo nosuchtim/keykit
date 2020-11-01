@@ -3,7 +3,6 @@
 ########
 
 LINK=link
-LIB=lib
 CC=cl
 
 WINDOWS10SDK = 10.0.18362.0
