@@ -15,23 +15,13 @@ method init {
 	$.tid = -1
 	$.fmax = 1000000.0
 	$.fdfactor = 13333.0	# amount to multiply dx/dy things by
-	$.currentcolor = "r"
-	$.maxballspercolor = 16
+	$.currentregion = "A"
+	$.maxballsperregion = 16
 	$.editing = 0
-	$.joystate = ["ANALOGX"=0, "ANALOGY"=0, "ANALOGR"=0, "ANALOGZ"=0]
-	$.selectdown = 0
-	$.startdown = 0
 	$.shiftdown = 0
 	$.breakout = 0
-	$.desc1 = ""
-	$.debugmove=0
 	$.randomadd = 1
 	$.mapon = 0
-	$.effectport = 0
-	if ( defined(EffectPort) )
-		$.effectport = EffectPort
-
-	$.loopplaying = [0=0,1=0,2=0,3=0]
 
 	$.paletteout = 1
 	$.midiout = 0
@@ -62,34 +52,35 @@ method init {
 		$.filephrase[n] = p
 	}
 
-	$.butt2color = ["R1"="g","R2"="b","L1"="r"]
-	$.colorchan = ["r"=1,"g"=2,"b"=3]
-	$.colorindex = ["r"=8,"g"=9,"b"=10]
-	$.orderedcolors = [0="r",1="g",2="b"]
+	$.regionchan = ["A"=1,"B"=2,"C"=3,"D"=4]
+	$.colorindex = ["A"=8,"B"=9,"C"=10,"D"=11]
+	$.orderedregions = [0="A",1="B",2="C",3="D"]
 	$.colorbuttpressed = []
-	$.colordur = ["r"=1.0,"g"=1.0,"b"=1.0]
+	$.colordur = ["A"=1.0,"B"=1.0,"C"=1.0,"D"=1.0]
 	$.defaultvol = 90
-	$.colorvol = ["r"=$.defaultvol,"g"=$.defaultvol,"b"=$.defaultvol]
+	$.colorvol = ["A"=$.defaultvol,"B"=$.defaultvol,"C"=$.defaultvol,"D"=$.defaultvol]
 
-	$.editdobuttons = ["UP"=1,"DOWN"=-1,"LEFT"=-2,"RIGHT"=2]
 	$.offset = 0
 	$.debug = 0
 
 	colormix(8,255*255,0,0)
 	colormix(9,0,255*255,0)
 	colormix(10,0,0,255*255)
-	colormix(11,0,0,0)
-	$.wallcolor = 11
+	colormix(11,255*255,0,255*255)
+	$.wallcolor = 12
 
 	$.grid = $0
 	$.more = new kmenubutton("More","mkmenu_paletteballs_1",$)
 	$.addchild($.more)
-	$.redbutt = new ktoggle("R",$,"redonoff")
-	$.addchild($.redbutt)
-	$.greenbutt = new ktoggle("G",$,"greenonoff")
-	$.addchild($.greenbutt)
-	$.bluebutt = new ktoggle("B",$,"blueonoff")
-	$.addchild($.bluebutt)
+
+	$.butt_A = new ktoggle("A",$,"onoff_A")
+	$.addchild($.butt_A)
+	$.butt_B = new ktoggle("B",$,"onoff_B")
+	$.addchild($.butt_B)
+	$.butt_C = new ktoggle("C",$,"onoff_C")
+	$.addchild($.butt_C)
+	$.butt_D = new ktoggle("D",$,"onoff_D")
+	$.addchild($.butt_D)
 
 	$.b3 = new kvalbutton([0="Normal",1="Control",2="Shift"],
 			$,"modchanged",REDRAW);
@@ -125,15 +116,11 @@ method init {
 
 	$.slidermax = 1000
 	$.decayslider = []
-	$.volslider = []
 	$.energyslider = []
 	for ( cl in $.colorindex ) {
 		$.decayslider[cl] = new kslider(0,$.slidermax,
 					$.decaydefault,$,"changedecay",cl)
 		$.addchild($.decayslider[cl])
-		$.volslider[cl] = new kslider(0,$.slidermax,
-					$.velocitydefault,$,"changevol",cl)
-		$.addchild($.volslider[cl])
 		$.energyslider[cl] = new kslider(0,$.slidermax,
 					$.energydefault,$,"changeenergy",cl)
 		$.addchild($.energyslider[cl])
@@ -157,18 +144,16 @@ method init {
 	$.freezep = []
 
 	$.colordecay = []
-	$.colorvelocity = []
 	$.colorenergy = []
 	for ( cl in $.colorindex ) {
 		$.colordecay[cl] = $.decaydefault
-		$.colorvelocity[cl] = $.velocitydefault
 		$.colorenergy[cl] = $.energydefault
-		$.colorlimit[cl] = $.maxballspercolor/2
+		$.colorlimit[cl] = $.maxballsperregion/2
 		$.freeze[cl] = 0
 		$.freezep[cl] = ''
 	}
 	$.tids = []
-	$.redbutt.set(1)
+	$.butt_A.set(1)
 
 	MazeTool = $
 
@@ -194,7 +179,6 @@ method dump() {
 	return( [
 		"colorlimit" = $.colorlimit,
 		"colordecay" = $.colordecay,
-		"colorvelocity" = $.colorvelocity,
 		"colorenergy" = $.colorenergy,
 		"sidetop" = $.sidetop,
 		"sidebottom" = $.sidebottom,
@@ -212,7 +196,6 @@ method dump() {
 method restore(st) {
 	for ( cl in $.colorindex ) {
 		$.decayslider[cl].set(st["colordecay"][cl])
-		$.volslider[cl].set(st["colorvelocity"][cl])
 		$.energyslider[cl].set(st["colorenergy"][cl])
 	}
 	$.mapon = st["mapon"]
@@ -224,7 +207,6 @@ method restore(st) {
 
 	$.colorlimit = arraycopy(st["colorlimit"])
 	$.colordecay = arraycopy(st["colordecay"])
-	$.colorvelocity = arraycopy(st["colorvelocity"])
 	$.colorenergy = arraycopy(st["colorenergy"])
 
 	$.sidetop = arraycopy(st["sidetop"])
@@ -247,20 +229,17 @@ method chanchanged(v) {
 }
 method setbasech(v) {
 	$.basech = v
-	$.colorchan = ["r"=$.basech,"g"=$.basech+1,"b"=$.basech+2]
+	$.regionchan = ["A"=$.basech,"B"=$.basech+1,"C"=$.basech+2,"D"=$.basech+3]
 }
 method changedecay(v,cl) {
 	$.colordecay[cl] = v
-}
-method changevol(v,cl) {
-	$.colorvelocity[cl] = v
 }
 method changeenergy(v,cl) {
 	# change all the existing balls
 	lock($)
 	$.colorenergy[cl] = v
 	for ( cl in $.colorindex ) {
-		for ( n=0; n<$.maxballspercolor; n++ ) {
+		for ( n=0; n<$.maxballsperregion; n++ ) {
 			b = $.ball[cl][n]
 			if ( b["on"] == 0 )
 				break
@@ -304,7 +283,7 @@ method initballs {
 	$.ball = []
 	for ( cl in $.colorindex ) {
 		$.ball[cl] = []
-		for ( n=0; n<$.maxballspercolor; n++ ) {
+		for ( n=0; n<$.maxballsperregion; n++ ) {
 			$.ball[cl][n] = []
 			$.ball[cl][n]["on"] = 0
 			$.ball[cl][n]["row"] = -1
@@ -401,8 +380,8 @@ method playit(p,cl) {
 		print("Hey, playit given non-phrase?")
 		return()
 	}
-	p.chan = $.colorchan[cl]
-	p.vol = $.basevelocity + ($.topvelocity - $.basevelocity) * $.colorvelocity[cl] / $.slidermax
+	p.chan = $.regionchan[cl]
+	p.vol = $.basevelocity + ($.topvelocity - $.basevelocity) * $.velocitydefault / $.slidermax
 	p.pitch += $.offset
 	p.dur *= $.colordur[cl]
 	if ( $.mapon ) {
@@ -615,7 +594,7 @@ method moveballs(cl) {
 			}
 
 			if ( bouncetype != "" && $.paletteout ) {
-				$.sendtopalette(r,c)
+				$.sendtopalette(r,c,bouncetype,cl)
 			}
 
 			if ( bouncetype == "top" ) {
@@ -684,13 +663,10 @@ method moveballs(cl) {
 				task $.redrawbottom(redrawbottomr,
 					redrawbottomc)
 			}
-# print("b is now ",b)
 		}
 		$.drawball(b,CLEAR)
 		$.updateball(b,nfx,nfy,nxy["x"],nxy["y"])
-# print("MOVED ball b=",b)
 		colorset($.colorindex[cl])
-if($.debugmove>0){print("drawing b=",b);}
 		$.drawball(b,STORE)
 	}
 	colorset(1)
@@ -800,31 +776,44 @@ method clear(v) {
 method maponoff(v) {
 	$.mapon = v
 }
-method redonoff(v) {
+method onoff_A(v) {
 	if ( v ) {
-		$.currentcolor = "r"
-		$.greenbutt.set(0) ; $.greenbutt.redraw()
-		$.bluebutt.set(0) ; $.bluebutt.redraw()
+		$.currentregion = "A"
+		$.butt_B.set(0) ; $.butt_B.redraw()
+		$.butt_C.set(0) ; $.butt_C.redraw()
+		$.butt_D.set(0) ; $.butt_D.redraw()
 	} else {
-		$.redbutt.set(1) ; $.redbutt.redraw()
+		$.butt_A.set(1) ; $.butt_A.redraw()
 	}
 }
-method greenonoff(v) {
+method onoff_B(v) {
 	if ( v ) {
-		$.currentcolor = "g"
-		$.redbutt.set(0) ; $.redbutt.redraw()
-		$.bluebutt.set(0) ; $.bluebutt.redraw()
+		$.currentregion = "B"
+		$.butt_A.set(0) ; $.butt_A.redraw()
+		$.butt_C.set(0) ; $.butt_C.redraw()
+		$.butt_D.set(0) ; $.butt_D.redraw()
 	} else {
-		$.greenbutt.set(1) ; $.greenbutt.redraw()
+		$.butt_B.set(1) ; $.butt_B.redraw()
 	}
 }
-method blueonoff(v) {
+method onoff_C(v) {
 	if ( v ) {
-		$.currentcolor = "b"
-		$.redbutt.set(0) ; $.redbutt.redraw()
-		$.greenbutt.set(0) ; $.greenbutt.redraw()
+		$.currentregion = "C"
+		$.butt_A.set(0) ; $.butt_A.redraw()
+		$.butt_B.set(0) ; $.butt_B.redraw()
+		$.butt_D.set(0) ; $.butt_D.redraw()
 	} else {
-		$.bluebutt.set(1) ; $.bluebutt.redraw()
+		$.butt_C.set(1) ; $.butt_C.redraw()
+	}
+}
+method onoff_D(v) {
+	if ( v ) {
+		$.currentregion = "D"
+		$.butt_A.set(0) ; $.butt_A.redraw()
+		$.butt_B.set(0) ; $.butt_B.redraw()
+		$.butt_C.set(0) ; $.butt_C.redraw()
+	} else {
+		$.butt_D.set(1) ; $.butt_D.redraw()
 	}
 }
 method onoff(v) {
@@ -899,16 +888,25 @@ method dobreakout(v) {
 	$.breakout = v
 }
 
-method sendtopalette(r,c) {
+method sendtopalette(r,c,bouncetype,cl) {
 	y = r / float($.nrows-1)
 	x = c / float($.ncols-1)
 	z = 0.5
-	cid = sprintf("%d",$.cursornum++)
-	msgdown = [0="/cursorevent",1=sprintf("{ \"event\": \"down\", \"cid\": \"%s\", \"x\": %f, \"y\": %f, \"z\": %f }",cid,x,y,z)]
-	msgup = [0="/cursorevent",1=sprintf("{ \"event\": \"up\", \"cid\": \"%s\", \"x\": %f, \"y\": %f, \"z\": 0.0 }",cid,x,y)]
-	task $.sendcursorup(msgdown,msgup)
+	sendtype = "cursor"
+	if ( sendtype == "sprite" ) {
+		cid = sprintf("%s_%s_%d",bouncetype,cl,$.cursornum++)
+		msg = [0="/spriteevent",1=sprintf("{ \"event\": \"sprite\", \"cid\": \"%s\", \"x\": %f, \"y\": %f, \"z\": %f }",cid,x,y,z)]
+		print("osc msg = ",msg)
+		mdep("osc","send",$.oscpalette,msg)
+	} else {
+		cid = sprintf("%s_%s_%d",bouncetype,cl,$.cursornum++)
+		region = cl
+		msgdown = [0="/cursorevent",1=sprintf("{ \"event\": \"down\", \"cid\": \"%s\", \"region\": \"%s\", \"x\": %f, \"y\": %f, \"z\": %f }",cid,region,x,y,z)]
+		msgup = [0="/cursorevent",1=sprintf("{ \"event\": \"up\", \"cid\": \"%s\", \"region\": \"%s\", \"x\": %f, \"y\": %f, \"z\": 0.0 }",cid,region,x,y)]
+		task $.sendcursor(msgdown,msgup)
+	}
 }
-method sendcursorup(msgdown,msgup) {
+method sendcursor(msgdown,msgup) {
 	mdep("osc","send",$.oscpalette,msgdown)
 	sleeptill(Now+1b/4)
 	mdep("osc","send",$.oscpalette,msgup)
@@ -939,16 +937,19 @@ method mazetask {
 	while ( 1 ) {
 		sleeptill(tm-2)
 		if ( $.joyon == 0 ) {
-			$.moveballs("r")
-			$.moveballs("g")
-			$.moveballs("b")
+			$.moveballs("A")
+			$.moveballs("B")
+			$.moveballs("C")
+			$.moveballs("D")
 		} else {
-			if ( "r" in $.colorbuttpressed )
-				$.moveballs("r")
-			if ( "g" in $.colorbuttpressed )
-				$.moveballs("g")
-			if ( "b" in $.colorbuttpressed )
-				$.moveballs("b")
+			if ( "A" in $.colorbuttpressed )
+				$.moveballs("A")
+			if ( "B" in $.colorbuttpressed )
+				$.moveballs("B")
+			if ( "C" in $.colorbuttpressed )
+				$.moveballs("C")
+			if ( "D" in $.colorbuttpressed )
+				$.moveballs("D")
 		}
 		tm += $.movesize
 	}
@@ -966,37 +967,37 @@ method resize (sz) {
 			ym2 = $.ymin() + 2
 
 			$.dx = $.textwidth()*2
-			$.x0a = $.xmin() + 2 + 4*$.dx
+			$.x0a = $.xmin() + 2 + 5*$.dx
 			cln = 0
 
 			y0 = $.ymin()+$.dy
-			ddy = ($.ymax()-2-y0)/3
+			ddy = ($.ymax()-2-y0)/2
 			y0a = y0+ddy
-			y0b = y0+2*ddy
 			y0c = $.ymax()-2
+			y0mid = y0a
 
 			x0 = $.xmin()+2
-			for ( n=0; n<sizeof($.orderedcolors); n++ ) {
-				cl = $.orderedcolors[n]
+			for ( n=0; n<sizeof($.orderedregions); n++ ) {
+				cl = $.orderedregions[n]
 				x0a = x0 + $.dx
 
 				x1 = $.xmin()+(cln+1)*$.dx-1
 				$.decayslider[cl].resize(
-					xy(x0,y0,x0a,y0a-3))
-				$.volslider[cl].resize(
-					xy(x0,y0a+3,x0a,y0b-3))
+					xy(x0,y0,x0a,y0mid-3))
 				$.energyslider[cl].resize(
-					xy(x0,y0b+3,x0a,y0c))
+					xy(x0,y0mid+3,x0a,y0c))
 				cln++
 				x0 = x0a
 			}
 
-			$.redbutt.resize(xy($.xmin()+2,ym2,
+			$.butt_A.resize(xy($.xmin()+2,ym2,
 				$.xmin()+$.dx-1,$.ymin()+$.dy-2))
-			$.greenbutt.resize(xy($.xmin()+$.dx+1,ym2,
+			$.butt_B.resize(xy($.xmin()+$.dx+1,ym2,
 				$.xmin()+2*$.dx-1,$.ymin()+$.dy-2))
-			$.bluebutt.resize(xy($.xmin()+2*$.dx+1,ym2,
+			$.butt_C.resize(xy($.xmin()+2*$.dx+1,ym2,
 				$.xmin()+3*$.dx-1,$.ymin()+$.dy-2))
+			$.butt_D.resize(xy($.xmin()+3*$.dx+1,ym2,
+				$.xmin()+4*$.dx-1,$.ymin()+$.dy-2))
 
 			$.gridsize = xy($.x0a+2,$.ymin()+$.dy,
 					$.xmax()-3,$.ymax()-2)
@@ -1030,28 +1031,28 @@ method redraw {
 		lock($)
 		$.w.redraw()
 		colorset($.wallcolor)
-		$.w.textcenter("JoyBalls",xy($.xmin(),$.ymin(),
+		$.w.textcenter("PaletteBalls",xy($.xmin(),$.ymin(),
 				$.xm,$.ymin()+$.dy))
-		x0c = $.xmin() + 2 + 3*$.dx
-		x0d = $.xmin() + 2 + 4*$.dx
+		x0c = $.xmin() + 2 + 4*$.dx
+		x0d = $.xmin() + 2 + 5*$.dx
 		y0 = $.ymin()+$.dy
-		ddy = ($.ymax()-2-y0)/3
+		ddy = ($.ymax()-2-y0)/2
 		y0a = y0+ddy
-		y0b = y0+2*ddy
 		y0c = $.ymax()-2
+		y0mid = (y0a+y0c)/2
 		th = $.textheight()
 
-		$.w.textcenter("D",xy(x0c,y0-th,x0d,y0a-1-th))
-		$.w.textcenter("C",xy(x0c,y0,x0d,y0a-1))
-		$.w.textcenter("Y",xy(x0c,y0+th,x0d,y0a-1+th))
-
-		$.w.textcenter("V",xy(x0c,y0a+1-th,x0d,y0b-1-th))
-		$.w.textcenter("E",xy(x0c,y0a+1,x0d,y0b-1))
-		$.w.textcenter("L",xy(x0c,y0a+1+th,x0d,y0b-1+th))
-
-		$.w.textcenter("N",xy(x0c,y0b+1-th,x0d,y0c-th))
-		$.w.textcenter("G",xy(x0c,y0b+1,x0d,y0c))
-		$.w.textcenter("Y",xy(x0c,y0b+1+th,x0d,y0c+th))
+		# vertical text
+		s = "DECAY"
+		yoff = -5
+		for ( n=0 ; n<sizeof(s); n++ ) {
+			$.w.textcenter(substr(s,n+1,1),xy(x0c,y0+(yoff+n)*th,x0d,y0mid-1+(yoff+n+1)*th))
+		}
+		s = "ENERGY"
+		yoff = -5
+		for ( n=0 ; n<sizeof(s); n++ ) {
+			$.w.textcenter(substr(s,n+1,1),xy(x0c,y0mid+(yoff+n)*th,x0d,y0c-1+(yoff+n+1)*th))
+		}
 
 		methodbroadcast()
 		$.w.rectangle($.gridsize)
@@ -1072,7 +1073,7 @@ method fxy2xy(fx,fy) {
 }
 method gotdrag (m,ms,cl) {
 	if ( nargs() < 3 ) {
-		cl = $.currentcolor
+		cl = $.currentregion
 	}
 	# Drag events don't include the modifier, bummer
 	ms["modifier"] = $.shiftdown * 2 + $.controldown
@@ -1080,7 +1081,7 @@ method gotdrag (m,ms,cl) {
 }
 method gotdown (m,ms,cl) {
 	if ( nargs() < 3 ) {
-		cl = $.currentcolor
+		cl = $.currentregion
 	}
 	$.realgotdown(0,m,ms,cl)
 }
@@ -1173,13 +1174,13 @@ method realgotdown(dragged,m,ms,cl) {
 	initfx = (m["x"] - $.gridsize["x0"]) * $.fmax / $.griddx
 	initfy = (m["y"] - $.gridsize["y0"]) * $.fmax / $.griddy
 
-	$.addball($.currentcolor,r,c,initfx,initfy)
+	$.addball($.currentregion,r,c,initfx,initfy)
 	unlock($)
 }
 
 method addball(cl,r,c,initfx,initfy) {
 	# print("addball cl=",cl)
-	if ( cl != "r" && cl != "g" && cl != "b" ) {
+	if ( cl != "A" && cl != "B" && cl != "C" && cl != "D" ) {
 		print("Hey, addball can't handle cl=",cl)
 		return()
 	}
@@ -1251,8 +1252,8 @@ method setplayquant(v) {
 }
 
 method setmovinglimit(v) {
-	if ( v > $.maxballspercolor ) {
-		print("You can't have that many, the limit is ",$.maxballspercolor)
+	if ( v > $.maxballsperregion ) {
+		print("You can't have that many, the limit is ",$.maxballsperregion)
 		return()
 	}
 	lock($)
@@ -1362,7 +1363,7 @@ method debugprint {
 	$.debug = 1 - $.debug
 	for ( cl in $.colorindex ) {
 		print("cl=",cl)
-		for ( n=0; n<$.maxballspercolor; n++ ) {
+		for ( n=0; n<$.maxballsperregion; n++ ) {
 			b = $.ball[cl][n]
 			if (b["on"]==0)
 				break
@@ -1407,6 +1408,7 @@ function mkmenu_paletteballs_randwalls(o,po) {
 	o.menucmd("10%",po,"allwallsrand",1,0.1)
 	o.menucmd("20%",po,"allwallsrand",1,0.2)
 	o.menucmd("50%",po,"allwallsrand",1,0.5)
+	o.menucmd("100%",po,"allwallsrand",1,1.0)
 }
 function mkmenu_paletteballs_key(o,po) {
 	o.submenu("C","mkmenu_paletteballs_scale",po,'c')
