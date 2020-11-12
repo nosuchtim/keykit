@@ -5,8 +5,6 @@ method init {
 	$.w = new window()
 	$.inherit($.w)
 
-	$.joyon = 0
-
 	# Figure Remember what ports each channel goes to
 	$.defouts = midi("portmap")[0]
 
@@ -28,29 +26,8 @@ method init {
 	$.cursornum = 1
 	addr = "3333@127.0.0.1"
 	$.oscpalette = open(addr,"wb","osc_send")
-	print("oscpalette = ",$.oscpalette)
 
 	$.setbasech(1)
-
-	$.nfiles = 4
-	$.filenum = 0
-	# Define JoyBallsFiles in keylocal.k if you want
-	if ( defined(JoyBallsFiles) ) {
-		$.filenames = JoyBallsFiles
-	} else {
-		$.filenames = [
-			0="jsbach.mid",
-			1="prelude.mid",
-			2="bachinv1.mid",
-			3="bachinv2.mid"]
-	}
-	$.filephrase = []
-	for ( n in $.filenames ) {
-		p = onlynotes(readmf($.filenames[n]))
-		if ( sizeof(p) == 0 )
-			p = onlynotes(readmf("jsbach.mid"))
-		$.filephrase[n] = p
-	}
 
 	$.regionchan = ["A"=1,"B"=2,"C"=3,"D"=4]
 	$.colorindex = ["A"=8,"B"=9,"C"=10,"D"=11]
@@ -84,31 +61,16 @@ method init {
 
 	$.b3 = new kvalbutton([0="Normal",1="Control",2="Shift"],
 			$,"modchanged",REDRAW);
-	charr = []
-	for ( n=1; n<=14; n++ )
-		charr[n-1] = string(n)
-	$.chanbutt = new kvalbutton(charr,$,"chanchanged")
-	$.addchild($.chanbutt)
-
-	filearr = [0="File 1",1="File 2",2="File 3",3="File 4"]
-	$.filebutt = new kvalbutton(filearr,$,"filenumchanged")
-	$.addchild($.filebutt)
 
 	$.onoffbutt = new ktoggle("On",$,"onoff")
 	$.addchild($.onoffbutt)
-
-	$.mapbutt = new ktoggle("Map",$,"maponoff")
-	$.addchild($.mapbutt)
-
-	$.joybutt = new ktoggle("Joy",$,"joyonoff")
-	$.addchild($.joybutt)
 
 	$.clearbutt = new kbutton("Clear",$,"clear")
 	$.addchild($.clearbutt)
 
 	$.basevelocity = 0
 	$.topvelocity = 127
-	$.decaydefault = 10
+	$.decaydefault = 0
 	$.decaymax = 1000
 	$.velocitydefault = 500
 	$.energydefault = 500
@@ -137,7 +99,7 @@ method init {
 	$.scale = "aeolian"
 	$.startquant = 1b
 	$.playquant = 1b/4
-	$.movesize = 1b/8
+	$.movespeed = 1b/8
 	$.colorlimit = []
 	$.playlimit = 4
 	$.freeze = []
@@ -164,15 +126,6 @@ method init {
 	} else {
 		nnotes = 1
 	}
-	for ( n=0; n<$.nfiles; n++ ) {
-		$.filenum = n
-		print("Reading file ",$.filenames[n]," nnotes=",nnotes)
-		$.setfromfile($.filenames[n],nnotes)
-	}
-	$.filenum = 0
-
-	# $.joyonoff(1)
-	# $.joybutt.set(1)
 }
 
 method dump() {
@@ -187,9 +140,7 @@ method dump() {
 		"wallbottom" = $.wallbottom,
 		"wallright" = $.wallright,
 		"basech" = $.basech,
-		"filenum" = $.filenum,
 		"mapon" = $.mapon,
-		"joyon" = $.joyon,
 		"ball" = $.ball
 	] )
 }
@@ -199,11 +150,8 @@ method restore(st) {
 		$.energyslider[cl].set(st["colorenergy"][cl])
 	}
 	$.mapon = st["mapon"]
-	$.joyon = st["joyon"]
 
 	$.setbasech(st["basech"])
-	$.chanbutt.set($.basech-1)
-	$.mapbutt.set($.mapon)
 
 	$.colorlimit = arraycopy(st["colorlimit"])
 	$.colordecay = arraycopy(st["colordecay"])
@@ -216,14 +164,8 @@ method restore(st) {
 	$.wallbottom = arraycopy(st["wallbottom"])
 	$.wallright = arraycopy(st["wallright"])
 	$.ball = arraycopy(st["ball"])
-
-	$.joyonoff($.joyon)
-	$.joybutt.set($.joyon)
 }
 
-method filenumchanged(v) {
-	$.filenum = v
-}
 method chanchanged(v) {
 	$.setbasech(v+1)
 }
@@ -270,7 +212,6 @@ method setgridsize(v,doredraw) {
 	$.grid.setcallbackdown($,"gotdown")
 	$.grid.setcallbackdrag($,"gotdrag")
 	$.initballs()
-	$.setscale($.key,$.scale)
 
 	if ( doredraw ) {
 		$.resize()
@@ -315,12 +256,6 @@ method initballs {
 			$.sideright[r][c] = []
 			$.wallbottom[r][c] = 1
 			$.wallright[r][c] = 1
-			for ( f=0; f<$.nfiles; f++ ) {
-				$.sidetop[r][c][f] = ''
-				$.sidebottom[r][c][f] = ''
-				$.sideleft[r][c][f] = ''
-				$.sideright[r][c][f] = ''
-			}
 		}
 	}
 	unlock($)
@@ -375,32 +310,7 @@ method ballxy(arr,bx,by) {
 	by0 = y0 + 1 + (y1-y0-2)*by/($.fmax/$.nrows)
 	return( xy(bx0-1,by0-1,bx0+1,by0+1) )
 }
-method playit(p,cl) {
-	if ( typeof(p) != "phrase") {
-		print("Hey, playit given non-phrase?")
-		return()
-	}
-	p.chan = $.regionchan[cl]
-	p.vol = $.basevelocity + ($.topvelocity - $.basevelocity) * $.velocitydefault / $.slidermax
-	p.pitch += $.offset
-	p.dur *= $.colordur[cl]
-	if ( $.mapon ) {
-		sc = maptoscale(Mapto,Key)
-		p = scadjust(p,sc)
-	}
-	if ( $.debug )
-		print("p=",p)
-
-	tm = nextquant(Now,$.playquant)
-	if ( $.midiout) {
-		t = realtime(p,tm)
-		if ( t >= 0 ) {
-			$.tids[t] = 1
-		}
-	}
-}
 method hitleft(r,c,cl) {
-	$.playit($.sideleft[r][c][$.filenum],cl)
 	if ( $.breakout && c > 0 ) {
 		if ( r < 0 || r >= $.nrows )
 			print("Unexpected r in hitleft")
@@ -409,21 +319,18 @@ method hitleft(r,c,cl) {
 	}
 }
 method hitright(r,c,cl) {
-	$.playit($.sideright[r][c][$.filenum],cl)
 	if ( $.breakout && c < ($.nrows-1) ) {
 		$.wallright[r][c] = 0
 		$.grid.drawwallright(r,c,CLEAR)
 	}
 }
 method hittop(r,c,cl) {
-	$.playit($.sidetop[r][c][$.filenum],cl)
 	if ( $.breakout && r > 0 ) {
 		$.wallbottom[r-1][c] = 0
 		$.grid.drawwallbottom(r-1,c,CLEAR)
 	}
 }
 method hitbottom(r,c,cl) {
-	$.playit($.sidebottom[r][c][$.filenum],cl)
 	if ( $.breakout && r < ($.nrows-1) ) {
 		$.wallbottom[r][c] = 0
 		$.grid.drawwallbottom(r,c,CLEAR)
@@ -879,11 +786,6 @@ method deleteoneball(v) {
 method editonoff(v) {
 	$.editing = v
 }
-method joyonoff(v) {
-	if ( ! defined(v) )
-		v = 0
-	$.joyon = v
-}
 method dobreakout(v) {
 	$.breakout = v
 }
@@ -893,14 +795,13 @@ method sendtopalette(r,c,bouncetype,cl) {
 	x = c / float($.ncols-1)
 	z = 0.5
 	sendtype = "cursor"
+	region = cl
 	if ( sendtype == "sprite" ) {
 		cid = sprintf("%s_%s_%d",bouncetype,cl,$.cursornum++)
-		msg = [0="/spriteevent",1=sprintf("{ \"event\": \"sprite\", \"cid\": \"%s\", \"x\": %f, \"y\": %f, \"z\": %f }",cid,x,y,z)]
-		print("osc msg = ",msg)
+		msg = [0="/spriteevent",1=sprintf("{ \"event\": \"sprite\", \"cid\": \"%s\", \"region\": \"%s\", \"x\": %f, \"y\": %f, \"z\": %f }",cid,region,x,y,z)]
 		mdep("osc","send",$.oscpalette,msg)
 	} else {
 		cid = sprintf("%s_%s_%d",bouncetype,cl,$.cursornum++)
-		region = cl
 		msgdown = [0="/cursorevent",1=sprintf("{ \"event\": \"down\", \"cid\": \"%s\", \"region\": \"%s\", \"x\": %f, \"y\": %f, \"z\": %f }",cid,region,x,y,z)]
 		msgup = [0="/cursorevent",1=sprintf("{ \"event\": \"up\", \"cid\": \"%s\", \"region\": \"%s\", \"x\": %f, \"y\": %f, \"z\": 0.0 }",cid,region,x,y)]
 		task $.sendcursor(msgdown,msgup)
@@ -911,47 +812,20 @@ method sendcursor(msgdown,msgup) {
 	sleeptill(Now+1b/4)
 	mdep("osc","send",$.oscpalette,msgup)
 }
-method dopalette(v) {
-	$.paletteout = v
-}
 method domidi(v) {
 	$.midiout = v
 }
-method shiftmap(v) {
-	$.mapon = v
-	$.mapbutt.set($.mapon)
-	$.mapbutt.redraw()
-}
-method togglemap(v) {
-	if ( v == 1 ) {
-		$.mapon = 1 - $.mapon
-		$.mapbutt.set($.mapon)
-		$.mapbutt.redraw()
-	}
-}
-
 method mazetask {
 	# print("mazetask start")
 	tm = Now
 	tm = nextquant(tm,$.startquant)
 	while ( 1 ) {
 		sleeptill(tm-2)
-		if ( $.joyon == 0 ) {
-			$.moveballs("A")
-			$.moveballs("B")
-			$.moveballs("C")
-			$.moveballs("D")
-		} else {
-			if ( "A" in $.colorbuttpressed )
-				$.moveballs("A")
-			if ( "B" in $.colorbuttpressed )
-				$.moveballs("B")
-			if ( "C" in $.colorbuttpressed )
-				$.moveballs("C")
-			if ( "D" in $.colorbuttpressed )
-				$.moveballs("D")
-		}
-		tm += $.movesize
+		$.moveballs("A")
+		$.moveballs("B")
+		$.moveballs("C")
+		$.moveballs("D")
+		tm += $.movespeed
 	}
 }
 method delete {
@@ -1005,26 +879,18 @@ method resize (sz) {
 			$.griddx = $.gridsize["x1"] - $.gridsize["x0"]
 			$.griddy = $.gridsize["y1"] - $.gridsize["y0"]
 
-			$.xm = $.xmin() + ($.xmax()-$.xmin())/3
-			if ( $.xm < ($.xmax()-28*tw) )
-				$.xm = ($.xmax()-28*tw)
+			$.xm = $.xmin() + ($.xmax()-$.xmin())/2
+			# if ( $.xm < ($.xmax()-28*tw) )
+			# 	$.xm = ($.xmax()-28*tw)
 
-			$.xmdx = ($.xmax() - $.xm)/8
+			$.xmdx = ($.xmax() - $.xm)/5
 
 
-			$.mapbutt.resize(xy($.xm+1*$.xmdx+1,ym2,
-				$.xm+2*$.xmdx-1,$.ymin()+$.dy-2))
 			$.onoffbutt.resize(xy($.xm+2*$.xmdx+1,ym2,
 				$.xm+3*$.xmdx-1,$.ymin()+$.dy-2))
-			$.chanbutt.resize(xy($.xm+3*$.xmdx+1,ym2,
+			$.clearbutt.resize(xy($.xm+3*$.xmdx+1,ym2,
 				$.xm+4*$.xmdx-1,$.ymin()+$.dy-2))
-			$.filebutt.resize(xy($.xm+4*$.xmdx+1,ym2,
-				$.xm+5*$.xmdx-1,$.ymin()+$.dy-2))
-			$.clearbutt.resize(xy($.xm+5*$.xmdx+1,ym2,
-				$.xm+6*$.xmdx-1,$.ymin()+$.dy-2))
-			$.joybutt.resize(xy($.xm+6*$.xmdx+1,ym2,
-				$.xm+7*$.xmdx-1,$.ymin()+$.dy-2))
-			$.more.resize(xy($.xm+7*$.xmdx+1,ym2,
+			$.more.resize(xy($.xm+4*$.xmdx+1,ym2,
 				$.xmax()-2,$.ymin()+$.dy-2))
 		}
 method redraw {
@@ -1032,7 +898,7 @@ method redraw {
 		$.w.redraw()
 		colorset($.wallcolor)
 		$.w.textcenter("PaletteBalls",xy($.xmin(),$.ymin(),
-				$.xm,$.ymin()+$.dy))
+				$.xmax(),$.ymin()+$.dy))
 		x0c = $.xmin() + 2 + 4*$.dx
 		x0d = $.xmin() + 2 + 5*$.dx
 		y0 = $.ymin()+$.dy
@@ -1268,97 +1134,13 @@ method setmovinglimit(v) {
 	unlock($)
 }
 
-method setmovesize(n) {
+method setmovespeed(n) {
 	$.onoff(0)
-	$.movesize = n
+	$.movespeed = n
+	print("Setting movespeed to ",$.movespeed)
 	$.onoff(1)
 }
-method setscale(k,s,nstarts) {
-	if ( nargs() < 3 )
-		nstarts = 1
-	sc = completescale(k,s)
-	sc = step(sc,$.playquant)
-	arr = splitonstarts(sc,0,nstarts)
-	$.setfromarr(arr,1)
-}
-method readfile(nstarts) {
-	fname = browsefiles("MIDI File (*.MID)","*.mid",0)
-	if ( fname == "" ) {
-		print("No file specified")
-		return()
-	}
-	$.setfromfile(fname,nstarts)
-}
-method setfromfile(fname,nstarts) {
-	$.setfromphrase(readmf(fname),nstarts)
-}
-method setfromsnarf(nstarts) {
-	$.setfromphrase(Snarf,nstarts)
-}
-method setfromphrase(p,nstarts) {
-	p = onlynotes(p)
-	if ( sizeof(p) == 0 ) {
-		print("No notes in phrase!?")
-		return()
-	}
-	arr = splitonstarts(p,0,nstarts)
-	$.setfromarr(arr,1)
-}
 
-method setfromarr(arr,exactfit) {
-
-	lock($)
-	for ( i in arr ) {
-		tm1 = arr[i]%1.time
-		arr[i].time -= tm1
-	}
-	if ( exactfit ) {
-		ai = 0
-		tot = $.ncols * $.nrows * 4
-		sofar = 0
-		arrsz = sizeof(arr)
-		for ( r=0; r<$.nrows; r++ ) {
-			for ( c=0; c<$.ncols; c++ ) {
-				d = arrsz * sofar++ / tot
-				$.sidetop[r][c][$.filenum] = arr[d]
-
-				d = arrsz * sofar++ / tot
-				$.sidebottom[r][c][$.filenum] = arr[d]
-
-				d = arrsz * sofar++ / tot
-				$.sideleft[r][c][$.filenum] = arr[d]
-
-				d = arrsz * sofar++ / tot
-				$.sideright[r][c][$.filenum] = arr[d]
-			}
-		}
-	} else {
-		# This version uses each item once, and restarts
-		# from the beginning when it runs out
-		ai = 0
-		for ( r=0; r<$.nrows; r++ ) {
-			for ( c=0; c<$.ncols; c++ ) {
-				if ( ! ( ai in arr ) )
-					ai = 0
-				p = arr[ai++]
-				$.sidetop[r][c][$.filenum] = p
-				if ( ! ( ai in arr ) )
-					ai = 0
-				p = arr[ai++]
-				$.sidebottom[r][c][$.filenum] = p
-				if ( ! ( ai in arr ) )
-					ai = 0
-				p = arr[ai++]
-				$.sideleft[r][c][$.filenum] = p
-				if ( ! ( ai in arr ) )
-					ai = 0
-				p = arr[ai++]
-				$.sideright[r][c][$.filenum] = p
-			}
-		}
-	}
-	unlock($)
-}
 method debugprint {
 	$.debug = 1 - $.debug
 	for ( cl in $.colorindex ) {
@@ -1376,29 +1158,15 @@ method debugprint {
 function mkmenu_paletteballs_1(o,po) {
 	o.submenu("Grid Size   ->","mkmenu_paletteballs_gridsize",po)
 	o.submenu("Rand Walls  ->","mkmenu_paletteballs_randwalls",po)
-	o.submenu("Move Freq   ->","mkmenu_paletteballs_size",po)
-	o.submenu("Play Quant  ->","mkmenu_paletteballs_playquant",po)
-	o.submenu("Moving Limit->","mkmenu_paletteballs_moving",po)
-	o.submenu("From Scale  ->","mkmenu_paletteballs_key",po)
+	o.submenu("Speed       ->","mkmenu_paletteballs_speed",po)
+	o.submenu("Max Balls   ->","mkmenu_paletteballs_moving",po)
 	o.submenu("Breakout    ->","mkmenu_paletteballs_breakout",po)
-	o.submenu("To Palette  ->","mkmenu_paletteballs_palette",po)
-	o.submenu("MIDI Output ->","mkmenu_paletteballs_midi",po)
-	o.menucmd("From File (1 note/wall)",po,"readfile",1)
-	o.menucmd("From File (2 notes/wall)",po,"readfile",2)
-	o.menucmd("From File (3 notes/wall)",po,"readfile",3)
-	o.menucmd("From Snarf (1 note/wall)",po,"setfromsnarf",1)
-	o.menucmd("From Snarf (2 notes/wall)",po,"setfromsnarf",2)
-	o.menucmd("From Snarf (3 notes/wall)",po,"setfromsnarf",3)
-	o.menucmd("Debug Print",po,"debugprint")
 	o.menucmd("All Walls Up",po,"allwallsup",1)
+	# o.menucmd("Debug Print",po,"debugprint")
 }
 function mkmenu_paletteballs_breakout(o,po) {
 	o.menucmd("on",po,"dobreakout",1)
 	o.menucmd("off",po,"dobreakout",0)
-}
-function mkmenu_paletteballs_palette(o,po) {
-	o.menucmd("on",po,"dopalette",1)
-	o.menucmd("off",po,"dopalette",0)
 }
 function mkmenu_paletteballs_midi(o,po) {
 	o.menucmd("on",po,"domidi",1)
@@ -1410,39 +1178,12 @@ function mkmenu_paletteballs_randwalls(o,po) {
 	o.menucmd("50%",po,"allwallsrand",1,0.5)
 	o.menucmd("100%",po,"allwallsrand",1,1.0)
 }
-function mkmenu_paletteballs_key(o,po) {
-	o.submenu("C","mkmenu_paletteballs_scale",po,'c')
-	o.submenu("C#","mkmenu_paletteballs_scale",po,'c+')
-	o.submenu("D","mkmenu_paletteballs_scale",po,'d')
-	o.submenu("D#","mkmenu_paletteballs_scale",po,'d+')
-	o.submenu("E","mkmenu_paletteballs_scale",po,'e')
-	o.submenu("F","mkmenu_paletteballs_scale",po,'f')
-	o.submenu("F#","mkmenu_paletteballs_scale",po,'f+')
-	o.submenu("G","mkmenu_paletteballs_scale",po,'g')
-	o.submenu("G#","mkmenu_paletteballs_scale",po,'g+')
-	o.submenu("A","mkmenu_paletteballs_scale",po,'a')
-	o.submenu("A#","mkmenu_paletteballs_scale",po,'a+')
-	o.submenu("B","mkmenu_paletteballs_scale",po,'b')
-}
-function mkmenu_paletteballs_scale(o,po,k) {
-	o.menucmd("Ionian",po,"setscale",k,"ionian")
-	o.menucmd("Dorian",po,"setscale",k,"dorian")
-	o.menucmd("Phrygian",po,"setscale",k,"phrygian")
-	o.menucmd("Lydian",po,"setscale",k,"lydian")
-	o.menucmd("Mixolydian",po,"setscale",k,"mixolydian")
-	o.menucmd("Aeolian",po,"setscale",k,"aeolian")
-	o.menucmd("Locrian",po,"setscale",k,"locrian")
-	o.menucmd("Newage",po,"setscale",k,"newage")
-	o.menucmd("Fifths",po,"setscale",k,"fifths")
-}
 function mkmenu_paletteballs_gridsize(o,po) {
-	o.menucmd("4",po,"setgridsize",4,1)
+	# o.menucmd("4",po,"setgridsize",4,1)
 	o.menucmd("8",po,"setgridsize",8,1)
 	o.menucmd("16",po,"setgridsize",16,1)
 	o.menucmd("32",po,"setgridsize",32,1)
-	o.menucmd("64",po,"setgridsize",64,1)
-	o.menucmd("128",po,"setgridsize",128,1)
-	o.menucmd("256",po,"setgridsize",256,1)
+	# o.menucmd("64",po,"setgridsize",64,1)
 }
 function mkmenu_paletteballs_moving(o,po) {
 	o.menucmd("1",po,"setmovinglimit",1)
@@ -1452,13 +1193,14 @@ function mkmenu_paletteballs_moving(o,po) {
 	o.menucmd("12",po,"setmovinglimit",12)
 	o.menucmd("16",po,"setmovinglimit",16)
 }
-function mkmenu_paletteballs_size(o,po) {
-	o.menucmd("1b",po,"setmovesize",1b)
-	o.menucmd("1b/2",po,"setmovesize",1b/2)
-	o.menucmd("1b/4",po,"setmovesize",1b/4)
-	o.menucmd("1b/8",po,"setmovesize",1b/8)
-	o.menucmd("1b/16",po,"setmovesize",1b/16)
-	o.menucmd("1b/32",po,"setmovesize",1b/32)
+function mkmenu_paletteballs_speed(o,po) {
+	o.menucmd("Slowest",po,"setmovespeed",1b)
+	o.menucmd("Slower",po,"setmovespeed",1b/2)
+	o.menucmd("Slow",po,"setmovespeed",1b/4)
+	o.menucmd("Normal",po,"setmovespeed",1b/8)
+	o.menucmd("Fast",po,"setmovespeed",1b/16)
+	o.menucmd("Faster",po,"setmovespeed",1b/32)
+	o.menucmd("Fastest",po,"setmovespeed",2)
 }
 function mkmenu_paletteballs_playquant(o,po) {
 	o.menucmd("2b",po,"setplayquant",2b)
