@@ -3,6 +3,8 @@
 src/.vs
 mdep/nt/.vs
 bin/keylocal.k
+calc
+cheerp_abort
 
 fingerworks
 local/oscwin32
