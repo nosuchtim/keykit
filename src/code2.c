@@ -2,10 +2,7 @@
  *	Copyright 1996 AT&T Corp.  All rights reserved.
  */
 
-#define OVERLAY5
-
 #include "key.h"
-#include "gram.h"
 
 void
 i_popignore(void)
@@ -40,7 +37,7 @@ i_popignore(void)
 void
 i_defined(void)
 {
-	register Symbolp s;
+	Symbolp s;
 	Datum d;
 
 	s = use_symcode();
@@ -172,7 +169,7 @@ dphresh(Datum d)
 }
 
 long
-doop(register long oldv,register long v,register int type)
+doop(long oldv,long v,int type)
 {
 	switch(type){
 	case '=': oldv = v; break;
@@ -228,7 +225,7 @@ dmodulo(Datum d1,Datum d2)
 	CHKNOVAL(d1,"modulo operation");
 	CHKNOVAL(d2,"modulo operation");
 	if ( d1.type == D_PHR && d2.type == D_NUM ) {
-		register Noteptr n = picknt(d1.u.phr,(int)numval(d2));
+		Noteptr n = picknt(d1.u.phr,(int)numval(d2));
 		d1.u.phr = newph(0);
 		if ( n != NULL ) {
 			n = ntcopy(n);
@@ -249,7 +246,7 @@ void
 i_dot(void)
 {
 	Datum d, r;
-	register int dottype;
+	int dottype;
 
 	/* The dot type (LENGTH, PITCH, etc.) is the next instruction */
 	dottype = (int)use_numcode();
@@ -438,9 +435,9 @@ phrop(Phrasep p1,int op,Phrasep p2)
 int
 phrcmp(Phrasep p1,Phrasep p2)
 {
-	register Noteptr n1 = firstnote(p1);
-	register Noteptr n2 = firstnote(p2);
-	register int cmp;
+	Noteptr n1 = firstnote(p1);
+	Noteptr n2 = firstnote(p2);
+	int cmp;
 
 	while ( n1!=NULL && n2!=NULL ) {
 		cmp = ntcmpxact(n1,n2);
@@ -911,7 +908,7 @@ assign(int type, int dottype)
 	case MODASSIGN:
 		decruse(sd);
 
-	    {register Noteptr lnt, rnt;
+	    {Noteptr lnt, rnt;
 
 		if ( sd.type!=D_PHR || expr.type!=D_PHR ) {
 			execerror("Assignment with '%' only works on phrases!");

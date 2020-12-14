@@ -2,29 +2,7 @@
  *	Copyright 1996 AT&T Corp.  All rights reserved.
  */
 
-#define OVERLAY6
-
 #include "key.h"
-#include "gram.h"
-
-extern char *Msg1;
-
-char *Nullstr = "";
-int Defvol, Defoct, Defchan, Defport;
-DURATIONTYPE Defdur;
-char *Defatt;
-long Deftime = 0L;
-long Def2time = 0L;
-UINT16 Defflags = 0;
-
-/* Each phrase in the entire system is a member of one of the following lists */
-
-Noteptr Freent = NULL;
-Phrasep Topph = NULL;		/* Phrases in use */
-Phrasep Freeph = NULL;		/* Free list, available for re-use by newph() */
-
-int Numnotes = 0;	/* Total number of notes in use. */
-int Numalloc = 0;	/* Total number of notes that have been allocated. */
 
 #ifdef OLDSTUFF
 void
@@ -96,7 +74,7 @@ newnt(void)
 {
 	static Noteptr lastn;
 	static int used = ALLOCNT;
-	register Noteptr n;
+	Noteptr n;
 
 	/* to avoid spending much time on it, we only check memory */
 	/* every so often. */
@@ -135,8 +113,8 @@ Midimessp
 savemess(Unchar* mess,int leng)
 {
 	Midimessp m;
-	register Unchar *p, *q;
-	register int n;
+	Unchar *p, *q;
+	int n;
 
 	m = (Midimessp) kmalloc(sizeof(Midimessdata),"savemess");
 	m->leng = leng;
@@ -154,7 +132,7 @@ savemess(Unchar* mess,int leng)
 void
 ntfree(Noteptr n)
 {
-        register Midimessp m;
+        Midimessp m;
 
 	if ( n == NULL )
 		return;
@@ -171,9 +149,9 @@ ntfree(Noteptr n)
 }
 
 Noteptr 
-ntcopy(register Noteptr n)
+ntcopy(Noteptr n)
 {
-	register Noteptr nn;
+	Noteptr nn;
 	int i, nb;
 
 	nn = newnt();
@@ -257,10 +235,10 @@ utypeof(Noteptr nt)
 /* code twice - that way it'll keep in sync better if there are future */
 /* changes. */
 int
-ntcmporder(register Noteptr n1,register Noteptr n2)
+ntcmporder(Noteptr n1,Noteptr n2)
 {
-	register long ld;
-	register int d;
+	long ld;
+	int d;
 #ifdef NTATTRIB
 	char *att1;
 	char *att2;
@@ -320,10 +298,10 @@ ntcmporder(register Noteptr n1,register Noteptr n2)
 
 /* compare two notes exactly (all attributes are used in the comparison) */
 int
-ntcmpxact(register Noteptr n1,register Noteptr n2)
+ntcmpxact(Noteptr n1,Noteptr n2)
 {
-	register long ld;
-	register int d;
+	long ld;
+	int d;
 #ifdef NTATTRIB
 	char *att1;
 	char *att2;
@@ -382,7 +360,7 @@ ntcmpxact(register Noteptr n1,register Noteptr n2)
 void
 phcopy(Phrasep out,Phrasep in)
 {
-	register Noteptr n, newn, lastn;
+	Noteptr n, newn, lastn;
 
 	lastn = NULL;
 	out->p_leng = in->p_leng;
@@ -409,7 +387,7 @@ phcopy(Phrasep out,Phrasep in)
 void
 phreorder(Phrasep ph,long tmout)
 {
-	register Noteptr n, nextn;
+	Noteptr n, nextn;
 	int cnt = 0;
 
 	/* Since we're re-ordering, we can't trust p_end, so we */
@@ -454,7 +432,7 @@ phreorder(Phrasep ph,long tmout)
 void
 phcutusertype(Phrasep pin,Phrasep pout,int types,int invert)
 {
-	register Noteptr n;
+	Noteptr n;
 	int istype;
 
 	for ( n=firstnote(pin); n!=NULL; n=nextnote(n) ) {
@@ -469,7 +447,7 @@ phcutusertype(Phrasep pin,Phrasep pout,int types,int invert)
 void
 phcutcontroller(Phrasep pin,Phrasep pout,int cnum, int invert)
 {
-	register Noteptr n;
+	Noteptr n;
 	int istype;
 
 	for ( n=firstnote(pin); n!=NULL; n=nextnote(n) ) {
@@ -484,7 +462,7 @@ phcutcontroller(Phrasep pin,Phrasep pout,int cnum, int invert)
 void
 phcutflags(Phrasep pin,Phrasep pout,long mask)
 {
-	register Noteptr n;
+	Noteptr n;
 
 	for ( n=firstnote(pin); n!=NULL; n=nextnote(n) ) {
 		if ( (flagsof(n) & mask) != 0 )
@@ -495,7 +473,7 @@ phcutflags(Phrasep pin,Phrasep pout,long mask)
 void
 phcutchannel(Phrasep pin,Phrasep pout,int chan)
 {
-	register Noteptr n;
+	Noteptr n;
 	Datum d;
 
 	for ( n=firstnote(pin); n!=NULL; n=nextnote(n) ) {
@@ -516,8 +494,8 @@ phcutchannel(Phrasep pin,Phrasep pout,int chan)
 void
 phcut(Phrasep pin,Phrasep pout,long tm1,long tm2,int p1,int p2)
 {
-	register Noteptr n;
-	register long t;
+	Noteptr n;
+	long t;
 
 	if ( tm1 == tm2 )
 		tm2 = tm1 + 1;
@@ -533,8 +511,8 @@ phcut(Phrasep pin,Phrasep pout,long tm1,long tm2,int p1,int p2)
 void
 phcutincl(Phrasep pin,Phrasep pout,long tm1,long tm2)
 {
-	register Noteptr n;
-	register long t, e;
+	Noteptr n;
+	long t, e;
 
 	if ( tm1 == tm2 )
 		tm2 = tm1 + 1;
@@ -595,7 +573,7 @@ newph(int inituse)
 {
 	static Phrasep lastph;
 	static int used = ALLOCPH;
-	register Phrasep p;
+	Phrasep p;
 
 	/* First check the free list and use those nodes, before */
 	/* using newly allocated stuff. */
@@ -626,7 +604,7 @@ getout:
 }
 
 void
-reinitph(register Phrasep p)
+reinitph(Phrasep p)
 {
 	p->p_notes = NULL;
 	p->p_end = NULL;
@@ -645,9 +623,9 @@ reinitph(register Phrasep p)
 void
 ntinsert(Noteptr n,Phrasep p)
 {
-	register Noteptr lastn = NULL;
-	register Noteptr prevnt = NULL;
-	register Noteptr nt1;
+	Noteptr lastn = NULL;
+	Noteptr prevnt = NULL;
+	Noteptr nt1;
 
 	/* quick check to see if it goes at the end */
 	lastn = p->p_end;
@@ -680,9 +658,9 @@ ntinsert(Noteptr n,Phrasep p)
  */
 
 void
-ntdelete(register Phrasep ph,register Noteptr nt)
+ntdelete(Phrasep ph,Noteptr nt)
 {
-	register Noteptr n, pre;
+	Noteptr n, pre;
 
 	for ( pre=NULL,n=firstnote(ph); n!=NULL; pre=n,n=n->next ) {
 		if ( n == nt )
@@ -761,10 +739,10 @@ usertypeof(Noteptr nt)
  */
 
 int
-phtype(register Phrasep p)
+phtype(Phrasep p)
 {
-	register Noteptr n = firstnote(p);
-	register int t;
+	Noteptr n = firstnote(p);
+	int t;
 
 	if ( n == NULL )
 		return(NT_BYTES);	/* -1 would be another possibility */
@@ -784,10 +762,10 @@ notetoke(INTFUNC infunc)
 	static int buffinc = 32;
 	static char *endofbuff = NULL;
 	static int savechar = 0;
-	register int sc = savechar;
-	register int state = 0;
-	register char *p = notebuff;
-	register int c;
+	int sc = savechar;
+	int state = 0;
+	char *p = notebuff;
+	int c;
 
 	while ( state >= 0 ) {
 
@@ -984,7 +962,7 @@ static Symstr Strptr;
 int
 strinput(void)
 {
-	register int c = *Strptr++;
+	int c = *Strptr++;
 	return ( c == '\0' ? EOF : c );
 }
 
@@ -1016,7 +994,7 @@ ntbytesleng(Noteptr n)
 Noteptr 
 ntparse(char *s,Phrasep p)
 {
-	register Noteptr n;
+	Noteptr n;
 	int type = NT_NOTE;
 	long lng;
 
@@ -1124,7 +1102,7 @@ strtont(char *s)
 	long clicks = -1L;
 	Noteptr n;
 	char *att;
-	register char c;
+	char c;
 	UINT16 flags;
 	int port;
 
@@ -1151,7 +1129,7 @@ strtont(char *s)
 		/* Otherwise, it should be a pitch name */
 		int i = 0;
 		int schr = *s;
-		register char *pn = pitchnames;
+		char *pn = pitchnames;
 
 		while ( (c=(*pn++)) != '\0' ) {
 			if ( c == schr )
@@ -1435,9 +1413,9 @@ strtotextmess(char *s)
 }
 
 Unchar*
-ptrtobyte(register Noteptr n,register int num)
+ptrtobyte(Noteptr n,int num)
 {
-	register Midimessp m;
+	Midimessp m;
 
 	switch(typeof(n)){
 	case NT_LE3BYTES:

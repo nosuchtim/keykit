@@ -2,22 +2,7 @@
  *	Copyright 1996 AT&T Corp.  All rights reserved.
  */
 
-#define OVERLAY7
-
 #include "key.h"
-
-Htablep Fifotable = NULL;
-Fifo *Topfifo = NULL;
-Fifo *Freefifo = NULL;
-int Nblocked = 0;
-long Fifonum = 0;
-int Default_fifotype = 0;
-
-Fifo *Midi_in_f = NULL;
-Fifo *Midi_out_f = NULL;
-Fifo *Consinf = NULL;
-Fifo *Consoutf = NULL;
-Fifo *Mousef = NULL;
 
 void
 initfifos(void)

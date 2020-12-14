@@ -1,39 +1,8 @@
 /*
  *	Copyright 1996 AT&T Corp.  All rights reserved.
  */
-#define OVERLAY4
 
 #include "key.h"
-#include "keymidi.h"
-
-Symlongp Mousebutt;
-Symlongp Sweepquant, Menuymargin;
-Symlongp Rtmouse;
-Symlongp Dragquant;
-Symlongp Keyinverse, Panraster;
-Symlongp Bendrange, Bendoffset, Showtext, Showbar;
-Symlongp Volstem, Volstemsize, Colors, Colornotes;
-Symlongp Inverse, Menusize, Menujump, Menuscrollwidth, Menusize;
-Symlongp Textscrollsize;
-
-int Pmode = -1;
-int Backcolor = 0;
-int Forecolor = 1;
-int Pickcolor = 2;
-int Lightcolor = 3;
-int Darkcolor = 4;
-
-Kwind *Wroot = NULL;	/* root window */
-#ifdef OLDSTUFF
-Kwind *Wcons = NULL;	/* text (console) window */
-#endif
-Kwind *Wprintf = NULL;
-
-/* These are used by the SHOWXSTART and SHOWYHIGH macros */
-long Lastst = -1;
-int Lastxs;
-long Lastsh = -1;
-int Lastys;
 
 void
 startgraphics(void)
@@ -1155,72 +1124,3 @@ gridpan(Kwind *w,long cshift,int pshift)
 		drawbars(w,clrx2a,clry,clrx2b,clry+yshift);
 	}
 }
-
-#ifdef OLDKEYBOARDSTUFF
-		     /*   c c+  d d+  e  f f+  g g+  a a+  b    */
-char Blackkeys[] = 	{ 0, 1, 0, 1, 0, 0, 1, 0, 1, 0, 1, 0 };
-char Y1inc[] = 		{ 1, 0, 1, 0, 0, 1, 0, 1, 0, 1, 0, 0 };
-char Y0inc[] =		{ 0, 0, 1, 0, 1, 0, 0, 1, 0, 1, 0, 1 };
-
-void
-drawkeyboard(Kwind *w,int erasefirst)
-{
-	int low = w->showlow;
-	int high = w->showhigh;
-	int dx = (w->dispx0 - w->x0)/10;
-	int x0 = w->x0 + 2;
-	int xb = x0 + dx*6;
-	int xc = x0 + dx*4;
-	int xtext = (xb + w->dispx0)/2;
-	int p, cp, y0, y1, prevy, nexty, prevy1inc;
-	int pblack = (*Keyinverse)? P_STORE : P_CLEAR;
-	int pwhite = (*Keyinverse)? P_CLEAR : P_STORE;
-
-	if ( erasefirst ) {
-		my_plotmode(P_CLEAR);
-		mdep_boxfill(x0,Disporigy,Disporigx-5,Dispcorny);
-	}
-	my_plotmode(pwhite);
-	mdep_boxfill(x0,y0=pitchtoy(w,high),xb,y1=pitchtoy(w,low));
-	my_plotmode(pblack);
-	if ( *Keyinverse )
-		mdep_line(xb,y0,xb,y1);
-	prevy1inc = -1;
-	for ( p=low+1; p<=high; p++ ) {
-		y0 = pitchtoy(w,p-1);
-		y1 = pitchtoy(w,p);
-		cp = canonipitchof(p);
-		if ( cp == 0 ) {
-			char num[4];
-			sprintf(num,"%d",canoctave(p));
-			my_plotmode(P_STORE);
-			centertext(num,xtext,(y0+y1)/2);
-			my_plotmode(pblack);
-		}
-		if ( Blackkeys[cp] ) {
-			if ( y0 > y1 )
-				y0--;
-			mdep_boxfill(x0,y1,xc,y0);
-		}
-		else {
-			if ( Y0inc[cp] && (p-1) != low ) {
-				if ( prevy1inc > 0 )
-					y0 = prevy1inc;
-				else {
-					prevy = pitchtoy(w,p-2);
-					y0 = (prevy+y0)/2;
-				}
-			}
-			if ( Y1inc[cp] && p != high ) {
-				nexty = pitchtoy(w,p+1);
-				y1 = (nexty+y1)/2;
-				prevy1inc = y1;
-			}
-			mdep_line(x0,y1,xb,y1);
-			/* mdep_line(xb,y1,xb,y0); */
-			mdep_line(xb,y0,x0,y0);
-		}
-	}
-	my_plotmode(P_STORE);
-}
-#endif

@@ -1,6 +1,9 @@
+#if 0
 /*
  *	Copyright 1996 AT&T Corp.  All rights reserved.
  */
+
+#pragma once
 
 #define NOTEOFF 0x80
 #define NOTEON 0x90
@@ -74,3 +77,4 @@ struct midiaction {
 
 extern struct midiaction Midi;
 extern int Currchan;
+#endif

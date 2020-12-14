@@ -2,16 +2,7 @@
  *	Copyright 1996 AT&T Corp.  All rights reserved.
  */
 
-#define OVERLAY7
-
 #include "key.h"
-#include "gram.h"
-
-Kwind *Topwind = NULL;
-Kwind *Freewind = NULL;
-Htablep Windhash = NULL;
-
-#define WINDUNSCALED -2
 
 void
 wredraw1(Kwind *w)

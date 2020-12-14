@@ -7,8 +7,6 @@
 /* function in mdep.h, so that the full mdep.o isn't needed. */
 #define ONETIMEINCLUDE
 
-#define OVERLAY6
-
 #include "key.h"
 
 void (*Fatalfunc)(char *) = 0;
@@ -52,7 +50,7 @@ myfclose(FILE *f)
 }
 
 int
-hexchar(register int c)
+hexchar(int c)
 {
 	if ( c >= '0' && c <= '9' )
 		return(c-'0');
@@ -64,7 +62,7 @@ hexchar(register int c)
 }
 
 long
-numscan(register char **as)
+numscan(char **as)
 {
 	char c = **as;
 	long num = 0;
@@ -82,9 +80,9 @@ numscan(register char **as)
 }
 
 static void
-reverse(register char *s)
+reverse(char *s)
 {
-	register long i, j;
+	long i, j;
 	char c;
 
 	for ( i=0, j=(long)strlen(s)-1; i<j; i++, j-- ) {
@@ -102,9 +100,9 @@ reverse(register char *s)
  */
 
 char *
-prlongto(register long n,register char *s)
+prlongto(long n,char *s)
 {
-	register int i, sign = 0;
+	int i, sign = 0;
 
 	if ( n < 0 ) {
 		sign = -1;
@@ -122,9 +120,9 @@ prlongto(register long n,register char *s)
 }
 
 char *
-printto(register int n,register char *s)
+printto(int n,char *s)
 {
-	register int i, sign;
+	int i, sign;
 
 	if ( (sign=n) < 0 )
 		n = -n;
@@ -140,9 +138,9 @@ printto(register int n,register char *s)
 }
 
 char *
-strsave(register char *s)
+strsave(char *s)
 {
-	register char *p = kmalloc((unsigned)(strlen(s)+1),"strsave");
+	char *p = kmalloc((unsigned)(strlen(s)+1),"strsave");
 	strcpy(p,s);
 	if ( Debugmalloc!=NULL && *Debugmalloc ) {
 		char buff[100];
@@ -267,7 +265,7 @@ mmreset(void)
 char *
 visstr(char *s)
 {
-	register char *p = s;
+	char *p = s;
 
 	for ( ; *p!='\0'; p++ ) {
 		if ( ! isprint(*p) )

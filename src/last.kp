@@ -1,0 +1,59 @@
+Pageobj=$1
+Pagenm="last"
+Pagesz=["x0"=660,"x1"=1460,"y0"=40,"y1"=580]
+function keypage_create(r) {
+r.restore(["Autoresize"=1,"Chancolors"=0,"Dragquant"=24,"Flashquick"=1,"Menujump"=0,"Merge"=1,"Playquant"=96,"Record"=1,"Recsched"=0,"Showbar"=384,"Sweepquant"=24,"Sync"=0,"Volstem"=0])
+# recreate object $4
+o=wconsole($4)
+r.addtool(o,["x0"=8,"x1"=776,"y0"=375,"y1"=494])
+
+# recreate object $13
+o=wecho($13)
+r.addtool(o,["x0"=110,"x1"=537,"y0"=45,"y1"=325])
+o.restore(["ison"=0,"ntimes"=1,"time"=4,"trans"=0,"vol"=90])
+
+# recreate object $49
+o=wgroup($49)
+r.addtool(o,["x0"=66,"x1"=713,"y0"=103,"y1"=349])
+o.restore(["buttmod"=0,"buttonact"=[1=[0=0,1=2,2=25],2=[0=1,1=7,2=6]],"dn2tn"=[0=0,1=1],"groupname"="New","ntracks"=1,"phrases"=[1='"Sequence/Track Name=Voice 2" "Sequence/Track Name=Voice 1" "Keysig=255,0" "\
+Tempo=705882" "Timesig=3/8,24,8" do4d24v64,e,f,g,a,b-,c+,b-,a,g,f,e,do3 fo4d4\
+8,eo3d24t312,f ao4d48,go3d24t360,a do5d48,b-o3d24t408,c+ go4d48,b-o3d24t456,a\
+ c+o5d48,go3d24t504,f eo5d48,eo3d24t552,fd48 do5d24,e,ao3d48 fo5d24,g,do4d48 \
+ao5d24,b-,eo3d48 c+o5d24,b-,go3d48 ao5d24,g,c+o4d48 fo5d24,e,do3d48 fo5d24,d,\
+do4d48 eo5d24,f,fo3d48 go5d24,a,go3d48 b-o4d24,ao5,ao3d48 go5d24,f,b-o3d48 eo\
+5d24,d,co3d48 eo5d24,c,co4d48 do5d24,e,eo3d48 fo5d24,g,fo3d48 ao4d24,go5,go3d\
+48 fo5d24,e,ao3d48 do5d24,c,b-o3 do5,go3 eo5,ao3 fo5,b-o3 do5,co4 eo5,do4 fo5\
+,eo3 go4d48,dd24t1608,c,b-o3,a,g,a co5,fo3 do5,go3 eo5,ao3 co5,b-o3 do5,co4 e\
+o5,do3 fo4d48,cd24t1896,b-o3,a,g b-o4d96,fo3d24t1992,e,c,d ao4d48,eo3d24t2088\
+,f go4d48,go3d24t2136,ao2 co5,go3 b-o4,fo3 ao4,eo3 go4,do3 fo4,co3 eo4,do3 fo\
+4,b-o2 go4,co3d48 go4d72,co2d48t2400,fo4d24t2424,fo2 fo4d48,go2d24t2472,a co5\
+d48,b-o2d24t2520,co3 co5d48,do3d24t2568,eo2 co5d456,do3d24t2616,c,b-o2,a,g,a,\
+b-,co3,d,e,f,go2,fo3,e,d,c,b-o2,a,b- b-o4,co3 ao4,ao2 go4,b-o2 fo4,co3 eo4,f+\
+o2d48 co5d24,do4,e,f+,g,a,go2 b-o4,ao2 ao4,b-o2 go4,go2 fo4,ao2 eo4,b-o2 do4,\
+eo2d48 b-o4d24,c,d,ed894t3744,ft3768,gt3792,fo2t3816 ao4,bt3840,fo3t3864 co5,\
+dt3888,do3t3912 eo5,ft3936,bo2t3960 a-o4,fo5t3984,a-o2t4008 eo5,dt4032,eo2t40\
+56 co5,bo4t4080,ao2t4104 co5,a-o2t4128 bo4,ao2t4152 do5,bo2t4176 co5,co3t4200\
+ bo4,do3t4224 ao4,eo3t4248 a-o4,at4272,a-t4296,f+t4320,et4344,dt4368,ct4392,d\
+t4416 a-d24,ed894 f+d24,e f+d894,f+d24t4488 a-d894,a-d24t4512 ad894,dt4536 ad\
+24,b co5d894,bo4t4584 co5d24,f+o4 ad894,eo5d24t4632,d,c,bo4,a,a-,a,ed48 bd24,\
+co5,do4d48 do5d24,e,co4d48 ad24,fo5,bo3d48 eo5d24,d,ao3d48 co5d24,bo4,dd48 ao\
+5d24,a-,eo4d48 f+o5d24,e,fo4d48 ao5d72,do4d48t5184,do5d24t5208,eo4d48 bd72,eo\
+3d48t5280,ao4d24t5304,ao3 ao4d72,ao2d24t5352,b-,co3 ao4,do3 b-o4,e-o3 co5,f+o\
+2 do4d48,e-o3d24t5496,d f+o4d48,co3d24t5544,b-o2 ao4d48,ao2d24t5592,gd72 b-o4\
+d24,g,a,go2 b-o4,ao2 co5,b-o2 do5,co2d48 eo4d24,do5,go2d48 co5d24,b-o4,co3d48\
+ ao4d24,g,fo3 ao4d48,go3d24t5928,a fo5,bo3:1 eo5,c+o4 fo5d48,do4d24t6024,eo3 \
+go4d48,dd24:0t6072,c+ eo5d48,bo3d24t6120,a,g,fd48 do5d24,e,ao3d48 fo5d24,g,do\
+4d48 ao5d24,b-,eo3d48 c+o5d24,b-,go3d48 ao5d24,g,c+o4d48 fo5d24,e,do3 fo5d48,\
+eo3d24t6504,f do5d48,go3d24t6552,a go4d72,b-o3d24t6600,c+,b- do5,ao3 c+o5,go3\
+ eo5,fo3 ao4,eo3 c+o5,fo3 do5,go3 bo4,ao3d48 c+o5d72,ao2d48t6864,do5d24t6888,\
+b-o2d72 do5d24,c,b-o4,co3 ao4,b-o2 go4,ao2 fo4,go2 b-o4,b-o3 c+o4,ao3 do4,go3\
+ eo4,fo3 fo4,eo3 go4,"Tempo=705882" fo3 ao4,"Tempo=714285"t7204,"Tempo=722891\
+"t7212,"Tempo=731707"t7216,"Tempo=740740"t7224 go3 do5,"Tempo=750000"t7228,"T\
+empo=759493"t7236,"Tempo=769230"t7240,"Tempo=779220"t7244,ao3d48t7248 fo4,"Te\
+mpo=789473"t7252,"Tempo=800000"t7256,"Tempo=810810"t7264,"Tempo=821917"t7268,\
+"Tempo=833333"t7276,"Tempo=845070"t7280,"Tempo=857142"t7288,"Tempo=869565"t72\
+92,"Tempo=882352"t7296 ao2 eo4d24,"Tempo=895522"t7304,"Tempo=909090"t7308,"Te\
+mpo=923076"t7316,"Tempo=937500"t7320 d,"Tempo=952380"t7328,"Tempo=967741"t733\
+2,"Tempo=983606"t7336,"Tempo=1000000"t7344 do2d144 do4'],"tn2chan"=[0=0,1=0],"tn2label"=[0="Merged",1="Trk 1"],"tn2mute"=[0=0,1=0],"tn2patch"=[0=0,1=0],"tn2port"=[0=0,1=0],"toolnotes"=[1=[]],"view"=["x0"=-468,"x1"=7956,"y0"=0,"y1"=127]])
+
+}

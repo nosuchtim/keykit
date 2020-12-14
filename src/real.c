@@ -2,13 +2,9 @@
  *	Copyright 1996 AT&T Corp.  All rights reserved.
  */
 
-/* This is a hook to include 'overlay' directives (in mdep.h) */
-#define OVERLAY1
-
 int Debugqnote = 0;
 
 #include "key.h"
-#include "keymidi.h"
 
 static char *Timeoutmsg = "This is a demo copy of KeyKit.\nThe timeout has expired, sorry.";
 static void real_putnmidi(int buffsize, char *buff, int port);
@@ -43,33 +39,6 @@ psched(void)
 	eprint(";)\n");
 }
 
-static char *Grabbuff = NULL;
-static long Grabbuffsize = 0;
-
-int Midiok = 0;
-
-long Tempo = 500000L;	/* Microseconds per beat */
-
-long Milltempo = 500;	/* Milliseconds per beat */
-
-long Start;		/* Millsecond value at start of rtloop() */
-
-long Midinow;		/* If MIDI clocks are in control, this is */
-			/* current time in keykit clicks */
-			/* THIS VALUE INCLUDES Nowoffset !! */
-
-long Midimilli = 0;	/* in milliseconds */
-
-long Nextclick = -1;	/* in milliseconds */
-
-int Chkmouse = 0;	/* if non-zero, there are mouse actions to be */
-			/* checked. */
-
-char Sustain[MIDI_OUT_DEVICES+1][16];
-			/* one for each MIDI channel, keeping track of */
-			/* whether the sustain switch is down. */
-char Portamento[MIDI_OUT_DEVICES+1][16];
-			/* one for each MIDI channel, like Sustain */
 
 /*
  * first index is 0 (for defaults) or 0-based input port number+1,
@@ -269,7 +238,7 @@ Symlongp Maxatonce, Noteqsize;
 /* This is a queue of notes that have been received via MIDI in (and */
 /* possibly echoed on MIDI out), but have not been processed. */
 /* If we get more than Noteqsize notes queued up, we're in trouble... */
-static Notedata *Noteq;	/* circular queue */
+static Notedata *Qnotes;	/* circular queue */
 static int Qavail = 0;	/* index of next free slot in noteq */
 static int Qbegin = 0;	/* index of head of circular queue */
 
@@ -305,7 +274,7 @@ startrealtime(void)
 
 	installnum("Noteqsize",&Noteqsize,256);
 
-	Noteq = (Notedata *) kmalloc((unsigned)(*Noteqsize) * sizeof(Notedata),"startreal");
+	Qnotes = (Notedata *) kmalloc((unsigned)(*Noteqsize) * sizeof(Notedata),"startreal");
 
 	installnum("Maxatonce",&Maxatonce,256);
 	u = (unsigned)(*Maxatonce) * 3 * sizeof(char);
@@ -407,7 +376,7 @@ resetreal(void)
 void
 finishoff(void)
 {
-	register Sched *s;
+	Sched *s;
 	int c, m;
 	Noteptr n;
 
@@ -447,7 +416,7 @@ finishoff(void)
 void
 addandput(int port, int n0, int chan, int c1,int c2)
 {
-	register Noteptr n = &Intnt;
+	Noteptr n = &Intnt;
 	int c0 = n0 | chan;
 
 	timeof(n) = *Now;
@@ -487,9 +456,9 @@ chkinput(void)
 	GRABMIDI;
 
 	while ( Qavail != Qbegin ) {
-		register Noteptr q;
+		Noteptr q;
 
-		q = (Noteptr)(&Noteq[Qbegin]);
+		q = (Noteptr)(&Qnotes[Qbegin]);
 
 		switch(typeof(q)){
 		case NT_ON:
@@ -668,9 +637,9 @@ chanofbyte(int b)
  */
 
 int
-execnt(register Sched *s, Sched *pres)
+execnt(Sched *s, Sched *pres)
 {
-	register Noteptr n;
+	Noteptr n;
 	int nttype, bytetype;
 	int disable = 0;
 	Noteptr nxt;
@@ -893,13 +862,13 @@ toomany(char *onoff)
 
 /* The rc_* functions are called from the MIDI interpreter (midiparse). */
 /* To promptly handle (and echo) MIDI input, these routines just stuff */
-/* things into the Noteq array, which is then later processed more */
+/* things into the Qnotes array, which is then later processed more */
 /* completely. */
 
 void
 rc_on(Unchar *mess,int indx)
 {
-	register Noteptr q;
+	Noteptr q;
 
 	if ( *Merge != 0 ) {
 		if ( *Mergefilter == 0 || ( (1<<Currchan) & *Mergefilter)==0 ) {
@@ -923,7 +892,7 @@ rc_on(Unchar *mess,int indx)
 void
 rc_off(Unchar *mess,int indx)
 {
-	register Noteptr q;
+	Noteptr q;
 
 	if ( *Merge != 0 ) {
 		if ( *Mergefilter == 0 || ( (1<<Currchan) & *Mergefilter)==0 ) {
@@ -952,7 +921,7 @@ rc_mess(Unchar *mess,int indx)
 void
 rc_messhandle(Unchar *mess,int indx, int chan)
 {
-	register Noteptr q;
+	Noteptr q;
 
 	if ( *Merge != 0 ) {
 		if ( chan<0 || *Mergefilter == 0 || ( (1<<chan) & *Mergefilter)==0 ) {
@@ -967,7 +936,7 @@ rc_messhandle(Unchar *mess,int indx, int chan)
 	if ( (q=qnote(-1)) == NULL )
 		return;
 	if ( indx <= 3 ) {
-		register int i;
+		int i;
 		typeof(q) = NT_LE3BYTES;
 		le3_nbytesof(q) = indx;
 		for ( i=0; i<indx; i++ ) {
@@ -1131,7 +1100,7 @@ chkcontroller(int port, Unchar* mess)
 Noteptr 
 qnote(int chan)
 {
-	register Noteptr q = (Noteptr)(&Noteq[Qavail]);
+	Noteptr q = (Noteptr)(&Qnotes[Qavail]);
 	int nextq = Qavail+1;
 
 	if ( nextq >= *Noteqsize )
@@ -1162,9 +1131,9 @@ qnote(int chan)
 }
 
 void
-noteon(register Noteptr q)
+noteon(Noteptr q)
 {
-	register Noteptr n;
+	Noteptr n;
 
 	typeof(&Intnt) = NT_ON;
 	timeof(&Intnt) = timeof(q);
@@ -1194,10 +1163,10 @@ noteon(register Noteptr q)
 void
 noteoff(Noteptr q)
 {
-	register Noteptr n;
-	register Noteptr pre = NULL;
-	register int chan = chanof(q);
-	register int pitch = pitchof(q);
+	Noteptr n;
+	Noteptr pre = NULL;
+	int chan = chanof(q);
+	int pitch = pitchof(q);
 
 	/* Look for this note in the Current phrase */
 	for ( n=firstnote(*Currphr); n!=NULL; pre=n,n=nextnote(n) ) {
@@ -1432,7 +1401,7 @@ struct midiaction Intmidi = {
 void
 clrsched(Sched **as)
 {
-	register Sched *s, *nxt;
+	Sched *s, *nxt;
 
 	dummyset(nxt);
 	for ( s=(*as); s!=NULL; s=nxt ) {
@@ -1468,12 +1437,12 @@ newsch(void)
 void
 unsched(Task *t)
 {
-	register Sched *s, *pres;
+	Sched *s, *pres;
 
 	for ( pres=NULL,s=Topsched; s!=NULL; ) {
 
 		if ( s->task == t ) {
-			register Sched *nexts = s->next;
+			Sched *nexts = s->next;
 			if ( s->type == SCH_NOTEOFF ) {
 				Noteptr n = s->note;
 				put3midi( (int)(NOTEOFF | chanof(n)), (int)pitchof(n), (int)volof(n), (int)portof(n), (int)chanof(n) );
@@ -1494,7 +1463,7 @@ unsched(Task *t)
 }
 
 void
-freesch(register Sched *s)
+freesch(Sched *s)
 {
 	switch ( s->type ) {
 	case SCH_NOTEOFF:
@@ -1542,8 +1511,8 @@ immsched(int type,long clicks,Ktaskp tp,int monitor)
 		Topsched = s;
 	}
 	else {
-		register Sched *prev = Topsched;
-		register Sched *t = prev->next;
+		Sched *prev = Topsched;
+		Sched *t = prev->next;
 		/* find place in list */
 		for ( ; t!=NULL; prev=t,t=t->next ) {
 			if ( clicks < t->clicks )

@@ -1,7 +1,6 @@
 /*
  *	Copyright 1996 AT&T Corp.  All rights reserved.
  */
-#define OVERLAY4
 
 #include "key.h"
 

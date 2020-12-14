@@ -2,17 +2,7 @@
  *	Copyright 1996 AT&T Corp.  All rights reserved.
  */
 
-#define OVERLAY3
-
 #include "key.h"
-#include "gram.h"
-
-int Tjt = 0;
-int	Indef = 0;	/* >0 while parsing a function definition */
-int	Inclass = 0;	/* >0 while parsing a class definition */
-int	Inparams = 0;	/* 1 while parsing the parameters of a func def'n */
-int	Inselect = 0;	/* 1 while parsing a select {...} construct */
-int	Globaldecl = 0;	/* 1 while parsing a global statement. */
 
 void
 resetstack(void)
@@ -36,17 +26,6 @@ i_pop(void)
 	d = *--Stackp;
 	decruse(d);
 }
-
-Instnodep *Iseg = NULL;
-Instnodep *Lastin = NULL;
-Instnodep *Future = NULL;
-
-/* This is purposely low, just to exercise newly added code. */
-#define ISEGINC 2
-int Maxiseg = 0;
-int Niseg = -1;
-
-Instcode Stopcode;
 
 void
 clriseg(void)
@@ -86,7 +65,7 @@ pushiseg(void)
 Codep
 inodes2code(Instnodep inlist)
 {
-	register Instnodep in2;
+	Instnodep in2;
 	Instcode i;
 	int n;
 	Unchar *ip, *ip2;
@@ -98,10 +77,6 @@ inodes2code(Instnodep inlist)
 	/* First go through and figure out how big the code will be, */
 	/* so we know the exact byte position of each instruction, and also */
 	/* so we know how much memory to allocate. */
-
-#ifdef FFF
-fprintf(FF,"INODES2CODE start\n");
-#endif
 
 	/* Anything that's still an i_stop is really an i_stop. */
 	/* Need to change it before computing sizes. */
@@ -218,7 +193,7 @@ instnodepatch(Instnodep t,Instnodep i1,Instnodep i2)
 {
 	/* Backpatch any pointers to an inode, i.e. change all */
 	/* occurrences of pointers to i1 into pointers to i2 */
-	register Instnodep i;
+	Instnodep i;
 	for ( i=t; i!=NULL; i=nextinode(i) ) {
 		if ( i->code.u.in == i1 )
 			i->code.u.in = i2;
@@ -392,7 +367,7 @@ addinode(Instnodep in)
 Instnodep
 code(Instcode ic)
 {
-	register Instnodep in;
+	Instnodep in;
 
 	in = Future[Niseg];
 	Future[Niseg] = newin();
@@ -475,9 +450,9 @@ bltininst(BLTINCODE f)
 }
 
 Instnodep
-previnstnode(register Instnodep ilow,register Instnodep in)
+previnstnode(Instnodep ilow,Instnodep in)
 {
-	register Instnodep nxt;
+	Instnodep nxt;
 
 	while ( ilow != NULL ) {
 		nxt = nextinode(ilow);
@@ -490,7 +465,7 @@ previnstnode(register Instnodep ilow,register Instnodep in)
 }
 
 Instcode*
-ptincode(register Instnodep in,register int n)
+ptincode(Instnodep in,int n)
 {
 	while ( n-- > 0 )
 		in = nextinode(in);
@@ -557,7 +532,7 @@ reinitmsg2(void)
 }
 
 void
-ptomsg2(register Symstr s)
+ptomsg2(Symstr s)
 {
 	long lng = (long)strlen((char*)s);
 
@@ -574,7 +549,7 @@ reinitmsg3(void)
 }
 
 void
-ptomsg3(register Symstr s)
+ptomsg3(Symstr s)
 {
 	long lng = (long)strlen((char*)s);
 
@@ -650,7 +625,7 @@ expectarr(Datum d,Datum subs,char *s)
 void
 i_arrend(void)
 {
-	register Symbolp s;
+	Symbolp s;
 	Datum subs;
 	Datum d;
 
@@ -717,7 +692,7 @@ endclass(Symbolp sp)
 }
 
 void
-startdef(register Symbolp sp)
+startdef(Symbolp sp)
 {
 	Datum *dp;
 
@@ -736,7 +711,7 @@ startdef(register Symbolp sp)
 
 /* put function in symbol table */
 void
-enddef(register Symbolp sp)
+enddef(Symbolp sp)
 {
 	Codep cp;
 
@@ -1048,7 +1023,7 @@ ret(Datum retd)
 void
 redoarg0(Ktaskp t)
 {
-	register Datum *tstackframe = t->stackframe;
+	Datum *tstackframe = t->stackframe;
 
 	if ( tstackframe )
 		t->arg0 = arg0_of_frame(tstackframe);
@@ -1251,7 +1226,7 @@ i_regexeq(void)
 int
 dcompare(Datum d1,Datum d2)
 {
-	register int n;
+	int n;
 
 	if ( d1.type == D_NUM && d2.type == D_NUM ) {
 

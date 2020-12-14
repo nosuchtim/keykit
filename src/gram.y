@@ -670,7 +670,7 @@ installvar(Symstr up)
 int
 yylex()
 {
-	register int c;
+	int c;
 	int retval;
 	int lastc = 0;
 	int isdouble, nextc;

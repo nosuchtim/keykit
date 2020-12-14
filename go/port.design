@@ -1,0 +1,25 @@
+
+ins = midi("list","input")
+
+ins[0] = ["UA100 input 1"]
+ins[1] = ["UA100 input 2"]
+
+midi("open","input",0)
+midi("close","input",0)
+midi("isopen","input",2)
+
+Multiple inputs can be open, all input gets
+put on port = Defoutport.
+
+--------------------------------
+
+outs = midi("list","output")
+
+outs[0] = ["UA100 output 1"]
+
+midi("open","output",2)
+midi("close","output",2)
+midi("isopen","output",2)
+
+--------------------------------
+
