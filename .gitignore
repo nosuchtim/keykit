@@ -5,8 +5,7 @@ mdep/nt/.vs
 bin/keylocal.k
 lib/keylib.k
 src/makefile
-
-
+go.zip
 fingerworks
 local/oscwin32
 local/udp
