@@ -4,7 +4,7 @@ method init() {
 	$.w = new window()
 	$.inherit($.w)
 
-	$.kboomtype = 1		# set to 2 to use Kboom2
+	$.kboomtype = 2		# set to 2 to use Kboom2
 	arr = []
 	for ( n=0; n<16; n++ )
 		arr[n] = string(n+1)
@@ -18,6 +18,7 @@ method init() {
 	$.addchild($.kb)
 	$.sleeptime = 2b
 
+	$.ison = 0
 	$.startquant = 1
 	$.stoptids = []
 	$.ph = []
@@ -61,11 +62,22 @@ method setkboomtype(n) {
 	$.resize()
 	$.redraw()
 }
+# this method gets used by both the kbutton and bang
 method onoff(v) {
-	if ( v )
+	if ( v ) {
+		$.ison = 1
 		$.play()
-	else
+	} else {
+		$.ison = 0
 		$.stop()
+	}
+}
+method bang() {
+	if ($.ison) {
+		$.onoff(0)
+	} else {
+		$.onoff(1)
+	}
 }
 method slidermoved(v,bn,killit) {
 	if ( nargs() < 3 )

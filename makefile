@@ -172,7 +172,7 @@ install_ntcons :
 # clean for NT (and 95)
 clean_nt :
 	$(MK) copy_nt
-	cd src && $(MK) clean
+	cd src && $(MK) clobber
 	cd byacc && $(MK) -f makefile.stdio clobber
 	cd tests && $(MK) clean_nt
 	rm -f bin/last.kp
@@ -227,6 +227,7 @@ bindir :
 	
 distribution_nt :
 	$(MK) install_nt
+	$(MK) clean_nt
 	rm -fr dist/nt dist/key_nt.zip
 	mkdir dist/nt
 	mkdir dist/nt/key

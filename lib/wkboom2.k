@@ -1541,12 +1541,13 @@ method snarf { Snarf = dr202decode($.get()) }
 method setonoff (v) { if ( v ) $.on(); else $.stop() }
 method delete { Kboomtool=$0 ; if ( $.beatid >= 0 ) kill($.beatid) }
 
-# The argument, if specified, is the start time
-method bang(...) { $.sync(); $.on(...); $.nloops = 1 }
+method bang(...) { $.sync(); if ($.ison) { $.stop(...); } else { $.on(...); $.nloop = 0; } }
 
 method resetbeatid() {
 	$.beatid = -1
 }
+
+# The argument, if specified, is the start time
 method task_kbbeat(starttm) {
 	tm = starttm
 	onexit(global(kb2_beatend),$)
