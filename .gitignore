@@ -3,6 +3,9 @@
 src/.vs
 mdep/nt/.vs
 bin/keylocal.k
+lib/keylib.k
+src/makefile
+
 
 fingerworks
 local/oscwin32

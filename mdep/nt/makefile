@@ -149,6 +149,7 @@ clobber : clean
 	rm -f mdep1.c
 	rm -f mdep2.c
 	rm -f midi.c
+	rm -f clock.c
 	rm -f y_output
 	rm -f key.dbg
 	rm -f *.sln *.vcxproj*
