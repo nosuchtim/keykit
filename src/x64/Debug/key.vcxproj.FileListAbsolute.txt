@@ -1,2 +1,0 @@
-C:\Users\tjt\go\src\github.com\vizicist\keykit\src\x64\Debug\key.exe
-C:\Users\tjt\go\src\github.com\vizicist\keykit\src\x64\Debug\key.pdb

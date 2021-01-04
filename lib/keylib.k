@@ -1997,11 +1997,14 @@
 #library wpaletteballs.k wpaletteballs
 #library wpaletteballs.k mkmenu_paletteballs_1
 #library wpaletteballs.k mkmenu_paletteballs_breakout
+#library wpaletteballs.k mkmenu_paletteballs_palette
 #library wpaletteballs.k mkmenu_paletteballs_midi
 #library wpaletteballs.k mkmenu_paletteballs_randwalls
+#library wpaletteballs.k mkmenu_paletteballs_key
+#library wpaletteballs.k mkmenu_paletteballs_scale
 #library wpaletteballs.k mkmenu_paletteballs_gridsize
 #library wpaletteballs.k mkmenu_paletteballs_moving
-#library wpaletteballs.k mkmenu_paletteballs_speed
+#library wpaletteballs.k mkmenu_paletteballs_size
 #library wpaletteballs.k mkmenu_paletteballs_playquant
 #library wparam.k wparam
 #library wparty.k wparty

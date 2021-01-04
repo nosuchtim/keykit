@@ -2,7 +2,20 @@
  *	Copyright 1996 AT&T Corp.  All rights reserved.
  */
 
+#define OVERLAY4
+
 #include "key.h"
+
+#include "d_menu.h"
+
+static int Menuysize = 0;
+
+#define MSCROLLWIDTH ((int)(*Menuscrollwidth)*mdep_fontwidth()/4) /* width of menu scroll bar */
+#define mymin(a,b) ((a)>(b)?(b):(a))
+#define shown(w) mymin((w)->km.nitems,(w)->km.menusize)
+#define menuxarea(w) ((w)->km.width+5)
+#define menuyarea(w) ((w)->km.height+4)
+#define hasscrollbar(w) ((w)->km.offset!=0)
 
 static void
 scrollbar(Kwind *w)

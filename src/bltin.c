@@ -2,7 +2,11 @@
  *	Copyright 1996 AT&T Corp.  All rights reserved.
  */
 
+#define OVERLAY2
+
+#include <math.h>
 #include "key.h"
+#include "gram.h"
 
 void
 bi_debug(int argc)
@@ -1175,6 +1179,9 @@ bi_kill(int argc)
 	}
 }
 
+int Anyrun;
+int Cprio;
+
 int
 chkprio(Hnodep h)
 {
@@ -1437,6 +1444,10 @@ bi_chdir(int argc)
 	}
 	ret(strdatum(p));
 }
+
+static Datum lsdatum;
+static char * lsdir;
+static int lsdirleng;
 
 void
 lsdircallback(char *fname,int type)
@@ -1805,6 +1816,8 @@ xyarr(long x0,long y0)
 	setarraydata(da.u.arr,Str_y,numdatum(y0));
 	return da;
 }
+
+Htablep Newarr;
 
 int
 addifnew(Hnodep h)
@@ -2314,6 +2327,15 @@ bi_midi(int argc)
 	ret(d);
 #endif
 }
+
+typedef struct bi_bitmap_t {
+	int id;
+	int xsize, ysize;
+	Unchar *bits;
+	struct bi_bitmap_t *next;
+} bi_bitmap_t;
+
+struct bi_bitmap_t *Bitmaplist = NULL;
 
 static struct bi_bitmap_t *
 bitmap_find(int bid)

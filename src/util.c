@@ -3,17 +3,19 @@
  */
 
 /* This is a hook to include 'overlay' directives (in mdep.h) */
+#define OVERLAY1
 
 #include "key.h"
+#include "gram.h"
 
 Phrasep Tobechecked = NULL;
 Htablep Htobechecked = NULL;
 int Chkstuff = 0;
 
 void
-addtobechecked(Phrasep p)
+addtobechecked(register Phrasep p)
 {
-	Phrasep tp;
+	register Phrasep tp;
 
 	/* make sure it's not already in there */
 	for ( tp=Tobechecked; tp!=NULL; tp=tp->p_next ) {
@@ -45,7 +47,7 @@ addtobechecked(Phrasep p)
 }
 
 void
-httobechecked(Htablep p)
+httobechecked(register Htablep p)
 {
 	/* if it's already in the list... */
 	if ( p->h_state == HT_TOBECHECKED )
@@ -201,7 +203,7 @@ ph1dump(Phrasep p)
 void
 phcheck(void)
 {
-	Phrasep p, nxt;
+	register Phrasep p, nxt;
 
 	dummyset(nxt);
 	for ( p=Tobechecked; p!=NULL; p=nxt ) {
@@ -246,7 +248,7 @@ phcheck(void)
 void
 htcheck(void)
 {
-	Htablep h, nxt, savelist;
+	register Htablep h, nxt, savelist;
 
 #ifdef lint
 	nxt=0;
@@ -298,7 +300,7 @@ if(*Debug>1)eprint("htcheck calling freeht on %lld used=%d tobe=%d\n",(intptr_t)
 long Seqnum = 0;
 
 char *
-strend(char *s)
+strend(register char *s)
 {
 	while ( *s != '\0' )
 		s++;
@@ -314,10 +316,10 @@ keysrand(unsigned x)
 	Randx = x;
 }
 
-unsigned int
+int
 keyrand(void)
 {
-	return((unsigned int)(((Randx = Randx * 1103515245L + 12345)>>16) & 0x7fff));
+	return((int)(((Randx = Randx * 1103515245L + 12345)>>16) & 0x7fff));
 }
 #endif
 
@@ -516,6 +518,11 @@ phprint(PFCHAR pfunc,Phrasep ph,int nl)
 	phputc('\'');
 }
 
+char *Scachars[] = {
+	"c", "c+", "d", "e-", "e", "f", "f+",
+	"g", "a-", "a", "b-", "b", "c"
+};
+
 /*
  * nttostr(nt,buff)
  *
@@ -527,7 +534,7 @@ nttostr(Noteptr n,char *buff)
 {
 	int chan, oct, vol;
 	DURATIONTYPE dur;
-	char *p = buff;
+	register char *p = buff;
 
 	if ( typeof(n) == NT_ON )
 		*p++ = '+';
@@ -561,10 +568,10 @@ nttostr(Noteptr n,char *buff)
 }
 
 int
-phsize(Phrasep p,int notes)
+phsize(register Phrasep p,register int notes)
 {
-	int size = 0;
-	Noteptr n;
+	register int size = 0;
+	register Noteptr n;
 
 	if ( p==NULL )
 		return(0);
@@ -582,10 +589,10 @@ phsize(Phrasep p,int notes)
  */
 
 Noteptr
-picknt(Phrasep ph,int picknum)
+picknt(register Phrasep ph,register int picknum)
 {
-	Noteptr nt;
-	int n;
+	register Noteptr nt;
+	register int n;
 
 	if ( picknum < PHRASEBASE ) {
 #ifdef BASEERROR
@@ -605,7 +612,7 @@ picknt(Phrasep ph,int picknum)
 int
 phrinphr(Datum d1,Datum d2)
 {
-	Noteptr nt1, nt2;
+	register Noteptr nt1, nt2;
 
 	if ( d1.type != D_PHR || d2.type != D_PHR )
 		inerr();
@@ -664,9 +671,9 @@ typestr(int type)
 }
 
 char *
-dotstr(int type)
+dotstr(register int type)
 {
-	char *p;
+	register char *p;
 
 	switch(type){
 	case LENGTH:	 p = ".length"; break;
@@ -740,7 +747,7 @@ phdotvalue(Phrasep ph,int type)
 }
 
 int
-ntdotvalue(Noteptr n,int type,Datum *ad)
+ntdotvalue(register Noteptr n,register int type,Datum *ad)
 {
 	int r = 1;
 	long v = -1;
@@ -885,7 +892,7 @@ getnumval(Datum d,int round)
 		break;
 	case D_PHR:
 		{
-			Noteptr n = firstnote(d.u.phr);
+			register Noteptr n = firstnote(d.u.phr);
 
 			/* numeric value of a phrase is either */
 			/* the pitch of the first note, or the */
@@ -993,10 +1000,10 @@ struct finfo {
 } Files[MAXOPEN];
 
 int
-findfile(char *name)
+findfile(register char *name)
 {
-	char *p;
-	int n;
+	register char *p;
+	register int n;
 
 	for ( n=0; n<MAXOPEN; n++ ) {
 		p = Files[n].name;
@@ -1033,8 +1040,8 @@ getnclose(char *fname)
 FILE *
 getnopen(char *name,char *mode)
 {
-	FILE *f = NULL;
-	int n;
+	register FILE *f = NULL;
+	register int n;
 
 	/* Look to see if the file (or pipe) is already open */
 	if ( (n=findfile(name)) >= 0 ) {
@@ -1058,7 +1065,7 @@ getnopen(char *name,char *mode)
 
 	if ( *name == '|' ) {
 #ifdef PIPES
-		char *cmd = name + 1;
+		register char *cmd = name + 1;
 		if ( *Abortonint == 0 )
 			mdep_ignoreinterrupt();
 		f = popen(cmd,mode);
@@ -1429,7 +1436,7 @@ newdn(void)
 	/* First check the free list and use those nodes, before using */
 	/* the newly allocated stuff. */
 	if ( Dnfree != NULL ) {
-		Dnode *dn = Dnfree;
+		register Dnode *dn = Dnfree;
 		Dnfree = Dnfree->next;
 		dn->next = NULL;
 		return(dn);
@@ -1453,7 +1460,7 @@ freedn(Dnode *dn)
 void
 freednodes(Dnode *dn)
 {
-	Dnode *nxtd;
+	register Dnode *nxtd;
 
 	dummyset(nxtd);
 	for ( ; dn!=NULL; dn=nxtd ) {
@@ -1649,6 +1656,9 @@ put_numcode(long num, Unchar *p)
 {
 	Unchar *tp;
 
+#ifdef FFF
+fprintf(FF,"put_numcode num=%d\n",num);
+#endif
 	tp = varinum_put(num,p);
 	return tp;
 }
@@ -1706,7 +1716,7 @@ Symbolp
 scan_symcode(Unchar **pp)
 {
 	union sym_union u;
-	Unchar *p = *pp;
+	register Unchar *p = *pp;
 	u.bytes[0] = *p++;
 	u.bytes[1] = *p++;
 	u.bytes[2] = *p++;

@@ -2,7 +2,10 @@
  *	Copyright 1996 AT&T Corp.  All rights reserved.
  */
 
+#define OVERLAY7
+
 #include "key.h"
+#include "keymidi.h"
 
 /*
  * midiparse(inbyte)
@@ -22,8 +25,44 @@
  * to NEEDSTATUS.
  */
 
+/* possible values for State */
+#define NEEDSTATUS 0
+#define NEEDONEBYTE 1
+#define NEEDTWOBYTES 2
+#define VARIABLELENGTH 3
+
+#define MESSAGESIZE 256
+
+int State = NEEDSTATUS;	/* The current state of the finite state machine. */
+			/* It indicates what we're currently looking for. */
+
+actfunc Currfunc = NULL;/* This is the 'midiaction' function for the */
+				/* current MIDI message being processed. */
+
+int Currchan = 0;	/* This is the current channel, ie. the channel # */
+			/* on the latest 'channel message' status byte. */
+
+Unchar *Currmessage = NULL;	/* Current message buffer */
+
+int Messleng = 0;	/* Size of currently allocated message */
+
+int Messindex = 0;	/* Index of next byte to go into */
+			/* 'Currmessage'.  When Messindex */
+			/* gets >= Messleng, the 'Currmessage' */
+			/* is reallocated to a larger size. */
+
+int Runnable = 0;	/* If non-zero, the current MIDI message */
+			/* can use the "running status byte" feature. */
+
+struct midiaction Midi = {
+	NULL,NULL,NULL,NULL,NULL,
+	NULL,NULL,NULL,NULL,NULL,
+	NULL,NULL,NULL,NULL,NULL,
+	NULL,NULL,NULL
+};
+
 void
-midiparse(int inbyte)
+midiparse(register int inbyte)
 {
 	int highbit;
 
@@ -148,7 +187,7 @@ midiparse(int inbyte)
 void
 realmess(int inbyte)
 {
-	actfunc f = NULL;
+	register actfunc f = NULL;
 
 	switch ( inbyte ) {
 	case 0xf8:
@@ -239,7 +278,7 @@ chanmsg(int inbyte)
 void
 sysmess(int inbyte)
 {
-	actfunc f = NULL;
+	register actfunc f = NULL;
 
 	switch ( inbyte ) {
 	case 0xf0:
@@ -289,9 +328,9 @@ biggermess(Unchar **amessage,int *aMessleng)
 
 	/* copy old message into larger new message */
 	if ( oldmess != NULL ) {
-		Unchar *p = newmess;
-		Unchar *q = oldmess;
-		Unchar *endq = &oldmess[oldleng];
+		register Unchar *p = newmess;
+		register Unchar *q = oldmess;
+		register Unchar *endq = &oldmess[oldleng];
 
 		for ( ; q!=endq ; p++,q++ )
 			*p = *q;

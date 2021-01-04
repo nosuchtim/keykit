@@ -2,7 +2,14 @@
  *	Copyright 1996 AT&T Corp.  All rights reserved.
  */
 
+#define OVERLAY6
+
+#ifdef PYTHON
+#include "Python.h"
+#endif
 #include "key.h"
+#include "gram.h"
+
 
 Codep Ipop, Idosweep, Ireboot;
 
@@ -373,6 +380,197 @@ handlewaitfor(int wn)
 	}
 }
 
+#ifdef PYTHON
+PyThreadState * KeyPyState = NULL;
+#endif
+
+char *Bytenames[] = {
+	"i_pop",
+	"i_dblpush",
+	"i_stringpush",
+	"i_phrasepush",
+	"i_arrend",
+	"i_arraypush",
+	"i_incond",
+	"i_divcode",
+	"i_par",
+	"i_amp",
+	"i_lshift",
+	"i_rightshift",
+	"i_negate",
+	"i_tilda",
+	"i_lt",
+	"i_gt",
+	"i_le",
+	"i_ge",
+	"i_ne",
+	"i_eq",
+	"i_regexeq",
+	"i_and1",
+	"i_or1",
+	"i_not",
+	"i_noop",
+	"i_popignore",
+	"i_defined",
+	"i_objdefined",
+	"i_currobjdefined",
+	"i_realobjdefined",
+	"i_task",
+	"i_undefine",
+	"i_dot",
+	"i_modulo",
+	"i_addcode",
+	"i_subcode",
+	"i_mulcode",
+	"i_xorcode",
+	"i_dotassign",
+	"i_moddotassign",
+	"i_modassign",
+	"i_varassign",
+	"i_deleteit",
+	"i_deletearritem",
+	"i_readonlyit",
+	"i_onchangeit",
+	"i_eval",
+	"i_vareval",
+	"i_objvareval",
+	"i_funcnamed",
+	"i_lvareval",
+	"i_gvareval",
+	"i_varpush",
+	"i_objvarpush",
+	"i_callfunc",
+	"i_objcallfuncpush",
+	"i_objcallfunc",
+	"i_array",
+	"i_linenum",
+	"i_filename",
+	"i_forin1",
+	"i_forin2",
+	"i_popnreturn",
+	"i_stop",
+	"i_select1",
+	"i_select2",
+	"i_select3",
+	"i_print",
+	"i_goto",
+	"i_tfcondeval",
+	"i_tcondeval",
+	"i_constant",
+	"i_dotdotarg",
+	"i_varg",
+	"i_currobjeval",
+	"i_constobjeval",
+	"i_ecurrobjeval",
+	"i_erealobjeval",
+	"i_returnv",
+	"i_return",
+	"i_qmark",
+	"i_forinend",
+	"i_dosweepcont",
+	"i_classinit",
+	"i_pushinfo",
+	"i_popinfo",
+	"i_nargs",
+	"i_typeof",
+	"i_xy2",
+	"i_xy4"
+};
+
+/* The order in this list MUST match the values of the I_* macros */
+BYTEFUNC Bytefuncs[] = {
+	i_pop,
+	i_dblpush,
+	i_stringpush,
+	i_phrasepush,
+	i_arrend,
+	i_arraypush,
+	i_incond,
+	i_divcode,
+	i_par,
+	i_amp,
+	i_lshift,
+	i_rightshift,
+	i_negate,
+	i_tilda,
+	i_lt,
+	i_gt,
+	i_le,
+	i_ge,
+	i_ne,
+	i_eq,
+	i_regexeq,
+	i_and1,
+	i_or1,
+	i_not,
+	i_noop,
+	i_popignore,
+	i_defined,
+	i_objdefined,
+	i_currobjdefined,
+	i_realobjdefined,
+	i_task,
+	i_undefine,
+	i_dot,
+	i_modulo,
+	i_addcode,
+	i_subcode,
+	i_mulcode,
+	i_xorcode,
+	i_dotassign,
+	i_moddotassign,
+	i_modassign,
+	i_varassign,
+	i_deleteit,
+	i_deletearritem,
+	i_readonlyit,
+	i_onchangeit,
+	i_eval,
+	i_vareval,
+	i_objvareval,
+	i_funcnamed,
+	i_lvareval,
+	i_gvareval,
+	i_varpush,
+	i_objvarpush,
+	i_callfunc,
+	i_objcallfuncpush,
+	i_objcallfunc,
+	i_array,
+	i_linenum,
+	i_filename,
+	i_forin1,
+	i_forin2,
+	i_popnreturn,
+	i_stop,
+	i_select1,
+	i_select2,
+	i_select3,
+	i_print,
+	i_goto,
+	i_tfcondeval,
+	i_tcondeval,
+	i_constant,
+	i_dotdotarg,
+	i_varg,
+	i_currobjeval,
+	i_constobjeval,
+	i_ecurrobjeval,
+	i_erealobjeval,
+	i_returnv,
+	i_return,
+	i_qmark,
+	i_forinend,
+	i_dosweepcont,
+	i_classinit,
+	i_pushinfo,
+	i_popinfo,
+	i_nargs,
+	i_typeof,
+	i_xy2,
+	i_xy4
+};
+
 void
 exectasks(int nosetjmp)
 {
@@ -394,9 +592,7 @@ exectasks(int nosetjmp)
 	setintcatch();
 
 	thcnt = ccnt = 0;
-#if 0
 	int nbytenames = sizeof(Bytenames)/sizeof(Bytenames[0]);
-#endif
 
 	for ( ;; ) {
 
@@ -2195,7 +2391,7 @@ eprfunc(BYTEFUNC i)
 	intptr_t ii;
 
 	ii = (intptr_t)i;
-	if ( ii>=0 && ii < nbytenames ) {
+	if ( ii>=0 && ii < (sizeof(Bytenames)/sizeof(Bytenames[0])) ) {
 		keyerrfile("%s (%ld)",Bytenames[ii],ii);
 	}
 	else {

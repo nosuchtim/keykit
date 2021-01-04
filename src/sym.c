@@ -2,7 +2,10 @@
  *	Copyright 1996 AT&T Corp.  All rights reserved.
  */
 
+#define OVERLAY8
+
 #include "key.h"
+#include "gram.h"
 
 Htablep Keywords = NULL;
 Htablep Macros = NULL;
@@ -103,7 +106,7 @@ newsy(void)
 }
 
 void
-freesy(Symbolp sy)
+freesy(register Symbolp sy)
 {
 	/* Add it to the list of free symbols */
 	sy->next = Free_sy;
@@ -111,7 +114,7 @@ freesy(Symbolp sy)
 }
 
 Symbolp
-findsym(char *p,Htablep symbols)
+findsym(register char *p,Htablep symbols)
 {
 	Datum key;
 	Hnodep h;
@@ -244,7 +247,7 @@ syminstall(Symstr p,Htablep symbols,int t)
 }
 
 void
-clearsym(Symbolp s)
+clearsym(register Symbolp s)
 {
 #ifdef OLDSTUFF
 	Codep cp;
@@ -1208,7 +1211,7 @@ vartofile(Symbolp s, char *fname)
 /* be opened, it's a silent error. */
 
 void
-filetovar(Symbolp s, char *fname)
+filetovar(register Symbolp s, char *fname)
 {
 	FILE *f;
 	Phrasep ph;
@@ -1327,7 +1330,7 @@ freehn(Hnodep hn)
 #ifdef OLDSTUFF
 void
 chkfreeht() {
-	Htablep ht;
+	register Htablep ht;
 	if ( Freeht == NULL || Freeht->h_next == NULL )
 		return;
 	for ( ht=Freeht->h_next; ht!=NULL; ht=ht->h_next ) {
@@ -1345,8 +1348,8 @@ chkfreeht() {
 Htablep
 newht(int size)
 {
-	Hnodepp h, pp;
-	Htablep ht;
+	register Hnodepp h, pp;
+	register Htablep ht;
 
 /* eprint("(newht(%d ",size); */
 	/* See if there's a saved table we can use */
@@ -1399,9 +1402,9 @@ newht(int size)
 void
 clearht(Htablep ht)
 {
-	Hnodep hn, nexthn;
-	Hnodepp pp;
-	int n = ht->size;
+	register Hnodep hn, nexthn;
+	register Hnodepp pp;
+	register int n = ht->size;
 	
 	pp = ht->nodetable;
 	/* as we're freeing the Hnodes pointed to by this hash table, */
@@ -1425,7 +1428,7 @@ clearht(Htablep ht)
 void
 freeht(Htablep ht)
 {
-	Htablep ht2;
+	register Htablep ht2;
 
 	clearht(ht);
 
@@ -1494,9 +1497,9 @@ uniqstr(char *s)
 	}
 
 	{
-		unsigned int t = 0;
-		int c;
-		char *p = s;
+		register unsigned int t = 0;
+		register int c;
+		register char *p = s;
 
 		/* compute hash value of string */
 		while ( (c=(*p++)) != '\0' ) {
@@ -1736,9 +1739,9 @@ static INTFUNC2P qscompare;
 
 /* Exchange the contents of two vectors.  n is the size of vectors in bytes. */
 static void
-memexch(unsigned char *s1,unsigned char *s2,int n)
+memexch(register unsigned char *s1,register unsigned char *s2,register int n)
 {
-	unsigned char c;
+	register unsigned char c;
 	while (n--) {
 		c = *s1;
 		*s1++ = *s2;
@@ -1749,8 +1752,8 @@ memexch(unsigned char *s1,unsigned char *s2,int n)
 static void
 mysort(unsigned char *vec,int nel)
 {
-	short i, j;
-	unsigned char *iptr, *jptr, *kptr;
+	register short i, j;
+	register unsigned char *iptr, *jptr, *kptr;
 
 begin:
 	if (nel == 2) {	/* If 2 items, check them by hand. */
@@ -1811,10 +1814,10 @@ pqsort(unsigned char *vec,int nel,int esize,INTFUNC2P compptr)
 Datum *
 arrlist(Htablep arr,int *asize,int sortit)
 {
-	Hnodepp pp;
-	Hnodep h;
-	Datum *lp;
-	int hsize;
+	register Hnodepp pp;
+	register Hnodep h;
+	register Datum *lp;
+	register int hsize;
 	Datum *list;
 
 	pp = arr->nodetable;
@@ -1839,9 +1842,9 @@ arrlist(Htablep arr,int *asize,int sortit)
 void
 hashvisit(Htablep arr,HNODEFUNC f)
 {
-	Hnodepp pp;
-	Hnodep h;
-	int hsize;
+	register Hnodepp pp;
+	register Hnodep h;
+	register int hsize;
 
 	pp = arr->nodetable;
 	hsize = arr->size;

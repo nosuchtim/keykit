@@ -3,11 +3,86 @@
  */
 
 #include "key.h"
+#include "gram.h"
+
+#ifdef FFF
+FILE *FF = NULL;
+#endif
+
+#ifndef lint
+char *Copyright = "KeyKit 8.0 - Copyright 1996 AT&T Corp.  All rights reserved.";
+#endif
+
+// int errno;
+
+char *Yytext;
+char *Yytextend;
+char *Buffer;
+unsigned int Buffsize;
+long Msg1size = 0;
+long Msg2size = 0;
+long Msg3size = 0;
+long Wmsgsize = 0;
+long Msgtsize = 0;
+char *Msg1;
+char *Msg2;
+char *Msg3;
+char *Wmsg;
+char *Msgt;
+char *Pyytext;
+char *Ungot;
+long Ungotsize = 0;
+int Usestdio = 0;
+int ReadytoEval = 0;
+
+FILE *Fin = NULL;		/* current input */
+FILE *Fout = NULL;		/* current output */
+int Keycnt = 0;
+int Errors = 0;
+int Doconsole = 0;
+int Gotanint = 0;
+int Errfileit = 0;
+int Dbg = 0;
+
+char Tty[] = "tty";
+char *Infile = Tty;		/* current input file name */
+char Autopop = 0;
+
+static FILE *Fstack[FSTACKSIZE];	/* Nested FILEs being read */
+static char *Fnstack[FSTACKSIZE];	/* The names of those files */
+static int Lnstack[FSTACKSIZE];		/* Current line # in those files */
+static int Popstack[FSTACKSIZE];	/* Whether to auto-pop on EOF */
+static FILE **Fstackp = Fstack;
+static char **Fnstackp = Fnstack;
+static int *Lnstackp = Lnstack;
+static int *Popstackp = Popstack;
+static long Ungoti;
+static int Maxpathleng = 0;
+static Htablep Keylibtable = NULL;
+
+char *Progname = "key";
+int Macrosused = 0;
+int Lineno = 1;
+
+Instnodep Loopstack[FSTACKSIZE];
+int Loopnum = -1;
+
+Codep Fkeyfunc[NFKEYS];
+
+char *stdinonly[] = { "-" };
+
+#define DONTFLAGERROR 0
+#define FLAGERROR 1
+
+int Argc;
+char **Argv;
+
+void keyerrfile(char *fmt,...);
 
 void
 keystart(void)
 {
-	char *p;
+	register char *p;
 
 	/* these are dynamically allocated to avoid using global static */
 	/* memory, which some compilers limit to 64 K */
@@ -368,7 +443,7 @@ int Inerror = 0;
 void
 keyerrfile(char *fmt,...)
 {
-	va_list args = (va_list)0;
+	va_list args;
 	static FILE *f = NULL;
 
 	if ( f == NULL )
@@ -390,7 +465,7 @@ keyerrfile(char *fmt,...)
 void
 execerror(char *fmt,...)
 {
-	va_list args = (va_list)0;
+	va_list args;
 
 	Inerror++;
 	if ( Inerror > 1 ) {
@@ -490,7 +565,7 @@ void
 warning(char *fmt,...)
 {
 	long needed;
-	va_list args = (va_list)0;
+	va_list args;
 
 	if ( fmt == NULL )
 		return;
@@ -523,7 +598,7 @@ void
 popupwarning(char *fmt,...)
 {
 	long needed;
-	va_list args = (va_list)0;
+	va_list args;
 
 	if ( fmt == NULL )
 		return;
@@ -596,7 +671,7 @@ tsync(void)
 void
 tprint(char *fmt,...)
 {
-	va_list args = (va_list)0;
+	va_list args;
 
 	va_start(args,fmt);
 	kdoprnt(0,stdout,fmt,args);
@@ -606,7 +681,7 @@ tprint(char *fmt,...)
 void
 eprint(char *fmt,...)
 {
-	va_list args = (va_list)0;
+	va_list args;
 
 	va_start(args,fmt);
 	kdoprnt(1,stderr,fmt,args);
@@ -691,9 +766,9 @@ stuffch(int ch)
 }
 
 void
-stuffword(char *q)
+stuffword(register char *q)
 {
-	char *t = strend(q) - 1;
+	register char *t = strend(q) - 1;
 
 	while ( t>=q )
 		stuffch(*t--);
@@ -702,7 +777,7 @@ stuffword(char *q)
 int
 yyinput(void)
 {
-	int ch;
+	register int ch;
 
 restart:
 	if ( (ch=yyrawin()) == EOF ) {
@@ -711,7 +786,7 @@ restart:
 
 	/* a backslash followed by \r or \n is ignored */
 	if ( ch == '\\' ) {
-		int nextc = yyrawin();
+		register int nextc = yyrawin();
 		if ( nextc == '\r' || nextc == '\n' )
 			goto restart;
 		yyunget(nextc);
@@ -834,7 +909,7 @@ flushfin(void)
 int
 yyrawin(void)
 {
-	int ch;
+	register int ch;
 
 restart:
 	/* If we have input stashed away, use it */
@@ -941,7 +1016,7 @@ checkfunckey(int c)
 int
 follow(int expect,int ifyes,int ifno)
 {
-	int ch = yyinput();
+	register int ch = yyinput();
 
 	if ( ch == expect)
 		return ifyes;
@@ -952,7 +1027,7 @@ follow(int expect,int ifyes,int ifno)
 int
 follo2(int expect1,int ifyes1,int expect2,int ifyes2,int ifno)
 {
-	int ch = yyinput();
+	register int ch = yyinput();
 
 	if ( ch == expect1)
 		return ifyes1;
@@ -965,7 +1040,7 @@ follo2(int expect1,int ifyes1,int expect2,int ifyes2,int ifno)
 int
 follo3(int expect1,int ifyes1,int expect2,int expect3,int ifyes2,int ifyes3,int ifno)
 {
-	int ch = yyinput();
+	register int ch = yyinput();
 
 	if ( ch == expect1)
 		return ifyes1;
@@ -1114,6 +1189,16 @@ pinclude(char *s)
 	}
 }
 
+#define skipspace(s) while(isspace(*s))s++
+
+typedef struct Macro {
+	char *name;
+	char **params;
+	int nparams;
+	char *value;
+	struct Macro *next;
+} Macro;
+
 static Macro *Topmac = NULL;
 
 /* Scan the macro definition in s, creating a new Macro structure. */
@@ -1197,7 +1282,7 @@ macrodefine(char *s,int checkkeyword)
 int
 scanparam(char **ap)
 {
-	char *p = *ap;
+	register char *p = *ap;
 	int echar;
 
 	while ( isnamechar(*p) )
@@ -1304,8 +1389,8 @@ macroeval(char *name)
 char *
 scantill(char *lookfor,char *buff,char *pend)
 {
-	char *p = buff;
-	int ch;
+	register char *p = buff;
+	register int ch;
 
 	while ( (ch=yyinput()) != EOF ) {
 
@@ -1562,10 +1647,8 @@ makeparts(Symstr path)
 }
 
 int
-keymain(int argc,char **argv)
+MAIN(int argc,char **argv)
 {
-	initExterns();
-
 	int nerrs = 0;
 	int go_interactive = 1;
 	int do_rc = 1;

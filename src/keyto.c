@@ -6,7 +6,27 @@
  * Convert a keykit phrase to Standard MIDI File.
  */
 
+#define OVERLAY2
+
+#include <stdio.h>
+#include <errno.h>
 #include "key.h"
+#include "keymidi.h"
+
+#define MYMETATEMPO	-1
+#define MYMETATIMESIG	-2
+#define MYMETAKEYSIG	-3
+#define MYMETASEQNUM	-4
+#define MYMETASMPTE	-5
+#define MYCHANPREFIX	-6
+
+static Noteptr Pend = NULL;		/* list of pending note-offs */
+static FILE *Trktmp;
+static char Tmpfname[16];	/* enough space for "#xxxxx.tmp" */
+static long Trksize;
+static FILE *Outf;
+static double Clickfactor = 1.0;
+static int Laststat = 0;	/* NOTEON, NOTEOFF, PRESSURE, etc. */
 
 static void
 trackbyte(int c)	/* must be used by everything that writes track data */
@@ -17,7 +37,7 @@ trackbyte(int c)	/* must be used by everything that writes track data */
 }
 
 static void
-writevarinum (long value)
+writevarinum (register long value)
 {
 	unsigned char buffer[8];
 	int bi = 0;
@@ -120,9 +140,10 @@ metatype(char *s)
 	return 0;
 }
 
-/* contents here ends with 0xf7, NOT 0x00 */
 static void
-putmetatext(int type,char *contents)  /* generate a standard midifile meta text message */
+putmetatext(type,contents)  /* generate a standard midifile meta text message */
+int type;
+char *contents;	/* ends with 0xf7, NOT 0x00 */
 {
 	char *q;
 	int lng;
@@ -450,7 +471,7 @@ maketemp()	/* find a temporary file name (inefficient but portable) */
 static void
 rmtemp(void)
 {
-	(void) _unlink(Tmpfname);
+	(void) unlink(Tmpfname);
 }
 
 static void

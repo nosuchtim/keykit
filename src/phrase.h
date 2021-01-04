@@ -137,7 +137,7 @@ typedef struct Phrase {
 } Phrase;
 
 extern Phrasep Topph, Freeph;
-// extern FILE *Fgetc;
+extern FILE *Fgetc;
 extern int Defvol, Defoct, Defchan, Defport;
 extern DURATIONTYPE Defdur;
 extern char *Defatt;

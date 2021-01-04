@@ -8,7 +8,25 @@
 
 #include <ctype.h>
 #include "key.h"
+#include "keymidi.h"
 #include "mf.h"
+
+int Mf_nomerge = 0;		/* 1 => continue'ed system exclusives are */
+				/* not collapsed. */
+long Mf_currtime = 0L;		/* current time in delta-time units */
+int Mf_skipinit = 1;		/* 1 if initial garbage should be skipped */
+
+#define finished(n) durof(n)=0
+
+static FILE *Mf;
+static long Mf_toberead = 0L;
+static int Tracknum;
+static Phrasep Noteq;
+static Phrasep Currph;
+static int Numq = 0;
+static double Clickfactor = 1.0;
+static Htablep Mfarr;
+static int Mformat;
 
 static void
 mferror(char *s)
@@ -138,9 +156,9 @@ msgenlarge(void)
 
 	/* copy old message into larger new one */
 	if ( oldmess != NULL ) {
-		Unchar *p = newmess;
-		Unchar *q = oldmess;
-		Unchar *endq = &oldmess[oldleng];
+		register Unchar *p = newmess;
+		register Unchar *q = oldmess;
+		register Unchar *endq = &oldmess[oldleng];
 
 		for ( ; q!=endq ; p++,q++ )
 			*p = *q;
@@ -635,8 +653,8 @@ k_metatext(int type,int leng,Unchar *mess)
 		METAUNRECOGNIZED	/* type=0x08-0x0f */
 	};
 	int unrecognized = (sizeof(ttype)/sizeof(char *)) - 1;
-	int n, c;
-	Unchar *p = mess;
+	register int n, c;
+	register Unchar *p = mess;
 	char *s, *es;
 
 	if ( type < 1 || type > unrecognized )
