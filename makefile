@@ -39,7 +39,7 @@ clean :
 
 clobber :
 	@echo "No default for 'make clobber'."
-	@echo "Use 'make clobber_nt' or 'make clobber_stdio'."
+	@echo "Use 'make clobber_nt' or 'make clobber_linux'."
 
 clean_linux : 
 	$(MK) -C src clean
@@ -211,7 +211,7 @@ clean_stdio :
 	cd byacc ; $(MK) -f makefile.stdio clobber
 	cd tests ; $(MK) clean_stdio
 
-clobber_stdio : clean_stdio
+clobber_linux : clean_stdio
 	rm -f */core
 	cd src ; $(MK) clobber
 	rm -f bin/lowkey bin/key
@@ -272,7 +272,8 @@ updateversion :
 
 flip_all:
 	$(RMCR) src/*.c src/*.h src/makefile
-	$(RMCR) lib/* mdep/*/*
+	$(RMCR) `echo lib/* | grep -v .ppm`
+	$(RMCR) mdep/*/*
 	$(RMCR) tests/*
 	echo 'flip done' > flip_all
 
@@ -289,7 +290,7 @@ copy_stdio : bindir
 	cp mdep/stdio/midi.c src/midi.c
 	chmod +x $(RMCR)
 	$(RMCR) src/*.c src/*.h src/makefile
-	$(RMCR) lib/*
+	$(RMCR) `echo lib/* | grep -v .ppm`
 	cp mdep/stdio/resetkeylib bin
 	$(RMCR) bin/resetkeylib
 	chmod +x bin/resetkeylib
@@ -319,7 +320,7 @@ copy_x : bindir
 	cp mdep/x/keykit.ico src/keykit.ico
 	cp mdep/x/nullmidi.c src/midi.c
 	$(RMCR) src/*.c src/*.h src/*.ico src/makefile
-	$(RMCR) lib/*
+	$(RMCR) `echo lib/* | grep -v .ppm`
 	cp mdep/stdio/resetkeylib bin
 	$(RMCR) bin/resetkeylib
 	chmod +x bin/resetkeylib
@@ -339,7 +340,8 @@ copy_linux : bindir
 	cp mdep/linux/keykit.ico src/keykit.ico
 	cp mdep/linux/midi.c src/midi.c
 	$(RMCR) src/*.c src/*.h src/*.ico src/makefile
-	$(RMCR) lib/* tests/makefile
+	$(RMCR) `echo lib/* | grep -v .ppm`
+	$(RMCR) tests/makefile
 	cp mdep/stdio/resetkeylib bin
 	$(RMCR) bin/resetkeylib
 	chmod +x bin/resetkeylib
@@ -356,7 +358,8 @@ copy_raspbian : bindir
 	cp mdep/raspbian/keykit.ico src/keykit.ico
 	cp mdep/raspbian/midi.c src/midi.c
 	$(RMCR) src/*.c src/*.h src/*.ico src/makefile
-	$(RMCR) lib/* tests/makefile
+	$(RMCR) `echo lib/* | grep -v .ppm`
+	$(RMCR) tests/makefile
 	cp mdep/stdio/resetkeylib bin
 	$(RMCR) bin/resetkeylib
 	chmod +x bin/resetkeylib
@@ -405,6 +408,7 @@ bindir :
 install_linux: bindir
 	$(MK) install_stdio
 	$(MK) copy_linux
+	cd src ; $(MK) clean
 	cd src ; $(MK) install
 
 distribution_linux :
@@ -415,7 +419,7 @@ distribution_linux :
 	mkdir dist/linux/key/lib
 	mkdir dist/linux/key/music
 	mkdir dist/linux/key/doc
-	cp bin/key bin/lowkey dist/linux/key/bin
+	cp bin/key bin/lowkey bin/resetkeylib dist/linux/key/bin
 	cp lib/* dist/linux/key/lib
 	cp music/* dist/linux/key/music
 	cp doc/*.html dist/linux/key/doc
@@ -439,5 +443,5 @@ svr4 :
 	cp mdep/svr4/keykit.ico src/keykit.ico
 	cp mdep/svr4/midi.c src/midi.c
 	$(RMCR) src/*.c src/*.h src/*.ico src/makefile
-	$(RMCR) lib/*
+	$(RMCR) `echo lib/* | grep -v .ppm`
 

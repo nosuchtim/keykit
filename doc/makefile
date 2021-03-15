@@ -5,6 +5,9 @@ default :
 
 all : maketools makelibdoc html
 
+clean :
+	@echo Nothing to clean
+
 makelibdoc :
 	cd ..
 	cd lib

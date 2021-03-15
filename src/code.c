@@ -800,7 +800,7 @@ callfuncd(Symbolp s)
 				if ( s != NULL )
 					sprintf(strend(Msg1)," named '%s'",sn);
 				if ( strcmp(sn,"keyrc") == 0 ) {
-					mdep_popup("Fatal error: couldn't find keyrc!?  You should run 'resetkeylib'");
+					mdep_popup("Fatal error: couldn't find keyrc!\nYou should cd to the bin directory,\nor add the bin directory to your PATH");
 				}
 				execerror(Msg1);
 			}

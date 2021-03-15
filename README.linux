@@ -5,16 +5,28 @@ To compile, make sure you have these packages installed:
 
 	sudo apt install libghc-alsa-core-dev
 	sudo apt install libghc-x11-dev
+	sudo apt install make
+	sudo apt install zip
 
 then:
 
 	make install_linux
 
-This will produce:
+The bin directory should then contain:
 
-	bin/key		# The GUI version of keykit
-	bin/lowkey	# The text-only version of keykit,
-			# suitable for use in CGI scripts.
+	key	# The GUI version of keykit
+	lowkey	# The text-only version of keykit,
+		# suitable for use in CGI scripts.
+
+To execute, either:
+
+	cd bin
+	./key
+
+or add the key/bin directory to your PATH and execute it from anywhere:
+
+	PATH=$PATH:`pwd`/bin
+	key
 
 KeyKit is a client of the ALSA "sequencer" (it's really a
 MIDI routing system) which allows KeyKit to have as many

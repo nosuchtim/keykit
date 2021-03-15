@@ -26,7 +26,7 @@ all : lowkey
 
 install : all
 	cp lowkey ../bin/lowkey
-	cd ../lib ; ../bin/resetkeylib
+	cd ../bin ; ./resetkeylib
 
 lowkey : protoflp $(ALLDECS) $(KEYOBJ)
 	$(CC) $(STATIC) $(CFLAGS) $(KEYOBJ) -lm -o lowkey
@@ -61,6 +61,9 @@ clobber : clean
 	rm -f yacc.c
 	rm -f yacc.h
 	rm -f y_output
+	rm -f mdep.h mdep1.c mdep2.c midi.c clock.c tmp.c
+	rm -f key
+	rm -f keykit.ico tjt.ico
 
 d_regex.h : regex.c
 	./protoflp $(PROTO) -dd_regex.h < regex.c > tmp.c

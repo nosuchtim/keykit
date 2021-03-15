@@ -1,3 +1,11 @@
-cd ..
-cd lib
-../bin/lowkey ../lib/updatelib.k -c "updatelib(1)"
+if [ "$KEYROOT" != "" ]
+then
+	cd $KEYROOT/bin
+else
+	keypath=`which key` 
+	if [ "$keypath" != "" ]
+	then
+		cd `dirname $keypath`
+	fi
+fi
+./lowkey ../lib/updatelib.k -c "updatelib(1)"

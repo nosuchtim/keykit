@@ -4,6 +4,9 @@ test_nt :
 clean_nt :
 	del *.out
 
+clean :
+	rm -f *.out
+
 test_stdio :
 	flip -u *.k *.sav *.sh
 	sh ./keytest.sh

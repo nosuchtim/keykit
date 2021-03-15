@@ -193,4 +193,5 @@ clobber: clean
 	rm -f key.dbg lowkey tjt.ico keykit.ico
 	rm -f key.dbg tmp.c
 	rm -f *.arc setjmp.h setjmp.s pc-ints.asm y_output tmp.lint
+	rm -f key
 	if [ $(BIN) != "." ] ; then cd $(BIN) ; rm -f $(EXECS) ; fi
