@@ -22,6 +22,7 @@ int Forecolor = 1;
 int Pickcolor = 2;
 int Lightcolor = 3;
 int Darkcolor = 4;
+int ButtonBGcolor = 5;
 
 Kwind *Wroot = NULL;	/* root window */
 #ifdef OLDSTUFF

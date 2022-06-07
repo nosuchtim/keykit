@@ -203,7 +203,7 @@ extern Symlongp Colornotes, Inverse, Menujump, Menuscrollwidth, Menusize;
 extern Symlongp Graphmode, Graphdriver, Menuymargin;
 extern Symlongp Textscrollsize;
 extern Symlongp Keyinverse, Cursereverse, Usewindfifos;
-extern int Backcolor, Forecolor, Pickcolor, Lightcolor, Darkcolor;
+extern int Backcolor, Forecolor, Pickcolor, Lightcolor, Darkcolor, ButtonBGcolor;
 extern Phrasepp Pickphr, Gridphr;
 extern Symstrp Fontname, Icon, Windowsys;
 extern int Rawx, Rawy;

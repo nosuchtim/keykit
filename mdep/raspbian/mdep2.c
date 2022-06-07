@@ -630,19 +630,17 @@ mdep_initcolors(void)
 		mdep_colormix(0, 0, 0, 0 );		/* black */
 		mdep_colormix(1, 255*n, 255*n, 255*n);	/* white */
 		mdep_colormix(2, 255*n, 0, 0	);	/* red, for Pickcolor */
-		mdep_colormix(3, 200*n, 200*n, 200*n);	/* light grey */
-		mdep_colormix(4, 100*n, 100*n, 100*n);	/* dark grey */
-		/* ajd: new color */
-		mdep_colormix(5, 230*n, 230*n, 230*n);	/* faint grey */
+		mdep_colormix(3, 100*n, 100*n, 100*n);	/* */
+		mdep_colormix(4, 200*n, 200*n, 200*n);	/* button pressed */
+		mdep_colormix(5, 50*n, 50*n, 50*n);	/* button background */
 	}
 	else {
 		mdep_colormix(0, 255*n, 255*n, 255*n);	/* white */
 		mdep_colormix(1, 0, 0, 0 );		/* black */
 		mdep_colormix(2, 255*n, 0, 0	);	/* red, for Pickcolor */
-		mdep_colormix(4, 200*n, 200*n, 200*n);	/* light grey */
-		mdep_colormix(3, 100*n, 100*n, 100*n);	/* dark grey */
-		/* ajd: not sure if this should be the same as above. */
-		mdep_colormix(5, 230*n, 230*n, 230*n);	/* faint grey */
+		mdep_colormix(3, 200*n, 200*n, 200*n);	/* */
+		mdep_colormix(4, 100*n, 100*n, 100*n);	/* button pressed */
+		mdep_colormix(5, 210*n, 210*n, 210*n);	/* button background */
 	}
 }
 

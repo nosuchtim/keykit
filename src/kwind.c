@@ -64,7 +64,7 @@ wshadow(Kwind *w,int menubutton,int pressed)
 {
 	mdep_color(Forecolor);
 	mdep_box(w->x0,w->y0,w->x1,w->y1);			/* outline */
-	mdep_color(pressed?Darkcolor:Lightcolor);
+	mdep_color(pressed?Darkcolor:ButtonBGcolor);
 	mdep_boxfill(w->x0+2,w->y0+2,w->x1-2,w->y1-2);	/* inner box */
 	mdep_color(pressed?Lightcolor:Darkcolor);
 	mdep_line(w->x0+1,w->y1-1,w->x1-1,w->y1-1);	/* bottom shadow */

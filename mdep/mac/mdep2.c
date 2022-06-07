@@ -159,6 +159,11 @@ mdep_initcolors(void)
 	Mcolors[4].green = 0x8ccc;
 	Mcolors[4].blue = 0x8ccc;
 	
+	Mcolors[5].red = 0xeeb8;	// button bg grey
+	Mcolors[5].green = 0xeeb8;
+	Mcolors[5].blue = 0xeeb8;
+
+	
 	c.red = c.green = c.blue = 0xFFFF;
 	RGBBackColor( &c );
 
