@@ -18,7 +18,7 @@
 #include <time.h>
 #include <io.h>
 #include <direct.h>
-#include "key.h"
+#include <key.h>
 
 #define K_JOYBUTTON 0
 #define K_JOYANALOG 1
@@ -764,10 +764,12 @@ WndProc (HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam)
 	case WM_KEY_MIDIINPUT:
 		saveevent(K_MIDI);
 		return 0;
+#if 0
 	case WM_KEY_MIDIOUTPUT:
 		/* The wParam is the port */
 		handlemidioutput( lParam, (int) wParam );
 		return 0;
+#endif
 	case WM_KEY_PORT:
 		return 0;
 	case WM_QUERYNEWPALETTE:

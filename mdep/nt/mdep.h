@@ -109,18 +109,19 @@ typedef struct callbackInstance_tag
 
 typedef CALLBACKINSTANCEDATA FAR* LPCALLBACKINSTANCEDATA;
 
-void midiInputHandler(HMIDIIN, WORD, DWORD, DWORD, DWORD);
-void midiOutputHandler(HMIDIIN, WORD, DWORD, DWORD, DWORD);
-void PutEvent(LPCIRCULARBUFFER lpBuf, LPEVENT lpEvent);
-LPCALLBACKINSTANCEDATA AllocCallbackInstanceData(void);
-void FreeCallbackInstanceData(LPCALLBACKINSTANCEDATA lpBuf);
-LPCIRCULARBUFFER AllocCircularBuffer(DWORD dwSize);
-void FreeCircularBuffer(LPCIRCULARBUFFER lpBuf);
+// void midiInputHandler(HMIDIIN, WORD, DWORD, DWORD, DWORD);
+// void midiOutputHandler(HMIDIIN, WORD, DWORD, DWORD, DWORD);
+// void PutEvent(LPCIRCULARBUFFER lpBuf, LPEVENT lpEvent);
+// LPCALLBACKINSTANCEDATA AllocCallbackInstanceData(void);
+// void FreeCallbackInstanceData(LPCALLBACKINSTANCEDATA lpBuf);
+// LPCIRCULARBUFFER AllocCircularBuffer(DWORD dwSize);
+// void FreeCircularBuffer(LPCIRCULARBUFFER lpBuf);
 WORD GetEvent(LPCIRCULARBUFFER lpBuf, LPEVENT lpEvent);
 
-extern LPCALLBACKINSTANCEDATA CallbackInputData[];
+// extern LPCALLBACKINSTANCEDATA CallbackInputData[];
 
-#define devnoOutIndex(d) (((d)==MIDI_MAPPER)?(MidimapperOutIndex):(d))
+// #define devnoOutIndex(d) (((d)==MIDI_MAPPER)?(MidimapperOutIndex):(d))
+#define devnoOutIndex(d) (d)
 
 typedef struct mymidiinbuff {
 	LPMIDIHDR midihdr;
