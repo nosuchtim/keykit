@@ -196,6 +196,7 @@ clobber_nt : clean_nt
 	rm -f src/clock.c
 	rm -f src/makefile
 	rm -f tmp.diff
+	rm -f src/key.sln
 	cd byacc && $(MK) -f makefile.$(MSTYPE) clobber
 
 # complete compile/regression test (for NT and 95)

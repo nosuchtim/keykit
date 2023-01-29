@@ -215,48 +215,11 @@ static DWORD Inputdata = 99;
 int
 openmidiin(int i)
 {
-#if 0
-	CallbackInputData[i]->hWnd = Khwnd;
-	CallbackInputData[i]->dwDevice = i;
-	CallbackInputData[i]->lpBuf = MidiInputBuffer;
-#endif
-
 	int windevno = devnoOutIndex(i);
 	int r = 0;
 
 	char *inputName = RtmidiInputNames[windevno];
 	rtmidi_open_port(rtmidiin, windevno, inputName);
-
-#if 0
-	r = midiInOpen((LPHMIDIIN)&(Kmidiin[i]),
-		i,
-		(DWORD_PTR)midiInputHandler,
-		i, // (DWORD_PTR)(CallbackInputData[i]),
-		CALLBACK_FUNCTION);
-	if (r) {
-		char msg[256];
-		/* can't open */
-		Kmidiin[i] = 0;
-		FreeCallbackInstanceData(CallbackInputData[i]);
-		sprintf(msg, "Error in midiInOpen of '%s' : ", Midiinputs[i].name);
-		midiinerror(r, msg);
-		return(r);
-	}
-#endif
-
-#if 0
-	else {
-		/* successful open, with function callbacks */
-		if (InitMidiInBuff(i)) {
-			midiInStart(Kmidiin[i]);
-		}
-		else {
-			Kmidiin[i] = 0;
-			mdep_popup("Unable to allocate Midi Buffers!?");
-			return(1);
-		}
-	}
-#endif
 	return(r);
 }
 
@@ -264,23 +227,7 @@ static int
 closemidiin(int windevno)
 {
 	rtmidi_close_port(rtmidiin);
-#if 0
-	if (CallbackInputData[windevno])
-		CallbackInputData[windevno]->hWnd = 0;	/* so callbacks don't cause messages */
-#endif
-
-#if 0
-	if (Kmidiin[windevno] != 0) {
-#define THIS_CAUSES_A_HANG_ON_SOME_SYSTEMS 1
-#ifdef THIS_CAUSES_A_HANG_ON_SOME_SYSTEMS
-		midiInReset(Kmidiin[windevno]);
-#endif
-		midiInReset(Kmidiin[windevno]);
-		midiInClose(Kmidiin[windevno]);
-		Kmidiin[windevno] = 0;
-	}
-#endif
-	return 0;
+	return (rtmidiin->ok == true) ? 0 : -1;
 }
 
 static int
@@ -1263,15 +1210,6 @@ mdep_midi(int openclose, Midiport * p)
 	return r;
 }
 
-#if 0
-#include <windows.h>
-#include <mmsystem.h>
-#include <string.h>
-#include "keydll.h"
-#include <stdio.h>
-#include <varargs.h>
-#endif
-
 int KeySetupDll(HWND hwnd) {
 
 	hwndNotify = hwnd;           // Save window handle for notification
@@ -1283,114 +1221,3 @@ KeyTimerFunc(UINT  wID, UINT  wMsg, DWORD dwUser, DWORD dw1, DWORD dw2) {
 
 	PostMessage(hwndNotify, WM_KEY_TIMEOUT, 0, timeGetTime());
 }
-
-#if 0
-/* midiInputHandler - Low-level callback function to handle MIDI input.
- *      Installed by midiInOpen().  The input handler takes incoming
- *      MIDI events and places them in the circular input buffer.  It then
- *      notifies the application by posting a WM_KEY_MIDIINPUT message.
- *
- *      This function is accessed at interrupt time, so it should be as
- *      fast and efficient as possible.  You can't make any
- *      Windows calls here, except PostMessage().  The only Multimedia
- *      Windows call you can make are timeGetSystemTime(), midiOutShortMsg().
- *
- *
- * Param:   hMidiIn - Handle for the associated input device.
- *          wMsg - One of the MIM_***** messages.
- *          dwInstance - Points to CALLBACKINSTANCEDATA structure.
- *          dwParam1 - MIDI data.
- *          dwParam2 - Timestamp (in milliseconds)
- *
- * Return:  void
- */
-void midiInputHandler(
-	HMIDIIN hMidiIn,
-	WORD wMsg,
-	DWORD dwInstance,
-	DWORD dwParam1,
-	DWORD dwParam2)
-{
-	static EVENT event;
-	HWND h;
-	LPCALLBACKINSTANCEDATA lpc;
-
-	void keyerrfile(char* fmt, ...);
-
-	switch (wMsg) {
-	case MIM_DATA:
-		/* ignore active sensing */
-		if (LOBYTE(LOWORD(dwParam1)) == (BYTE)0xfe)
-			break;
-		/* fall through */
-	case MIM_LONGDATA:
-		// lpc = (LPCALLBACKINSTANCEDATA)dwInstance;
-		lpc = CallbackInputData[dwInstance];
-		h = lpc->hWnd;
-		if (h == 0) {
-			// e.g. when we're shutting down
-			break;
-		}
-		event.dwDevice = lpc->dwDevice;
-		event.data = dwParam1;		/* real MIDI data */
-#ifdef EVENT_TIMESTAMP
-		event.timestamp = dwParam2;
-#endif
-		event.islong = (wMsg == MIM_LONGDATA);
-		PutEvent(lpc->lpBuf, (LPEVENT) & event);
-		PostMessage(h,
-			WM_KEY_MIDIINPUT,
-			lpc->dwDevice,
-			(DWORD)dwInstance);
-		break;
-	case MIM_OPEN:
-		break;
-	case MIM_CLOSE:
-		break;
-	case MIM_ERROR:
-	case MIM_LONGERROR:
-		// lpc = (LPCALLBACKINSTANCEDATA)dwInstance;
-		lpc = CallbackInputData[dwInstance];
-		PostMessage(lpc->hWnd,
-			WM_KEY_ERROR,
-			lpc->dwDevice,
-			(DWORD)dwInstance);
-		break;
-	default:
-		break;
-	}
-}
-#endif
-
-#if 0
-void PutEvent(LPCIRCULARBUFFER lpBuf, LPEVENT lpEvent)
-{
-
-/*
- * PutEvent - Puts an EVENT in a CIRCULARBUFFER.  If the buffer is full,
- *      it sets the wError element of the CIRCULARBUFFER structure
- *      to be non-zero.
- *
- * Params:  lpBuf - Points to the CIRCULARBUFFER.
- *          lpEvent - Points to the EVENT.
- *
- * Return:  void
- */
-
-	/* If the buffer is full, set an error and return. */
-	if (lpBuf->dwCount >= lpBuf->dwSize) {
-		lpBuf->wError = 1;
-		return;
-	}
-
-	/* Put the event in the buffer, bump the head pointer and byte count.*/
-	*lpBuf->lpHead = *lpEvent;
-
-	++lpBuf->lpHead;
-	++lpBuf->dwCount;
-
-	/* Wrap the head pointer, if necessary. */
-	if (lpBuf->lpHead >= lpBuf->lpEnd)
-		lpBuf->lpHead = lpBuf->lpStart;
-}
-#endif

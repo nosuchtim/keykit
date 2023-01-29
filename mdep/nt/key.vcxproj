@@ -141,7 +141,7 @@
     <ClCompile Include="menu.c" />
     <ClCompile Include="meth.c" />
     <ClCompile Include="mfin.c" />
-    <ClCompile Include="midi_rtmidi.c" />
+    <ClCompile Include="midi.c" />
     <ClCompile Include="misc.c" />
     <ClCompile Include="phrase.c" />
     <ClCompile Include="real.c" />
