@@ -16,7 +16,7 @@ RMCR = mdep/stdio/rmcr
 # WINRMCR = flip -u
 WINRMCR = dos2unix
 
-VERSION=8.0
+VERSION=8.1
 
 OTHERDIRS = 
 
@@ -267,8 +267,6 @@ updateversion :
 	sed -e "/var=.KEYKITVERSION/s/Version ..../Version $(VERSION)/" < hacking.xml > tmp.xml
 	mv tmp.xml hacking.xml
 	cd ..
-	cd mdep/winsetup
-	cd ../..
 	echo $(VERSION) > VERSION
 
 flip_all:

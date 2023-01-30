@@ -1,10 +1,3 @@
-/*
- * The define of _WIN32_WINNT here is in order to
- * cause winuser.h to include the definiton of
- * tagINPUT and other things for the SendInput function.
- */
-#define _WIN32_WINNT 0x0500
-
 #include <windows.h>
 #include <mmsystem.h>
 #include <commdlg.h>
@@ -20,185 +13,69 @@
 #include "key.h"
 #include "d_mdep2.h"
 
-#define USE_RTMIDI
-
 #define __WINDOWS_MM__
 #include "../rtmidi/cpp/rtmidi_c.h"
 
 int udp_send(PORTHANDLE mp, char* msg, int msgsize);
 
-BOOL GetButtonInput(int,int,BOOL *);
+BOOL GetButtonInput(int, int, BOOL*);
 void key_start_capture();
 void key_stop_capture();
 
-#define CIRCULAR_BUFF_SIZE 1000
-#define NUM_OF_OUT_BUFFS 8
-#define MIDI_OUT_BUFFSIZE 32
-#define NUM_OF_IN_BUFFS 6
-#define MIDI_IN_BUFFSIZE 8096
 #define EBUFFSIZE 128
 
 #define MIDI_NOSUCH_DEV -2
-
-/* extern FILE *df; */
-
-char midibuff[1024];
-
-RtMidiOutPtr rtmidiout;
-RtMidiInPtr rtmidiin;
-
-extern HWND Khwnd;
-// HMIDIIN Kmidiin[MIDI_IN_DEVICES];
-// HMIDIOUT Kmidiout[MIDI_OUT_DEVICES];
-// int MidimapperOutIndex;
-MIDIINCAPS midiInCaps[MIDI_IN_DEVICES];
-MIDIOUTCAPS midiOutCaps[MIDI_OUT_DEVICES];
-
-static MY_MIDI_BUFF *MidiInBuff = NULL;
+#define MIDIBUFF_SIZE 8096
 
 HWND     hwndNotify;
-int Nmidiin = 0;
-int Nmidiout = 0;
 
-// LPCIRCULARBUFFER MidiInputBuffer;
-// LPCALLBACKINSTANCEDATA CallbackInputData[MIDI_IN_DEVICES];
-
-static char *RtmidiInputNames[MIDI_IN_DEVICES];
-static char *RtmidiOutputNames[MIDI_OUT_DEVICES];
-
-#define MAXJOY 16 
-int joyState[MAXJOY];
-int joySize = 0;
-
-// static LPMIDIHDR newmidihdr(int);
-static int InitMidiInBuff(int);
-static void freemidihdr(LPMIDIHDR);
-static void midiouterror(int r, char *s);
-static void midiinerror(int r, char *s);
-static unsigned char *bytes = NULL;
+static RtMidiOutPtr rtmidiout;
+static RtMidiInPtr rtmidiin;
+static int Nmidiin = 0;
+static int Nmidiout = 0;
+static char* RtmidiInputNames[MIDI_IN_DEVICES];
+static char* RtmidiOutputNames[MIDI_OUT_DEVICES];
+static unsigned char* bytes = NULL;
 static int sofar;
 static int nbytes;
 
+static int midiInUserData;
+
+static char midibuff[MIDIBUFF_SIZE];
+static char* midibuff_sofar = midibuff;
+static char* midibuff_next = midibuff;
+static char* midibuff_end = midibuff + MIDIBUFF_SIZE;
+
+static void midiouterror(int r, char* s);
+static void midiinerror(int r, char* s);
+
 int
-mdep_getnmidi(char *buff,int buffsize,int *port)
+mdep_getnmidi(char* buff, int buffsize, int* port)
 {
-	static EVENT ev;
-	static unsigned char smallbuff[3];
-	static int waslong;
-	int r;
+	int gotten = 0;
 
-	if ( port )
+	if (port)
 		*port = 0;
-#if 0
-	LPMIDIHDR lpMidi;
-	if ( bytes == NULL ) {
-		if ( GetEvent(MidiInputBuffer,&ev) == 0 )
-			return 0;
-		if ( port ) {
-			*port = ev.dwDevice;
+
+	for ( int i=0; i<buffsize; i++ ) {
+		if (midibuff_sofar >= midibuff_next) {
+			// we've reached the end of the input buffer, so reset things
+			midibuff_sofar = midibuff;
+			midibuff_next = midibuff;
+			return gotten;
 		}
-		if ( ev.islong ) {
-			lpMidi = (LPMIDIHDR)ev.data;
-			if ( ((lpMidi->dwFlags) & MHDR_DONE) == 0 )
-				mdep_popup("Hey, MHDR_DONE not set in dwFlags!?");
-			bytes = lpMidi->lpData;
-			nbytes = (int)(lpMidi->dwBytesRecorded);
-			sofar = 0;
-		}
-		else {
-			BYTE statusbyte;
-			smallbuff[0] = LOBYTE(LOWORD(ev.data));
-			statusbyte = smallbuff[0] & (BYTE)0xf0;
-
-			switch ( statusbyte ) {
-
-			/* Three byte events */
-			case NOTEOFF:
-			case NOTEON:
-			case PRESSURE:
-			case CONTROLLER:
-			case PITCHBEND:
-				nbytes = 3;
-				break;
-
-			/* Two byte events */
-			case PROGRAM:
-			case CHANPRESSURE:
-				nbytes = 2;
-				break;
-
-			/* MIDI system events (0xf0 - 0xff) */
-			case SYSTEMMESSAGE:
-			    switch(statusbyte) {
-				/* Two byte system events */
-				case MTCQUARTERFRAME:
-				case SONGSELECT:
-					nbytes = 2;
-					break;
-				/* Three byte system events */
-				case SONGPOSPTR:
-					nbytes = 3;
-					break;
-				/* One byte system events */
-				default:
-					nbytes = 1;
-					break;
-			    }
-			    break;
-            
-			default:
-				/* unknown event !? */
-				nbytes = 0;
-				break;
-			}
-			if ( nbytes > 1 ) {
-				smallbuff[1] = HIBYTE(LOWORD(ev.data));
-				if ( nbytes > 2 )
-					smallbuff[2] = LOBYTE(HIWORD(ev.data));
-			}
-			bytes = smallbuff;
-			sofar = 0;
-		}
+		buff[gotten] = *midibuff_sofar++;
+		gotten++;
 	}
-#endif
-	r = 0;
-#if 0
-	if ( bytes != NULL ) {
-		char *bp = buff;
-		while ( r < buffsize && sofar < nbytes ) {
-			*bp++ = bytes[sofar++];
-			r++;
-		}
-		if ( sofar >= nbytes ) {
-			/* We've used up all the bytes */
-			bytes = NULL;
-			if ( ev.islong ) {
-				/* give buffer back to the MIDI input device */
-				int i = (int)(ev.dwDevice);
-				if ( i < 0 || i >= Nmidiin ) {
-					mdep_popup("Hey, bad ev.dwDevice!?");
-				}
-				else {
-					midiInPrepareHeader(Kmidiin[i],
-						(LPMIDIHDR)(ev.data), sizeof(MIDIHDR));
-					midiInAddBuffer(Kmidiin[i],
-						(LPMIDIHDR)(ev.data), sizeof(MIDIHDR));
-				}
-			}
-		}
-	}
-#endif
-	return r;
+	return gotten;
 }
 
 void
 mdep_putnmidi(int n, char *cp, Midiport * pport)
 {
 	int windevno;
-	int mydevno;
 
 	windevno = pport->private1;
-	mydevno = devnoOutIndex(windevno);
 	if (windevno == MIDI_NOSUCH_DEV)
 		return;
 
@@ -210,17 +87,11 @@ mdep_putnmidi(int n, char *cp, Midiport * pport)
 	}
 }
 
-static DWORD Inputdata = 99;
-
 int
-openmidiin(int i)
+openmidiin(int windevno)
 {
-	int windevno = devnoOutIndex(i);
-	int r = 0;
-
-	char *inputName = RtmidiInputNames[windevno];
-	rtmidi_open_port(rtmidiin, windevno, inputName);
-	return(r);
+	rtmidi_open_port(rtmidiin, windevno, RtmidiInputNames[windevno]);
+	return (rtmidiin->ok == true) ? 0 : -1;
 }
 
 static int
@@ -233,9 +104,6 @@ closemidiin(int windevno)
 static int
 closemidiout(int windevno)
 {
-	int mydevno;
-
-	mydevno = devnoOutIndex(windevno);
 	if (windevno == MIDI_NOSUCH_DEV)
 		return -1;
 
@@ -254,15 +122,28 @@ mdep_endmidi(void)
 		closemidiin(devno);
 }
 
-int midiInUserData;
+void
+mdep_rtmidi_callback(double timeStamp, const unsigned char* message, size_t messageSize, void *userData) {
+
+	// char buff[1000];
+	// int* up = (int*)(userData);
+	// int ud = *up;
+	// sprintf(buff, "timestamp=%f messageSize=%ld userData=%d\n", timeStamp, (long)messageSize, ud);
+	// tprint(buff);
+
+	// Append to midibuff
+	for (int i = 0; i < messageSize; i++) {
+		if ( midibuff_next >= midibuff_end ) {
+			midiinerror(0,"midi input buffer overflow");
+			break;
+		}
+		*midibuff_next++ = message[i];
+	}
+}
 
 void
-mycallback(double timeStamp, const unsigned char* message, size_t messageSize, void *userData) {
-	char buff[1000];
-	int* up = (int*)(userData);
-	int ud = *up;
-	sprintf(buff, "timestamp=%f messageSize=%ld userData=%d\n", timeStamp, (long)messageSize, ud);
-	tprint(buff);
+mdep_push_midi_byte(unsigned char byte) {
+
 }
 
 int
@@ -277,19 +158,7 @@ mdep_initmidi(Midiport *inputs, Midiport *outputs)
 
 	*Devmidi = uniqstr("winmm");
 
-	rtmidi_in_set_callback(rtmidiin, mycallback, &midiInUserData);
-
-#if 0
-	/* Allocate a circular buffer for low-level MIDI input.  This buffer
-	 * is filled by the low-level callback function and emptied by the
-	 * application when it receives MM_MIDIINPUT messages.
-	 */
-	MidiInputBuffer = AllocCircularBuffer((DWORD)(CIRCULAR_BUFF_SIZE));	// DWORD here is okay, I think
-	if (MidiInputBuffer == NULL) {
-		mdep_popup("Not enough memory available for input buffer.");
-		return 1;
-	}
-#endif
+	rtmidi_in_set_callback(rtmidiin, mdep_rtmidi_callback, &midiInUserData);
 
 	char bufOut[1024];
 	int bufLen = sizeof(bufOut);
@@ -316,221 +185,19 @@ mdep_initmidi(Midiport *inputs, Midiport *outputs)
 	 * each device.
 	 */
 	for (i=0; (i<Nmidiin) && (i<MIDI_IN_DEVICES); i++) {
-		r = midiInGetDevCaps(i, (LPMIDIINCAPS) &midiInCaps[i],
+		MIDIINCAPS midiInCaps;
+		r = midiInGetDevCaps(i, (LPMIDIINCAPS) &midiInCaps,
                                 sizeof(MIDIINCAPS));
 		if(r) {
 			midiinerror(r,"Error in midiInGetDevCaps: ");
 			Nmidiin = i;		/* and admit no more devices */
 			break;
 		}
-		inputs[i].name = uniqstr(midiInCaps[i].szPname);
+		inputs[i].name = uniqstr(midiInCaps.szPname);
 		inputs[i].private1 = i;
 		RtmidiInputNames[i] = inputs[i].name;
 	}
-#if 0
-	for ( i=0; i<Nmidiin; i++ ) {
-		if ((CallbackInputData[i] = AllocCallbackInstanceData())==NULL){
-			mdep_popup("Not enough memory available.");
-			return 1;
-		}
-	}
-	for ( ; i<MIDI_IN_DEVICES; i++ ) {
-		CallbackInputData[i] = NULL;
-	}
-#endif
-
 	return 0;
-}
-
-#if 0
-static LPMIDIHDR
-newmidihdr(int sz)
-{
-	LPMIDIHDR lpMidi;
-	HPSTR lpData;
-
-	lpData = (HPSTR) GlobalAlloc(0, (DWORD)sz);	// DWORD is okay here, I think
-	if(lpData == NULL)
-		return 0;
-	    
-	lpMidi = (LPMIDIHDR) GlobalAlloc(0, (DWORD)sizeof(MIDIHDR));	// DWORD is okay here, I think
-	if(lpMidi == NULL)
-		return 0;
-	    
-	lpMidi->lpData = lpData;
-	lpMidi->dwBufferLength = sz;
-	lpMidi->dwBytesRecorded = 0;
-	lpMidi->dwUser = 0;
-	lpMidi->dwFlags = 0;
-	return lpMidi;
-}
-#endif
-
-static void
-freemidihdr(LPMIDIHDR midihdr)
-{
-	GlobalFree(midihdr->lpData);
-	GlobalFree(midihdr);
-}
-
-#if 0
-static int
-InitMidiInBuff(int i)
-{
-	int n;
-
-	if ( MidiInBuff ) {
-		for ( n=0; n<NUM_OF_IN_BUFFS; n++ ) {
-			midiInUnprepareHeader(Kmidiin[i],
-				MidiInBuff[n].midihdr,sizeof(MIDIHDR));
-			freemidihdr(MidiInBuff[n].midihdr);
-		}
-		free(MidiInBuff);
-	}
-
-	MidiInBuff = malloc( NUM_OF_IN_BUFFS * sizeof (MY_MIDI_BUFF) );
-	if ( MidiInBuff == NULL )
-		return 0;
-
-	for ( n=0; n<NUM_OF_IN_BUFFS; n++ ) {
-	
-		MidiInBuff[n].midihdr = newmidihdr(MIDI_IN_BUFFSIZE);
-
-		midiInPrepareHeader(Kmidiin[i],
-			MidiInBuff[n].midihdr,sizeof(MIDIHDR));
-		midiInAddBuffer(Kmidiin[i],
-			MidiInBuff[n].midihdr,sizeof(MIDIHDR));
-	}
-	return 1;
-}
-#endif
-
-/*
- * circbuf.c - Routines to manage the circular MIDI input buffer.
- *      This buffer is filled by the low-level callback function and
- *      emptied by the application.  Since this buffer is accessed
- *      by a low-level callback, memory for it must be allocated
- *      exactly as shown in AllocCircularBuffer().
- */
-
-/*
- * AllocCircularBuffer -    Allocates memory for a CIRCULARBUFFER structure 
- * and a buffer of the specified size.
- *
- * Params:  dwSize - The size of the buffer, in events.
- *
- * Return:  A pointer to a CIRCULARBUFFER structure identifying the 
- *      allocated display buffer.  NULL if the buffer could not be allocated.
- */
-
-static LPCIRCULARBUFFER
-AllocCircularBuffer(DWORD dwSize)
-{
-    LPCIRCULARBUFFER lpBuf;
-    LPEVENT lpMem;
-    
-    lpBuf = (LPCIRCULARBUFFER) GlobalAlloc(0,(DWORD)sizeof(CIRCULARBUFFER));
-    if ( lpBuf == NULL )
-        return NULL;
-    
-    lpMem = (LPEVENT) GlobalAlloc(0, dwSize * sizeof(EVENT));
-    if ( lpMem == NULL )
-        return NULL;
-    
-    lpBuf->hBuffer = lpMem;
-    lpBuf->wError = 0;
-    lpBuf->dwSize = dwSize;
-    lpBuf->dwCount = 0L;
-    lpBuf->lpStart = lpMem;
-    lpBuf->lpEnd = lpMem + dwSize;
-    lpBuf->lpTail = lpMem;
-    lpBuf->lpHead = lpMem;
-        
-    return lpBuf;
-}
-
-/* FreeCircularBuffer - Frees the memory for the given CIRCULARBUFFER 
- * structure and the memory for the buffer it references.
- *
- * Params:  lpBuf - Points to the CIRCULARBUFFER to be freed.
- *
- * Return:  void
- */
-
-static void
-FreeCircularBuffer(LPCIRCULARBUFFER lpBuf)
-{
-    GlobalFree(lpBuf->hBuffer);
-    GlobalFree(lpBuf);
-}
-
-/* GetEvent - Gets a MIDI event from the circular input buffer.  Events
- *  are removed from the buffer.  The corresponding PutEvent() function
- *  is called by the low-level callback function, so it must reside in
- *  the callback DLL.
- *
- * Params:  lpBuf - Points to the circular buffer.
- *          lpEvent - Points to an EVENT structure that is filled with the
- *              retrieved event.
- *
- * Return:  Returns non-zero if successful, zero if there are no 
- *   events to get.
- */
-
-static WORD
-GetEvent(LPCIRCULARBUFFER lpBuf, LPEVENT lpEvent)
-{
-    /* If no event available, return.
-     */
-    if(lpBuf->dwCount <= 0)
-        return 0;
-    
-    /* Get the event.
-     */
-    *lpEvent = *lpBuf->lpTail;
-    
-    /* Decrement the byte count, bump the tail pointer.
-     */
-    --lpBuf->dwCount;
-    ++lpBuf->lpTail;
-    
-    /* Wrap the tail pointer, if necessary.
-     */
-    if(lpBuf->lpTail >= lpBuf->lpEnd)
-        lpBuf->lpTail = lpBuf->lpStart;
-
-    return 1;
-}
-
-/* AllocCallbackInstanceData - Allocates a CALLBACKINSTANCEDATA
- *      structure.  This structure is used to pass information to the
- *      low-level callback function, each time it receives a message.
- *
- * Params:  void
- *
- * Return:  A pointer to the allocated CALLBACKINSTANCE data structure.
- */
-
-static LPCALLBACKINSTANCEDATA
-AllocCallbackInstanceData(void)
-{
-    LPCALLBACKINSTANCEDATA lpBuf;
-    
-    lpBuf = (LPCALLBACKINSTANCEDATA) GlobalAlloc(0, (DWORD)sizeof(CALLBACKINSTANCEDATA));
-    return lpBuf;
-}
-
-/* FreeCallbackInstanceData - Frees the given CALLBACKINSTANCEDATA structure.
- *
- * Params:  lpBuf - Points to the CALLBACKINSTANCEDATA structure to be freed.
- *
- * Return:  void
- */
-
-static void
-FreeCallbackInstanceData(LPCALLBACKINSTANCEDATA lpBuf)
-{
-    GlobalFree(lpBuf);
 }
 
 static void
@@ -1019,11 +686,6 @@ mdep_mdep(int argc)
 				}
 			}
 		}
-#if 0
-		for(n=0;n<sofar;n++){
-			tprint("[%d]",buff[n]);
-		}
-#endif
 		
 		udp_send(fptr->port,buff,sofar);
 		d = numdatum(0);
@@ -1167,7 +829,6 @@ mdep_mdep(int argc)
 int
 openmidiout(int windevno)
 {
-	int mydevno = devnoOutIndex(windevno);
 	int r = 0;
 
 	char *outputName = RtmidiOutputNames[windevno];

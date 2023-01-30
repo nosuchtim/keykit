@@ -2,7 +2,8 @@
 Compiling and Running KeyKit on Windows
 
 --------------------------------
-To compile the windows version, you'll need:
+
+To compile the windows version, you'll need these prerequisites:
 
     0) Windows 10
     1) Microsoft Visual Studio 2019 (the most recent version that put things
@@ -11,15 +12,28 @@ To compile the windows version, you'll need:
        and also add the C++/CLI support for v142 tools (14.25)
     2) Git (in c:\program files\Git, for a few unix utilities)
 
-    Once you have these, execute this command in a DOS window:
+--------------------------------
 
-        makewindows.bat
+To compile the executables from the command-line, execute:
 
-    This will compile and put binaries in the bin directory.
+	makewindows.bat
 
-If you want to compile and debug with Visual Studio AFTER you successfully
-use makewindows.bat, you should use src/key.sln (NOT mdep/nt/key.sln)
+This will compile and put binaries in the bin directory.
 
+--------------------------------
+
+If you want to debug with Visual Studio after using makewindows.bat,
+invoke Visual Studio on src/key.sln .  If you make changes to some of the
+files in src (for Windows-specific things) like makefile or key.sln,
+execute "nmake mdepback" to copy those changes back to ../mdep/nt
+
+--------------------------------
+
+To compile a distribution and clean up afterward:
+
+	nmake distribution_nt
+
+--------------------------------
 See the doc directory for:
 
        *.html - nicely formatted docs
