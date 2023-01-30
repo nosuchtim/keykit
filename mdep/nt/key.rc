@@ -15,7 +15,7 @@ AboutBox	DIALOG 20, 20, 160, 90
 	CAPTION "About KeyKit..."
 	{
 	ICON "keykit"		-1,	8, 8, 0, 0
-	CTEXT "KeyKit (8.0)"		-1,	40, 12, 80, 8	/* VERSION */
+	CTEXT "KeyKit (8.1)"		-1,	40, 12, 80, 8	/* VERSION */
 	CTEXT "Musical Fun with Windows, Tasks, and Objects" -1, 0, 32, 160, 8
 	CTEXT "by Tim Thompson - me@timthompson.com"	-1,	0, 42, 160, 8
 	CTEXT "Copyright 1996 AT&T Corp.  All rights reserved."	-1,	0, 52, 160, 8, SS_CENTER|SS_NOPREFIX

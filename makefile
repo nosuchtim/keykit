@@ -16,7 +16,7 @@ RMCR = mdep/stdio/rmcr
 # WINRMCR = flip -u
 WINRMCR = dos2unix
 
-VERSION=8.0
+VERSION=8.1
 
 OTHERDIRS = 
 
@@ -196,6 +196,7 @@ clobber_nt : clean_nt
 	rm -f src/clock.c
 	rm -f src/makefile
 	rm -f tmp.diff
+	rm -f src/key.sln
 	cd byacc && $(MK) -f makefile.$(MSTYPE) clobber
 
 # complete compile/regression test (for NT and 95)
@@ -266,8 +267,6 @@ updateversion :
 	sed -e "/var=.KEYKITVERSION/s/Version ..../Version $(VERSION)/" < hacking.xml > tmp.xml
 	mv tmp.xml hacking.xml
 	cd ..
-	cd mdep/winsetup
-	cd ../..
 	echo $(VERSION) > VERSION
 
 flip_all:

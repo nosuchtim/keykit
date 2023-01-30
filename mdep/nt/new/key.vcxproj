@@ -22,7 +22,7 @@
     <VCProjectVersion>15.0</VCProjectVersion>
     <ProjectGuid>{B7E485A7-56E5-4851-9E0F-738CC2335268}</ProjectGuid>
     <RootNamespace>key</RootNamespace>
-    <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformVersion>10.0.17763.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -41,7 +41,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v142</PlatformToolset>
+    <PlatformToolset>v141</PlatformToolset>
     <CharacterSet>MultiByte</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
@@ -86,7 +86,7 @@
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
       <PreprocessorDefinitions>_MBCS;%(PreprocessorDefinitions);_CRT_SECURE_NO_WARNINGS;_DEBUG</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>.</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>../../src</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -124,42 +124,38 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="..\rtmidi\cpp\RtMidi.cpp" />
-    <ClCompile Include="..\rtmidi\cpp\rtmidi_c.cpp" />
-    <ClCompile Include="bltin.c" />
+    <ClCompile Include="..\..\src\bltin.c" />
+    <ClCompile Include="..\..\src\code.c" />
+    <ClCompile Include="..\..\src\code2.c" />
+    <ClCompile Include="..\..\src\fifo.c" />
+    <ClCompile Include="..\..\src\fsm.c" />
+    <ClCompile Include="..\..\src\grid.c" />
+    <ClCompile Include="..\..\src\keyto.c" />
+    <ClCompile Include="..\..\src\kwind.c" />
+    <ClCompile Include="..\..\src\main.c" />
+    <ClCompile Include="..\..\src\mdep2.c" />
+    <ClCompile Include="..\..\src\menu.c" />
+    <ClCompile Include="..\..\src\meth.c" />
+    <ClCompile Include="..\..\src\mfin.c" />
+    <ClCompile Include="..\..\src\misc.c" />
+    <ClCompile Include="..\..\src\phrase.c" />
+    <ClCompile Include="..\..\src\real.c" />
+    <ClCompile Include="..\..\src\regex.c" />
+    <ClCompile Include="..\..\src\sym.c" />
+    <ClCompile Include="..\..\src\task.c" />
+    <ClCompile Include="..\..\src\util.c" />
+    <ClCompile Include="..\..\src\view.c" />
+    <ClCompile Include="..\..\src\yacc.c" />
     <ClCompile Include="clock.c" />
-    <ClCompile Include="code.c" />
-    <ClCompile Include="code2.c" />
-    <ClCompile Include="fifo.c" />
-    <ClCompile Include="fsm.c" />
-    <ClCompile Include="grid.c" />
-    <ClCompile Include="keyto.c" />
-    <ClCompile Include="kwind.c" />
-    <ClCompile Include="main.c" />
     <ClCompile Include="mdep1.c" />
-    <ClCompile Include="mdep2.c" />
-    <ClCompile Include="menu.c" />
-    <ClCompile Include="meth.c" />
-    <ClCompile Include="mfin.c" />
     <ClCompile Include="midi.c" />
-    <ClCompile Include="misc.c" />
-    <ClCompile Include="phrase.c" />
-    <ClCompile Include="real.c" />
-    <ClCompile Include="regex.c" />
-    <ClCompile Include="sym.c" />
-    <ClCompile Include="task.c" />
-    <ClCompile Include="util.c" />
-    <ClCompile Include="view.c" />
-    <ClCompile Include="yacc.c" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\rtmidi\cpp\RtMidi.h" />
-    <ClInclude Include="..\rtmidi\cpp\rtmidi_c.h" />
     <ClInclude Include="key.h" />
     <ClInclude Include="mdep.h" />
   </ItemGroup>
   <ItemGroup>
-    <ResourceCompile Include="key.rc" />
+    <ResourceCompile Include="..\..\src\key.rc" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

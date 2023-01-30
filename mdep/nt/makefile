@@ -36,7 +36,7 @@ WINSOCK = wsock32.lib
 KEYOBJ = yacc.obj main.obj util.obj misc.obj phrase.obj sym.obj keyto.obj \
 	code.obj code2.obj grid.obj view.obj menu.obj task.obj fifo.obj \
 	mfin.obj real.obj mdep1.obj mdep2.obj kwind.obj fsm.obj bltin.obj \
-	meth.obj regex.obj midi.obj clock.obj
+	meth.obj regex.obj midi.obj clock.obj rtmidi.obj rtmidi_c.obj
 
 KEYFILES = main util misc phrase sym keyto yacc \
 	code code2 grid view menu task fifo \
@@ -87,6 +87,12 @@ keylib.exe : keylib.obj mdep1.obj misc.obj
 
 tjt.exe : tjt.obj 
 	$(LINK) $(conflags) $(VCPATHS) -out:tjt.exe tjt.obj $(conlibs)
+
+rtmidi.obj: ../rtmidi/cpp/rtmidi.cpp
+	$(CC) -c $(DEBUGCC) $(cflags) -I. $(cvars) ../rtmidi/cpp/rtmidi.cpp
+
+rtmidi_c.obj: ../rtmidi/cpp/rtmidi_c.cpp
+	$(CC) -c $(DEBUGCC) $(cflags) -I. $(cvars) ../rtmidi/cpp/rtmidi_c.cpp
 
 .c.obj:
 	$(CC) -c $(DEBUGCC) $(cflags) -I. $(cvars) $*.c
