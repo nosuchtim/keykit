@@ -5,6 +5,8 @@ VisualStudioVersion = 16.0.29911.84
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "key", "key.vcxproj", "{B7E485A7-56E5-4851-9E0F-738CC2335268}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "keygo", "keygo\keygo.vcxproj", "{DD99CC7B-20E3-451C-A8EF-BF9E21D80AAC}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -21,6 +23,14 @@ Global
 		{B7E485A7-56E5-4851-9E0F-738CC2335268}.Release|x64.Build.0 = Release|x64
 		{B7E485A7-56E5-4851-9E0F-738CC2335268}.Release|x86.ActiveCfg = Release|Win32
 		{B7E485A7-56E5-4851-9E0F-738CC2335268}.Release|x86.Build.0 = Release|Win32
+		{DD99CC7B-20E3-451C-A8EF-BF9E21D80AAC}.Debug|x64.ActiveCfg = Debug|x64
+		{DD99CC7B-20E3-451C-A8EF-BF9E21D80AAC}.Debug|x64.Build.0 = Debug|x64
+		{DD99CC7B-20E3-451C-A8EF-BF9E21D80AAC}.Debug|x86.ActiveCfg = Debug|Win32
+		{DD99CC7B-20E3-451C-A8EF-BF9E21D80AAC}.Debug|x86.Build.0 = Debug|Win32
+		{DD99CC7B-20E3-451C-A8EF-BF9E21D80AAC}.Release|x64.ActiveCfg = Release|x64
+		{DD99CC7B-20E3-451C-A8EF-BF9E21D80AAC}.Release|x64.Build.0 = Release|x64
+		{DD99CC7B-20E3-451C-A8EF-BF9E21D80AAC}.Release|x86.ActiveCfg = Release|Win32
+		{DD99CC7B-20E3-451C-A8EF-BF9E21D80AAC}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

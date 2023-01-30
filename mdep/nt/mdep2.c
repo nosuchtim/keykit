@@ -18,7 +18,7 @@
 #include <time.h>
 #include <io.h>
 #include <direct.h>
-#include <key.h>
+#include "key.h"
 
 #define K_JOYBUTTON 0
 #define K_JOYANALOG 1

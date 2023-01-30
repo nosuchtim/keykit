@@ -76,6 +76,9 @@ keypc : key.exe
 key.exe : protoflp.exe $(ALLDECS) $(KEYOBJ) key.res
 	$(LINK) $(DEBUGLINK) $(guiflags) -map:key.map -out:key.exe /subsystem:windows /libpath:. $(VCPATHS) $(KEYOBJ) key.res $(libs)
 
+keygo.dll : protoflp.exe $(ALLDECS) $(KEYOBJ) key.res
+	$(LINK) $(DEBUGLINK) $(guiflags) /libpath:. $(VCPATHS) /NXCOMPAT /PDB:"keygo.pdb" /DYNAMICBASE "winmm.lib" "wsock32.lib" "kernel32.lib" "user32.lib" "gdi32.lib" "winspool.lib" "comdlg32.lib" "advapi32.lib" "shell32.lib" "ole32.lib" "oleaut32.lib" "uuid.lib" "odbc32.lib" "odbccp32.lib" /IMPLIB:"keygo.lib" /DEBUG /DLL /MACHINE:X64 /INCREMENTAL /SUBSYSTEM:WINDOWS /LTCGOUT:"keygo.iobj" /ERRORREPORT:PROMPT /ILK:"keygo.ilk" /NOLOGO /TLBID:1 /map:keygo.map -out:keygo.dll $(KEYOBJ) key.res $(libs)
+
 key.res: key.rc
 	rc $(rcvars) /I $(PLATINC) -r key.rc
 
@@ -159,6 +162,7 @@ clobber : clean
 	rm -f y_output
 	rm -f key.dbg
 	rm -f *.sln *.vcxproj*
+	rm -fr x64 keygo/x64
 
 d_regex.h : regex.c
 	.\protoflp -dd_regex.h < regex.c > tmp.c
