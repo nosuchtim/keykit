@@ -438,7 +438,11 @@ mdep_mdep(int argc)
 	else if ( strcmp(args[0],"env") == 0 ) {
 	    if ( strcmp(args[1],"get")==0 ) {
 		char *s = getenv(args[2]);
-		d = strdatum(uniqstr(s));
+		if ( s != NULL ) {
+			d = strdatum(uniqstr(s));
+		} else {
+			d = strdatum(Nullstr);
+		}
 	    } else {
 		execerror("mdep(\"env\",... ) doesn't recognize %s\n",args[1]);
 	    }

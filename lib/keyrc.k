@@ -108,9 +108,13 @@ function dokeylocal() {
 	} else {
 		if ( Machine == "win" ) {
 			## # For convenience, let's open MIDI MAPPER by default
-			## m = outport("MAPPER")
-			## # and map the default port to it
-			## mapport(0,m)
+			outportname = mdep("env","get","KEYKIT_OUTPUT")
+			if ( outportname != "" ) {
+				out = outport(outportname)
+				if ( out >= 0 ) {
+					mapport(0,out)
+				}
+			}
 		}
 		if ( Machine == "linux" ) {
 			# m = outport("alsa")
