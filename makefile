@@ -183,14 +183,9 @@ clobber_nt : clean_nt
 	cd lib && $(MK) clobber
 	rm -fr mdep/nt/x64
 	rm -f bin/key.dbg
-	rm -f bin/key.exe
-	rm -f bin/keylib.exe
 	rm -f bin/keydll.dll
-	rm -f bin/*.ico
-	rm -f bin/*.cur
 	rm -f bin/keykit.py
 	rm -f bin/pykeykit.pyd
-	rm -f bin/lowkey.exe
 	rm -f src/d_*.h
 	rm -f src/win32.mak
 	rm -f src/clock.c
@@ -198,6 +193,13 @@ clobber_nt : clean_nt
 	rm -f tmp.diff
 	rm -f src/key.sln
 	cd byacc && $(MK) -f makefile.$(MSTYPE) clobber
+
+clobber_bin :
+	rm -f bin/key.exe
+	rm -f bin/keylib.exe
+	rm -f bin/lowkey.exe
+	rm -f bin/*.ico
+	rm -f bin/*.cur
 
 # complete compile/regression test (for NT and 95)
 regress_nt :

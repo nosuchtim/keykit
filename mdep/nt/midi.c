@@ -435,6 +435,14 @@ mdep_mdep(int argc)
 	if ( strcmp(args[0],"midi")==0 ) {
 		execerror("mdep(\"midi\",...) is no longer used.  Use midi(...).\n");
 	}
+	else if ( strcmp(args[0],"env") == 0 ) {
+	    if ( strcmp(args[1],"get")==0 ) {
+		char *s = getenv(args[2]);
+		d = strdatum(uniqstr(s));
+	    } else {
+		execerror("mdep(\"env\",... ) doesn't recognize %s\n",args[1]);
+	    }
+	}
 	else if ( strcmp(args[0],"video") == 0 ) {
 #if KEYCAPTURE
 	    if ( strcmp(args[1],"capture")==0 ) {

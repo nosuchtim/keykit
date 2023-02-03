@@ -12,7 +12,6 @@ makelibdoc :
 	cd ..
 	cd lib
 	ls *.k > ..\doc\liblist
-	dos2unix ..\doc\libdoc.sh
 	sh ..\doc\libdoc.sh < ..\doc\liblist > ..\doc\libdoc.xml
 	cd ..
 	cd doc
