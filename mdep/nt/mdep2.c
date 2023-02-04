@@ -2570,12 +2570,19 @@ udp_recv(PORTHANDLE mp, char *buff, int buffsize)
 	int len;
 	int e;
 
-	if ( NoWinsock )
-		return INVALID_SOCKET;
+	if (NoWinsock) {
+		return -1;
+	}
 
 	errno = 0;
 	len = sizeof(src_sin);
 	r = recvfrom(sock,buff,buffsize,0,(PSOCKADDR) &src_sin,&len);
+
+	if ( ! allowaccept(sock,&src_sin) ) {
+		sockerror(sock,"udp_recv() failed");
+		return -1;
+	}
+
 	// keyerrfile("(udp_recv r=%d e=%d wsa=%d buff=%d,%d,%d,%d)",
 	// 	r,errno,WSAGetLastError(),buff[0],buff[1],buff[2],buff[3]);
 	buff[buffsize-1] = 0;

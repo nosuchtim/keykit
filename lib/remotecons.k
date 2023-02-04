@@ -4,7 +4,7 @@
 #desc	KEYALLOW environment variable is hostname of machine allowed to connect.
 
 function remotecons(port) {
-	if ( nargs() < 2 ) {
+	if ( nargs() < 1 ) {
 		print("Usage: remotecons(port)")
 		return()
 	}
