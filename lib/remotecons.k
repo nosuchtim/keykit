@@ -1,6 +1,16 @@
+#name	remotecons
+#usage	remotecons(port)
+#desc	Starts a remote keykit console on the given port.
+#desc	KEYALLOW environment variable is hostname of machine allowed to connect.
+
 function remotecons(port) {
+	if ( nargs() < 2 ) {
+		print("Usage: remotecons(port)")
+		return()
+	}
 	task remotecons_task(port)
 }
+
 function remotecons_task(port) {
 	if ( nargs() > 0 )
 		s = string(port)+"@127.0.0.1"
@@ -13,6 +23,7 @@ function remotecons_task(port) {
 		task remotecons_loop(x)
 	}
 }
+
 function remotecons_loop(x) {
 
 	fifoctl(x["r"],"type","l")

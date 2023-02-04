@@ -33,8 +33,9 @@ function consoutloop() {
 #see	consloop
 
 function interploop(interpfifoin,cons) {
+
 	onexit(interploop,interpfifoin,cons)
-	if( ! defined(Hist))		# passe à travers les erreurs/crashes...
+	if( ! defined(Hist))		# passe ï¿½ travers les erreurs/crashes...
 	{	Hist = []
 		Histindex = 0}
 	if ( ! defined(History) )
@@ -45,7 +46,7 @@ function interploop(interpfifoin,cons) {
 
 	millisleep(200)	# wait a bit before putting out prompt
 	if( ! defined(Modir))
-		Modir = 0	# indicateur de mode direct (print systématique)
+		Modir = 0	# indicateur de mode direct (print systï¿½matique)
 
 	for ( ;; ) {
 		if ( Modir == 1) pm = ":" else pm = ""
@@ -69,7 +70,7 @@ function interploop(interpfifoin,cons) {
 			continue
 		}
 
-                # History processing (revu et augmenté...)
+                # History processing (revu et augmentï¿½...)
                 if ( substr(cmd,1,1)=="!") {
                         theCmd = ""
                         if (cmd=="!!") {
@@ -91,7 +92,7 @@ function interploop(interpfifoin,cons) {
 					else cons.printf("no history yet...\n")
 					theCmd = ""
 				}
-				else if (cmd=="!!!") { 						# remise à zéro
+				else if (cmd=="!!!") { 						# remise ï¿½ zï¿½ro
 					Histindex = 0
 					theCmd = ""
 				}
@@ -100,7 +101,7 @@ function interploop(interpfifoin,cons) {
 					for(hi = 0; hi < Histindex; hi++)
 						put(logf, sprintf("%d: %s\n",hi,Hist[hi]))
 					close(logf)
-					cons.printf("%s\n",">>> History sauvegardée sous "+HFName)
+					cons.printf("%s\n",">>> History sauvegardï¿½e sous "+HFName)
 					theCmd = ""							
 				}
 				else {

@@ -614,10 +614,39 @@ getfontinfo(void)
 	}
 }
 
+static BOOL
+allowaccept(SOCKET sock, SOCKADDR_IN *acc_sin) {
+	char* keyallow = getenv("KEYALLOW");
+	if (keyallow == NULL || *keyallow == '\0') {
+		return FALSE;
+	}
+	SOCKADDR_IN allow_sin;
+	allow_sin.sin_addr.s_addr = inet_addr(keyallow);
+	ULONG allow_addr = allow_sin.sin_addr.S_un.S_addr;
+	ULONG acc_addr = (*acc_sin).sin_addr.S_un.S_addr;
+	/*
+	char buff[1000];
+	sprintf(buff, "%d,%d,%d,%d  %d,%d,%d,%d",
+		allow_sin.sin_addr.S_un.S_un_b.s_b1,
+		allow_sin.sin_addr.S_un.S_un_b.s_b2,
+		allow_sin.sin_addr.S_un.S_un_b.s_b3,
+		allow_sin.sin_addr.S_un.S_un_b.s_b4,
+		
+		acc_sin->sin_addr.S_un.S_un_b.s_b1,
+		acc_sin->sin_addr.S_un.S_un_b.s_b2,
+		acc_sin->sin_addr.S_un.S_un_b.s_b3,
+		acc_sin->sin_addr.S_un.S_un_b.s_b4
+		);
+	*/
+	if ((allow_sin.sin_addr.S_un.S_addr) == (acc_sin->sin_addr.S_un.S_addr)) {
+		return TRUE;
+	}
+	return FALSE;
+}
+
 #ifdef WINSOCK
 static void
-doaccept(SOCKET sock)
-{
+doaccept(SOCKET sock) {
 	SOCKET newsock;
 	int acc_sin_len;
 	SOCKADDR_IN acc_sin;
@@ -630,6 +659,10 @@ doaccept(SOCKET sock)
 			 (int FAR *) &acc_sin_len );
 	if ( newsock==INVALID_SOCKET ) {
 		sockerror(sock,"accept() failed");
+		return;
+	}
+	if ( ! allowaccept(sock,&acc_sin) ) {
+		sockerror(sock,"accept() not allowed, set KEYALLOW to hostname allowed");
 		return;
 	}
 	/* create 2 new fifos for reading/writing new socket */

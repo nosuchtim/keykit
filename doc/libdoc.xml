@@ -631,6 +631,10 @@ contents as a single phrase (with all tracks merged).
 <blankline/>
 <listitem name="readraw(filename)  " bold="yes" />
 <blankline/>
+<listitem name="remotecons(port)  " bold="yes" />
+Starts a remote keykit console on the given port.
+KEYALLOW environment variable is hostname of machine allowed to connect.
+<blankline/>
 <listitem name="repeat(phrase,num_times)  " bold="yes" />
 Repeat a phrase as many times as specified.  The length attribute
 of the phrase determines the offset of the repetitions.

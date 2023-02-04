@@ -1105,11 +1105,6 @@
 #library page.k snapshot
 #library page.k restartconfig
 #library pagecol.k pagecol_write
-#library palette.k palette_kill
-#library palette.k palette_listen
-#library palette.k palette_listen_task
-#library palette.k palette_send
-#library palette.k palette_test
 #library perkis.k task_slidermon
 #library perkis.k slidermon
 #library pi.k piscan

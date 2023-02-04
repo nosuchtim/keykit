@@ -107,8 +107,8 @@ function dokeylocal() {
 		return()
 	} else {
 		if ( Machine == "win" ) {
-			## # For convenience, let's open MIDI MAPPER by default
-			outportname = mdep("env","get","KEYKIT_OUTPUT")
+			## # KEYOUT environment variable is default output port
+			outportname = mdep("env","get","KEYOUT")
 			if ( outportname != "" ) {
 				out = outport(outportname)
 				if ( out >= 0 ) {
