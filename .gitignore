@@ -1,4 +1,6 @@
 *~
+last.kp
+src/keygo/x64
 *.swp
 bin/last.kp
 src/x64/Debug

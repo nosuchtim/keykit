@@ -1028,24 +1028,27 @@ keyroot(void)
 	if ( (p=strrchr(cmd,'\\')) != NULL )
 		cmd = p+1;
 
-	if ( SearchPath(NULL,cmd,".exe",BUFSIZ,buff,&pfile) == 0 ) {
+	/* KEYROOT, if set, now overrides the exe path, */
+	/* so the lib and bin directories can be in different places. */
 
-		/* The LAST resort is KEYROOT, not first.  That way */
-		/* if we happen to execute some other version, */
-		/* a mis-set KEYROOT won't screw us up. */
+	if ( (p=getenv("KEYROOT")) != NULL && *p != '\0' ) {
 
-		if ( (p=getenv("KEYROOT")) != NULL && *p != '\0' )
-			root = uniqstr(p);
+		/* If (and only if) KEYROOT is set and used, we chdir to it */
+		root = uniqstr(p);
+		_chdir(root);
+
+	} else if ( SearchPath(NULL,cmd,".exe",BUFSIZ,buff,&pfile) == 0 ) {
+
+		/* If we can't get it by looking for the exe, */
+		/* last last resort is ".." */
+
+		if ( exists("../lib/keyrc.k") )
+			root = uniqstr("..");
+		else if ( exists("c:\\key\\lib\\keyrc.k") )
+			root = uniqstr("c:\\key");
 		else {
-			/* Last last resorts is ".." */
-			if ( exists("../lib/keyrc.k") )
-				root = uniqstr("..");
-			else if ( exists("c:\\key\\lib\\keyrc.k") )
-				root = uniqstr("c:\\key");
-			else {
-				eprint("KEYROOT not set!  Last resort - trying '..'");
-				root = uniqstr("..");
-			}
+			eprint("KEYROOT not set!  Last resort - trying '..'");
+			root = uniqstr("..");
 		}
 	}
 	else {
