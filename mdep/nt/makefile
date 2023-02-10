@@ -21,8 +21,8 @@ OTHER =
 # LIBC = libcd.lib
 
 # Reverse the order of these statements to toggle debug info
-DEBUGCC = $(cdebug) /nologo $(OTHER)
 DEBUGCC = /D _DEBUG /D _CRT_SECURE_NO_WARNINGS /W3 /MDd
+DEBUGCC = $(cdebug) /nologo $(OTHER)
 
 # Reverse the order of these statements to toggle debug info
 DEBUGLINK = /STACK:4194304 /MAP $(linkdebug) /nologo /FIXED:NO /NODEFAULTLIB:library
