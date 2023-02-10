@@ -238,8 +238,7 @@ distribution_nt :
 	mkdir dist/nt/key/lib
 	mkdir dist/nt/key/music
 	mkdir dist/nt/key/doc
-	cp bin/key bin/lowkey dist/nt/key/bin
-	cp bin/ucrtbased.dll bin/vcruntime140d.dll dist/nt/key/bin
+	cp bin/key.exe bin/lowkey.exe bin/keylib.exe dist/nt/key/bin
 	cp doc/*.html dist/nt/key/doc
 	cp lib/* dist/nt/key/lib
 	cp music/* dist/nt/key/music

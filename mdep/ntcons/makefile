@@ -2,12 +2,12 @@
 
 BINMODE=binmode.obj
 VC7=$(MSVS)\vc
-DEBUGCC = /Ox /nologo
 DEBUGCC = /D "_DEBUG" /D "_CRT_SECURE_NO_WARNINGS" /W3 /nologo /MDd
+DEBUGCC = /Ox /nologo
 
 # Reverse the order of these statements to toggle debug info
-DEBUGLINK = /MAP $(linkdebug)
 DEBUGLINK = /DEBUG
+DEBUGLINK = /MAP $(linkdebug)
 
 VC7LINK=link.exe
 VC7INC=$(VC7)\include
