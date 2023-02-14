@@ -39,7 +39,7 @@ func ExampleMIDIIn_SetCallback() {
 		log.Fatal(err)
 	}
 	defer in.Close()
-	in.SetCallback(func(m MIDIIn, msg []byte, t float64) {
+	_ = in.SetCallback(func(m MIDIIn, msg []byte, t float64) {
 		log.Println(msg, t)
 	})
 	<-make(chan struct{})

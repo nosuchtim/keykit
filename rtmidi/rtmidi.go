@@ -72,7 +72,7 @@ func (api API) String() string {
 // CompiledAPI determines the available compiled MIDI APIs.
 func CompiledAPI() (apis []API) {
 	n := C.rtmidi_get_compiled_api(nil, 0)
-	capis := make([]C.enum_RtMidiApi, n, n)
+	capis := make([]C.enum_RtMidiApi, n)
 	C.rtmidi_get_compiled_api(&capis[0], C.uint(n))
 	for _, capi := range capis {
 		apis = append(apis, API(capi))
@@ -321,13 +321,13 @@ func (m *midiIn) CancelCallback() error {
 //
 // This function returns immediately whether a new message is available or not.
 func (m *midiIn) Message() ([]byte, float64, error) {
-	msg := make([]C.uchar, 64*1024, 64*1024)
+	msg := make([]C.uchar, 64*1024)
 	sz := C.size_t(len(msg))
 	r := C.rtmidi_in_get_message(m.in, &msg[0], &sz)
 	if !m.in.ok {
 		return nil, 0, errors.New(C.GoString(m.in.msg))
 	}
-	b := make([]byte, int(sz), int(sz))
+	b := make([]byte, int(sz))
 	for i, c := range msg[:sz] {
 		b[i] = byte(c)
 	}
