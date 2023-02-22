@@ -32,6 +32,7 @@ Symlongp Consecho, Checkcount, Isofuncwarn, Consupdown, Monitor_fnum;
 Symlongp Consecho_fnum, Slashcheck, Directcount, SubstrCount;
 Symlongp Mousefnum, Consinfnum, Consoutfnum, Midi_in_fnum, Mousefifolimit;
 Symlongp Saveglobalsize, Warningsleep, Millires, Milliwarn, Resizefix;
+Symlongp Deftimeout;
 Symlongp Minbardx, Kobjectoffset, Midi_out_fnum, Mousemoveevents;
 Symlongp Numinst1, Numinst2, Offsetpitch, Offsetfilter, DoDirectinput;
 Symlongp Offsetportfilter;
@@ -814,6 +815,7 @@ static struct binum {
 	"Consechofifo", -1, &Consecho_fnum,
 	"Saveglobalsize", 256L, &Saveglobalsize,
 	"Warningsleep", 0L, &Warningsleep,
+	"Deftimeout", 2L, &Deftimeout,
 	"Millires", 1L, &Millires,
 	"Milliwarn", 2L, &Milliwarn,
 	"Resizefix", 1L, &Resizefix,

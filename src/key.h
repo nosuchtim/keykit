@@ -1079,6 +1079,7 @@ extern Symlongp Consinfnum, Consoutfnum, Midi_in_fnum, Midi_out_fnum;
 extern Symlongp Redrawignoretime, Resizeignoretime, Mousefnum, Warningsleep;
 extern Symlongp Millires, Milliwarn, Mousefifolimit, Minbardx, Midithrottle;
 extern Symlongp Numinst1, Numinst2, Kobjectoffset, Mousemoveevents;
+extern Symlongp Deftimeout;
 extern Symlongp Debuggesture;
 extern Symlongp Chancolors;
 extern Phrasepp Currphr, Recphr;

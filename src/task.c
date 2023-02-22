@@ -607,8 +607,6 @@ exectasks(int nosetjmp)
 			goto runit;
 		}
 
-#define DEFTIMEOUT 5000
-
 		if ( Running != NULL )
 			tmout = 0;
 		else {
@@ -624,7 +622,7 @@ exectasks(int nosetjmp)
 					tmout = 0;
 			}
 			else
-				tmout = DEFTIMEOUT;
+				tmout = *Deftimeout;
 		}
 		wn = mdep_waitfor((int)tmout);
 
