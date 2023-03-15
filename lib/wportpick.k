@@ -24,7 +24,10 @@ method init {
 	for ( i in $.inports ) {
 		s = $.inports[i]
 		$.inportval[n] = i
-		$.intext[n] = new ktext("IN","left")
+
+		##$.intext[n] = new ktext("IN","left")              # ORG.
+		$.intext[n] = new ktext("IN P"+string(i),"left")    # show port index
+
 		$.intogg[n] = new ktoggle(" ",$,"toggle","input",n)
 		$.intogg[n].settext(s,"right")
 		$.addchild($.intogg[n])
@@ -37,7 +40,10 @@ method init {
 	for ( i in $.outports ) {
 		s = $.outports[i]
 		$.outportval[n] = i
-		$.outtext[n] = new ktext("OUT","left")
+
+		##$.outtext[n] = new ktext("OUT","left")            # ORG.
+		$.outtext[n] = new ktext("OUT P"+string(i),"left")  # show port index
+
 		$.outtogg[n] = new ktoggle(" ",$,"toggle","output",n)
 		$.outtogg[n].settext(s,"right")
 		$.addchild($.outtogg[n])
@@ -87,7 +93,10 @@ method resize(sz) {
 	if ( nargs() > 0 ) {
 		wid = sz["x1"] - sz["x0"]
 		hgt = sz["y1"] - sz["y0"]
-		xneeded = tw * ($.maxlength + 8)
+
+		##xneeded = tw * ($.maxlength + 8)	# ORG.
+		xneeded = tw * ($.maxlength + 10)	# 2nd column widened
+
 		yneeded = 4 + th * ($.nins+$.nouts+1)
 		if ( wid > xneeded ) {
 			sz["x1"] = sz["x0"] + xneeded;
@@ -106,7 +115,10 @@ method resize(sz) {
 	
 	$.dy = (y1-y0-th-4)/($.nins+$.nouts)
 
-	x0a = $.xmin() + tw*5;
+	##x0a = $.xmin() + tw*5;		# ORG.
+	x0a = $.xmin() + tw*8;			# 1st column widened
+
+
 	y0b = y0 + th + 2
 	y = y0b
 	h = y1-y0b

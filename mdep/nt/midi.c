@@ -29,22 +29,33 @@ void key_stop_capture();
 
 HWND     hwndNotify;
 
-static RtMidiOutPtr rtmidiout;
-static RtMidiInPtr rtmidiin;
 static int Nmidiin = 0;
-static int Nmidiout = 0;
+static RtMidiInPtr rtmidiin[MIDI_IN_DEVICES];
 static char* RtmidiInputNames[MIDI_IN_DEVICES];
+static int midiInUserData[MIDI_IN_DEVICES];
+
+static int Nmidiout = 0;
+static RtMidiOutPtr rtmidiout[MIDI_OUT_DEVICES];
 static char* RtmidiOutputNames[MIDI_OUT_DEVICES];
+
 static unsigned char* bytes = NULL;
 static int sofar;
 static int nbytes;
 
-static int midiInUserData;
+// One midiInBuff for each input device
+struct {
+	char buff[MIDIBUFF_SIZE];
+	char* readSoFar;
+	char* nextToWrite;
+	char* end;
+} midiBuff[MIDI_IN_DEVICES];
 
+/*
 static char midibuff[MIDIBUFF_SIZE];
 static char* midibuff_sofar = midibuff;
 static char* midibuff_next = midibuff;
 static char* midibuff_end = midibuff + MIDIBUFF_SIZE;
+*/
 
 static void midiouterror(int r, char* s);
 static void midiinerror(int r, char* s);
@@ -52,19 +63,34 @@ static void midiinerror(int r, char* s);
 int
 mdep_getnmidi(char* buff, int buffsize, int* port)
 {
+	// Find the first device that has input
+
+	int devno = -1; // in case no device has input
+	for (int i = 0; i < Nmidiin; i++) {
+		if (midiBuff[i].nextToWrite > midiBuff[i].readSoFar) {
+			devno = i;
+			break;
+		}
+	}
+	if ( devno < 0 ) {
+		if (port) {
+			*port = 0;
+		}
+		return 0;
+	}
+
+	if (port) {
+		*port = devno;
+	}
 	int gotten = 0;
-
-	if (port)
-		*port = 0;
-
 	for ( int i=0; i<buffsize; i++ ) {
-		if (midibuff_sofar >= midibuff_next) {
+		if (midiBuff[devno].readSoFar >= midiBuff[devno].nextToWrite) {
 			// we've reached the end of the input buffer, so reset things
-			midibuff_sofar = midibuff;
-			midibuff_next = midibuff;
+			midiBuff[devno].readSoFar = midiBuff[devno].buff;
+			midiBuff[devno].nextToWrite = midiBuff[devno].buff;
 			return gotten;
 		}
-		buff[gotten] = *midibuff_sofar++;
+		buff[gotten] = *midiBuff[devno].readSoFar++;
 		gotten++;
 	}
 	return gotten;
@@ -79,10 +105,10 @@ mdep_putnmidi(int n, char *cp, Midiport * pport)
 	if (windevno == MIDI_NOSUCH_DEV)
 		return;
 
-	rtmidi_out_send_message(rtmidiout, cp, n);
+	rtmidi_out_send_message(rtmidiout[windevno], cp, n);
 
-	if (rtmidiout->ok != true) {
-		midiouterror(1, (char *)(rtmidiout->msg));
+	if (rtmidiout[windevno]->ok != true) {
+		midiouterror(1, (char *)(rtmidiout[windevno]->msg));
 		return;
 	}
 }
@@ -90,15 +116,18 @@ mdep_putnmidi(int n, char *cp, Midiport * pport)
 int
 openmidiin(int windevno)
 {
-	rtmidi_open_port(rtmidiin, windevno, RtmidiInputNames[windevno]);
-	return (rtmidiin->ok == true) ? 0 : -1;
+	midiBuff[windevno].readSoFar = midiBuff[windevno].buff;
+	midiBuff[windevno].nextToWrite = midiBuff[windevno].buff;
+	midiBuff[windevno].end = midiBuff[windevno].buff + MIDIBUFF_SIZE;
+	rtmidi_open_port(rtmidiin[windevno], windevno, RtmidiInputNames[windevno]);
+	return (rtmidiin[windevno]->ok == true) ? 0 : -1;
 }
 
 static int
 closemidiin(int windevno)
 {
-	rtmidi_close_port(rtmidiin);
-	return (rtmidiin->ok == true) ? 0 : -1;
+	rtmidi_close_port(rtmidiin[windevno]);
+	return (rtmidiin[windevno]->ok == true) ? 0 : -1;
 }
 
 static int
@@ -107,8 +136,8 @@ closemidiout(int windevno)
 	if (windevno == MIDI_NOSUCH_DEV)
 		return -1;
 
-	rtmidi_close_port(rtmidiout);
-	return (rtmidiout->ok == true) ? 0 : -1;
+	rtmidi_close_port(rtmidiout[windevno]);
+	return (rtmidiout[windevno]->ok == true) ? 0 : -1;
 }
 
 void
@@ -116,28 +145,26 @@ mdep_endmidi(void)
 {
 	int devno;
 
-	for ( devno=0; devno<MIDI_OUT_DEVICES; devno++ )
-		closemidiout(devno);
-	for ( devno=0; devno<MIDI_IN_DEVICES; devno++ )
+	for ( devno=0; devno<Nmidiin; devno++ )
 		closemidiin(devno);
+	for ( devno=0; devno<Nmidiout; devno++ )
+		closemidiout(devno);
 }
 
 void
 mdep_rtmidi_callback(double timeStamp, const unsigned char* message, size_t messageSize, void *userData) {
 
-	// char buff[1000];
-	// int* up = (int*)(userData);
-	// int ud = *up;
-	// sprintf(buff, "timestamp=%f messageSize=%ld userData=%d\n", timeStamp, (long)messageSize, ud);
-	// tprint(buff);
+	// The userData is the device number
+	int* up = (int*)(userData);
+	int devno = *up;
 
 	// Append to midibuff
 	for (int i = 0; i < messageSize; i++) {
-		if ( midibuff_next >= midibuff_end ) {
+		if ( midiBuff[devno].nextToWrite >= midiBuff[devno].end ) {
 			midiinerror(0,"midi input buffer overflow");
 			break;
 		}
-		*midibuff_next++ = message[i];
+		*midiBuff[devno].nextToWrite++ = message[i];
 	}
 }
 
@@ -151,20 +178,35 @@ mdep_initmidi(Midiport *inputs, Midiport *outputs)
 {
 	int r, i;
 
-	rtmidiout = rtmidi_out_create(RTMIDI_API_WINDOWS_MM, "keykit");
-	rtmidiin = rtmidi_in_create(RTMIDI_API_WINDOWS_MM, "keykit",1000);
-	Nmidiout = rtmidi_get_port_count(rtmidiout);
-	Nmidiin = rtmidi_get_port_count(rtmidiin);
+	// The first RtMidiIn and RtMidiOut instance is just to get the number of inputs and outputs.
+	RtMidiInPtr rtin;
+	RtMidiOutPtr rtout;
+	rtin = rtmidi_in_create(RTMIDI_API_WINDOWS_MM, "keykit",1000);
+	rtout = rtmidi_out_create(RTMIDI_API_WINDOWS_MM, "keykit");
+	Nmidiout = rtmidi_get_port_count(rtout);
+	Nmidiin = rtmidi_get_port_count(rtin);
+
+	// We then create a separate RtMidiIn/Out for each port.  This is necessary
+	// in order to receive and send things to all the ports simultaneously.
+	// I.e. Each instance of RtMidiIn/Out can only handle a single connection.
 
 	*Devmidi = uniqstr("winmm");
 
-	rtmidi_in_set_callback(rtmidiin, mdep_rtmidi_callback, &midiInUserData);
+	int windevno;
+	for (windevno = 0; windevno < Nmidiin; windevno++) {
+		rtmidiin[windevno] = rtmidi_in_create(RTMIDI_API_WINDOWS_MM, "keykit", 1000);
+		midiInUserData[windevno] = windevno;
+		rtmidi_in_set_callback(rtmidiin[windevno], mdep_rtmidi_callback, &midiInUserData[windevno]);
+	}
+	for (windevno = 0; windevno < Nmidiout; windevno++) {
+		rtmidiout[windevno] = rtmidi_out_create(RTMIDI_API_WINDOWS_MM, "keykit");
+	}
 
 	char bufOut[1024];
 	int bufLen = sizeof(bufOut);
 
 	for (i=0; i<Nmidiout; i++ ) {
-		int ret = rtmidi_get_port_name(rtmidiout, i, bufOut, &bufLen);
+		int ret = rtmidi_get_port_name(rtmidiout[i], i, bufOut, &bufLen);
 		if ( ret < 0 ) {
 			char msg[1024];
 			sprintf(msg, "Can't get name for output port %d", i);
@@ -176,7 +218,7 @@ mdep_initmidi(Midiport *inputs, Midiport *outputs)
 		outputs[i].private1 = i;
 	}
 
-	for ( ; i<MIDI_OUT_DEVICES; i++ ) {
+	for ( ; i<Nmidiout; i++ ) {
 		outputs[i].name = NULL;
 		outputs[i].private1 = MIDI_NOSUCH_DEV;
 	}
@@ -184,7 +226,7 @@ mdep_initmidi(Midiport *inputs, Midiport *outputs)
 	/* Get the number of MIDI input devices.  Then get the capabilities of
 	 * each device.
 	 */
-	for (i=0; (i<Nmidiin) && (i<MIDI_IN_DEVICES); i++) {
+	for (i=0; i<Nmidiin; i++) {
 		MIDIINCAPS midiInCaps;
 		r = midiInGetDevCaps(i, (LPMIDIINCAPS) &midiInCaps,
                                 sizeof(MIDIINCAPS));
@@ -844,8 +886,8 @@ openmidiout(int windevno)
 	int r = 0;
 
 	char *outputName = RtmidiOutputNames[windevno];
-	rtmidi_open_port(rtmidiout, windevno, outputName);
-	if (rtmidiout->ok != true) {
+	rtmidi_open_port(rtmidiout[windevno], windevno, outputName);
+	if (rtmidiout[windevno]->ok != true) {
 		char msg[256];
 		sprintf(msg, "Error in nmidiOutOpen of '%s' : ", outputName);
 		r = 1;
