@@ -749,8 +749,8 @@ typedef struct Midiport {
 /*
  * The index into this array is the port number minus 1.
  */
-Midiport Midiinputs[MIDI_IN_DEVICES];
-Midiport Midioutputs[MIDI_OUT_DEVICES];
+extern Midiport Midiinputs[MIDI_IN_DEVICES];
+extern Midiport Midioutputs[MIDI_OUT_DEVICES];
 
 /*
  * Used for the first argument of the mdep_midi function.

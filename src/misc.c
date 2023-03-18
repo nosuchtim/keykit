@@ -13,10 +13,12 @@
 
 void (*Fatalfunc)(char *) = 0;
 void (*Diagfunc)(char *) = 0;
+#if 0
 long dval = 1;
 long *Debug = &dval;
 long dmval = 1;
 extern long *Debugmalloc;
+#endif
 
 int
 exists(char *fname)

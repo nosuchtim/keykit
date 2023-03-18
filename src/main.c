@@ -13,6 +13,9 @@ FILE *FF = NULL;
 char *Copyright = "KeyKit 8.1 - Copyright 1996 AT&T Corp.  All rights reserved.";
 #endif
 
+Midiport Midiinputs[MIDI_IN_DEVICES];
+Midiport Midioutputs[MIDI_OUT_DEVICES];
+
 // int errno;
 
 char *Yytext;
