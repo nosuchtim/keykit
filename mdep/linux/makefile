@@ -24,7 +24,7 @@ SRC = real.c yacc.c code.c code2.c sym.c main.c util.c mdep1.c mfin.c \
 	phrase.c misc.c fsm.c grid.c view.c midi.c clock.c mdep2.c \
 	keyto.c regex.c task.c fifo.c kwind.c menu.c bltin.c meth.c
 PROFILE = -g
-CFLAGS = -O $(INC) $(PROFILE)
+CFLAGS = -Wall -Wextra -O $(INC) $(PROFILE)
 
 all : $(EXECS)
 
@@ -125,6 +125,9 @@ alldecs : $(ALLDECS)
 
 $(KEY):	protoflp $(ALLDECS) $(OBJS)
 	$(CC) $(STATIC) $(CFLAGS) $(OBJS) $(XLIBS) $(SOUNDLIBS) -o $(KEY)
+
+.c.o:
+	$(CC) $(CFLAGS) -c $*.c
 
 trymidi:	trymidi.o
 	$(CC) $(CFLAGS) trymidi.o $(SOUNDLIBS) -o trymidi

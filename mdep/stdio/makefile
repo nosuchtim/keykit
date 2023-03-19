@@ -1,5 +1,5 @@
 CC = gcc
-CFLAGS = -O
+CFLAGS = -Wall -Wextra -O
 STATIC = -static
 
 PROTO = -p
@@ -38,7 +38,7 @@ keylib : keylib.o mdep1.o misc.o
 	$(CC) $(STATIC) keylib.o mdep1.o misc.o -o keylib
 
 .c.o:
-	gcc -c $*.c
+	$(CC) $(CFLAGS) -c $*.c
 
 yacc.c : gram.y
 	../byacc/byacc -d gram.y
