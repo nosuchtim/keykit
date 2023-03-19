@@ -958,7 +958,7 @@ extern Unchar B___;
 
 #define codeis(c,v) (((c).u.func==(BYTEFUNC)(v)) && ((c).type==IC_FUNC))
 
-#define chkrealoften() if(++Chkcount>*Throttle2){chkinput();chkoutput();Chkcount=0;}else
+#define chkrealoften() do {if(++Chkcount>*Throttle2){chkinput();chkoutput();Chkcount=0;}} while(0)
 
 /* legal first characters of names */
 #define isname1char(c) (isalpha(c)||c=='_')
