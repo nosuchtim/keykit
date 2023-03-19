@@ -192,6 +192,7 @@ allocate(unsigned int s, char *tag)
 {
 	char *p;
 
+	dummyusage(tag);
 	p = (char*) malloc(s);
 	/* if ( Debugmalloc!=NULL && *Debugmalloc!=0 && recurse<=1 )
 		keyerrfile("allocate(%d %s)=%d\n",s,tag,p); */

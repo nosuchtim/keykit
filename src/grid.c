@@ -757,6 +757,8 @@ int
 clipcode(Kwind *w,int x,int y,Krect *r)
 {
         int rc = 0;
+
+        dummyusage(w);
         if(x < r->x0)
                 rc |= ISLEFT;
         else if(x > r->x1)
@@ -908,6 +910,7 @@ dispclip(Kwind *w,int *ax,int *ay,Krect *kr)
 {
 	int r = NT_VISIBLE;
 
+    dummyusage(w);
 	if ( *ax < kr->x0 ) {
 		r = NT_INVISIBLE;
 		*ax = kr->x0;

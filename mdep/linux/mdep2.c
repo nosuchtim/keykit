@@ -722,6 +722,10 @@ mdep_browse(char *lbl, char *expr, int mustexist)
 {
 	/* NOTE: this isn't really used if NOBROWSESUPPORT is set in mdep.h. */
 	/* fill in someday, when there's a standard file selection dialog */
+
+	dummyusage(lbl);
+	dummyusage(expr);
+	dummyusage(mustexist);
 	return NULL;
 }
 
@@ -1419,6 +1423,9 @@ mdep_fillellipse(int x0,int y0,int x1,int y1)
 void
 mdep_fillpolygon(int *xarr, int *yarr, int arrsize)
 {
+	dummyusage(xarr);
+	dummyusage(yarr);
+	dummyusage(arrsize);
 	tprint("fillpolygon not supported on linux.\n");
 }
 
@@ -2082,12 +2089,16 @@ mdep_openport(char *name, char *mode, char *type)
 Datum
 mdep_ctlport(PORTHANDLE m, char *cmd, char *arg)
 {
+	dummyusage(m);
+	dummyusage(cmd);
+	dummyusage(arg);
 	return(Noval);
 }
 
 Datum
 mdep_mdep(int argc)
 {
+	dummyusage(argc);
 	return(Noval);
 }
 
@@ -2246,6 +2257,7 @@ mdep_getportdata(PORTHANDLE *handle, char *buff, int buffsize, Datum *pd)
 	int soerr = 0;
 	int soleng = sizeof(int);
 
+	dummyusage(pd);
 	for ( m=Topport; m!=NULL; m=m->next ) {
 
 		if ( m->rw != TYPE_READ && m->rw != TYPE_LISTEN )
@@ -2358,5 +2370,7 @@ mdep_closeport(PORTHANDLE m)
 int
 mdep_help(char *fname, char *keyword)
 {
+	dummyusage(fname);
+	dummyusage(keyword);
 	return(1);
 }

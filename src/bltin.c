@@ -358,6 +358,7 @@ bi_taskinfo(int argc)
 void
 bi_oldtypeof(int argc)
 {
+	dummyusage(argc);
 	execerror("bi_oldnargs is obsolete!\n");
 #ifdef OLDSTUFF
 
@@ -868,6 +869,7 @@ bi_midibytes(int argc)
 void
 bi_oldnargs(int argc)
 {
+	dummyusage(argc);
 	execerror("bi_oldnargs is obsolete!\n");
 #ifdef OLDSTUFF
 	Datum d, *frm, *arg0;
@@ -1837,6 +1839,7 @@ addnonxy(Htablep newarr,Htablep arr)
 void
 bi_oldxy(int argc)
 {
+	dummyusage(argc);
 	execerror("bi_oldxy is obsolete!\n");
 #ifdef OLDSTUFF
 	Datum r;
@@ -2111,6 +2114,7 @@ void
 bi_midi(int argc)
 {
 #ifndef MDEP_MIDI_PROVIDED
+	dummyusage(argc);
 	execerror("midi: this port of keykit didn't provide mdep_midi()\n");
 #else
 	int r, portno;
@@ -2605,6 +2609,7 @@ bi_object(int argc)
 	Kobjectp o;
 	Datum d;
 
+	dummyusage(argc);
 	/*
 	 * Return an object value, given an object constant reference
 	 * as a an integer or string (either 123 or "$123").

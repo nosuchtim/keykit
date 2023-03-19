@@ -210,12 +210,16 @@ mdep_abortexit(char *s)
 char *
 mdep_browse(char *lbl, char *expr, int mustexist)
 {
+	dummyusage(lbl);
+	dummyusage(expr);
+	dummyusage(mustexist);
 	return NULL;
 }
 
 int
 mdep_shellexec(char *s)
 {
+	dummyusage(s);
 	return 0;
 }
 
@@ -239,6 +243,7 @@ mdep_showmouse(void)
 int
 mdep_waitfor(int tmout)
 {
+	dummyusage(tmout);
 	return K_TIMEOUT;
 }
 
@@ -246,6 +251,9 @@ int
 mdep_startgraphics(int argc,char **argv)
 {
 	extern int Consolefd;
+
+	dummyusage(argc);
+	dummyusage(argv);
 	Consolefd = 0;
 	return 0;
 }
@@ -258,11 +266,18 @@ mdep_endgraphics(void)
 void
 mdep_boxfill(int x0,int y0,int x1,int y1)
 {
+	dummyusage(x0);
+	dummyusage(y0);
+	dummyusage(x1);
+	dummyusage(y1);
 }
 
 void
 mdep_fillpolygon(int *xarr, int *yarr, int arrsize)
 {
+	dummyusage(xarr);
+	dummyusage(yarr);
+	dummyusage(arrsize);
 }
 
 int
@@ -277,32 +292,51 @@ mdep_mouse(int *ax,int *ay,int *am)
 int
 mdep_mousewarp(int x, int y)
 {
+	dummyusage(x);
+	dummyusage(y);
 	return 0;
 }
 
 void
 mdep_plotmode(int m)
 {
+	dummyusage(m);
 }
 
 void
 mdep_line(int x0,int y0,int x1,int y1)
 {
+	dummyusage(x0);
+	dummyusage(y0);
+	dummyusage(x1);
+	dummyusage(y1);
 }
 
 void
 mdep_ellipse(int x0,int y0,int x1,int y1)
 {
+	dummyusage(x0);
+	dummyusage(y0);
+	dummyusage(x1);
+	dummyusage(y1);
 }
 
 void
 mdep_fillellipse(int x0,int y0,int x1,int y1)
 {
+	dummyusage(x0);
+	dummyusage(y0);
+	dummyusage(x1);
+	dummyusage(y1);
 }
 
 void
 mdep_box(int x0,int y0,int x1,int y1)
 {
+	dummyusage(x0);
+	dummyusage(y0);
+	dummyusage(x1);
+	dummyusage(y1);
 }
 
 static MyBitmap *
@@ -355,6 +389,9 @@ mdep_freebitmap(Pbitmap p)
 void
 mdep_pullbitmap(int x,int y,Pbitmap p)
 {
+	dummyusage(x);
+	dummyusage(y);
+	dummyusage(p);
 }
 
 void
@@ -365,16 +402,29 @@ mdep_sync(void)
 void
 mdep_putbitmap(int x,int y,Pbitmap p)
 {
+	dummyusage(x);
+	dummyusage(y);
+	dummyusage(p);
 }
 
 void
 mdep_movebitmap(int x,int y,int wid,int hgt,int tox,int toy)
 {
+	dummyusage(x);
+	dummyusage(y);
+	dummyusage(wid);
+	dummyusage(hgt);
+	dummyusage(tox);
+	dummyusage(toy);
 }
 
 int
 mdep_screenresize(int x0, int y0, int x1, int y1)
 {
+	dummyusage(x0);
+	dummyusage(y0);
+	dummyusage(x1);
+	dummyusage(y1);
 	return 0;
 }
 
@@ -402,11 +452,13 @@ mdep_maxy(void)
 void
 mdep_setcursor(int type)
 {
+	dummyusage(type);
 }
 
 char *
 mdep_fontinit(char *fontname)
 {
+	dummyusage(fontname);
 	return NULL;
 }
 
@@ -425,6 +477,8 @@ mdep_fontheight(void)
 void
 mdep_string(int x,int y,char *s)
 {
+	dummyusage(x);
+	dummyusage(y);
 	printf("%s",s);
 }
 
@@ -442,51 +496,73 @@ mdep_initcolors(void)
 void
 mdep_color(int n)
 {
+	dummyusage(n);
 }
 
 void
 mdep_colormix(int n,int r,int g,int b)
 {
+	dummyusage(n);
+	dummyusage(r);
+	dummyusage(g);
+	dummyusage(b);
 }
 
 PORTHANDLE *
 mdep_openport(char *name, char *mode, char *type)
 {
+	dummyusage(name);
+	dummyusage(mode);
+	dummyusage(type);
 	return NULL;
 }
 
 Datum
 mdep_ctlport(PORTHANDLE m, char *cmd, char *arg)
 {
+	dummyusage(m);
+	dummyusage(cmd);
+	dummyusage(arg);
 	return(Noval);
 }
 
 Datum
 mdep_mdep(int argc)
 {
+	dummyusage(argc);
 	return(Noval);
 }
 
 int
 mdep_putportdata(PORTHANDLE m, char *buff, int size)
 {
+	dummyusage(m);
+	dummyusage(buff);
+	dummyusage(size);
 	return 0;
 }
 
 int
 mdep_getportdata(PORTHANDLE *handle, char *buff, int buffsize, Datum *pd)
 {
+	dummyusage(handle);
+	dummyusage(buff);
+	dummyusage(buffsize);
+	dummyusage(pd);
 	return 0;
 }
 
 int
 mdep_closeport(PORTHANDLE m)
 {
+	dummyusage(m);
 	return 0;
 }
 
 int
 mdep_help(char *fname, char *keyword)
 {
+	dummyusage(fname);
+	dummyusage(keyword);
 	return 1;
 }

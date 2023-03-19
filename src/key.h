@@ -81,7 +81,7 @@ typedef struct Kobject *Kobjectp;
 #define dummyusage(x) x=x
 #define dummyset(x) x=0
 #else
-#define dummyusage(x)
+#define dummyusage(x) (void)x
 #define dummyset(x)
 #endif
 #endif
