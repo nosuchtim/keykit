@@ -22,6 +22,7 @@ resetstack(void)
 
 void
 underflow(void)
+NO_RETURN_ATTRIBUTE
 {
 	execerror("Stack underflow");
 }

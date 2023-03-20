@@ -467,6 +467,7 @@ keyerrfile(char *fmt,...)
 /* recover from run-time error */
 void
 execerror(char *fmt,...)
+NO_RETURN_ATTRIBUTE
 {
 	va_list args;
 
@@ -631,6 +632,7 @@ popupwarning(char *fmt,...)
 
 void
 finalexit(int r)
+NO_RETURN_ATTRIBUTE
 {
 	mdep_endmidi();
 	mdep_bye();
@@ -639,6 +641,7 @@ finalexit(int r)
 
 void
 realexit(int r)
+NO_RETURN_ATTRIBUTE
 {
 	finishoff();
 	closeallfifos();	/* so ports get closed */
@@ -647,6 +650,7 @@ realexit(int r)
 
 void
 fatalerror(char *s)
+NO_RETURN_ATTRIBUTE
 {
 	strcpy(Msg1,s);
 	strcat(Msg1,"\n");
@@ -658,6 +662,7 @@ fatalerror(char *s)
 
 void
 myre_fail(char *s,int c)
+NO_RETURN_ATTRIBUTE
 {
 	dummyusage(c);
 	execerror("Failure in myre_exec: %s",s);

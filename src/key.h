@@ -15,6 +15,12 @@
 
 #include "mdep.h"
 
+/* Provide empty NO_RETURN_ATRRIBUTE if not defined in mdep.h
+ * which should prevent d_*.h header files from failing to compile */
+#ifndef NO_RETURN_ATTRIBUTE
+#define NO_RETURN_ATTRIBUTE
+#endif
+
 #ifdef PYTHON
 #include "Python.h"
 #endif
@@ -1202,6 +1208,15 @@ Hey, mdep_statmidi is no longer used!
 #include "d_regex.h"
 #include "d_clock.h"
 #include "d_menu.h"
+
+/* GCC compiler only wants the no return attribute on a function's
+ * prototype, _not_ its declaration. Other targets that don't define
+ * NO_RETURN_ATTRIBUTE in their mdep.h should have tripped ifdef above
+ * that defines NO_RETURN_ATTRIBUTE as empty string. */
+#ifdef __GNUC__
+#undef NO_RETURN_ATTRIBUTE
+#define NO_RETURN_ATTRIBUTE
+#endif
 
 #ifdef FFF
 extern FILE *FF;

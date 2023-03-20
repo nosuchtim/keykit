@@ -160,6 +160,7 @@ jmp_buf Begin;
 
 void
 restartexec(void)
+NO_RETURN_ATTRIBUTE
 {
 	longjmp(Begin,1);
 	/*NOTREACHED*/
