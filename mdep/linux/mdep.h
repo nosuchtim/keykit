@@ -20,7 +20,7 @@
 #define MACHINE "linux"	/* default value of keykit's Machine variable */
 
 /* GCC function attribute indicating a function does not return */
-#define NO_RETURN_ATTRIBUTE __attribute((__noreturn__))
+#define NO_RETURN_ATTRIBUTE __attribute__((__noreturn__))
 
 #define MDEP_MIDI_PROVIDED
 

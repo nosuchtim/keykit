@@ -25,7 +25,7 @@ extern char *sys_errlist[];
 #endif
 
 /* GCC function attribute indicating a function does not return */
-#define NO_RETURN_ATTRIBUTE __attribute((__noreturn__))
+#define NO_RETURN_ATTRIBUTE __attribute__((__noreturn__))
 
 #ifndef MAXLONG
 #define MAXLONG LONG_MAX
