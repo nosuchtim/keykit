@@ -2353,12 +2353,12 @@ expandstackatleast(Ktaskp p, int needed)
 Codep
 infiniteloop(BYTEFUNC f)
 {
-	Instnodep in, i;
+	Instnodep in;
 	Codep cp;
 
 	pushiseg();
 	in = code(funcinst(f));
-	i = code(instnodeinst(in));	/* An infinite loop to previous code. */
+	(void)code(instnodeinst(in));	/* An infinite loop to previous code. */
 	code(funcinst(I_POPNRETURN));
 	code(funcinst(I_RETURNV));
 	cp = popiseg();

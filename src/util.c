@@ -1638,7 +1638,7 @@ put_strcode(Symstr str, Unchar *p)
 Unchar *
 put_dblcode(DBLTYPE dbl, Unchar *p)
 {
-	union dbl_union u;
+	union dbl_union u = {0};
 	u.dbl = dbl;
 	*p++ = u.bytes[0];
 	*p++ = u.bytes[1];
@@ -1856,13 +1856,9 @@ varinum_put(long value,Unchar *p)
 int
 varinum_size(long value)
 {
-	int sign;
 	int sz = 0;
 
-	if ( value > 0 )
-		sign = 0;
-	else {
-		sign = 0x40;	/* this bit in the first byte indicates sign */
+	if ( value < 0 ) {
 		value = -value;
 	}
 	if ( value < 64 )

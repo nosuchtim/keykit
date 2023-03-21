@@ -1139,7 +1139,6 @@ bi_kill(int argc)
 {
 	long tid;
 	Ktaskp t;
-	int killchildren = 1;  /* default */
 
 	if ( argc < 1 )
 		execerror("usage: kill(tid,killchildren)");
@@ -1147,7 +1146,7 @@ bi_kill(int argc)
 	t = taskptr(tid);
 
 	if ( argc > 1 ) {
-		killchildren = neednum("kill",ARG(1));
+		(void)neednum("kill",ARG(1));
 	}
 
 	/* Do the ret() right away, because T may get changed */
@@ -1912,7 +1911,6 @@ bi_screen(int argc)
 	char *bad = "Improper xy array given to screen()";
 	long x0, y0, x1, y1;
 	Datum retval;
-	int n;
 
 	retval = Nullval;
 	v = needstr(s,ARG(0));
@@ -1926,7 +1924,7 @@ bi_screen(int argc)
 		}
 		else {
 			Htablep arr = needarr(s,ARG(1));
-			n = getxy01(arr,&x0,&y0,&x1,&y1,1,bad);
+			(void)getxy01(arr,&x0,&y0,&x1,&y1,1,bad);
 			if ( mdep_screenresize(x0,y0,x1,y1) != 0 )
 				retval = strdatum(uniqstr("mdep_screenresize fails!?"));
 		}
