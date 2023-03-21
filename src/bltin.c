@@ -2365,7 +2365,7 @@ bitmap_new(int x, int y)
 	b = (bi_bitmap_t*) kmalloc(sizeof(bi_bitmap_t),"bi_bitmap");
 	memset(b,0,sizeof(bi_bitmap_t));
 	nbytes = x * y * 3;
-	b->bits = kmalloc(nbytes,"bi_bitmap");
+	b->bits = (Unchar *) kmalloc(nbytes,"bi_bitmap");
 	memset(b->bits,0,nbytes);
 	b->id = mx + 1;
 	b->xsize = x;
