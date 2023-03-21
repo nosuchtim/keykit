@@ -282,7 +282,7 @@ addstr(Symstr s1,Symstr s2)
 
 	need = (long)strlen(s1)+(long)strlen(s2)+1;
 	/* avoid expensive kmalloc if we can use small buffer */
-	if ( need > sizeof(s) ) {
+	if ( need > (int)sizeof(s) ) {
 		Symstr snew;
 		snew = (Symstr) kmalloc((unsigned)need,"addstr");
 		strcpy(snew,(char*)s1);

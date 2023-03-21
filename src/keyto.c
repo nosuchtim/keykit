@@ -43,7 +43,7 @@ writevarinum (register long value)
 	int bi = 0;
 
 	buffer[bi] = (unsigned char)(value & 0x7f);
-	while ((value >>= 7) > 0 && bi < (sizeof(buffer)-1) ) {
+	while ((value >>= 7) > 0 && bi < (int)(sizeof(buffer)-1) ) {
 		buffer[++bi] = 0x80 | (unsigned char)(value & 0x7f);
 	}
 	while ( bi >= 0 ) {

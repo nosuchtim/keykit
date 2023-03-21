@@ -117,7 +117,7 @@ fprintf(FF,"INODES2CODE start\n");
 
 		/* advance offset by size of code type */
 		codetype = in->code.type;
-		if ( codetype <= 0 || codetype >= sizeof(Codesize) ) {
+		if ( codetype <= 0 || codetype >= (int)sizeof(Codesize) ) {
 			eprint("Unknown IC_* (%d) in 2inst!?",codetype);
 		}
 		else {

@@ -2390,7 +2390,7 @@ eprfunc(BYTEFUNC i)
 	intptr_t ii;
 
 	ii = (intptr_t)i;
-	if ( ii>=0 && ii < (sizeof(Bytenames)/sizeof(Bytenames[0])) ) {
+	if ( ii>=0 && ii < (int)(sizeof(Bytenames)/sizeof(Bytenames[0])) ) {
 		keyerrfile("%s (%ld)",Bytenames[ii],ii);
 	}
 	else {

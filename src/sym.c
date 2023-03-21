@@ -615,7 +615,7 @@ strsplit(char *str,char *sep)
 	int state;
 
 	/* avoid kmalloc if we can use small buffer */
-	if ( slen >= sizeof(buffer) )
+	if ( slen >= (int)sizeof(buffer) )
 		buff = kmalloc((unsigned)(slen+1),"strsplit");
 	else
 		buff = buffer;
@@ -667,7 +667,7 @@ strsplit(char *str,char *sep)
 		*p = '\0';
 		setarrayelem(arr,n++,word);
 	}
-	if ( slen >= sizeof(buffer) )
+	if ( slen >= (int)sizeof(buffer) )
 		kfree(buff);
 	return(da);
 }
