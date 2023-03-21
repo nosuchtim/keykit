@@ -1620,15 +1620,15 @@ static struct cinfo {
 	int hotx, hoty;
 	Cursor curs;
 } Clist[] = {
-	M_ARROW, (char*)myarrow_bits, (char*)myarrow_mask_bits, 1,1, NOCURSOR,
-	M_CROSS, (char*)cross_bits, (char*)cross_bits, 8,8, NOCURSOR,
-	M_SWEEP, (char*)sweep_bits, (char*)sweep_bits, 0,0, NOCURSOR,
-	M_LEFTRIGHT,(char*)leftright_bits, (char*)leftright_bits, 0,0,NOCURSOR,
-	M_UPDOWN, (char*)updown_bits, (char*)updown_bits, 0,0, NOCURSOR,
-	M_ANYWHERE, (char*)anywhere_bits, (char*)anywhere_bits, 8,8, NOCURSOR,
-	M_BUSY, (char*)coffee_bits, (char*)coffee_bits, 0,0, NOCURSOR,
-	M_NOTHING, (char*)no_bits, (char*)no_bits, 0,0, NOCURSOR,
-	-1, (char*)NULL, (char*)NULL, 0,0, NOCURSOR
+	{ M_ARROW, (char*)myarrow_bits, (char*)myarrow_mask_bits, 1,1, NOCURSOR },
+	{ M_CROSS, (char*)cross_bits, (char*)cross_bits, 8,8, NOCURSOR },
+	{ M_SWEEP, (char*)sweep_bits, (char*)sweep_bits, 0,0, NOCURSOR },
+	{ M_LEFTRIGHT,(char*)leftright_bits, (char*)leftright_bits, 0,0,NOCURSOR },
+	{ M_UPDOWN, (char*)updown_bits, (char*)updown_bits, 0,0, NOCURSOR },
+	{ M_ANYWHERE, (char*)anywhere_bits, (char*)anywhere_bits, 8,8, NOCURSOR },
+	{ M_BUSY, (char*)coffee_bits, (char*)coffee_bits, 0,0, NOCURSOR },
+	{ M_NOTHING, (char*)no_bits, (char*)no_bits, 0,0, NOCURSOR },
+	{ -1, (char*)NULL, (char*)NULL, 0,0, NOCURSOR }
 };
 
 void

@@ -114,21 +114,21 @@ metatype(char *s)
 		char *type_name;
 		int type_val;
 	} ttype[] = {
-		METATEXT,		1,
-		METACOPYRIGHT,		2,
-		METASEQUENCE,		3,
-		METAINSTRUMENT,		4,
-		METALYRIC,		5,
-		METAMARKER,		6,
-		METACUE,		7,
-		METAUNRECOGNIZED,	8,
-		"Tempo",		MYMETATEMPO,
-		"Timesig",		MYMETATIMESIG,
-		"Keysig",		MYMETAKEYSIG,
-		"Seqnum",		MYMETASEQNUM,
-		"Smpte",		MYMETASMPTE,
-		"Channelprefix",	MYCHANPREFIX,
-		NULL, 0
+		{ METATEXT,		1 },
+		{ METACOPYRIGHT,		2 },
+		{ METASEQUENCE,		3 },
+		{ METAINSTRUMENT,		4 },
+		{ METALYRIC,		5 },
+		{ METAMARKER,		6 },
+		{ METACUE,		7 },
+		{ METAUNRECOGNIZED,	8 },
+		{ "Tempo",		MYMETATEMPO },
+		{ "Timesig",		MYMETATIMESIG },
+		{ "Keysig",		MYMETAKEYSIG },
+		{ "Seqnum",		MYMETASEQNUM },
+		{ "Smpte",		MYMETASMPTE },
+		{ "Channelprefix",	MYCHANPREFIX },
+		{ NULL, 0 }
 	};
 	int n;
 	char *p;
