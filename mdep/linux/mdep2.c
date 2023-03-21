@@ -888,8 +888,17 @@ mdep_waitfor(int tmout)
 			(*Intrfunc)();
 			return K_CONSOLE;
 		}
-		sprintf(Msg1,"poll/select failed in mdep_waitfor() errno=%d Readfds=0x%x MaxFdUsed=%d\n",errno,ReadFds,MaxFdUsed);
-		execerror(Msg1);
+        {
+            int fd;
+            unsigned int maskReadFds = 0;
+            for (fd = 0; fd < MaxFdUsed; fd++)
+            {
+                if (FD_ISSET(fd, &readfds))
+                    maskReadFds |= (1 << fd);
+            }
+            sprintf(Msg1,"poll/select failed in mdep_waitfor() errno=%d Readfds= 0x%x MaxFdUsed=%d\n",errno,maskReadFds,MaxFdUsed);
+            execerror(Msg1);
+        }
 	}
 
 	for ( m=Topport; m!=NULL; m=m->next ) {
