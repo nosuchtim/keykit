@@ -838,7 +838,7 @@ callfuncd(Symbolp s)
 		tp = cp;
 
 		/* For user-defined funcs, # of parameters is the 2nd code */
-		SCAN_BLTINCODE(tp);
+		(void)SCAN_BLTINCODE(tp);
 		nparams = SCAN_NUMCODE(tp);
 
 		SKIP_SYMCODE(tp);   /* skip over 3rd code (symbol) */

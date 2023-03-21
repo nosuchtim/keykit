@@ -1783,14 +1783,14 @@ scan_ipcode(Unchar **pp)
 long
 nparamsof(Codep cp)
 {
-	SCAN_BLTINCODE(cp);
+	(void)SCAN_BLTINCODE(cp);
 	return scan_numcode(&cp);
 }
 
 Symbolp
 symof(Codep cp)
 {
-	SCAN_BLTINCODE(cp);
+	(void)SCAN_BLTINCODE(cp);
 	scan_numcode(&cp);
 	return scan_symcode(&cp);
 }
@@ -1798,7 +1798,7 @@ symof(Codep cp)
 long
 nlocalsof(Codep cp)
 {
-	SCAN_BLTINCODE(cp);
+	(void)SCAN_BLTINCODE(cp);
 	scan_numcode(&cp);
 	scan_symcode(&cp);
 	return scan_numcode(&cp);
@@ -1807,7 +1807,7 @@ nlocalsof(Codep cp)
 Codep
 firstinstof(Codep cp)
 {
-	SCAN_BLTINCODE(cp);
+	(void)SCAN_BLTINCODE(cp);
 	scan_numcode(&cp);
 	scan_symcode(&cp);
 	scan_numcode(&cp);
