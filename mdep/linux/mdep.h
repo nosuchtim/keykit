@@ -15,6 +15,7 @@
 #endif
 #include <setjmp.h>
 #include <errno.h>
+#include <inttypes.h>
 
 
 #define MACHINE "linux"	/* default value of keykit's Machine variable */

@@ -259,7 +259,7 @@ mdep_getnmidi(char *buff, int buffsize, int *port)
 			if (inports[n].port_id == port_id) {
 				
 				if ((nbytes = snd_midi_event_decode (inports[n].parser, buff, buffsize, ev)) < 0) {
-					fprintf (stderr, "bad parse on port\n", port_id);
+					fprintf (stderr, "bad parse on port %d\n", port_id);
 					return -1;
 				}
 

@@ -15,6 +15,12 @@
 
 #include "mdep.h"
 
+/* If mdep does not provide PRIdPTR format string, supply our own
+ * (using "lld" format code from original code) */
+#ifndef PRIdPTR
+#define PRIdPTR "lld"
+#endif
+
 /* Provide empty NO_RETURN_ATRRIBUTE if not defined in mdep.h
  * which should prevent d_*.h header files from failing to compile */
 #ifndef NO_RETURN_ATTRIBUTE
