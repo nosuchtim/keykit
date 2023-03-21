@@ -40,7 +40,6 @@ static snd_seq_t* seq = 0;
 static int
 connect_to_sequencer ()
 {
-	unsigned int caps = 0;
 	int err;
 
 	if ((err = snd_seq_open (&seq, "default", SND_SEQ_OPEN_DUPLEX, SND_SEQ_NONBLOCK)) != 0) {
@@ -60,7 +59,6 @@ mdep_initmidi(Midiport *inputs, Midiport *outputs)
 	struct pollfd pfds[1];
 	int i;
 	char* env;
-	int n = 0;
 	int err;
 
 	if (connect_to_sequencer ()) {

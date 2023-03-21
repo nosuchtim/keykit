@@ -590,7 +590,6 @@ void
 mdep_prerc(void)
 {
 	extern Symlongp Merge;
-	char *p;
 
 	*Merge = 1;
 	*Panraster = 0;
@@ -684,8 +683,6 @@ mdep_keypath(void)
 int
 mdep_makepath(char *dirname, char *filename, char *result, int resultsize)
 {
-	char *p, *q;
-
 	if ( resultsize < (int)(strlen(dirname)+strlen(filename)+5) )
 		return 1;
 
@@ -796,7 +793,6 @@ int
 mdep_waitfor(int tmout)
 {
 	int ret;
-	int iii;
 	fd_set readfds;
 	fd_set exceptfds;
 	struct timeval t;
@@ -1112,7 +1108,9 @@ initdisplay(int argc,char **argv)
 	XSizeHints sizehints;
 	XWMHints wmhints;
 	char *geom = 0;
+#if OLDSTUFF
 	long et;
+#endif
 	int flags;
 	unsigned int width, height;
 	int x, y;
@@ -1815,7 +1813,6 @@ tcpip_listen(char *hostname, char *servname)
 	SOCKET sock;
 	char myname[80];
 	unsigned short port;
-	int r;
 
 	sock = socket( AF_INET, SOCK_STREAM, 0);
 	if (sock == INVALID_SOCKET) {
@@ -2185,10 +2182,6 @@ tcpip_checksock_accept(Myport *m)
 	Myport *m2;
 
 	if ( m->sockstate == SOCK_LISTENING ) {
-		SOCKADDR_IN sin;  /* accepted socket */
-		SOCKET s2;
-		int addrlen;
-
 		getsockopt(m->sock,SOL_SOCKET,SO_ERROR,&soerr,&soleng);
 		if ( soerr == ECONNREFUSED ) {
 			m->isopen = 0;
@@ -2263,8 +2256,6 @@ mdep_getportdata(PORTHANDLE *handle, char *buff, int buffsize, Datum *pd)
 	Myport *m;
 	Myport *m2;
 	int r;
-	int soerr = 0;
-	int soleng = sizeof(int);
 
 	dummyusage(pd);
 	for ( m=Topport; m!=NULL; m=m->next ) {

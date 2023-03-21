@@ -807,7 +807,6 @@ waddtolist(Kwind *w, Kwind **wlist)
 void
 k_initmenu(Kwind *w)
 {
-	static Pbitmap Emptybitmap = EMPTYBITMAP;
 	w->inscroll = 0;
 	w->km.items = NULL;
 	w->km.nitems = 0;

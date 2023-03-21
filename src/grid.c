@@ -568,8 +568,6 @@ textnoteinfo(Kwind *w,Noteptr n,int *ax1, int *ay1, int *ax2, int *ay2)
 	static char str[MAXTEXTSIZE+2];
 	int b1, b2, b3, i, c, ymid;
 	char *s, *pp = NULL;
-	int v = 0;
-	int off = 0;
 	Unchar* bp;
 	int theight;
 	int nbytes = ntbytesleng(n);
@@ -630,7 +628,6 @@ nonnotesize(Noteptr n,int *apitch1,int *apitch2)
 	int type1;
 	char *s = NULL;
 	int p1, p2;
-	int off = 0;
 
 	b1 = *bp++;
 	b2 = *bp++;

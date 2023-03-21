@@ -13,10 +13,6 @@
 
 extern int errno;
 
-static int Isatty = 0;
-static int Nextchar = NOCHAR;
-static int Conseof = 0;
-
 typedef struct Point {
 	short	x;
 	short	y;
@@ -37,15 +33,6 @@ typedef const char *Bitstype;
 typedef unsigned char *Bitstype;
 #endif
 
-static int Msx, Msy, Msb, Msm;	/* Mouse x, y, buttons, modifier */
-static Point Dsize;
-static MyRectangle Rawsize;
-static MyBitmap Disp;
-static int Inwind = 1;
-static int Ncolors;
-static int Sharecolors;
-static int defscreen;
-static int defdepth;
 static SIGFUNCTYPE Intrfunc;
 
 static Point
@@ -174,8 +161,6 @@ mdep_keypath(void)
 int
 mdep_makepath(char *dirname, char *filename, char *result, int resultsize)
 {
-	char *p, *q;
-
 	if ( resultsize < (int)(strlen(dirname)+strlen(filename)+5) )
 		return 1;
 

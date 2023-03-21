@@ -1585,7 +1585,6 @@ hashtable(Htablep ht,Datum key,int action)
 	Hnodepp table;
 	Hnodep h, toph, prev;
 	int v, nc;
-int cnt = 0;
 
 	table = ht->nodetable;
 

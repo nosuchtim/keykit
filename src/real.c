@@ -10,7 +10,6 @@ int Debugqnote = 0;
 #include "key.h"
 #include "keymidi.h"
 
-static char *Timeoutmsg = "This is a demo copy of KeyKit.\nThe timeout has expired, sorry.";
 static void real_putnmidi(int buffsize, char *buff, int port);
 
 static int Currport = 0;	/* 1-based input port number (keykit's port

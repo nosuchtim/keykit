@@ -94,7 +94,6 @@ inodes2code(Instnodep inlist)
 	Instnodep in;
 	int offset = 0;
 	int codetype;
-	int cnt = 0;
 
 	/* First go through and figure out how big the code will be, */
 	/* so we know the exact byte position of each instruction, and also */

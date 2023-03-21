@@ -842,7 +842,6 @@ o_sweep(int argc)
 	long x, y;
 	int n;
 	Htablep arr;
-	char *bad = "bad array given to .sweep, needs x0/y0/x1/y1";
 	char *s = ".sweep";
 	Kwind *w = windid(T->obj);
 
@@ -907,7 +906,6 @@ void
 o_menuitems(int argc)
 {
 	Kwind *w = windid(T->obj);
-	char *s = ".menuitems";
 	Kitem *ki;
 	Datum d;
 
@@ -925,7 +923,9 @@ o_menuitems(int argc)
 Kobjectp
 windobject(long id,int complain,char *type)
 {
+#ifdef OLDSTUFF
 	static int first = 1;
+#endif
 	Symbolp s;
 	Kobjectp o;
 	Kwind *w = NULL;
