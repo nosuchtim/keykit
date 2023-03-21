@@ -845,9 +845,9 @@ callfuncd(Symbolp s)
 		/* and # of locals is the 4th code */
 		nlocals = SCAN_NUMCODE(tp);
 
-		/* Be careful here - tp is assumed to retain it's value */
-		/* until it's used again down in the setpc() call at the
-		/* very end of this function! */
+		/* Be careful here - tp is assumed to retain it's value
+		 * until it's used again down in the setpc() call at the
+		 * very end of this function! */
 
 		/* See if the stack needs to be expanded. */
 		/* The extra 4 here is for paranoia */

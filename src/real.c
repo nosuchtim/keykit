@@ -12,8 +12,8 @@ int Debugqnote = 0;
 
 static void real_putnmidi(int buffsize, char *buff, int port);
 
-static int Currport = 0;	/* 1-based input port number (keykit's port
-				/* numbers), 0 means default. */
+static int Currport = 0;  /* 1-based input port number (keykit's port
+                           * numbers), 0 means default. */
 
 static int lastsync = 0;
 static long lastnowoffset = 0;
