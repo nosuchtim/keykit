@@ -1839,7 +1839,8 @@ tcpip_listen(char *hostname, char *servname)
 	local_sin.sin_port = port;
 
 	if ( hostname != NULL ) {
-		strncpy(myname,hostname,sizeof(myname));
+		strncpy(myname,hostname,sizeof(myname)-1);
+        myname[sizeof(myname)-1] = '\0';
 	} else {
 		if ( gethostname(myname,sizeof(myname)) < 0 ) {
 			sockerror(sock,"gethostname() failed, errno=%d",errno);
