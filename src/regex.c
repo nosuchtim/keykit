@@ -776,6 +776,9 @@ myre_subs(register char *src, register char *dst)
 				pin = c - '0';
 				break;
 			}
+			/* Eliminate fallthrough warning by cloning default case here */
+			*dst++ = c;
+			continue;
 			
 		default:
 			*dst++ = c;
