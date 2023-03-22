@@ -232,11 +232,13 @@ mdep_ignoreinterrupt(void)
 	(void) signal(SIGBUS, SIG_IGN);
 }
 
+#if OLDSTUFF
 static void
 millisleep(int n)
 {
 	usleep(1000*n);
 }
+#endif
 
 static int
 kbdchar(void)
@@ -749,15 +751,6 @@ mdep_putconsole(char *s)
 {
 	fputs(s,stdout);
 	(void) fflush(stdout);
-}
-
-static void
-clearrect(int x0,int y0,int x1,int y1)
-{
- 	XSetFunction(dpy,gc,F_STORE);
- 	XSetForeground(dpy,gc,bgpix);
-	resetmode();
-	XFillRectangle(dpy, Disp.dr, gc, x0,y0, x1-x0,y1-y0);
 }
 
 static void
@@ -1945,21 +1938,6 @@ tcpip_write(SOCKET sock,char *msg,int msgsize)
 		nwritten += r;
 	}
 	return nwritten;
-}
-
-static int
-tcpip_recv(SOCKET sock,char *buff, int buffsize)
-{
-	int r = recv(sock,buff,buffsize,0);
-	if ( r==0 )
-		return 0;	/* socket has closed, perhaps we should eof? */
-	if ( r == SOCKET_ERROR && errno == EWOULDBLOCK )
-		return 0;
-	if ( r == SOCKET_ERROR ) {
-		sockerror(sock,"tcpip_recv() failed");
-		return 0;
-	}
-	return r;
 }
 
 static int

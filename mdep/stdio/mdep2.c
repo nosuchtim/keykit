@@ -35,16 +35,6 @@ typedef unsigned char *Bitstype;
 
 static SIGFUNCTYPE Intrfunc;
 
-static Point
-Pt(int x,int y)
-{
-	Point p;
-
-	p.x = (short)x;
-	p.y = (short)y;
-	return p;
-}
-
 static MyRectangle
 Rect(int x1,int y1,int x2,int y2)
 {
