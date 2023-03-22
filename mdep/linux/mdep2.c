@@ -2129,7 +2129,7 @@ static void
 doaccept(SOCKET sock)
 {
 	SOCKET newsock;
-	int acc_sin_len;
+	socklen_t acc_sin_len;
 	SOCKADDR_IN acc_sin;
 	PORTHANDLE m0, m1, mp;
 	char *name;
@@ -2178,7 +2178,7 @@ static void
 tcpip_checksock_accept(Myport *m)
 {
 	int soerr = 0;
-	int soleng = sizeof(int);
+	socklen_t soleng = sizeof(int);
 	Myport *m2;
 
 	if ( m->sockstate == SOCK_LISTENING ) {
@@ -2205,7 +2205,7 @@ static void
 tcpip_checksock_connect(Myport *m)
 {
 	int soerr = 0;
-	int soleng = sizeof(int);
+	socklen_t soleng = sizeof(int);
 	Myport *m2;
 
 	if ( m->sockstate == SOCK_UNCONNECTED ) {

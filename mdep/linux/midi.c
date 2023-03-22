@@ -256,7 +256,7 @@ mdep_getnmidi(char *buff, int buffsize, int *port)
 
 	for (n = 0; n < n_inports; ++n) {
 		if (inports[n].port_id == port_id) {
-			if ((nbytes = snd_midi_event_decode (inports[n].parser, buff, buffsize, ev)) < 0) {
+			if ((nbytes = snd_midi_event_decode (inports[n].parser, (unsigned char *)buff, buffsize, ev)) < 0) {
 				fprintf (stderr, "bad parse on port %d\n", port_id);
 				return -1;
 			}
@@ -280,7 +280,7 @@ mdep_putnmidi(int n,char *p, Midiport * port)
 
 	snd_seq_nonblock (seq, 0);
 
-	if (snd_midi_event_encode (a->parser, p, n, &a->event) >= 0) {
+	if (snd_midi_event_encode (a->parser, (unsigned char *)p, n, &a->event) >= 0) {
 		if (snd_seq_event_output (seq, &a->event) < 0) {
 			eprint("Hmm, write to MIDI device didn't write everything?\n");
 			keyerrfile("Hmm, write to MIDI device didn't write everything?\n");
