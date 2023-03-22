@@ -2255,7 +2255,7 @@ mdep_getportdata(PORTHANDLE *handle, char *buff, int buffsize, Datum *pd)
 {
 	Myport *m;
 	Myport *m2;
-	int r;
+	int r = 0;
 
 	dummyusage(pd);
 	for ( m=Topport; m!=NULL; m=m->next ) {

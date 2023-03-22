@@ -247,34 +247,28 @@ mdep_getnmidi(char *buff, int buffsize, int *port)
 		*port = 0;
 	}
 
-	if (snd_seq_event_input (seq, &ev) > 0) {
-
-		int port_id = ev->dest.port;
-		int n = 0;
-
-		for (n = 0; n < n_inports; ++n) {
-
-			if (inports[n].port_id == port_id) {
-				
-				if ((nbytes = snd_midi_event_decode (inports[n].parser, buff, buffsize, ev)) < 0) {
-					fprintf (stderr, "bad parse on port %d\n", port_id);
-					return -1;
-				}
-
-				if (port) {
-					*port = n;
-				}
-
-				break;
-			}
-		}
-
-	} else { 
-
+	if (snd_seq_event_input (seq, &ev) <= 0) {
 		return -1;
 	}
 
-	return nbytes;
+	int port_id = ev->dest.port;
+	int n;
+
+	for (n = 0; n < n_inports; ++n) {
+		if (inports[n].port_id == port_id) {
+			if ((nbytes = snd_midi_event_decode (inports[n].parser, buff, buffsize, ev)) < 0) {
+				fprintf (stderr, "bad parse on port %d\n", port_id);
+				return -1;
+			}
+
+			if (port) {
+				*port = n;
+			}
+
+			return nbytes;
+		}
+	}
+	return -1;
 }
 
 void

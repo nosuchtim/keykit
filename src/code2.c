@@ -731,7 +731,7 @@ assign(int type, int dottype)
 	Symbolp s;
 	Datum *sdp;
 	Phrasep p;
-	long sum, modval, val;
+	long sum, modval=0, val;
 	Noteptr nt;
 	int dontpush;
 
@@ -984,7 +984,7 @@ void
 recodeassign(Instnodep varinode,Instnodep eqinode)
 {
 	Instnodep in, prein, tin;
-	int eqtype, isdot=0, ismod=0, isarr=0, dottype;
+	int eqtype, isdot=0, ismod=0, isarr=0, dottype=0;
 	Instcode cd;
 
 	eqtype = (int) (eqinode->code.u.val);

@@ -1298,7 +1298,7 @@ messtont(char *s)
 	static int messinc = 64;
 	Noteptr n;
 	char c;
-	int h, i, bytenum=0, byte1;
+	int h, i, bytenum=0, byte1=0;
 	int nbytes = 0;
 
 	n = newnt();
