@@ -643,10 +643,10 @@ pmatch(register char *lp, register CHAR *ap)
 				return(0);
 			break;
 		case BOT:
-			bopat[*ap++] = lp;
+			bopat[(unsigned char)*ap++] = lp;
 			break;
 		case EOT:
-			eopat[*ap++] = lp;
+			eopat[(unsigned char)*ap++] = lp;
 			break;
  		case BOW:
 			if (!(lp!=bol && iswordc(lp[-1])) && iswordc(*lp))
