@@ -115,7 +115,7 @@ midiput(int n,Unchar* msg,int port,int chan)
 		 * But if that port isn't open,
 		 * don't put out anything.
 		 */
-		if ( Midioutputs[port-1].opened == 0 ) {
+		if ( port <= 0 || Midioutputs[port-1].opened == 0 ) {
 			return;
 		}
 	}
