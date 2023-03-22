@@ -182,6 +182,9 @@ clobber_nt : clean_nt
 	cd src && $(MK) clobber
 	cd lib && $(MK) clobber
 	rm -fr mdep/nt/x64
+	rm -f bin/key.exe
+	rm -f bin/keylib.exe
+	rm -f bin/lowkey.exe
 	rm -f bin/key.dbg
 	rm -f bin/keydll.dll
 	rm -f bin/keykit.py
