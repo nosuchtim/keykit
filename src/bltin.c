@@ -358,6 +358,7 @@ bi_taskinfo(int argc)
 void
 bi_oldtypeof(int argc)
 {
+	dummyusage(argc);
 	execerror("bi_oldnargs is obsolete!\n");
 #ifdef OLDSTUFF
 
@@ -868,6 +869,7 @@ bi_midibytes(int argc)
 void
 bi_oldnargs(int argc)
 {
+	dummyusage(argc);
 	execerror("bi_oldnargs is obsolete!\n");
 #ifdef OLDSTUFF
 	Datum d, *frm, *arg0;
@@ -1137,7 +1139,6 @@ bi_kill(int argc)
 {
 	long tid;
 	Ktaskp t;
-	int killchildren = 1;  /* default */
 
 	if ( argc < 1 )
 		execerror("usage: kill(tid,killchildren)");
@@ -1145,7 +1146,7 @@ bi_kill(int argc)
 	t = taskptr(tid);
 
 	if ( argc > 1 ) {
-		killchildren = neednum("kill",ARG(1));
+		(void)neednum("kill",ARG(1));
 	}
 
 	/* Do the ret() right away, because T may get changed */
@@ -1837,6 +1838,7 @@ addnonxy(Htablep newarr,Htablep arr)
 void
 bi_oldxy(int argc)
 {
+	dummyusage(argc);
 	execerror("bi_oldxy is obsolete!\n");
 #ifdef OLDSTUFF
 	Datum r;
@@ -1909,7 +1911,6 @@ bi_screen(int argc)
 	char *bad = "Improper xy array given to screen()";
 	long x0, y0, x1, y1;
 	Datum retval;
-	int n;
 
 	retval = Nullval;
 	v = needstr(s,ARG(0));
@@ -1923,7 +1924,7 @@ bi_screen(int argc)
 		}
 		else {
 			Htablep arr = needarr(s,ARG(1));
-			n = getxy01(arr,&x0,&y0,&x1,&y1,1,bad);
+			(void)getxy01(arr,&x0,&y0,&x1,&y1,1,bad);
 			if ( mdep_screenresize(x0,y0,x1,y1) != 0 )
 				retval = strdatum(uniqstr("mdep_screenresize fails!?"));
 		}
@@ -2111,6 +2112,7 @@ void
 bi_midi(int argc)
 {
 #ifndef MDEP_MIDI_PROVIDED
+	dummyusage(argc);
 	execerror("midi: this port of keykit didn't provide mdep_midi()\n");
 #else
 	int r, portno;
@@ -2363,7 +2365,7 @@ bitmap_new(int x, int y)
 	b = (bi_bitmap_t*) kmalloc(sizeof(bi_bitmap_t),"bi_bitmap");
 	memset(b,0,sizeof(bi_bitmap_t));
 	nbytes = x * y * 3;
-	b->bits = kmalloc(nbytes,"bi_bitmap");
+	b->bits = (Unchar *) kmalloc(nbytes,"bi_bitmap");
 	memset(b->bits,0,nbytes);
 	b->id = mx + 1;
 	b->xsize = x;
@@ -2605,6 +2607,7 @@ bi_object(int argc)
 	Kobjectp o;
 	Datum d;
 
+	dummyusage(argc);
 	/*
 	 * Return an object value, given an object constant reference
 	 * as a an integer or string (either 123 or "$123").
@@ -2732,107 +2735,107 @@ bi_nullfunc(int argc)
 
 /* The order of elements in this array is not important */
 struct bltinfo builtins[] = {
-	"sizeof",	bi_sizeof,	BI_SIZEOF,
-	"oldnargs",	bi_oldnargs,	BI_OLDNARGS,
-	"argv",		bi_argv,	BI_ARGV,
-	"midibytes",	bi_midibytes,	BI_MIDIBYTES,
-	"substr",	bi_substr,	BI_SUBSTR,
-	"subbytes",	bi_sbbyes,	BI_SBBYES,
-	"rand",		bi_rand,	BI_RAND,
-	"error",	bi_error,	BI_ERROR,
-	"printf",	bi_printf,	BI_PRINTF,
-	"readphr",	bi_readphr,	BI_READPHR,
-	"exit",		bi_exit,	BI_EXIT,
-	"oldtypeof",	bi_oldtypeof,	BI_OLDTYPEOF,
-	"split",	bi_split,	BI_SPLIT,
-	"cut",		bi_cut,		BI_CUT,
-	"string",	bi_string,	BI_STRING,
-	"integer",	bi_integer,	BI_INTEGER,
-	"phrase",	bi_phrase,	BI_PHRASE,
-	"float",	bi_float,	BI_FLOAT,
-	"system",	bi_system,	BI_SYSTEM,
-	"chdir",	bi_chdir,	BI_CHDIR,
-	"tempo",	bi_tempo,	BI_TEMPO,
-	"milliclock",	bi_milliclock,	BI_MILLICLOCK,
-	"currtime",	bi_currtime,	BI_CURRTIME,
-	"filetime",	bi_filetime,	BI_FILETIME,
-	"garbcollect",	bi_garbcollect,	BI_GARBCOLLECT,
-	"funkey",	bi_funkey,	BI_FUNKEY,
-	"ascii",	bi_ascii,	BI_ASCII,
-	"midifile",	bi_midifile,	BI_MIDIFILE,
-	"reboot",	bi_reboot,	BI_REBOOT,
-	"refunc",	bi_refunc,	BI_REFUNC,
-	"debug",	bi_debug,	BI_DEBUG,
-	"nullfunc",	bi_nullfunc,	BI_NULLFUNC,
-	"pathsearch",	bi_pathsearch,	BI_PATHSEARCH,
-	"symbolnamed",	bi_symbolnamed,	BI_SYMBOLNAMED,
-	"limitsof",	bi_limitsof,	BI_LIMITSOF,
-	"sin",		bi_sin,		BI_SIN,
-	"cos",		bi_cos,		BI_COS,
-	"tan",		bi_tan,		BI_TAN,
-	"asin",		bi_asin,	BI_ASIN,
-	"acos",		bi_acos,	BI_ACOS,
-	"atan",		bi_atan,	BI_ATAN,
-	"sqrt",		bi_sqrt,	BI_SQRT,
-	"pow",		bi_pow,		BI_POW,
-	"exp",		bi_exp,		BI_EXP,
-	"log",		bi_log,		BI_LOG,
-	"log10",	bi_log10,	BI_LOG10,
-	"realtime",	bi_realtime,	BI_REALTIME,
-	"finishoff",	bi_finishoff,	BI_FINISHOFF,
-	"sprintf",	bi_sprintf,	BI_SPRINTF,
+	{ "sizeof",	bi_sizeof,	BI_SIZEOF },
+	{ "oldnargs",	bi_oldnargs,	BI_OLDNARGS },
+	{ "argv",		bi_argv,	BI_ARGV },
+	{ "midibytes",	bi_midibytes,	BI_MIDIBYTES },
+	{ "substr",	bi_substr,	BI_SUBSTR },
+	{ "subbytes",	bi_sbbyes,	BI_SBBYES },
+	{ "rand",		bi_rand,	BI_RAND },
+	{ "error",	bi_error,	BI_ERROR },
+	{ "printf",	bi_printf,	BI_PRINTF },
+	{ "readphr",	bi_readphr,	BI_READPHR },
+	{ "exit",		bi_exit,	BI_EXIT },
+	{ "oldtypeof",	bi_oldtypeof,	BI_OLDTYPEOF },
+	{ "split",	bi_split,	BI_SPLIT },
+	{ "cut",		bi_cut,		BI_CUT },
+	{ "string",	bi_string,	BI_STRING },
+	{ "integer",	bi_integer,	BI_INTEGER },
+	{ "phrase",	bi_phrase,	BI_PHRASE },
+	{ "float",	bi_float,	BI_FLOAT },
+	{ "system",	bi_system,	BI_SYSTEM },
+	{ "chdir",	bi_chdir,	BI_CHDIR },
+	{ "tempo",	bi_tempo,	BI_TEMPO },
+	{ "milliclock",	bi_milliclock,	BI_MILLICLOCK },
+	{ "currtime",	bi_currtime,	BI_CURRTIME },
+	{ "filetime",	bi_filetime,	BI_FILETIME },
+	{ "garbcollect",	bi_garbcollect,	BI_GARBCOLLECT },
+	{ "funkey",	bi_funkey,	BI_FUNKEY },
+	{ "ascii",	bi_ascii,	BI_ASCII },
+	{ "midifile",	bi_midifile,	BI_MIDIFILE },
+	{ "reboot",	bi_reboot,	BI_REBOOT },
+	{ "refunc",	bi_refunc,	BI_REFUNC },
+	{ "debug",	bi_debug,	BI_DEBUG },
+	{ "nullfunc",	bi_nullfunc,	BI_NULLFUNC },
+	{ "pathsearch",	bi_pathsearch,	BI_PATHSEARCH },
+	{ "symbolnamed",	bi_symbolnamed,	BI_SYMBOLNAMED },
+	{ "limitsof",	bi_limitsof,	BI_LIMITSOF },
+	{ "sin",		bi_sin,		BI_SIN },
+	{ "cos",		bi_cos,		BI_COS },
+	{ "tan",		bi_tan,		BI_TAN },
+	{ "asin",		bi_asin,	BI_ASIN },
+	{ "acos",		bi_acos,	BI_ACOS },
+	{ "atan",		bi_atan,	BI_ATAN },
+	{ "sqrt",		bi_sqrt,	BI_SQRT },
+	{ "pow",		bi_pow,		BI_POW },
+	{ "exp",		bi_exp,		BI_EXP },
+	{ "log",		bi_log,		BI_LOG },
+	{ "log10",	bi_log10,	BI_LOG10 },
+	{ "realtime",	bi_realtime,	BI_REALTIME },
+	{ "finishoff",	bi_finishoff,	BI_FINISHOFF },
+	{ "sprintf",	bi_sprintf,	BI_SPRINTF },
 /* FIFO-RELATED FUNCTIONS */
-	"get",		bi_get,		BI_GET,
-	"put",		bi_put,		BI_PUT,
-	"open",		bi_open,	BI_OPEN,
-	"fifosize",	bi_fifosize,	BI_FIFOSIZE,
-	"flush",	bi_flush,	BI_FLUSH,
-	"close",	bi_close,	BI_CLOSE,
+	{ "get",		bi_get,		BI_GET },
+	{ "put",		bi_put,		BI_PUT },
+	{ "open",		bi_open,	BI_OPEN },
+	{ "fifosize",	bi_fifosize,	BI_FIFOSIZE },
+	{ "flush",	bi_flush,	BI_FLUSH },
+	{ "close",	bi_close,	BI_CLOSE },
 /* TASK-RELATED FUNCTIONS */
-	"taskinfo",	bi_taskinfo,	BI_TASKINFO,
-	"kill",		bi_kill,	BI_KILL,
-	"priority",	bi_priority,	BI_PRIORITY,
-	"onexit",	bi_onexit,	BI_ONEXIT,
-	"onerror",	bi_onerror,	BI_ONERROR,
-	"sleeptill",	bi_sleeptill,	BI_SLEEPTILL,
-	"wait",		bi_wait,	BI_WAIT,
-	"lock",		bi_lock,	BI_LOCK,
-	"unlock",	bi_unlock,	BI_UNLOCK,
+	{ "taskinfo",	bi_taskinfo,	BI_TASKINFO },
+	{ "kill",		bi_kill,	BI_KILL },
+	{ "priority",	bi_priority,	BI_PRIORITY },
+	{ "onexit",	bi_onexit,	BI_ONEXIT },
+	{ "onerror",	bi_onerror,	BI_ONERROR },
+	{ "sleeptill",	bi_sleeptill,	BI_SLEEPTILL },
+	{ "wait",		bi_wait,	BI_WAIT },
+	{ "lock",		bi_lock,	BI_LOCK },
+	{ "unlock",	bi_unlock,	BI_UNLOCK },
 /* OBJECT-RELATED FUNCTIONS */
-	"object",	bi_object,	BI_OBJECT,
-	"objectlist",	bi_objectlist,	BI_OBJECTLIST,
+	{ "object",	bi_object,	BI_OBJECT },
+	{ "objectlist",	bi_objectlist,	BI_OBJECTLIST },
 /* GRAPHICS-RELATED FUNCTIONS */
-	"windowobject",	bi_windobject,	BI_WINDOBJECT,
-	"screen",	bi_screen,	BI_SCREEN,
-	"setmouse",	bi_setmouse,	BI_SETMOUSE,
-	"mousewarp",	bi_mousewarp,	BI_MOUSEWARP,
-	"browsefiles",	bi_browsefiles,	BI_BROWSEFILES,
-	"colorset",	bi_colorset,	BI_COLORSET,
-	"colormix",	bi_colormix,	BI_COLORMIX,
-	"sync",		bi_sync,	BI_SYNC,
-	"oldxy",	bi_oldxy,	BI_OLDXY,
-	"Redrawfunc",	bi_nullfunc,	BI_NULLFUNC,
-	"Resizefunc",	bi_nullfunc,	BI_NULLFUNC,
-	"Colorfunc",	bi_nullfunc,	BI_NULLFUNC,
-	"popup",	bi_printf,	BI_PRINTF,
+	{ "windowobject",	bi_windobject,	BI_WINDOBJECT },
+	{ "screen",	bi_screen,	BI_SCREEN },
+	{ "setmouse",	bi_setmouse,	BI_SETMOUSE },
+	{ "mousewarp",	bi_mousewarp,	BI_MOUSEWARP },
+	{ "browsefiles",	bi_browsefiles,	BI_BROWSEFILES },
+	{ "colorset",	bi_colorset,	BI_COLORSET },
+	{ "colormix",	bi_colormix,	BI_COLORMIX },
+	{ "sync",		bi_sync,	BI_SYNC },
+	{ "oldxy",	bi_oldxy,	BI_OLDXY },
+	{ "Redrawfunc",	bi_nullfunc,	BI_NULLFUNC },
+	{ "Resizefunc",	bi_nullfunc,	BI_NULLFUNC },
+	{ "Colorfunc",	bi_nullfunc,	BI_NULLFUNC },
+	{ "popup",	bi_printf,	BI_PRINTF },
 /* MISC FUNCTIONS */
-	"help",		bi_help,	BI_HELP,
-	"rekeylib",	bi_rekeylib,	BI_REKEYLIB,
-	"Exitfunc",	bi_nullfunc,	BI_NULLFUNC,
-	"Errorfunc",	bi_exit,	BI_EXIT,
-	"Rebootfunc",	bi_nullfunc,	BI_NULLFUNC,
-	"Intrfunc",	bi_exit,	BI_EXIT,
-	"coreleft",	bi_coreleft,	BI_CORELEFT,
-	"prstack",	bi_prstack,	BI_PRSTACK,
-	"phdump",	bi_phdump,	BI_PHDUMP,
-	"lsdir",	bi_lsdir,	BI_LSDIR,
-	"attribarray",	bi_attribarray,	BI_ATTRIBARRAY,
-	"fifoctl",	bi_fifoctl,	BI_FIFOCTL,
-	"mdep",		bi_mdep,	BI_MDEP,
-	"midi",		bi_midi,	BI_MIDI,
-	"bitmap",	bi_bitmap,	BI_BITMAP,
-	"objectinfo",	bi_objectinfo,	BI_OBJECTINFO,
-	0,		0,		0
+	{ "help",		bi_help,	BI_HELP },
+	{ "rekeylib",	bi_rekeylib,	BI_REKEYLIB },
+	{ "Exitfunc",	bi_nullfunc,	BI_NULLFUNC },
+	{ "Errorfunc",	bi_exit,	BI_EXIT },
+	{ "Rebootfunc",	bi_nullfunc,	BI_NULLFUNC },
+	{ "Intrfunc",	bi_exit,	BI_EXIT },
+	{ "coreleft",	bi_coreleft,	BI_CORELEFT },
+	{ "prstack",	bi_prstack,	BI_PRSTACK },
+	{ "phdump",	bi_phdump,	BI_PHDUMP },
+	{ "lsdir",	bi_lsdir,	BI_LSDIR },
+	{ "attribarray",	bi_attribarray,	BI_ATTRIBARRAY },
+	{ "fifoctl",	bi_fifoctl,	BI_FIFOCTL },
+	{ "mdep",		bi_mdep,	BI_MDEP },
+	{ "midi",		bi_midi,	BI_MIDI },
+	{ "bitmap",	bi_bitmap,	BI_BITMAP },
+	{ "objectinfo",	bi_objectinfo,	BI_OBJECTINFO },
+	{ 0,		0,		0 }
 };
 
 /* Watch out, the order of elements in this array must match */

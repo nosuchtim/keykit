@@ -337,7 +337,8 @@ k_header(int f,int n,int d)
 {
 	Mformat = f;
 	Tracknum = 0;
-	
+
+	dummyusage(n);
 	if ( (0x8000 & d) != 0 ) {
 		/* It's SMPTE, frame-per-second and ticks per frame */
 		int frames_per_second = (d >> 8) & 0x7f;

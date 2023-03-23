@@ -8,6 +8,7 @@
 void
 o_setinit(int argc)
 {
+	dummyusage(argc);
 	execerror("o_setinit called!?   It's obsolete!");
 #ifdef OLDSTUFF
 	Codep cp;
@@ -153,6 +154,7 @@ o_children(int argc)
 	Kobjectp o, obj;
 	Datum d;
 
+	dummyusage(argc);
 	obj = T->realobj;
 	d = newarrdatum(0,32);
 	for ( o=obj->children; o!=NULL; o=o->nextsibling ) {
@@ -193,6 +195,7 @@ o_inherited(int argc)
 	Kobjectp o, obj;
 	Datum d;
 
+	dummyusage(argc);
 	obj = T->realobj;
 	d = newarrdatum(0,32);
 	for ( o=obj->inheritfrom; o!=NULL; o=o->nextinherit )
@@ -254,6 +257,7 @@ o_contains(int argc)
 	Kwind *w;
 	long r;
 
+	dummyusage(argc);
 	w = windid(T->obj);
 	n = getxy01(needarr(".contains",ARG(0)),&x0,&y0,&x1,&y1,1,"bad array given to .contains");
 	if ( n == 2 )
@@ -274,6 +278,7 @@ o_mousedo(int argc)
 	int nodraw;
 	char *bad = "bad array given to .mousedo, needs x0/y0/button";
 
+	dummyusage(argc);
 	w = windid(T->obj);
 	arr = needarr(".mousedo",ARG(0));
 	n = getxy01(arr,&x0,&y0,&x1,&y1,1,bad);
@@ -481,6 +486,7 @@ o_saveunder(int argc)
 
 	/* We used to check for multiple saveunders (i.e. without an */
 	/* interveaning restoreunder), but no more. */
+	dummyusage(argc);
 	wid = w->x1 - w->x0 + 1;
 	hgt = w->y1 - w->y0 + 1;
 	w->saveunder = mdep_allocbitmap(wid,hgt);
@@ -515,12 +521,14 @@ o_restoreunder(int argc)
 void
 o_textheight(int argc)
 {
+	dummyusage(argc);
 	ret(numdatum(mdep_fontheight()));
 }
 
 void
 o_textwidth(int argc)
 {
+	dummyusage(argc);
 	ret(numdatum(mdep_fontwidth()));
 }
 
@@ -589,6 +597,8 @@ o_type(int argc)
 {
 	char *t;
 	Kwind *w = windid(T->obj);
+
+	dummyusage(argc);
 	switch(w->type){
 	case WIND_GENERIC:	t = "generic"; break;
 	case WIND_PHRASE:	t = "phrase"; break;
@@ -603,6 +613,8 @@ void
 o_xmin(int argc)
 {
 	Kwind *w = windid(T->obj);
+
+	dummyusage(argc);
 	ret(numdatum(windxmin(w)));
 }
 
@@ -610,6 +622,8 @@ void
 o_ymin(int argc)
 {
 	Kwind *w = windid(T->obj);
+
+	dummyusage(argc);
 	ret(numdatum(windymin(w)));
 }
 
@@ -617,6 +631,8 @@ void
 o_xmax(int argc)
 {
 	Kwind *w = windid(T->obj);
+
+	dummyusage(argc);
 	ret(numdatum(windxmax(w)));
 }
 
@@ -624,6 +640,8 @@ void
 o_ymax(int argc)
 {
 	Kwind *w = windid(T->obj);
+
+	dummyusage(argc);
 	ret(numdatum(windymax(w)));
 }
 
@@ -631,6 +649,8 @@ void
 o_redraw(int argc)
 {
 	Kwind *w = windid(T->obj);
+
+	dummyusage(argc);
 	wredraw1(w);
 	ret(Nullval);
 }
@@ -647,6 +667,7 @@ o_childunder(int argc)
 	char *s = ".childunder";
 	char *bad = "bad xy array in .childunder";
 
+	dummyusage(argc);
 	arr = needarr(s,ARG(0));
 	n = getxy01(arr,&x0,&y0,&x1,&y1,1,bad);
 	if ( n != 2 )
@@ -713,6 +734,7 @@ o_scaletogrid(int argc)
 	char *s = ".scaletogrid";
 	Kwind *w = windid(T->obj);
 
+	dummyusage(argc);
 	arr = needarr(s,ARG(0));
 	n = getxy01(arr,&x0,&y0,&x1,&y1,1,bad);
 	if ( n == 2 ) {
@@ -741,6 +763,7 @@ o_scaletowind(int argc)
 	char *s = ".scaletowind";
 	Kwind *w = windid(T->obj);
 
+	dummyusage(argc);
 	arr = needarr(s,ARG(0));
 	n = getxy01(arr,&x0,&y0,&x1,&y1,1,bad);
 	if ( n == 2 ) {
@@ -771,6 +794,7 @@ o_closestnote(int argc)
 	char *s = ".closestnote";
 	Kwind *w = windid(T->obj);
 
+	dummyusage(argc);
 	arr = needarr(s,ARG(0));
 	/* The values we're getting in the array are SUPPOSED to be raw */
 	/* x,y values, NOT click/pitch values. */
@@ -818,7 +842,6 @@ o_sweep(int argc)
 	long x, y;
 	int n;
 	Htablep arr;
-	char *bad = "bad array given to .sweep, needs x0/y0/x1/y1";
 	char *s = ".sweep";
 	Kwind *w = windid(T->obj);
 
@@ -883,10 +906,10 @@ void
 o_menuitems(int argc)
 {
 	Kwind *w = windid(T->obj);
-	char *s = ".menuitems";
 	Kitem *ki;
 	Datum d;
 
+	dummyusage(argc);
 	if ( w->type != WIND_MENU )
 		execerror(".menuitems() must be applied to a menu window!?");
 	
@@ -900,7 +923,9 @@ o_menuitems(int argc)
 Kobjectp
 windobject(long id,int complain,char *type)
 {
+#ifdef OLDSTUFF
 	static int first = 1;
+#endif
 	Symbolp s;
 	Kobjectp o;
 	Kwind *w = NULL;

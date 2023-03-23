@@ -15,6 +15,18 @@
 
 #include "mdep.h"
 
+/* If mdep does not provide PRIdPTR format string, supply our own
+ * (using "lld" format code from original code) */
+#ifndef PRIdPTR
+#define PRIdPTR "lld"
+#endif
+
+/* Provide empty NO_RETURN_ATRRIBUTE if not defined in mdep.h
+ * which should prevent d_*.h header files from failing to compile */
+#ifndef NO_RETURN_ATTRIBUTE
+#define NO_RETURN_ATTRIBUTE
+#endif
+
 #ifdef PYTHON
 #include "Python.h"
 #endif
@@ -81,7 +93,7 @@ typedef struct Kobject *Kobjectp;
 #define dummyusage(x) x=x
 #define dummyset(x) x=0
 #else
-#define dummyusage(x)
+#define dummyusage(x) (void)x
 #define dummyset(x)
 #endif
 #endif
@@ -749,8 +761,8 @@ typedef struct Midiport {
 /*
  * The index into this array is the port number minus 1.
  */
-Midiport Midiinputs[MIDI_IN_DEVICES];
-Midiport Midioutputs[MIDI_OUT_DEVICES];
+extern Midiport Midiinputs[MIDI_IN_DEVICES];
+extern Midiport Midioutputs[MIDI_OUT_DEVICES];
 
 /*
  * Used for the first argument of the mdep_midi function.
@@ -958,7 +970,7 @@ extern Unchar B___;
 
 #define codeis(c,v) (((c).u.func==(BYTEFUNC)(v)) && ((c).type==IC_FUNC))
 
-#define chkrealoften() if(++Chkcount>*Throttle2){chkinput();chkoutput();Chkcount=0;}else
+#define chkrealoften() do {if(++Chkcount>*Throttle2){chkinput();chkoutput();Chkcount=0;}} while(0)
 
 /* legal first characters of names */
 #define isname1char(c) (isalpha(c)||c=='_')
@@ -1202,6 +1214,15 @@ Hey, mdep_statmidi is no longer used!
 #include "d_regex.h"
 #include "d_clock.h"
 #include "d_menu.h"
+
+/* GCC compiler only wants the no return attribute on a function's
+ * prototype, _not_ its declaration. Other targets that don't define
+ * NO_RETURN_ATTRIBUTE in their mdep.h should have tripped ifdef above
+ * that defines NO_RETURN_ATTRIBUTE as empty string. */
+#ifdef __GNUC__
+#undef NO_RETURN_ATTRIBUTE
+#define NO_RETURN_ATTRIBUTE
+#endif
 
 #ifdef FFF
 extern FILE *FF;

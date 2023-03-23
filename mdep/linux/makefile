@@ -24,7 +24,7 @@ SRC = real.c yacc.c code.c code2.c sym.c main.c util.c mdep1.c mfin.c \
 	phrase.c misc.c fsm.c grid.c view.c midi.c clock.c mdep2.c \
 	keyto.c regex.c task.c fifo.c kwind.c menu.c bltin.c meth.c
 PROFILE = -g
-CFLAGS = -O $(INC) $(PROFILE)
+CFLAGS = -Wall -Wextra -O $(INC) $(PROFILE)
 
 all : $(EXECS)
 
@@ -71,60 +71,29 @@ ALLDECS = d_code.h d_code2.h d_fsm.h d_grid.h d_keyto.h d_main.h d_mdep1.h \
 	d_util.h d_view.h d_task.h d_fifo.h d_kwind.h d_regex.h d_bltin.h \
 	d_clock.h d_meth.h d_mdep2.h
 
-d_regex.h : regex.c
-	./protoflp $(PROTO) -dd_regex.h < regex.c > /dev/null
-d_sym.h : sym.c
-	./protoflp $(PROTO) -dd_sym.h < sym.c > /dev/null
-d_bltin.h : bltin.c
-	./protoflp $(PROTO) -dd_bltin.h < bltin.c > /dev/null
-d_util.h : util.c
-	./protoflp $(PROTO) -dd_util.h < util.c > /dev/null
-d_phrase.h : phrase.c
-	./protoflp $(PROTO) -dd_phrase.h < phrase.c > /dev/null
-d_misc.h : misc.c
-	./protoflp $(PROTO) -dd_misc.h < misc.c > /dev/null
-d_main.h : main.c
-	./protoflp $(PROTO) -dd_main.h < main.c > /dev/null
-d_task.h : task.c
-	./protoflp $(PROTO) -dd_task.h < task.c > /dev/null
-d_fifo.h : fifo.c
-	./protoflp $(PROTO) -dd_fifo.h < fifo.c > /dev/null
-d_code.h : code.c
-	./protoflp $(PROTO) -dd_code.h < code.c > /dev/null
-d_code2.h : code2.c
-	./protoflp $(PROTO) -dd_code2.h < code2.c > /dev/null
-d_mdep1.h : mdep1.c
-	./protoflp $(PROTO) -dd_mdep1.h < mdep1.c > /dev/null
-d_mdep2.h : mdep2.c
-	./protoflp $(PROTO) -dd_mdep2.h < mdep2.c > /dev/null
-d_view.h : view.c
-	./protoflp $(PROTO) -dd_view.h < view.c > /dev/null
-d_grid.h : grid.c
-	./protoflp $(PROTO) -dd_grid.h < grid.c > /dev/null
-d_midi.h : midi.c
-	./protoflp $(PROTO) -dd_midi.h < midi.c > /dev/null
-d_clock.h : clock.c
-	./protoflp $(PROTO) -dd_clock.h < clock.c > /dev/null
-d_real.h : real.c
-	./protoflp $(PROTO) -dd_real.h < real.c > /dev/null
-d_fsm.h : fsm.c
-	./protoflp $(PROTO) -dd_fsm.h < fsm.c > /dev/null
-d_keyto.h : keyto.c
-	./protoflp $(PROTO) -dd_keyto.h < keyto.c > /dev/null
-d_mfin.h : mfin.c
-	./protoflp $(PROTO) -dd_mfin.h < mfin.c > /dev/null
-d_menu.h : menu.c
-	./protoflp $(PROTO) -dd_menu.h < menu.c > /dev/null
-d_kwind.h : kwind.c
-	./protoflp $(PROTO) -dd_kwind.h < kwind.c > /dev/null
-d_meth.h : meth.c
-	./protoflp $(PROTO) -dd_meth.h < meth.c > /dev/null
+# Using protoflp, Create d_xx.h from xx.c (using d_xx_h.tmp temp file):
+# 1) if d_xx.h doesn't exist
+# 2) if d_xx.h is different than previous d_xx.h
+# 3) if d_xx.h is older than xx.c
+d_%.h: %.c
+	@./protoflp $(PROTO) -dd_$*_h.tmp < $*.c > /dev/null; \
+	cmp -s d_$*_h.tmp d_$*.h; \
+	test \( $$? -ne 0 \) -o \( $*.c -nt d_$*.h \); \
+	if [ $$? -eq 0 ]; then \
+		echo "generate 'd_$*.h'"; \
+		mv -f d_$*_h.tmp d_$*.h; \
+	else \
+		rm -f d_$*_h.tmp; \
+	fi
 
 
 alldecs : $(ALLDECS)
 
 $(KEY):	protoflp $(ALLDECS) $(OBJS)
 	$(CC) $(STATIC) $(CFLAGS) $(OBJS) $(XLIBS) $(SOUNDLIBS) -o $(KEY)
+
+.c.o:
+	$(CC) $(CFLAGS) -c $*.c
 
 trymidi:	trymidi.o
 	$(CC) $(CFLAGS) trymidi.o $(SOUNDLIBS) -o trymidi

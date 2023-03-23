@@ -13,6 +13,9 @@ char *buff;
 int buffsize;
 int *p;
 {
+	dummyusage(buff);
+	dummyusage(buffsize);
+	dummyusage(p);
 	return 0;
 }
 
@@ -22,6 +25,9 @@ int n;
 char *p;
 Midiport *port;
 {
+	dummyusage(n);
+	dummyusage(p);
+	dummyusage(port);
 }
 
 int
@@ -31,6 +37,9 @@ Midiport * outputs;
 {
 	extern char **Devmidi;
 	char *uniqstr();
+
+	dummyusage(inputs);
+	dummyusage(outputs);
 	*Devmidi = uniqstr("/dev/null");
 	return 0;
 }

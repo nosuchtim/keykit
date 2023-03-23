@@ -29,6 +29,21 @@ bin/save_gxy_wednesday
 bin/savefpp_starrynight
 bin/savefpp_google
 doc/electromusic2005
+bin/key
+bin/lowkey
+byacc/byacc
+src/protoflp
+src/keykit.ico
+src/tjt.ico
+src/d_*.h
+src/yacc.[hc]
+src/clock.c
+src/key
+src/lowkey
+src/mdep.h
+src/mdep[12].c
+src/midi.c
+
 
 # Compiled Object files
 *.slo

@@ -40,8 +40,10 @@ mdep_hello(int argc,char **argv)
 
 	if ( Isatty )
 		ttysetraw();
+#else
+	dummyusage(argc);
+	dummyusage(argv);
 #endif
-
 }
 
 /* bye -   This function does any cleanup, before final exit. */

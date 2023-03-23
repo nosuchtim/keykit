@@ -228,7 +228,7 @@ drawclipped(Kwind *w,Phrasep p,long sclicks,long eclicks,int spitch,int epitch,i
 	Noteptr n;
 	int pitch;
 	long lasts = MAXCLICKS, laste = MAXCLICKS;
-	int yhigh, lastx1, lastx2, denom, isnote;
+	int yhigh, lastx1=0, lastx2=0, denom, isnote;
 	long s, e;
 	long ndrawn = 0;
 	Krect cliprect;
@@ -568,8 +568,6 @@ textnoteinfo(Kwind *w,Noteptr n,int *ax1, int *ay1, int *ax2, int *ay2)
 	static char str[MAXTEXTSIZE+2];
 	int b1, b2, b3, i, c, ymid;
 	char *s, *pp = NULL;
-	int v = 0;
-	int off = 0;
 	Unchar* bp;
 	int theight;
 	int nbytes = ntbytesleng(n);
@@ -630,7 +628,6 @@ nonnotesize(Noteptr n,int *apitch1,int *apitch2)
 	int type1;
 	char *s = NULL;
 	int p1, p2;
-	int off = 0;
 
 	b1 = *bp++;
 	b2 = *bp++;
@@ -757,6 +754,8 @@ int
 clipcode(Kwind *w,int x,int y,Krect *r)
 {
         int rc = 0;
+
+        dummyusage(w);
         if(x < r->x0)
                 rc |= ISLEFT;
         else if(x > r->x1)
@@ -773,7 +772,7 @@ fullclipit(Kwind *w,int *x1,int *y1,int *x2,int *y2,Krect *r)
 {
         int c1, c2, c, clipped;
         int xa = *x1, xb = *x2, ya = *y1, yb = *y2;
-        int x, y;
+        int x=0, y=0;
 
         c1 = clipcode(w,xa, ya,r);
         c2 = clipcode(w,xb, yb,r);
@@ -908,6 +907,7 @@ dispclip(Kwind *w,int *ax,int *ay,Krect *kr)
 {
 	int r = NT_VISIBLE;
 
+    dummyusage(w);
 	if ( *ax < kr->x0 ) {
 		r = NT_INVISIBLE;
 		*ax = kr->x0;
@@ -1100,6 +1100,12 @@ gridpan(Kwind *w,long cshift,int pshift)
 		clrx2a = tox+1;
 		eclick2 -= cshift;
 	}
+    else
+    {
+        eclicks = 0;
+        sclicks = 0;
+        clrx = 0;
+    }
 
 	toy = fromy = Disporigy;
 	if ( pshift == 0 )

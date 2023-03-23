@@ -22,6 +22,7 @@ resetstack(void)
 
 void
 underflow(void)
+NO_RETURN_ATTRIBUTE
 {
 	execerror("Stack underflow");
 }
@@ -93,7 +94,6 @@ inodes2code(Instnodep inlist)
 	Instnodep in;
 	int offset = 0;
 	int codetype;
-	int cnt = 0;
 
 	/* First go through and figure out how big the code will be, */
 	/* so we know the exact byte position of each instruction, and also */
@@ -117,7 +117,7 @@ fprintf(FF,"INODES2CODE start\n");
 
 		/* advance offset by size of code type */
 		codetype = in->code.type;
-		if ( codetype <= 0 || codetype >= sizeof(Codesize) ) {
+		if ( codetype <= 0 || codetype >= (int)sizeof(Codesize) ) {
 			eprint("Unknown IC_* (%d) in 2inst!?",codetype);
 		}
 		else {
@@ -837,7 +837,7 @@ callfuncd(Symbolp s)
 		tp = cp;
 
 		/* For user-defined funcs, # of parameters is the 2nd code */
-		SCAN_BLTINCODE(tp);
+		(void)SCAN_BLTINCODE(tp);
 		nparams = SCAN_NUMCODE(tp);
 
 		SKIP_SYMCODE(tp);   /* skip over 3rd code (symbol) */
@@ -845,9 +845,9 @@ callfuncd(Symbolp s)
 		/* and # of locals is the 4th code */
 		nlocals = SCAN_NUMCODE(tp);
 
-		/* Be careful here - tp is assumed to retain it's value */
-		/* until it's used again down in the setpc() call at the
-		/* very end of this function! */
+		/* Be careful here - tp is assumed to retain it's value
+		 * until it's used again down in the setpc() call at the
+		 * very end of this function! */
 
 		/* See if the stack needs to be expanded. */
 		/* The extra 4 here is for paranoia */
@@ -1509,12 +1509,12 @@ prstack(Datum *d)
 			}
 			s2 = datumstr(*d);
 		}
-		sprintf(Msg1,"tid=%ld Stack[top-%d] (%lld) = %s %s",T->tid,n,(intptr_t)d,s1,s2);
+		sprintf(Msg1,"tid=%ld Stack[top-%d] (%" PRIdPTR ") = %s %s",T->tid,n,(intptr_t)d,s1,s2);
 		if ( (*d).type == D_PHR ) {
-			sprintf(strend(Msg1)," %lld used=%d tobe=%d",(intptr_t)((*d).u.phr),(*d).u.phr->p_used,(*d).u.phr->p_tobe);
+			sprintf(strend(Msg1)," %" PRIdPTR " used=%d tobe=%d",(intptr_t)((*d).u.phr),(*d).u.phr->p_used,(*d).u.phr->p_tobe);
 		}
 		if ( (*d).type == D_CODEP )
-			sprintf(strend(Msg1)," fnc=%lld",(intptr_t)((*d).u.codep));
+			sprintf(strend(Msg1)," fnc=%" PRIdPTR "",(intptr_t)((*d).u.codep));
 		eprint(Msg1);
 	}
 	if ( n >= PRSTACKLIMIT ) eprint("STACK LIST TRUNCATED!!!\n");

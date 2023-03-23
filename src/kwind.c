@@ -586,15 +586,18 @@ kwindellipse2(Kwind *w,int x0,int y0,int x1,int y1,int dofill)
 void
 kwindfillpolygon(Kwind *w,int *xarr,int *yarr,int arrsize)
 {
-	Krect clip;
-
-	clip = makerect(w->x0,w->y0,w->x1,w->y1);
-
 	if ( arrsize < 3 ) {
 		execerror("Too few points given to kwindfillpolygon");
 	}
-#if 0
+
+#if 1
+	(void)makerect(w->x0,w->y0,w->x1,w->y1);
+#else
+	Krect clip;
 	int n;
+
+	clip = makerect(w->x0,w->y0,w->x1,w->y1);
+
 	for ( n=1; n<arrsize; n++ ) {
 		/* If any line is completely invisible, don't do anything. */
 		if ( fullclipit(w,&xarr[n-1],&yarr[n-1],&xarr[n],&yarr[n],&clip) == NT_INVISIBLE ) {
@@ -807,7 +810,6 @@ waddtolist(Kwind *w, Kwind **wlist)
 void
 k_initmenu(Kwind *w)
 {
-	static Pbitmap Emptybitmap = EMPTYBITMAP;
 	w->inscroll = 0;
 	w->km.items = NULL;
 	w->km.nitems = 0;

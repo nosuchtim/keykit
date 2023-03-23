@@ -43,7 +43,7 @@ writevarinum (register long value)
 	int bi = 0;
 
 	buffer[bi] = (unsigned char)(value & 0x7f);
-	while ((value >>= 7) > 0 && bi < (sizeof(buffer)-1) ) {
+	while ((value >>= 7) > 0 && bi < (int)(sizeof(buffer)-1) ) {
 		buffer[++bi] = 0x80 | (unsigned char)(value & 0x7f);
 	}
 	while ( bi >= 0 ) {
@@ -114,21 +114,21 @@ metatype(char *s)
 		char *type_name;
 		int type_val;
 	} ttype[] = {
-		METATEXT,		1,
-		METACOPYRIGHT,		2,
-		METASEQUENCE,		3,
-		METAINSTRUMENT,		4,
-		METALYRIC,		5,
-		METAMARKER,		6,
-		METACUE,		7,
-		METAUNRECOGNIZED,	8,
-		"Tempo",		MYMETATEMPO,
-		"Timesig",		MYMETATIMESIG,
-		"Keysig",		MYMETAKEYSIG,
-		"Seqnum",		MYMETASEQNUM,
-		"Smpte",		MYMETASMPTE,
-		"Channelprefix",	MYCHANPREFIX,
-		NULL, 0
+		{ METATEXT,		1 },
+		{ METACOPYRIGHT,		2 },
+		{ METASEQUENCE,		3 },
+		{ METAINSTRUMENT,		4 },
+		{ METALYRIC,		5 },
+		{ METAMARKER,		6 },
+		{ METACUE,		7 },
+		{ METAUNRECOGNIZED,	8 },
+		{ "Tempo",		MYMETATEMPO },
+		{ "Timesig",		MYMETATIMESIG },
+		{ "Keysig",		MYMETAKEYSIG },
+		{ "Seqnum",		MYMETASEQNUM },
+		{ "Smpte",		MYMETASMPTE },
+		{ "Channelprefix",	MYCHANPREFIX },
+		{ NULL, 0 }
 	};
 	int n;
 	char *p;

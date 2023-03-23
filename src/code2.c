@@ -282,7 +282,7 @@ addstr(Symstr s1,Symstr s2)
 
 	need = (long)strlen(s1)+(long)strlen(s2)+1;
 	/* avoid expensive kmalloc if we can use small buffer */
-	if ( need > sizeof(s) ) {
+	if ( need > (int)sizeof(s) ) {
 		Symstr snew;
 		snew = (Symstr) kmalloc((unsigned)need,"addstr");
 		strcpy(snew,(char*)s1);
@@ -731,7 +731,7 @@ assign(int type, int dottype)
 	Symbolp s;
 	Datum *sdp;
 	Phrasep p;
-	long sum, modval, val;
+	long sum, modval=0, val;
 	Noteptr nt;
 	int dontpush;
 
@@ -984,7 +984,7 @@ void
 recodeassign(Instnodep varinode,Instnodep eqinode)
 {
 	Instnodep in, prein, tin;
-	int eqtype, isdot=0, ismod=0, isarr=0, dottype;
+	int eqtype, isdot=0, ismod=0, isarr=0, dottype=0;
 	Instcode cd;
 
 	eqtype = (int) (eqinode->code.u.val);

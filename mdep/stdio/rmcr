@@ -17,7 +17,7 @@ do
 	if [ "$i" != "-u" ]
 	then
 		sed -e 's///' -e 's///' $i > $i.tmp
-		mv -f $i.tmp $i
+		cmp -s $i.tmp $i && rm -f $i.tmp || mv -f $i.tmp $i
 	fi
 done
 

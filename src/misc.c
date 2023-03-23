@@ -13,10 +13,12 @@
 
 void (*Fatalfunc)(char *) = 0;
 void (*Diagfunc)(char *) = 0;
+#if 0
 long dval = 1;
 long *Debug = &dval;
 long dmval = 1;
 extern long *Debugmalloc;
+#endif
 
 int
 exists(char *fname)
@@ -190,6 +192,7 @@ allocate(unsigned int s, char *tag)
 {
 	char *p;
 
+	dummyusage(tag);
 	p = (char*) malloc(s);
 	/* if ( Debugmalloc!=NULL && *Debugmalloc!=0 && recurse<=1 )
 		keyerrfile("allocate(%d %s)=%d\n",s,tag,p); */

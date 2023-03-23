@@ -52,6 +52,7 @@ char **argv;
 	char *defs = NULL;
 	char *buff, *lastline, *func, *arg1, *args, *word1, *word2;
 	int n, l, ln, words, isproto, dtype = PROTO;
+	int found_no_return_attribute;
 	FILE *fdef;
 	char **decs;
 
@@ -142,9 +143,15 @@ char **argv;
 		if ( (p=strchr(arg1,',')) != NULL )
 			*p = '\0';
 		words = sscanf(arg1,"%s %s",word1,word2);
+		found_no_return_attribute = 0;
 		while ( fgets(buff,BFSIZE,stdin) != NULL ) {
 			if ( buff[0] == '\n' )
 				continue;
+			if ( !strcmp(buff, "NO_RETURN_ATTRIBUTE\n") )
+			{
+				found_no_return_attribute = 1;
+				continue;
+			}
 			if ( buff[0] == '{' )
 				break;
 			decs[ln++] = strsave(buff);
@@ -198,8 +205,13 @@ char **argv;
 			}
 			if ( (p=strchr(protoline,'\n')) != NULL )
 				*p = '\0';
-			fprintf(fdef,"%s;\n",protoline);
-		    }
+			fprintf(fdef,"%s\n",protoline);
+			if (found_no_return_attribute)
+			{
+				fprintf(fdef, "NO_RETURN_ATTRIBUTE\n");
+			}
+			fprintf(fdef, ";\n");
+			}
 		}
 		else {	 /* We want to turn it into old form */
 

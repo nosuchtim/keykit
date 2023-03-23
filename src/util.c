@@ -196,7 +196,7 @@ ph1dump(Phrasep p)
 	num = 0;
 	for ( n=firstnote(p); n!=NULL; n=n->next )
 		num++;
-	sprintf(Msg1,"phrase=%lld numnotes=%d used=%d tobe=%d\n",
+	sprintf(Msg1,"phrase=%" PRIdPTR " numnotes=%d used=%d tobe=%d\n",
 		(intptr_t)p,num,(int)(p->p_used),(int)(p->p_tobe));tprint(Msg1);
 }
 
@@ -1638,7 +1638,7 @@ put_strcode(Symstr str, Unchar *p)
 Unchar *
 put_dblcode(DBLTYPE dbl, Unchar *p)
 {
-	union dbl_union u;
+	union dbl_union u = {0};
 	u.dbl = dbl;
 	*p++ = u.bytes[0];
 	*p++ = u.bytes[1];
@@ -1783,14 +1783,14 @@ scan_ipcode(Unchar **pp)
 long
 nparamsof(Codep cp)
 {
-	SCAN_BLTINCODE(cp);
+	(void)SCAN_BLTINCODE(cp);
 	return scan_numcode(&cp);
 }
 
 Symbolp
 symof(Codep cp)
 {
-	SCAN_BLTINCODE(cp);
+	(void)SCAN_BLTINCODE(cp);
 	scan_numcode(&cp);
 	return scan_symcode(&cp);
 }
@@ -1798,7 +1798,7 @@ symof(Codep cp)
 long
 nlocalsof(Codep cp)
 {
-	SCAN_BLTINCODE(cp);
+	(void)SCAN_BLTINCODE(cp);
 	scan_numcode(&cp);
 	scan_symcode(&cp);
 	return scan_numcode(&cp);
@@ -1807,7 +1807,7 @@ nlocalsof(Codep cp)
 Codep
 firstinstof(Codep cp)
 {
-	SCAN_BLTINCODE(cp);
+	(void)SCAN_BLTINCODE(cp);
 	scan_numcode(&cp);
 	scan_symcode(&cp);
 	scan_numcode(&cp);
@@ -1856,13 +1856,9 @@ varinum_put(long value,Unchar *p)
 int
 varinum_size(long value)
 {
-	int sign;
 	int sz = 0;
 
-	if ( value > 0 )
-		sign = 0;
-	else {
-		sign = 0x40;	/* this bit in the first byte indicates sign */
+	if ( value < 0 ) {
 		value = -value;
 	}
 	if ( value < 64 )
