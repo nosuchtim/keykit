@@ -3061,7 +3061,7 @@ void MidiOutWinMM :: sendMessage( const unsigned char *message, size_t size )
     }
 
     // Pack MIDI bytes into double word.
-    DWORD packet;
+    DWORD packet = 0;
     unsigned char *ptr = (unsigned char *) &packet;
     for ( unsigned int i=0; i<nBytes; ++i ) {
       *ptr = message[i];
