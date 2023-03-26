@@ -105,7 +105,43 @@ mdep_putnmidi(int n, char *cp, Midiport * pport)
 	if (windevno == MIDI_NOSUCH_DEV)
 		return;
 
-	rtmidi_out_send_message(rtmidiout[windevno], cp, n);
+	int sofar = 0;
+	while ( sofar < n ) {
+		char *p = cp + sofar;
+		int byte0 = *p & 0xff;
+		int status = byte0 & 0xf0;
+		int expecting = 0;
+		switch (status) {
+			case NOTEON:
+			case NOTEOFF:
+			case PRESSURE:
+			case CONTROLLER:
+			case PITCHBEND:
+				expecting = 3;
+				break;
+			case PROGRAM:
+			case CHANPRESSURE:
+				expecting = 2;
+				break;
+		}
+		switch (byte0) {
+			case MIDISTART:
+			case MIDICONTINUE:
+			case MIDISTOP:
+				expecting = 1;
+		}
+		if (expecting != 0) {
+			// When we know the length to expect,
+			// we allow putnmidi to send multiple messages
+			rtmidi_out_send_message(rtmidiout[windevno], p, expecting);
+			sofar += expecting;
+		} else {
+			// BUT for system messages, we expect only one
+			// Ideally, this code should 
+			rtmidi_out_send_message(rtmidiout[windevno], p, n);
+			break;
+		}
+	}
 
 	if (rtmidiout[windevno]->ok != true) {
 		midiouterror(1, (char *)(rtmidiout[windevno]->msg));
