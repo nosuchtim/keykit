@@ -243,6 +243,7 @@ distribution_nt :
 	mkdir dist/nt/key/doc
 	cp bin/key.exe bin/lowkey.exe bin/keylib.exe dist/nt/key/bin
 	cp doc/*.html dist/nt/key/doc
+	rm -f lib/last.kp
 	cp lib/* dist/nt/key/lib
 	cp music/* dist/nt/key/music
 	cd dist/nt && powershell "$$global:ProgressPreference = 'SilentlyContinue' ; compress-archive -literalpath key -destinationpath ../key_nt.zip"
