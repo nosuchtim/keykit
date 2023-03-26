@@ -300,7 +300,6 @@ function consoleprintf(...) {
 }
 
 function normboot() {
-
 	if ( ! defined(Rebootfuncs) ) {
 		Rebootfuncs = []
 		Nbootfuncs = 0
@@ -308,6 +307,12 @@ function normboot() {
 	bootvars()
 
 	if ( Graphics ) {
+		# allow environment variable to control screen size
+		keysize = mdep("env","get","KEYSIZE")
+		if ( keysize != "" ) {
+			eval "TMP="+keysize
+			screen("size",TMP)
+		}
 		gridinit()
 		task consloop()
 		task consoutloop()
