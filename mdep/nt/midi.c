@@ -72,7 +72,7 @@ mdep_getnmidi(char* buff, int buffsize, int* port)
 			break;
 		}
 	}
-	if ( devno < 0 ) {
+	if (devno < 0) {
 		if (port) {
 			*port = 0;
 		}
@@ -83,7 +83,7 @@ mdep_getnmidi(char* buff, int buffsize, int* port)
 		*port = devno;
 	}
 	int gotten = 0;
-	for ( int i=0; i<buffsize; i++ ) {
+	for (int i = 0; i < buffsize; i++) {
 		if (midiBuff[devno].readSoFar >= midiBuff[devno].nextToWrite) {
 			// we've reached the end of the input buffer, so reset things
 			midiBuff[devno].readSoFar = midiBuff[devno].buff;
@@ -106,23 +106,35 @@ mdep_putnmidi(int n, char *cp, Midiport * pport)
 		return;
 
 	int sofar = 0;
-	while ( sofar < n ) {
+	int firststatus = 0;
+	while (sofar < n) {
 		char *p = cp + sofar;
 		int byte0 = *p & 0xff;
 		int status = byte0 & 0xf0;
+		BOOL isrunning = ((byte0 & 0x80) == 0);
+		if (isrunning) {
+			// Allow running status within a single buffer given to mdep_putnmidi.
+			status = firststatus;
+		}
+		else {
+			firststatus = status;
+		}
 		int expecting = 0;
 		switch (status) {
-			case NOTEON:
-			case NOTEOFF:
-			case PRESSURE:
-			case CONTROLLER:
-			case PITCHBEND:
-				expecting = 3;
-				break;
-			case PROGRAM:
-			case CHANPRESSURE:
-				expecting = 2;
-				break;
+		case NOTEON:
+		case NOTEOFF:
+		case PRESSURE:
+		case CONTROLLER:
+		case PITCHBEND:
+			expecting = 3;
+			break;
+		case PROGRAM:
+		case CHANPRESSURE:
+			expecting = 2;
+			break;
+		}
+		if ( isrunning ) {
+			expecting -= 1;
 		}
 		switch (byte0) {
 			case MIDISTART:
@@ -142,11 +154,12 @@ mdep_putnmidi(int n, char *cp, Midiport * pport)
 		}
 		if (expecting != 0) {
 			// When we know the length to expect,
-			// we allow putnmidi to send multiple messages.
+			// we allow putnmidi to send multiple messages,
+			// including possibly running status.
 			rtmidi_out_send_message(rtmidiout[windevno], p, expecting);
 			sofar += expecting;
 		} else {
-			// BUT for system messages, we expect only one.
+			// BUT otherwise, we send exactly what we've been given.
 			rtmidi_out_send_message(rtmidiout[windevno], p, n);
 			break;
 		}
