@@ -142,22 +142,22 @@ mdep_putnmidi(int n, char *cp, Midiport * pport)
 			case MIDISTOP:
 				expecting = 1;
 		}
-		int bytesleft = n - sofar;
-		// If we don't have enough bytes left (e.g. if we're given an incomplete
-		// message), we just expect to send that many bytes.
-		if (bytesleft < expecting) {
-			// NOTE: this relies on a change in RtMidi.cpp in rtmidi_out_send_message
-			// that initializes the entire message (a DWORD) to 0.  If that turns out to
-			// be problematic, we can allocate a new buffer here (since we can't expand
-			// the one at p) that has enough bytes for full short message.
-			expecting = bytesleft;
-		}
 		if (expecting != 0) {
+
 			// When we know the length to expect,
 			// we allow putnmidi to send multiple messages,
 			// including possibly running status.
+
+			// But if we don't have enough bytes...
+			int bytesleft = n - sofar;
+			if (bytesleft < expecting) {
+				eprint("Incomplete MIDI messages can't be handled by the Windows version\n");
+				break;
+			}
+
 			rtmidi_out_send_message(rtmidiout[windevno], p, expecting);
 			sofar += expecting;
+
 		} else {
 			// BUT otherwise, we send exactly what we've been given.
 			rtmidi_out_send_message(rtmidiout[windevno], p, n);
