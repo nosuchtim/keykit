@@ -39,10 +39,15 @@ function gridinit() {
 
 	# Create the first, blank, page
 	Root = $0
-	if ( defined(Initconfig) && Initconfig != "" ) {
-		page_readnew(Initconfig)
+
+	keypage = mdep("env","get","KEYPAGE")
+	if ( keypage == "" ) {
+		keypage = "last.kp"
 	}
-	else {
+	pagepath = pathsearch(keypage)
+	if ( fileisreadable(pagepath) ) {
+		page_readnew(pagepath)
+	} else {
 		o = new wpage()
 		page_switchto(o,newpagename())
 	}
