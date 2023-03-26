@@ -275,22 +275,47 @@ void
 mdep_putnmidi(int n,char *p, Midiport * port)
 {
 	AlsaPortInfo * a = &outports[port->private1];
+	int have_event = 0;
+	int idx;
+	int ret;
 
+	/* Is this even required - doesn't parent handle running status
+	 * for the _output_ side? */
 	snd_midi_event_reset_encode (a->parser);
 
 	snd_seq_nonblock (seq, 0);
 
-	if (snd_midi_event_encode (a->parser, (unsigned char *)p, n, &a->event) >= 0) {
-		if (snd_seq_event_output (seq, &a->event) < 0) {
-			eprint("Hmm, write to MIDI device didn't write everything?\n");
-			keyerrfile("Hmm, write to MIDI device didn't write everything?\n");
-		} 
+	for (idx = 0; idx < n; ++idx)
+	{
+		ret = snd_midi_event_encode_byte(a->parser, p[idx], &a->event);
+		if (ret == 0)
+		{
+			/* Need more MIDI bytes to encode a complete ALSA sequencer event */
+			continue;
+		}
+		if (ret > 0)
+		{
+			/* Have fully encoded ALSA sequencer event - send it out */
+			have_event = 1;
+			if (snd_seq_event_output (seq, &a->event) < 0) {
+				eprint("Hmm, write to MIDI device didn't write everything?\n");
+				keyerrfile("Hmm, write to MIDI device didn't write everything?\n");
+			}
+		}
+		else 
+		{
+			eprint("snd_midi_event_encode_byte returned %d?", ret);
+			keyerrfile("snd_midi_event_encode_byte returned %d?", ret);
+		}
+	}
+
+	if (have_event)
+	{
 		if (snd_seq_drain_output (seq) < 0) {
 			eprint("Hmm, drain of MIDI device didn't write everything?\n");
 			keyerrfile("Hmm, drain of MIDI device didn't write everything?\n");
 		}
 	}
-
 	snd_seq_nonblock (seq, 1);
 }
  
