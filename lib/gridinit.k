@@ -40,10 +40,7 @@ function gridinit() {
 	# Create the first, blank, page
 	Root = $0
 
-	keypage = mdep("env","get","KEYPAGE")
-	if ( keypage == "" ) {
-		keypage = "last.kp"
-	}
+	keypage = "last.kp"
 	pagepath = pathsearch(keypage)
 	if ( fileisreadable(pagepath) ) {
 		page_readnew(pagepath)
