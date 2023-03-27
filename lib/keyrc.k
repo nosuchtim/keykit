@@ -308,11 +308,11 @@ function normboot() {
 
 	if ( Graphics ) {
 		# allow environment variable to control screen size
-		# keysize = mdep("env","get","KEYSIZE")
-		# if ( keysize != "" ) {
-		#	eval "TMP="+keysize
-		#	screen("size",TMP)
-		#}
+		keysize = mdep("env","get","KEYSIZE")
+		if ( defined(keysize) && (keysize != "") ) {
+			eval "TMP="+keysize
+			screen("size",TMP)
+		}
 		gridinit()
 		task consloop()
 		task consoutloop()
