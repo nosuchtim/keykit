@@ -53,15 +53,19 @@ function task_midimon(verbose,notesonly) {
 				ch = (integer(subbytes(m,1,1)) & 0xf) + 1
 				ct = integer(subbytes(m,2,1))
 				v = integer(subbytes(m,3,1))
-				print("port=",m.port," chan=",ch," ctrl=",ct," vol=",v," p=",m)
+				print("port=",m.port," chan=",ch," controller=",ct," vol=",v)
+			} else if ( notesonly==0 && m.type == CHANPRESSURE ) {
+				ch = (integer(subbytes(m,1,1)) & 0xf) + 1
+				p = integer(subbytes(m,2,1))
+				print("port=",m.port," chan=",ch," chanpressure=",p)
 			} else if ( notesonly==0 && m.type == PITCHBEND ) {
 				ch = (integer(subbytes(m,1,1)) & 0xf) + 1
 				v1 = integer(subbytes(m,2,1))
 				v2 = integer(subbytes(m,3,1))
                                 v = v1 + v2*128
-				print("port=",m.port," chan=",ch," bend=",v)
+				print("port=",m.port," chan=",ch," pitchbend=",v)
 			} else if ( m.type == NOTEON || m.type == NOTEOFF || m.type == NOTE ) {
-				print("port=",m.port," chan=",m.chan," pitch=",m.pitch," vol=",m.vol," p=",m)
+				print("port=",m.port," chan=",m.chan," pitch=",m.pitch," vol=",m.vol)
 			} else {
 				print("port=",m.port," p=",m)
 			}
