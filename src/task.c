@@ -1380,6 +1380,7 @@ keyprintf(char *fmt,int arg0,int nargs, STRFUNC outfunc)
 	int c;
 	Datum d;
 	char *w, word[256];
+	long id;
 
 	s[1] = '\0';
 
@@ -1392,12 +1393,19 @@ keyprintf(char *fmt,int arg0,int nargs, STRFUNC outfunc)
 		*w++ = '%';
 		while ( (c=(*p++)) != '\0' ) {
 			*w++ = c;
-			if ( strchr("dfpsx",c) != NULL )
+			if ( strchr("dfpsx$",c) != NULL )
 				break;
 		}
 		*w++ = '\0';
 		d = ARG(arg0+i);
 		switch (c) {
+		case '$':
+			if (d.type != D_OBJ)
+				execerror("%%$ format expects and D_OBJ!");
+			id = (d.u.obj?d.u.obj->id:-1) + *Kobjectoffset;
+			sprintf(Msg1, "$%ld", id);
+			(*outfunc)(Msg1);
+			break;
 		case 'd':
 		case 'x':
 		case 'o':
