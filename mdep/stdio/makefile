@@ -70,7 +70,8 @@ clobber : clean
 # 2) if d_xx.h is different than previous d_xx.h
 # 3) if d_xx.h is older than xx.c
 d_%.h: %.c
-	@./protoflp $(PROTO) -dd_$*_h.tmp < $*.c > /dev/null; \
+	@./protoflp $(PROTO) -dd_$*_h.tmp < $*.c > d_$*_c.tmp; \
+	rm -f d_$*_c.tmp; \
 	cmp -s d_$*_h.tmp d_$*.h; \
 	test \( $$? -ne 0 \) -o \( $*.c -nt d_$*.h \); \
 	if [ $$? -eq 0 ]; then \
