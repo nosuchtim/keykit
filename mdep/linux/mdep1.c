@@ -133,6 +133,18 @@ mdep_dbginit(void)
 
 unsigned int dbgTraceBits = DBGTRACE_KEYKIT | DBGTRACE_CALLER;
 
+void
+mdep_dbgsetbits(unsigned int bitmask)
+{
+    dbgTraceBits |= bitmask;
+}
+
+void
+mdep_dbgclrbits(unsigned int bitmask)
+{
+    dbgTraceBits &= ~bitmask;
+}
+
 static void
 mdep_dbgputentry(struct DbgEntry *entry)
 {

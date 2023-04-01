@@ -65,12 +65,14 @@ extern unsigned int dbgTraceBits;
     } while(0)
 
 #define DBGPRINTF(fmt, ...)                         \
-    do {                                            \
-        mdep_dbgtrace((fmt), ##__VA_ARGS__);        \
-    } while(0)
+    mdep_dbgtrace((fmt), ##__VA_ARGS__)
 
 #define DBGPUTS(str)                                \
-    do {                                            \
-        mdep_dbgputs((str));                        \
-    } while(0)
+    mdep_dbgputs(str)
 #endif
+
+#define DBGTRACE_SETBITS(bitmask)                   \
+    mdep_dbgsetbits(bitmask)
+
+#define DBGTRACE_CLRBITS(bitmask)                   \
+    mdep_dbgclrbits(bitmask)

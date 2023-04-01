@@ -1253,3 +1253,11 @@ extern FILE *FF;
 #define DBGPUTS(str)                            \
     do { ; } while(0)
 #endif
+#ifndef DBGTRACE_SETBITS
+#define DBGTRACE_SETBITS(bitmask)               \
+	do { ; } while(0)
+#endif
+#ifndef DBGTRACE_CLRBITS
+#define DBGTRACE_CLRITS(bitmask)                \
+	do { ; } while(0)
+#endif

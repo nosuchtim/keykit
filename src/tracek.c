@@ -34,16 +34,22 @@ bi_tracek(int argc)
 		d = ARG(0);
 		if (d.type == D_NUM)
 		{
-			/* First arg is bitmask; 2nd arg has to be format string */
-			if (argc <= 1)
+			if (argc == 1)
 			{
-				execerror("tracek() requires format string after bitmask!");
+				/* Set the bitmask since only one numerical arg */
+                if (d.u.val > 0)
+                {
+                    DBGTRACE_SETBITS(d.u.val);
+                } else {
+                    DBGTRACE_CLRBITS(- d.u.val);
+                }
 				goto exit;
 			}
 			if (!DBGTRACE_ENABLED(d.u.val))
 			{
 				goto exit;
 			}
+			/* Have more than one arg, format must be 2nd arg */
 			d = ARG(1);
 			start_arg = 2;
 		}
