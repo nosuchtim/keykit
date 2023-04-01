@@ -23,6 +23,9 @@
 /* GCC function attribute indicating a function does not return */
 #define NO_RETURN_ATTRIBUTE __attribute__((__noreturn__))
 
+/* Define following to enable trace logging into /tmp/keykit.log */
+#define MDEP_ENABLE_DBGTRACE
+
 #define MDEP_MIDI_PROVIDED
 
 #define LINETRACK
@@ -46,4 +49,28 @@ typedef struct myportinfo *Myporthandle;
 
 #ifndef _MAX_PATH
 #define _MAX_PATH 256
+#endif
+
+/* Debug trace definitions */
+#ifdef MDEP_ENABLE_DBGTRACE
+extern unsigned int dbgTraceBits;
+#define DBGTRACE_ENABLED(bitmask) \
+    (dbgTraceBits & (bitmask))
+
+#define DBGTRACE(bitmask, fmt, ...)                 \
+    do {                                            \
+        if (DBGTRACE_ENABLED(bitmask)) {            \
+            mdep_dbgtrace((fmt), ##__VA_ARGS__);    \
+        }                                           \
+    } while(0)
+
+#define DBGPRINTF(fmt, ...)                         \
+    do {                                            \
+        mdep_dbgtrace((fmt), ##__VA_ARGS__);        \
+    } while(0)
+
+#define DBGPUTS(str)                                \
+    do {                                            \
+        mdep_dbgputs((str));                        \
+    } while(0)
 #endif

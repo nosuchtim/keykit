@@ -125,7 +125,7 @@ typedef struct Kobject *Kobjectp;
 typedef float DBLTYPE;
 typedef int (*INTFUNC)(NOARG);
 typedef void (*BYTEFUNC)(NOARG);
-typedef Unchar BLTINCODE;
+typedef Unchar BLTINCODE; /* has to be Unchar; bltinfo is larger than 127 */
 
 #ifdef __STDC__
 typedef void (*STRFUNC)(Symstr);
@@ -389,6 +389,7 @@ typedef void (*PATHFUNC)();
 #define BI_BITMAP	125
 #define BI_OBJECTINFO	126
 #define O_FILLPOLYGON	127
+#define BI_TRACEK 128
 
 #define IO_STD 1
 #define IO_REDIR 2
@@ -632,6 +633,7 @@ extern struct bltinfo builtins[];
 extern BYTEFUNC Bytefuncs[];
 extern char *Bytenames[];
 extern BLTINFUNC Bltinfuncs[];
+extern unsigned int bltinfuncs_size; /* number of entries in Bltinfuncs[] */
 
 typedef struct Ktask *Ktaskp;
 
@@ -1214,6 +1216,7 @@ Hey, mdep_statmidi is no longer used!
 #include "d_regex.h"
 #include "d_clock.h"
 #include "d_menu.h"
+#include "d_tracek.h"
 
 /* GCC compiler only wants the no return attribute on a function's
  * prototype, _not_ its declaration. Other targets that don't define
@@ -1228,3 +1231,25 @@ Hey, mdep_statmidi is no longer used!
 extern FILE *FF;
 #endif
 #define funcinst(x) realfuncinst((BYTEFUNC)(x))
+
+
+/* definitions for DBGTRACE bitmasks */
+#define DBGTRACE_KEYKIT    0x1  /* enable debug from keykit code */
+#define DBGTRACE_CALLER    0x2  /* add file, calling func/method, linenumber*/
+
+/* Nullification macros macros for ports that don't implement DBGTRACE */
+#ifndef DBGTRACE_ENABLED
+#define DBGTRACE_ENABLED(bitmask) 0
+#endif
+#ifndef DBGTRACE
+#define DBGTRACE(bitmask, fmt, ...)             \
+    do { ; } while(0)
+#endif
+#ifndef DBGPRINTF
+#define DBGPRINTF(fmt, ...)                     \
+    do { ; } while(0)
+#endif
+#ifndef DBGPUTS
+#define DBGPUTS(str)                            \
+    do { ; } while(0)
+#endif

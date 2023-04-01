@@ -2835,6 +2835,7 @@ struct bltinfo builtins[] = {
 	{ "midi",		bi_midi,	BI_MIDI },
 	{ "bitmap",	bi_bitmap,	BI_BITMAP },
 	{ "objectinfo",	bi_objectinfo,	BI_OBJECTINFO },
+	{ "tracek",	bi_tracek,	BI_TRACEK },
 	{ 0,		0,		0 }
 };
 
@@ -2968,5 +2969,8 @@ BLTINFUNC Bltinfuncs[] = {
 	bi_midi,
 	bi_bitmap,
 	bi_objectinfo,
-	o_fillpolygon
+	o_fillpolygon,
+	bi_tracek
 };
+
+unsigned int bltinfuncs_size = sizeof(Bltinfuncs)/sizeof(Bltinfuncs[0]);

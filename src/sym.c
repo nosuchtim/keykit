@@ -906,6 +906,20 @@ installnum(char *name,Symlongp *pvar,long defval)
 	*pvar = (Symlongp)( &(symdataptr(s)->u.val) ) ;
 }
 
+/* Install a constant number into symbol table */
+void
+installconstnum(char *name,long defval)
+{
+	Symbolp s;
+	name = uniqstr(name);
+	/* Only install and set value if not already present */
+	if ( (s=lookup(name)) == NULL ) {
+		s = globalinstallnew(name,VAR);
+		*symdataptr(s) = numdatum(defval);
+        s->flags |= S_READONLY;
+	}
+}
+
 void
 installstr(char *name,char *str)
 {
@@ -1065,6 +1079,9 @@ initsyms(void)
 
 	*Keypath = uniqstr(mdep_keypath());
 	*Musicpath = uniqstr(mdep_musicpath());
+
+    /* Install constant(s) used to construct tracek() bitmasks */
+    installconstnum("DBGTRACE_KEYKIT", DBGTRACE_KEYKIT);
 }
 
 void
