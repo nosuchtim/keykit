@@ -841,7 +841,9 @@ function normredraw() {
 #usage	normexit()
 
 function normexit() {
-	page_write("last.kp",Root,"last")
+	if ( defined(Keypagepersistent) && Keypagepersistent != "" ) {
+		page_write(Keypagepersistent)
+	}
 	exit(0)
 }
 

@@ -37,17 +37,28 @@ function gridinit() {
 	Mousebroadcast = $0
 	definecontrol()
 
-	# Create the first, blank, page
+	# Create the first page
 	Root = $0
 
-	keypage = mdep("env","get","KEYPAGE")
-	if ( !defined(keypage) || (keypage == "") ) {
-		keypage = "last.kp"
+	pg = ""
+	# Initconfig is the name of the initial page
+	if ( defined(Initconfig) && Initconfig != "" ) {
+		pg = Initconfig
 	}
-	pagepath = pathsearch(keypage)
-	if ( fileisreadable(pagepath) ) {
-		page_readnew(pagepath)
-	} else {
+	if ( pg != "" ) {
+		pagepath = pathsearch(pg)
+		if ( pagepath == "" ) {
+			pagepath = "./" + pg
+		}
+		if ( fileisreadable(pagepath) ) {
+			page_readnew(pagepath)
+		} else {
+			print("Can't find page '"+pagepath+"', using default page.")
+			pg = "" # use the default page
+		}
+	}
+	if ( pg == "" ) {
+		# Create a new default page
 		o = new wpage()
 		page_switchto(o,newpagename())
 	}
