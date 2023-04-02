@@ -668,7 +668,6 @@ mdep_keypath(void)
 
         if ( (p=getenv("KEYPATH")) != NULL && *p != '\0' ) {
                 path = uniqstr(p);
-                mdep_popup("Warning - you sure you want to set KEYPATH from the environment?\n");
         }
         else {
                 /* The length calculation here is inexact but liberal */
