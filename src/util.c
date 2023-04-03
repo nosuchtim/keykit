@@ -196,8 +196,8 @@ ph1dump(Phrasep p)
 	num = 0;
 	for ( n=firstnote(p); n!=NULL; n=n->next )
 		num++;
-	sprintf(Msg1,"phrase=%" PRIdPTR " numnotes=%d used=%d tobe=%d\n",
-		(intptr_t)p,num,(int)(p->p_used),(int)(p->p_tobe));tprint(Msg1);
+	sprintf(Msg1,"phrase=%" KEY_PRIdPTR " numnotes=%d used=%d tobe=%d\n",
+		(KEY_PRIdTYPE)p,num,(int)(p->p_used),(int)(p->p_tobe));tprint(Msg1);
 }
 
 void
