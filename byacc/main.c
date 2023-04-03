@@ -225,7 +225,7 @@ create_file_names()
     char *tmpdir;
 
 #ifdef _WIN32
-    char *_strdup(char*);
+    char *_strdup(const char*);
     action_file_name = _strdup(tmpnam(NULL));
     text_file_name = _strdup(tmpnam(NULL));
     union_file_name = _strdup(tmpnam(NULL));

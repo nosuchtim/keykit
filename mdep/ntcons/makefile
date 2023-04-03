@@ -34,9 +34,9 @@ libs =  libc.lib kernel32.lib user32.lib gdi32.lib winmm.lib comdlg32.lib
 all : lowkey.exe keylib.exe
 
 install : all
-	del /f ..\bin\lowkey.exe
+	del /f ..\bin\lowkey.exe >nul 2>&1
 	copy lowkey.exe ..\bin\lowkey.exe
-	del /f ..\bin\keylib.exe
+	del /f ..\bin\keylib.exe >nul 2>&1
 	copy keylib.exe ..\bin\keylib.exe
 	cd ..\lib && ..\bin\keylib.exe
 
@@ -88,12 +88,12 @@ protoproc : protoflp.exe
 	del / tmp.c
 
 clean :
-	del /f keydll.exp
-	del /f keydll.lib
-	del /f keydll.dll
-	del /f *.obj
-	del /f *.exe
-	del /f *.map
+	del /f keydll.exp  2>nul
+	del /f keydll.lib 2>nul
+	del /f keydll.dll 2>nul
+	del /f *.obj 2>nul
+	del /f *.exe 2>nul
+	del /f *.map 2>nul
 
 clobber : clean
 	del /f d_*.h

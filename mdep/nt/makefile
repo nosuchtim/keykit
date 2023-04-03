@@ -92,10 +92,10 @@ tjt.exe : tjt.obj
 	$(LINK) $(conflags) $(VCPATHS) -out:tjt.exe tjt.obj $(conlibs)
 
 rtmidi.obj: ../rtmidi/cpp/rtmidi.cpp
-	$(CC) -c $(DEBUGCC) $(cflags) -I. $(cvars) ../rtmidi/cpp/rtmidi.cpp
+	$(CC) -c $(DEBUGCC) $(cflags) -I. -EHsc $(cvars) ../rtmidi/cpp/rtmidi.cpp
 
 rtmidi_c.obj: ../rtmidi/cpp/rtmidi_c.cpp
-	$(CC) -c $(DEBUGCC) $(cflags) -I. $(cvars) ../rtmidi/cpp/rtmidi_c.cpp
+	$(CC) -c $(DEBUGCC) $(cflags) -I. -EHsc $(cvars) ../rtmidi/cpp/rtmidi_c.cpp
 
 .c.obj:
 	$(CC) -c $(DEBUGCC) $(cflags) -I. $(cvars) $*.c
