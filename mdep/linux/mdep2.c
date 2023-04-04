@@ -2082,8 +2082,44 @@ mdep_ctlport(PORTHANDLE m, char *cmd, char *arg)
 Datum
 mdep_mdep(int argc)
 {
-	dummyusage(argc);
-	return(Noval);
+	char *args[3];
+	int n;
+	Datum d;
+
+	d = Nullval;
+	/*
+	 * Things past the first 3 args might be integers
+	 */
+	for ( n=0; n<3 && n<argc; n++ ) {
+		Datum dd = ARG(n);
+		if ( dd.type == D_STR ) {
+			args[n] = needstr("mdep",dd);
+		} else {
+			args[n] = "";
+		}
+	}
+	for ( ; n<3; n++ )
+		args[n] = "";
+
+	/* Only handle mdep("env"...) commands (for now) */
+	if ( strcmp(args[0],"env") == 0 ) {
+		if ( strcmp(args[1], "get")==0 ) {
+			char *s = getenv(args[2]);
+			if ( s != NULL ) {
+				d = strdatum(uniqstr(s));
+			} else {
+				d = strdatum(Nullstr);
+			}
+		} else {
+			execerror("mdep(\"env\",... ) doesn't recognize %s\n",args[1]);
+		}
+	}
+	else {
+		/* unrecognized command */
+		eprint("Error: unrecognized mdep argument - %s\n",args[0]);
+	}
+	
+	return d;
 }
 
 static void
