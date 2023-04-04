@@ -1679,6 +1679,11 @@ MAIN(int argc,char **argv)
 
 	keystart();
 
+	if ((p = getenv("KEYPAGEPERSISTENT")) != NULL) {
+		*Keypagepersistent = uniqstr(p);
+		*Initconfig = uniqstr(p);
+	}
+
 	while ( argc > 1 && argv[1][0] == '-' ) {
 
 		c = argv[1][1];
@@ -1691,17 +1696,8 @@ MAIN(int argc,char **argv)
 
 		switch (c) {
 
-		case 'p':
-			if ( argv[1][2]=='\0' && argc>2 ) {
-				argc--;
-				argv++;
-				p = argv[1];
-			}
-			else
-				p = &argv[1][2];
-			*Initconfig = uniqstr(p);
-			break;
 		case 'i':
+		case 'p':
 			if ( argv[1][2]=='\0' && argc>2 ) {
 				argc--;
 				argv++;
@@ -1831,14 +1827,6 @@ MAIN(int argc,char **argv)
 			continue;
 		}
 
-		/* Anything else should be the name of a file */
-		if ( ! exists(arg) ) {
-			sprintf(Msg1,"No such file: %s",arg);
-			mdep_popup(Msg1);
-			go_interactive = 0;
-			nerrs++;
-			continue;
-		}
 		if ( suff!=NULL && (strcmp(suff,".km")==0 || strcmp(suff,".KM")==0) ) {
 			/* *.km arguments are mouse demos */
 			sprintf(Msg1,"mousedemo(\"%s\")",arg);

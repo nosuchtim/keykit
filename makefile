@@ -81,7 +81,7 @@ install_final_python :
 	copy bin\keykit.ico $(FINALDIR)\keykit
 
 install_nt_python :
-	-mkdir bin
+	-mkdir bin >nul 2>&1
 	$(MK) clean
 	cd byacc && $(MK) -f makefile.$(MSTYPE) all
 	$(MK) copy_nt_python
@@ -89,8 +89,8 @@ install_nt_python :
 	cd src && $(MK) install
 	
 install_nt_1 :
-	-mkdir bin
-	$(MK) clean
+	-mkdir bin >nul 2>&1
+	$(MK) clean_nt
 	cd byacc && $(MK) -f makefile.$(MSTYPE) all
 	$(MK) copy_ntcons
 	cd src && $(MK) clean && rm -f d_*.h

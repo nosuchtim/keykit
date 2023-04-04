@@ -15,10 +15,11 @@
 
 #include "mdep.h"
 
-/* If mdep does not provide PRIdPTR format string, supply our own
+/* If mdep does not provide KEY_PRIdPTR format string, supply our own
  * (using "lld" format code from original code) */
-#ifndef PRIdPTR
-#define PRIdPTR "lld"
+#ifndef KEY_PRIdPTR
+#define KEY_PRIdPTR "lld"
+#define KEY_PRIdTYPE long long int
 #endif
 
 /* Provide empty NO_RETURN_ATRRIBUTE if not defined in mdep.h
@@ -1095,7 +1096,7 @@ extern Symlongp Deftimeout;
 extern Symlongp Debuggesture;
 extern Symlongp Chancolors;
 extern Phrasepp Currphr, Recphr;
-extern Symstrp Keypath, Musicpath, Keyroot, Initconfig;
+extern Symstrp Keypath, Musicpath, Keyroot, Initconfig, Keypagepersistent;
 extern Symstrp Printsep, Printend, Pathsep, Dirseparator, Devmidi, Machine;
 extern int Dbg, Inerror, Usestdio, ReadytoEval;
 extern void (*Fatalfunc)(char *);

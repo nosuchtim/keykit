@@ -66,6 +66,15 @@ function addpostrc(f) {
 #desc	and if that doesn't exist, use some defaults
 function dokeylocal() {
 
+	# KEYOUT environment variable is default output port
+	outportname = mdep("env","get","KEYOUT")
+	if ( defined(outportname) && (outportname != "") ) {
+		out = outport(outportname)
+		if ( out >= 0 ) {
+			mapport(0,out)
+		}
+	}
+
 	if ( defined(Keylocal) ) {
 		eval "#include "+Keylocal
 		keylocal()
@@ -99,7 +108,6 @@ function dokeylocal() {
 		}
 	}
 
-
 	fname = pathsearch("keylocal.k")
 	if ( fname != "" ) {
 		eval "#include \""+fname+"\""
@@ -107,14 +115,6 @@ function dokeylocal() {
 		return()
 	} else {
 		if ( Machine == "win" ) {
-			## # KEYOUT environment variable is default output port
-			outportname = mdep("env","get","KEYOUT")
-			if ( outportname != "" ) {
-				out = outport(outportname)
-				if ( out >= 0 ) {
-					mapport(0,out)
-				}
-			}
 		}
 		if ( Machine == "linux" ) {
 			# m = outport("alsa")

@@ -1,6 +1,10 @@
 *~
 last.kp
 src/keygo/x64
+bin/keylib.exe
+bin/lowkey.exe
+bin/key.exe
+byacc/byacc.exe
 *.swp
 bin/last.kp
 src/x64/Debug
