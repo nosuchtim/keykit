@@ -48,52 +48,79 @@ FILE *dbgLogfile;
 static void
 *dbgPrintThread(void *arg)
 {
+	struct timespec ts;
+	uintmax_t then_ticks, now_ticks;
 	struct DbgEntry entry;
 	volatile struct DbgEntry *p;
+	uint32_t flush_seconds = 5; /* flush interval is five seconds */
+	uint32_t flush_ticks;
 	int ret;
 
 	(void)arg;
 
 	dbgLogfile = fopen("/tmp/keykit.log", "w");
+	then_ticks = times(NULL);
+	flush_ticks = dbgPool.freq * flush_seconds;
 	while (1)
 	{
-		/* Wait for dbgPool to not be empty */
-		ret = sem_wait(&dbgPool.emptySem);
-		if (ret)
+		/* Wait for dbgPool to not be empty - or for flush_seconds
+		 * to allow flushing dbgLogfile periodically to disc
+		 * when no debug output occurs */
+		if (clock_gettime(CLOCK_REALTIME, &ts) == -1)
+		{
+			fprintf(stderr, "%s: clock_gettime failed: %s\n", __FUNCTION__, strerror(errno));
+			exit(1);
+		}
+		ts.tv_sec += flush_seconds;
+			
+		ret = sem_timedwait(&dbgPool.emptySem, &ts);
+		if (ret && (errno != ETIMEDOUT))
 		{
 			fprintf(stderr, "%s: failed to lock empty sempaphore: %s\n", __FUNCTION__, strerror(errno));
 			exit(1);
 		}
-		/* lock the pool then extract an entry */
-		ret = pthread_mutex_lock(&dbgPool.mutex);
-		if (ret)
+		if (!ret)
 		{
-			fprintf(stderr, "%s: failed to lock pool mutex: %s\n", __FUNCTION__, strerror(errno));
-			exit(1);
-		}
-		p = &dbgPool.pool[dbgPool.tail++ % DBG_POOL_NELEMENTS];
-		entry = *p;
-		ret = pthread_mutex_unlock(&dbgPool.mutex);
-		if (ret)
-		{
-			fprintf(stderr, "%s: failed to unlock pool mutex: %s\n", __FUNCTION__, strerror(errno));
-			exit(1);
-		}
-		ret = sem_post(&dbgPool.fullSem);
-		if (ret)
-		{
-			fprintf(stderr, "%s: failed to post full semaphore: %s\n", __FUNCTION__, strerror(errno));
-			exit(1);
-		}
+			/* lock the pool then extract an entry */
+			ret = pthread_mutex_lock(&dbgPool.mutex);
+			if (ret)
+			{
+				fprintf(stderr, "%s: failed to lock pool mutex: %s\n", __FUNCTION__, strerror(errno));
+				exit(1);
+			}
+			p = &dbgPool.pool[dbgPool.tail++ % DBG_POOL_NELEMENTS];
+			entry = *p;
+			ret = pthread_mutex_unlock(&dbgPool.mutex);
+			if (ret)
+			{
+				fprintf(stderr, "%s: failed to unlock pool mutex: %s\n", __FUNCTION__, strerror(errno));
+				exit(1);
+			}
+			ret = sem_post(&dbgPool.fullSem);
+			if (ret)
+			{
+				fprintf(stderr, "%s: failed to post full semaphore: %s\n", __FUNCTION__, strerror(errno));
+				exit(1);
+			}
 		
-		if (dbgLogfile)
+			if (dbgLogfile)
+			{
+				/* Compute time */
+				uintmax_t delta = entry.now - dbgPool.start;
+				uint32_t seconds = delta / dbgPool.freq;
+				uint32_t hundredths = delta % dbgPool.freq;
+				hundredths = (hundredths * 100) / dbgPool.freq;
+				fprintf(dbgLogfile, "%" PRIu32 ".%02" PRIu32 " %s\n", seconds, hundredths, entry.str);
+			}
+		}
+
+		/* If more than flush_seconds (int ticks) has passed,
+		 * flush the logfile to disc */
+		now_ticks = times(NULL);
+		if ((now_ticks - then_ticks) > flush_ticks)
 		{
-			/* Compute time */
-			uintmax_t delta = entry.now - dbgPool.start;
-			uint32_t seconds = delta / dbgPool.freq;
-			uint32_t hundredths = delta % dbgPool.freq;
-			hundredths = (hundredths * 100) / dbgPool.freq;
-			fprintf(dbgLogfile, "%" PRIu32 ".%02" PRIu32 " %s\n", seconds, hundredths, entry.str);
+			fflush(dbgLogfile);
+			then_ticks = now_ticks;
 		}
 	}
 }
