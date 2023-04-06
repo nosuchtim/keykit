@@ -3,7 +3,7 @@
  */
 
 /*
- * protoflp [ -n | -p ] [ -d declarations.h ] < input.c > output.c
+ * protoflp [ -c -s | -n | -p ] [ -d declarations.h ] < input.c > output.c
  *
  * See README for info.  This program relies heavily on conventions
  * in the style of function definitions, and is not likely to
@@ -55,6 +55,7 @@ char **argv;
 	int found_no_return_attribute;
 	FILE *fdef;
 	char **decs;
+	int suppress_output = 0;
 
 	/* malloc buffers to avoid testing global data size limits */
 	buff = (char*) malloc(BFSIZE);
@@ -73,6 +74,9 @@ char **argv;
 		if ( argv[1][0] != '-' )
 			break;
 		switch (argv[1][1]) {
+		    case 's':
+			    suppress_output = 1;
+			    break;
 		case 'p':
 			dtype = PROTO;
 			break;
@@ -107,7 +111,9 @@ char **argv;
 			/* them.  However, we also want to grab the */
 			/* type name before the function name. */
 			strcpy(lastline,buff);
-			fputs(buff,stdout);
+			if (!suppress_output) {
+				fputs(buff,stdout);
+			}
 
 			/* #if, #ifdef, #ifndef, #else, and #endif directives get */
 			/* put into the definition file. */
@@ -193,8 +199,12 @@ char **argv;
 			}
 			strcat(protoline,")\n");
 		    }
-		    printf("%s",protoline);
-		    printf("{\n");
+		    if (!suppress_output) {
+			    printf("%s",protoline);
+			    if (!found_no_return_attribute) {
+				    printf("{\n");
+			    }
+		    }
 		    /* non-static functions get put into the fdef file */
 		    if ( fdef && strncmp(lastline,"static",6)!=0 ) {
 			/* The function type is on the previous line */
@@ -209,9 +219,16 @@ char **argv;
 			if (found_no_return_attribute)
 			{
 				fprintf(fdef, "NO_RETURN_ATTRIBUTE\n");
+				if (!suppress_output) {
+					printf("NO_RETURN_ATTRIBUTE\n");
+				}
 			}
 			fprintf(fdef, ";\n");
 			}
+		    if (!suppress_output && found_no_return_attribute)
+		    {
+			    printf("{\n");
+		    }
 		}
 		else {	 /* We want to turn it into old form */
 
