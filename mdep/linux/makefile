@@ -6,8 +6,8 @@
 
 CC = gcc
 STATIC =
-SOUNDLIBS = /usr/lib/x86_64-linux-gnu/libasound.so.2 -L/usr/lib/ -lpthread -ldl
-XLIBS = /usr/lib/x86_64-linux-gnu/libX11.so.6 -lm
+SOUNDLIBS = -lasound -lpthread -ldl
+XLIBS = -lX11 -lm
 INC = -I/usr/include/
 KEY = key
 
