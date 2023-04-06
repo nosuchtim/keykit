@@ -160,6 +160,9 @@ real_putnmidi(int buffsize, char *buff,int port)
 	long fn = *Midi_out_fnum;
 	int echoport = 0;
 
+	if ( Midiok == 0 ) {
+		return;
+	}
 	if ( *Echoport > 0 && *Echoport < MIDI_IN_PORT_OFFSET )
 		echoport = *Echoport;
 
@@ -200,6 +203,9 @@ real_getnmidi(char *buff,int buffsize,int *port)
 	int r;
 	int mdep_port;
 
+	if ( Midiok == 0 ) {
+		return 0;
+	}
 	r = mdep_getnmidi(buff,buffsize,&mdep_port);
 	// if ( r != 0 ) {
 	// 	keyerrfile("mdep_getnmidi r=%d\n",r);

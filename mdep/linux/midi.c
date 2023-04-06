@@ -62,6 +62,7 @@ mdep_initmidi(Midiport *inputs, Midiport *outputs)
 	int err;
 
 	if (connect_to_sequencer ()) {
+		seq = NULL;
 		return -1;
 	}
 
@@ -246,6 +247,9 @@ mdep_getnmidi(char *buff, int buffsize, int *port)
 	if (port) {
 		*port = 0;
 	}
+	if (seq == NULL) {
+		return -1;
+	}
 
 	if (snd_seq_event_input (seq, &ev) <= 0) {
 		return -1;
@@ -279,6 +283,9 @@ mdep_putnmidi(int n,char *p, Midiport * port)
 	int idx;
 	int ret;
 
+	if (seq == NULL) {
+		return;
+	}
 	/* Is this even required - doesn't parent handle running status
 	 * for the _output_ side? */
 	snd_midi_event_reset_encode (a->parser);

@@ -113,8 +113,6 @@ method resize(sz) {
 	x0 = $.xmin();
 	x1 = $.xmax();
 	
-	$.dy = (y1-y0-th-4)/($.nins+$.nouts)
-
 	##x0a = $.xmin() + tw*5;		# ORG.
 	x0a = $.xmin() + tw*8;			# 1st column widened
 
