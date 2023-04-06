@@ -628,7 +628,7 @@ specialfifo(void)
 }
 
 Fifo *
-getafifo()
+getafifo(void)
 {
 	Fifo *f;
 	Hnodep h;

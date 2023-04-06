@@ -38,7 +38,7 @@ static int n_outports;
 static snd_seq_t* seq = 0;
 
 static int
-connect_to_sequencer ()
+connect_to_sequencer (void)
 {
 	int err;
 

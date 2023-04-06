@@ -57,13 +57,14 @@ protoproc : protoflp
 			echo "okay - no change." ; \
 		elif [ $$r -eq 0 -a $$sizediff -lt 800 ] ; \
 		then \
-			cp tmp.c $$i ; rm -f tmp.c ; \
+			cp tmp.c $$i ; \
 			touch d_$$b.h ; \
 			echo okay - $$i has been rewritten. ; \
 		else \
 			echo WARNING - $$i has NOT been rewritten! ; \
 			echo    Reason: protoflp exit was $$r and sizediff was $$sizediff ; \
 		fi ; \
+		rm -f tmp.c; \
 	done ; exit 0
 
 ALLDECS = d_code.h d_code2.h d_fsm.h d_grid.h d_keyto.h d_main.h d_mdep1.h \
@@ -76,7 +77,7 @@ ALLDECS = d_code.h d_code2.h d_fsm.h d_grid.h d_keyto.h d_main.h d_mdep1.h \
 # 2) if d_xx.h is different than previous d_xx.h
 # 3) if d_xx.h is older than xx.c
 d_%.h: %.c
-	@./protoflp $(PROTO) -dd_$*_h.tmp < $*.c > /dev/null; \
+	@./protoflp -s $(PROTO) -dd_$*_h.tmp < $*.c; \
 	cmp -s d_$*_h.tmp d_$*.h; \
 	test \( $$? -ne 0 \) -o \( $*.c -nt d_$*.h \); \
 	if [ $$? -eq 0 ]; then \
@@ -160,7 +161,7 @@ clobber: clean
 	rm -f d_*.h yacc.c yacc.h
 	rm -f mdep.h mdep1.c mdep2.c midi.c clock.c
 	rm -f key.dbg lowkey tjt.ico keykit.ico
-	rm -f key.dbg tmp.c
+	rm -f key.dbg
 	rm -f *.arc setjmp.h setjmp.s pc-ints.asm y_output tmp.lint
 	rm -f key
 	if [ $(BIN) != "." ] ; then cd $(BIN) ; rm -f $(EXECS) ; fi
