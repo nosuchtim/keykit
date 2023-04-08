@@ -49,8 +49,7 @@ procfont : procfont.c
 	$(WINCC) procfont.c
 
 protoproc : protoflp
-	for %%f in ($(KEYFILES)) do protoflp -p -d d_%%f.h < %%f.c > tmp.c
-	rm -f tmp.c
+	for %%f in ($(KEYFILES)) do protoflp -s -p -d d_%%f.h < %%f.c
 
 clean :
 	rm -f d_*.h
@@ -66,53 +65,53 @@ clobber : clean
 	rm -f keykit.ico tjt.ico
 
 d_regex.h : regex.c
-	./protoflp $(PROTO) -dd_regex.h < regex.c > tmp.c
+	./protoflp -s $(PROTO) -dd_regex.h < regex.c
 d_sym.h : sym.c
-	./protoflp $(PROTO) -dd_sym.h < sym.c > tmp.c
+	./protoflp -s $(PROTO) -dd_sym.h < sym.c
 d_bltin.h : bltin.c
-	./protoflp $(PROTO) -dd_bltin.h < bltin.c > tmp.c
+	./protoflp -s $(PROTO) -dd_bltin.h < bltin.c
 d_meth.h : meth.c
-	./protoflp $(PROTO) -dd_meth.h < meth.c > tmp.c
+	./protoflp -s $(PROTO) -dd_meth.h < meth.c
 d_util.h : util.c
-	./protoflp $(PROTO) -dd_util.h < util.c > tmp.c
+	./protoflp -s $(PROTO) -dd_util.h < util.c
 d_phrase.h : phrase.c
-	./protoflp $(PROTO) -dd_phrase.h < phrase.c > tmp.c
+	./protoflp -s -s $(PROTO) -dd_phrase.h < phrase.c
 d_misc.h : misc.c
-	./protoflp $(PROTO) -dd_misc.h < misc.c > tmp.c
+	./protoflp -s $(PROTO) -dd_misc.h < misc.c
 d_main.h : main.c
-	./protoflp $(PROTO) -dd_main.h < main.c > tmp.c
+	./protoflp -s $(PROTO) -dd_main.h < main.c
 d_task.h : task.c
-	./protoflp $(PROTO) -dd_task.h < task.c > tmp.c
+	./protoflp -s $(PROTO) -dd_task.h < task.c
 d_fifo.h : fifo.c
-	./protoflp $(PROTO) -dd_fifo.h < fifo.c > tmp.c
+	./protoflp -s $(PROTO) -dd_fifo.h < fifo.c
 d_code.h : code.c
-	./protoflp $(PROTO) -dd_code.h < code.c > tmp.c
+	./protoflp -s $(PROTO) -dd_code.h < code.c
 d_code2.h : code2.c
-	./protoflp $(PROTO) -dd_code2.h < code2.c > tmp.c
+	./protoflp -s $(PROTO) -dd_code2.h < code2.c
 d_mdep1.h : mdep1.c
-	./protoflp $(PROTO) -dd_mdep1.h < mdep1.c > tmp.c
+	./protoflp -s $(PROTO) -dd_mdep1.h < mdep1.c
 d_mdep2.h : mdep2.c
-	./protoflp $(PROTO) -dd_mdep2.h < mdep2.c > tmp.c
+	./protoflp -s $(PROTO) -dd_mdep2.h < mdep2.c
 d_view.h : view.c
-	./protoflp $(PROTO) -dd_view.h < view.c > tmp.c
+	./protoflp -s $(PROTO) -dd_view.h < view.c
 d_grid.h : grid.c
-	./protoflp $(PROTO) -dd_grid.h < grid.c > tmp.c
+	./protoflp -s $(PROTO) -dd_grid.h < grid.c
 d_midi.h : midi.c
-	./protoflp $(PROTO) -dd_midi.h < midi.c > tmp.c
+	./protoflp -s $(PROTO) -dd_midi.h < midi.c
 d_clock.h : clock.c
-	./protoflp $(PROTO) -dd_clock.h < clock.c > tmp.c
+	./protoflp -s $(PROTO) -dd_clock.h < clock.c
 d_real.h : real.c
-	./protoflp $(PROTO) -dd_real.h < real.c > tmp.c
+	./protoflp -s $(PROTO) -dd_real.h < real.c
 d_fsm.h : fsm.c
-	./protoflp $(PROTO) -dd_fsm.h < fsm.c > tmp.c
+	./protoflp -s $(PROTO) -dd_fsm.h < fsm.c
 d_keyto.h : keyto.c
-	./protoflp $(PROTO) -dd_keyto.h < keyto.c > tmp.c
+	./protoflp -s $(PROTO) -dd_keyto.h < keyto.c
 d_mfin.h : mfin.c
-	./protoflp $(PROTO) -dd_mfin.h < mfin.c > tmp.c
+	./protoflp -s $(PROTO) -dd_mfin.h < mfin.c
 d_menu.h : menu.c
-	./protoflp $(PROTO) -dd_menu.h < menu.c > tmp.c
+	./protoflp -s $(PROTO) -dd_menu.h < menu.c
 d_kwind.h : kwind.c
-	./protoflp $(PROTO) -dd_kwind.h < kwind.c > tmp.c
+	./protoflp -s $(PROTO) -dd_kwind.h < kwind.c
 
 mdepback :
 	cp mdep1.c ../mdep/stdio/mdep1.c

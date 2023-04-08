@@ -201,7 +201,7 @@ drawph(Kwind *w,Phrasep p)
 int chancolors[16];
 
 void
-setupchancolors()
+setupchancolors(void)
 {
 	int ch;
 	Symbolp s;

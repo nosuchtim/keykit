@@ -6,7 +6,7 @@ long Initmicro = 0;
 /* resetclock - Reset the millisecond clock (ie. the values returned by */
 /*              milliclock()) to 0.  */
 void
-mdep_resetclock()
+mdep_resetclock(void)
 {
 	struct timeval t;
 	struct timezone tz;
@@ -17,7 +17,7 @@ mdep_resetclock()
 }
 
 long
-mdep_milliclock()
+mdep_milliclock(void)
 {
 	struct timeval t;
 	struct timezone tz;
