@@ -657,7 +657,7 @@ mdep_musicpath(void)
 		p = (char *) malloc((unsigned)(3*strlen(keyroot())+64));
 		sprintf(p,".%s%s/music",*Pathsep,keyroot());
 		str = uniqstr(p);
-		kfree(p);
+		free(p);
 	}
         return str;
 }
@@ -676,7 +676,7 @@ mdep_keypath(void)
                 sprintf(p,".%s%s/liblocal%s%s/lib",
                         *Pathsep,keyroot(),*Pathsep,keyroot());
                 path = uniqstr(p);
-                kfree(p);
+                free(p);
         }
         return path;
 }
@@ -1445,7 +1445,7 @@ bfree(Bitmap *b)
 {
 	if(b){
 		XFreePixmap(dpy, b->dr);
-		free((char *)b);
+		free(b);
 	}
 }
 

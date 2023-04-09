@@ -1509,12 +1509,12 @@ prstack(Datum *d)
 			}
 			s2 = datumstr(*d);
 		}
-		sprintf(Msg1,"tid=%ld Stack[top-%d] (%" KEY_PRIdPTR ") = %s %s",T->tid,n,( KEY_PRIdTYPE )(d),s1,s2);
+		sprintf(Msg1,"tid=%ld Stack[top-%d] (%" KEY_PRIdPTR ") = %s %s",T->tid,n,( KEY_PRIdPTR_TYPE )(d),s1,s2);
 		if ( (*d).type == D_PHR ) {
-			sprintf(strend(Msg1)," %" KEY_PRIdPTR " used=%d tobe=%d",( KEY_PRIdTYPE )((*d).u.phr),(*d).u.phr->p_used,(*d).u.phr->p_tobe);
+			sprintf(strend(Msg1)," %" KEY_PRIdPTR " used=%d tobe=%d",( KEY_PRIdPTR_TYPE )((*d).u.phr),(*d).u.phr->p_used,(*d).u.phr->p_tobe);
 		}
 		if ( (*d).type == D_CODEP )
-			sprintf(strend(Msg1)," fnc=%" KEY_PRIdPTR "",( KEY_PRIdTYPE )((*d).u.codep));
+			sprintf(strend(Msg1)," fnc=%" KEY_PRIdPTR "",( KEY_PRIdPTR_TYPE )((*d).u.codep));
 		eprint(Msg1);
 	}
 	if ( n >= PRSTACKLIMIT ) eprint("STACK LIST TRUNCATED!!!\n");

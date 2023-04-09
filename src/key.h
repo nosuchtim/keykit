@@ -11,15 +11,20 @@
 				and mdep_putbitmap are slow.
  */
 
+#include <ctype.h>
 #include "keyoptions.h"
 
 #include "mdep.h"
 
-/* If mdep does not provide KEY_PRIdPTR format string, supply our own
- * (using "lld" format code from original code) */
+/* If mdep does not provide KEY_PRId/xPTR format string (and _TYPE),
+ * supply our own (using "lld" format code and "long long" type) */
 #ifndef KEY_PRIdPTR
 #define KEY_PRIdPTR "lld"
-#define KEY_PRIdTYPE long long int
+#define KEY_PRIdPTR_TYPE long long int
+#endif
+#ifndef KEY_PRIxPTR
+#define KEY_PRIxPTR "llx"
+#define KEY_PRIxPTR_TYPE long long int
 #endif
 
 /* Provide empty NO_RETURN_ATRRIBUTE if not defined in mdep.h
@@ -74,17 +79,21 @@ typedef struct Kobject *Kobjectp;
 // #define BIGDEBUG
 // #define DEBUGEXEC
 
+// #define MDEBUG
+
 /* If MDEP_MALLOC is defined, then a machine-dependent mdep.h can */
 /* provide its own macros for kmalloc and kfree. */
 #ifndef MDEP_MALLOC
 
+/* Note: the tag passed into kmalloc _must_ be a constant string */
 #ifdef MDEBUG
 #define kmalloc(x,tag) dbgallocate(x,tag)
+#define kfree(x) dbgmyfree(x)
 #else
 #define kmalloc(x,tag) allocate(x,tag)
+#define kfree(x) myfree(x)
 #endif
 
-#define kfree(x) myfree((char *)(x))
 
 #endif
 
@@ -97,22 +106,6 @@ typedef struct Kobject *Kobjectp;
 #define dummyusage(x) (void)x
 #define dummyset(x)
 #endif
-#endif
-
-#ifndef isspace
-#define isspace(c) ((c)==' '||(c)=='\t'||(c)=='\n'||(c)=='\r')
-#endif
-
-#ifndef isdigit
-#define isdigit(c) ((c)>='0'&&(c)<='9')
-#endif
-
-#ifndef isalpha
-#define isalpha(c) (((c)>='a'&&(c)<='z')||((c)>='A'&&(c)<='Z')||(c)=='_')
-#endif
-
-#ifndef isalnum
-#define isalnum(c) (((c)>='a'&&(c)<='z')||((c)>='A'&&(c)<='Z')||(c)=='_'||((c)>='0'&&(c)<='9'))
 #endif
 
 #ifdef __STDC__
