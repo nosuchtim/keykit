@@ -85,10 +85,10 @@ function updatelib(forceit,forcerekeylib,path,reread) {
 	if ( anyupdated || forcerekeylib ) {
 		# This is the built-in that rereads all the keylib.k files
 		rekeylib()
-		# Also reset Tooltypes so that menus (in tools*.lst files)
-		# get re-read
-		Tooltypes = 0
 	}
+	# Also reset Tooltypes so that menus (in tools*.lst files)
+	# get re-read.  Do this no matter what since anyupdated doesn't check the *.lst files.
+	Tooltypes = 0
 }
 
 # This can be used to read every single .k file, looking
