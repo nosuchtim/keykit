@@ -16,7 +16,7 @@ RMCR = mdep/stdio/rmcr
 # WINRMCR = flip -u
 WINRMCR = dos2unix
 
-VERSION=8.1
+VERSION=8.2
 
 OTHERDIRS = 
 
@@ -265,12 +265,6 @@ updateversion :
 	cd doc
 	sed -e "/ds.KV/s/KV.*/KV $(VERSION)/" < macros > nmacros
 	mv nmacros macros
-	sed -e "/var=.KEYKITVERSION/s/Version ..../Version $(VERSION)/" < tutorial.xml > tmp.xml
-	mv tmp.xml tutorial.xml
-	sed -e "/var=.KEYKITVERSION/s/Version ..../Version $(VERSION)/" < language.xml > tmp.xml
-	mv tmp.xml language.xml
-	sed -e "/var=.KEYKITVERSION/s/Version ..../Version $(VERSION)/" < hacking.xml > tmp.xml
-	mv tmp.xml hacking.xml
 	cd ..
 	echo $(VERSION) > VERSION
 
