@@ -1093,18 +1093,15 @@ eatpound(void)
 	return(1);
 }
 
-void
+static void
 plibrary(char *dir,char *s)
 {
-	long lng = (long)strlen(s);
-	char *wrd1 = (char *) kmalloc(lng,"plibrary");
-	char *wrd2 = (char *) kmalloc(lng,"plibrary");
+	char wrd1[BUFSIZ];
+	char wrd2[BUFSIZ];
 	if ( sscanf(s,"%s %s",wrd1,wrd2) != 2 )
 		eprint("Improper '#library' statement!\n");
 	else
 		addplibrary(dir,wrd1,wrd2);
-	kfree(wrd1);
-	kfree(wrd2);
 }
 
 void
