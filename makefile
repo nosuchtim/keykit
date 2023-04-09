@@ -56,11 +56,6 @@ install_nt :
 	$(MK) copy_nt
 	$(MK) install_nt_2
 	
-install_tjt :
-	$(MK) install_nt_1
-	$(MK) copy_tjt
-	$(MK) install_nt_2
-	
 install_python :
 	$(MK) install_nt_python
 	$(MK) install_final_python
@@ -117,9 +112,6 @@ copy_nt :
 	cp mdep/nt/*.cur src
 	cp mdep/nt/*.ico src
 	cp mdep/nt/resetkeylib.bat bin
-
-copy_tjt : copy_nt
-	cp mdep/nt/makefile.tjt src/makefile
 
 # Windows Python module
 copy_nt_python :
@@ -311,26 +303,6 @@ regress_stdio :
 	cd tests ; sh keytest.sh
 
 #########################################################
-# UNIX X Windows version without MIDI
-#########################################################
-
-copy_x : bindir
-	cp mdep/x/mdep1.c src/mdep1.c
-	cp mdep/x/mdep2.c src/mdep2.c
-	cp mdep/x/mdep.h src/mdep.h
-	cp mdep/x/makefile src/makefile
-	cp mdep/x/bsdclock.c src/clock.c
-	cp mdep/x/tjt.ico src/tjt.ico
-	cp mdep/x/keykit.ico src/keykit.ico
-	cp mdep/x/nullmidi.c src/midi.c
-	$(RMCR) src/*.c src/*.h src/*.ico src/makefile
-	$(RMCR) `echo lib/* | grep -v .ppm`
-	cp mdep/stdio/resetkeylib bin
-	$(RMCR) bin/resetkeylib
-	chmod +x bin/resetkeylib
-	-$(RMCR) tests/*
-
-#########################################################
 # Linux X Windows version with MIDI
 #########################################################
 
@@ -429,23 +401,4 @@ distribution_linux :
 	cp doc/*.html dist/linux/key/doc
 	cd dist/linux ; zip -r ../key_linux.zip key
 	rm -fr dist/linux
-
-
-##########################################
-# The targets below here are old - probably still largely usable, but
-# untested for some time.
-##########################################
-
-# SVR4, with X and /dev/smid driver
-svr4 :
-	cp mdep/svr4/mdep1.c src/mdep1.c
-	cp mdep/svr4/mdep2.c src/mdep2.c
-	cp mdep/svr4/mdep.h src/mdep.h
-	cp mdep/svr4/makefile src/makefile
-	cp mdep/svr4/clock.c src/clock.c
-	cp mdep/svr4/tjt.ico src/tjt.ico
-	cp mdep/svr4/keykit.ico src/keykit.ico
-	cp mdep/svr4/midi.c src/midi.c
-	$(RMCR) src/*.c src/*.h src/*.ico src/makefile
-	$(RMCR) `echo lib/* | grep -v .ppm`
 
