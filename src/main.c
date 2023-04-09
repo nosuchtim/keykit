@@ -1095,30 +1095,25 @@ eatpound(void)
 	return(1);
 }
 
-static void
-plibrary(char *dir,char *s)
-{
-	char wrd1[BUFSIZ];
-	char wrd2[BUFSIZ];
-	if ( sscanf(s,"%s %s",wrd1,wrd2) != 2 )
-		eprint("Improper '#library' statement!\n");
-	else
-		addplibrary(dir,wrd1,wrd2);
-}
-
 void
 load1keylib(char *dir, char *keylibk)
 {
 	FILE *f;
 	char buff[BUFSIZ];
+	char wrd1[BUFSIZ];
+	char wrd2[BUFSIZ];
 
 	OPENTEXTFILE(f,keylibk,"r");
 	if ( Errfileit )
 		tprint("Loading keylib: %s\n",keylibk);
 	if ( f != NULL ) {
 		while ( myfgets(buff,BUFSIZ,f) != NULL ) {
-			if ( strncmp(buff,"#library",8)==0 )
-				plibrary(dir,buff+8);
+			if ( strncmp(buff,"#library",8)==0 ) {
+				if ( sscanf(buff+8,"%s %s",wrd1,wrd2) != 2 )
+					eprint("Improper '#library' statement!\n");
+				else
+					addplibrary(dir,wrd1,wrd2);
+			}
 		}
 		myfclose(f);
 	}
