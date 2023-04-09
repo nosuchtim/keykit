@@ -89,6 +89,8 @@ and enhanced.
 Version 7.0 added support for multiple MIDI inputs and outputs
 (on Windows only, initially).
 
+Version 8.0 created a 64-bit version.
+
 Development of KeyKit was first done using an Atari ST, then an IBM PC clone,
 then a UNIX System with X windows, and then Windows NT.
 Portability has always been an overriding consideration - the software
