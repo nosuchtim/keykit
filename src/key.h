@@ -1159,7 +1159,7 @@ Hey, mdep_statmidi is no longer used!
 
 #define NONAMEPREFIX "__"
 
-#define KEYVERSION "8.1"
+#define KEYVERSION "9.0"
 
 /* These values might, e.g., be set to 'p' and 'P', if that's what the */
 /* real function keys put out.  Depends on what mdep_getconsole() in mdep.c does. */

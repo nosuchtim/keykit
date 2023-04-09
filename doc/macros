@@ -171,7 +171,7 @@
 '''\"======================================================================
 '''\" Hi - Initial Header
 .de Hi
-.ds KV 8.1
+.ds KV 9.0
 '''\"	H=1 for Windows .rtf files for generating help files
 .if \nH=1 \{
 .ds Es \e\e

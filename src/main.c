@@ -10,7 +10,7 @@ FILE *FF = NULL;
 #endif
 
 #ifndef lint
-char *Copyright = "KeyKit 8.1 - Copyright 1996 AT&T Corp.  All rights reserved.";
+char *Copyright = "KeyKit 9.0 - Copyright 1996 AT&T Corp.  All rights reserved.";
 #endif
 
 Midiport Midiinputs[MIDI_IN_DEVICES];

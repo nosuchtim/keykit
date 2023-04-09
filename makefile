@@ -16,7 +16,7 @@ RMCR = mdep/stdio/rmcr
 # WINRMCR = flip -u
 WINRMCR = dos2unix
 
-VERSION=8.1
+VERSION=9.0
 
 OTHERDIRS = 
 

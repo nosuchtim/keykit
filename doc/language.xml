@@ -55,7 +55,7 @@ A multi-window graphical interface provides a piano-roll representation
 of music with pop-up menus for invoking actions.
 KeyKit programs can freely intermix graphics, mouse actions,
 MIDI I/O, and console I/O.  This is a reference manual for
-Version 8.1ck var="KEYKITVERSION"/> of the KeyKit language, necessarily terse in an attempt to be complete.
+Version 9.0 var="KEYKITVERSION"/> of the KeyKit language, necessarily terse in an attempt to be complete.
 <blankline/>
 A primary goal of KeyKit has been to build a highly extensible system,
 therefore the built-in capabilities of the KeyKit language are
