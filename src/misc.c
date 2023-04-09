@@ -13,12 +13,6 @@
 
 void (*Fatalfunc)(char *) = 0;
 void (*Diagfunc)(char *) = 0;
-#if 0
-long dval = 1;
-long *Debug = &dval;
-long dmval = 1;
-extern long *Debugmalloc;
-#endif
 
 int
 exists(char *fname)
@@ -147,9 +141,7 @@ strsave(register char *s)
 	register char *p = kmalloc((unsigned)(strlen(s)+1),"strsave");
 	strcpy(p,s);
 	if ( Debugmalloc!=NULL && *Debugmalloc ) {
-		char buff[100];
-		sprintf(buff,"strsave=(%s)(ch1=%d)\n",p,p[0]);
-		keyerrfile(buff);
+		keyerrfile("strsave=(%s)(ch1=%d)\n",p,p[0]);
 	}
 	return(p);
 }
@@ -187,7 +179,7 @@ allocerror(void)
  */
 
 #ifndef MDEBUG
-char *
+void *
 allocate(unsigned int s, char *tag)
 {
 	char *p;
@@ -200,7 +192,16 @@ allocate(unsigned int s, char *tag)
 		allocerror();
 	return(p);
 }
-#else
+
+void
+myfree(void *s)
+{
+	if ( s == NULL )
+		return;
+	free(s);	/* DO NOT CHANGE THIS TO kfree() ! */
+}
+
+#else /* MDEBUG */
 
 struct mminfo {
 	char *ptr;
@@ -211,27 +212,26 @@ struct mminfo {
 };
 struct mminfo *Topmm = NULL;
 
-char *
+void *
 dbgallocate(unsigned int s,char *tag)
 {
+	extern long *Debug;
 	struct mminfo *m;
 	char *tg;
 	char *p;
-static int recurse = 0;
+	static int recurse = 0;
 
-recurse++;
-{extern long *Debug;
-if(Debug && *Debug && recurse <= 1){char buff[32];sprintf(buff,"a(%d,%s)",s,tag==NULL?"":tag);keyerrfile(buff);}
-}
-recurse--;
+
 	p = malloc(s);
-if(Debugmalloc && *Debugmalloc){
-	char buff[100];
-	sprintf(buff,"allocate(%d,tag=%s)=%lld\n",s,tag,(long long)p);
-	keyerrfile(buff);
-}
+	recurse++;
+	{
+		if(Debug && *Debug && recurse <= 1) {
+			keyerrfile("allocate(%d)=0x%" KEY_PRIxPTR " tag=%s\n",s,(KEY_PRIxPTR_TYPE)p,tag==NULL?"":tag);
+		}
+	}
+	recurse--;
+
 	m = (struct mminfo *)malloc(sizeof(struct mminfo));
-keyerrfile("dbgalloc B1 malloc of %d\n",sizeof(struct mminfo));
 	m->ptr = p;
 	if ( p==NULL || m==NULL )
 		allocerror();
@@ -245,16 +245,34 @@ keyerrfile("dbgalloc B1 malloc of %d\n",sizeof(struct mminfo));
 	m->tag = tg;
 	m->next = Topmm;
 	Topmm = m;
-keyerrfile("dbgalloc C\n");
-	{extern long *Debug;
-		if ( Debug!=NULL && *Debug!='\0' ) {
-			char buff[100];
-			sprintf(buff,"allocate(%d %s)\n",m->size,tag);
-			keyerrfile(buff);
+	return(p);
+}
+
+void
+dbgmyfree(void *s)
+{
+	struct mminfo *m, *prevm;
+	if ( s == NULL )
+		return;
+
+	for ( prevm=NULL,m=Topmm; m!=NULL; prevm=m,m=m->next ) {
+		if ( m->ptr == s )
+			break;
+	}
+	if ( m == NULL ) {
+		keyerrfile("Hey, myfree(0x%" KEY_PRIxPTR ") called with unallocated pointer\n", (KEY_PRIxPTR_TYPE)s);
+	}
+	else {
+		if(Debug && *Debug) {
+			keyerrfile("myfree(0x%" KEY_PRIxPTR ") tag=%s\n",(KEY_PRIxPTR_TYPE)s,m?m->tag:"");
 		}
 	}
-keyerrfile("dbgalloc returning\n");
-	return(p);
+	if ( prevm==NULL )
+		Topmm = Topmm->next;
+	else
+		prevm->next = m->next;
+
+	free(s);	/* DO NOT CHANGE THIS TO kfree() ! */
 }
 
 void
@@ -283,48 +301,17 @@ void
 mmdump(void)
 {
 	struct mminfo *m;
-	char buff[200];
 
 	keyerrfile("mmdump\n");
 	for ( m=Topmm; m!=NULL; m=m->next ) {
 		if ( m->flag == 1 )
 			continue;
-		sprintf(buff,"mm ptr=%lld size=%d tag=%s str=%s\n",
-			(long long)(m->ptr),m->size,m->tag,visstr(m->ptr));
-		keyerrfile(buff);
+		keyerrfile("mm ptr=0x%" KEY_PRIxPTR " size=%d tag=%s str=%s\n",
+			(KEY_PRIxPTR_TYPE)(m->ptr),m->size,m->tag,visstr(m->ptr));
 	}
 }
 #endif
 
-void
-myfree(char *s)
-{
-	if ( s == NULL )
-		return;
-#ifdef MDEBUG
-    {	struct mminfo *m, *prevm;
-	for ( prevm=NULL,m=Topmm; m!=NULL; prevm=m,m=m->next ) {
-		if ( m->ptr == s )
-			break;
-	}
-	if ( m == NULL ) {
-		keyerrfile("Hey, myfree called with a pointer that wasn't allocate'ed\n");
-	}
-	else {
-		if(Debugmalloc && *Debugmalloc) {
-			char buff[100];
-			sprintf(buff,"myfree(%lld tag=%s)\n",(long long)s,m->tag);
-			keyerrfile(buff);
-		}
-	}
-	if ( prevm==NULL )
-		Topmm = Topmm->next;
-	else
-		prevm->next = m->next;
-    }
-#endif
-	free(s);	/* DO NOT CHANGE THIS TO kfree() ! */
-}
 
 char *
 myfgets(char *buff, int bufsiz, FILE *f)

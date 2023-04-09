@@ -6,7 +6,6 @@
  * Read a Standard MIDI File.
  */
 
-#include <ctype.h>
 #include "key.h"
 #include "keymidi.h"
 #include "mf.h"

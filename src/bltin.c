@@ -2713,12 +2713,14 @@ bi_sprintf(int argc)
 void
 bi_mmreset(int argc)
 {
+	dummyusage(argc);
 	mmreset();
 	ret(Nullval);
 }
 void
 bi_mmdump(int argc)
 {
+	dummyusage(argc);
 	mmdump();
 	/* printf("Totnotes=%d  Newnotes=%d\n",Totnotes,Newnotes);
 	printf("Totphr=%d  Newphr=%d\n",Totphr,Newphr); */

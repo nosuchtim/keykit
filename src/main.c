@@ -458,6 +458,8 @@ keyerrfile(char *fmt,...)
 		vfprintf(stderr,fmt,args);	/* last resort */
 	else {
 		vfprintf(stdout,fmt,args);
+		va_end(args);
+		va_start(args,fmt);
 		vfprintf(f,fmt,args);
 		fflush(f);
 	}
