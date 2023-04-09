@@ -1,12 +1,12 @@
 class wlyre {
 
-method init (strings) {
+method init {
 
 	$.w = new window()
 	$.inherit($.w)
 
 	$.drawing = 1
-	$.nstrings = strings
+	$.nstrings = 24
 	$.relayison = []
 	$.relayon = []
 	$.relayoff = []
@@ -14,6 +14,8 @@ method init (strings) {
 	$.ontm = []
 	$.offtid = []
 	$.offtm = []
+	$.offmode = STORE
+	$.onmode = CLEAR
 	$.extradur = 0
 	$.numon = 0
 	$.gen = 1
