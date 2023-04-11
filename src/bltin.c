@@ -1301,9 +1301,10 @@ bi_substr(int argc)
 	Datum d;
 	int num, slen, len;
 	char *str;
-	char *free_this = NULL;
 	char *s = "substr";
-
+	static char *substr_buf = NULL;
+	static long substr_buf_size = 0;
+    
 	if ( argc != 2 && argc != 3 )
 		execerror("usage: substr(string,start,length)");
 
@@ -1315,11 +1316,14 @@ bi_substr(int argc)
 		return;
 	}
 
-	str = strsave(str);	/* we need to overwrite it */
-	free_this = str;
-
 	num = neednum(s,ARG(1));
-	slen = (long)strlen(str);
+    
+	slen = strlen(str);
+	len = slen + 1;
+	makeroom(len, &substr_buf, &substr_buf_size);
+	memcpy(substr_buf, str, len);
+	str = substr_buf;
+
 	if ( num > slen ) {
 		str = "";
 		slen = 0;
@@ -1329,7 +1333,6 @@ bi_substr(int argc)
 		str += num;
 		slen -= num;
 	} else {
-		free(free_this);
 		execerror("Invalid start value (%d) given to substr()",num);
 	}
 	if ( argc == 3 ) {
@@ -1339,7 +1342,6 @@ bi_substr(int argc)
 		}
 	}
 	d = strdatum(uniqstr(str));	/* do not merge with return(d)! */
-	free(free_this);
 	ret(d);
 }
 
