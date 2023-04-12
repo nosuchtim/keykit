@@ -67,8 +67,8 @@ function addpostrc(f) {
 function dokeylocal() {
 
 	# KEYOUT environment variable is default output port
-	outportname = mdep("env","get","KEYOUT")
-	if ( defined(outportname) && (outportname != "") ) {
+	outportname = getenv("KEYOUT")
+	if ( outportname != "" ) {
 		out = outport(outportname)
 		if ( out >= 0 ) {
 			mapport(0,out)
@@ -308,8 +308,8 @@ function normboot() {
 
 	if ( Graphics ) {
 		# allow environment variable to control screen size
-		keysize = mdep("env","get","KEYSIZE")
-		if ( defined(keysize) && (keysize != "") ) {
+		keysize = getenv("KEYSIZE")
+		if ( keysize != "" ) {
 			eval "TMP="+keysize
 			screen("size",TMP)
 		}
