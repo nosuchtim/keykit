@@ -398,3 +398,11 @@ function forwardmidi(port1,port2) {
 		print("MIDI IN! N = ",n)
 	}
 }
+
+function getenv(variable) {
+	value=mdep("env","get",variable)
+	if ( !defined(value) ) {
+		value = ""
+	}
+	return(value)
+}
