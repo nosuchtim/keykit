@@ -803,19 +803,13 @@ notetoke(INTFUNC infunc)
 
 		if ( p>=endofbuff ) {
 			/* increase size of notebuff */
-			char *r, *newbuff;
-			char *q = notebuff;
-
+			/* increase size of notebuff */
+			unsigned int oldbuffsize = buffsize;
 			buffsize += buffinc;
 			buffinc = (buffinc*3)/2;
-			newbuff = kmalloc(buffsize,"notetoke");
-			r = newbuff;
-			while ( q < p )
-				*r++ = *q++;
-			kfree(notebuff);
-			notebuff = newbuff;
+			notebuff = krealloc(notebuff, buffsize, "notetoke");
+			p = notebuff + oldbuffsize;
 			endofbuff = notebuff + buffsize;
-			p = r;
 		}
 
 		switch (state) {
@@ -1340,16 +1334,9 @@ messtont(char *s)
 			continue;
 		}
 		if ( nbytes >= bytesize ) {
-			Unchar *newbytes;
-			int oldsize = bytesize;
 			bytesize += messinc;
 			messinc = (messinc*3)/2;
-			/* should really use realloc for this */
-			newbytes = (Unchar*) kmalloc((unsigned)bytesize,"messtont");
-			while ( oldsize-- > 0 )
-				newbytes[oldsize] = bytes[oldsize];
-			kfree(bytes);
-			bytes = newbytes;
+			bytes = krealloc(bytes, bytesize, "messtont");
 		}
 		bytes[nbytes++] = 16*byte1 + h;
 		bytenum = 0;

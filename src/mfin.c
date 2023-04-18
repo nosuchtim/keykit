@@ -146,24 +146,8 @@ msgleng(void)
 static void
 msgenlarge(void)
 {
-	Unchar *newmess;
-	Unchar *oldmess = Msg1buff;
-	int oldleng = Msg1alloc;
-
 	Msg1alloc += MSGINCREMENT;
-	newmess = (Unchar *) kmalloc( (unsigned)(sizeof(char)*Msg1alloc),"msgenlarge");
-
-	/* copy old message into larger new one */
-	if ( oldmess != NULL ) {
-		register Unchar *p = newmess;
-		register Unchar *q = oldmess;
-		register Unchar *endq = &oldmess[oldleng];
-
-		for ( ; q!=endq ; p++,q++ )
-			*p = *q;
-		kfree(oldmess);
-	}
-	Msg1buff = newmess;
+	Msg1buff = krealloc(Msg1buff,Msg1alloc,"msgenlarge");
 }
 
 static void

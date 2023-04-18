@@ -79,7 +79,7 @@ typedef struct Kobject *Kobjectp;
 // #define BIGDEBUG
 // #define DEBUGEXEC
 
-// #define MDEBUG
+#define MDEBUG
 
 /* If MDEP_MALLOC is defined, then a machine-dependent mdep.h can */
 /* provide its own macros for kmalloc and kfree. */
@@ -88,9 +88,11 @@ typedef struct Kobject *Kobjectp;
 /* Note: the tag passed into kmalloc _must_ be a constant string */
 #ifdef MDEBUG
 #define kmalloc(x,tag) dbgallocate(x,tag)
+#define krealloc(x,size,tag) dbgmyrealloc(x,size,tag)
 #define kfree(x) dbgmyfree(x)
 #else
 #define kmalloc(x,tag) allocate(x,tag)
+#define krealloc(x,size,tag) myrealloc(x,size,tag)
 #define kfree(x) myfree(x)
 #endif
 

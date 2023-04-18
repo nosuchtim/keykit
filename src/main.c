@@ -448,17 +448,25 @@ keyerrfile(char *fmt,...)
 {
 	va_list args;
 	static FILE *f = NULL;
-
+	unsigned long milliseconds = mdep_milliclock();
+	char now[32];
 	if ( f == NULL )
 		f = fopen("key.dbg","w");
 
+	milliseconds /= 10;
+	snprintf(now, sizeof(now), "%lu.%02u: ", milliseconds / 100, (unsigned int)(milliseconds % 100));
+
 	va_start(args,fmt);
 
-	if ( f == NULL )
-		vfprintf(stderr,fmt,args);	/* last resort */
-	else {
+	if ( f == NULL ) {
+		/* last resort */
+		fputs(now, stderr);
+		vfprintf(stderr,fmt,args);
+	} else {
+		fputs(now, stdout);
 		vfprintf(stdout,fmt,args);
 		va_end(args);
+		fputs(now, f);
 		va_start(args,fmt);
 		vfprintf(f,fmt,args);
 		fflush(f);
