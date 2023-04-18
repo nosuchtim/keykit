@@ -2312,46 +2312,39 @@ void
 expandstackatleast(Ktaskp p, int needed)
 {
 	Datum *olds = p->stack;
-	Datum *olde = p->stackend;
-	Datum *oldsp = p->stackp;
-	Datum *oldsf = p->stackframe;
-	Datum *oldqf = p->qmarkframe;
-	Datum *s, *ns;
-
-
+	
 	/* We want to increase by at least 50% */
 	if ( (p->stacksize)/2 > needed )
 		needed = p->stacksize / 2;
 
 	p->stacksize += needed;
-	p->stack = (Datum*) kmalloc(p->stacksize*sizeof(Datum),"expandstack");
-	p->stackp = p->stack + (oldsp - olds);
-	p->qmarkframe = p->stack + (oldqf - olds);
-	p->stackend = p->stack + p->stacksize;
+	p->stack = krealloc(p->stack,p->stacksize*sizeof(Datum),"expandstack");
 
-	/* copy old stack to new one */
-	if ( olds == NULL ) {
+	if (!olds)
+	{
 		mdep_popup("Internal error: olds == NULL in expandstack!?");
 		return;
 	}
-	for ( ns=p->stack,s=olds; s<olde; ns++,s++ ) {
-		/* adjust frame pointers, since they point within the stack */
-		if ( s->type == D_FRM ) {
-			ns->type = D_FRM;
-			if ( s->u.frm )
-				ns->u.frm = p->stack + (s->u.frm - olds);
-			else
-				ns->u.frm = NULL;
-		}
-		else
-			*ns = *s;
-	}
 
-	if ( oldsf != NULL ) {
-		p->stackframe = p->stack + (oldsf - olds);
-		redoarg0(p);
+	/* Only update stack/frame pointers if stack moved */
+	if (p->stack != olds)
+	{
+		intptr_t ptrdiff;
+		Datum *ns;
+
+		ptrdiff = (void *)p->stack - (void *)olds;
+		p->stackp = (void *)p->stackp + ptrdiff;
+		p->qmarkframe = (void *)p->qmarkframe + ptrdiff;
+		p->stackend = p->stack + p->stacksize;
+		
+		for ( ns=p->stack; ns<=p->stackp; ns++ ) {
+			/* adjust frame pointers, since they point within the stack */
+			if ( ns->type == D_FRM ) {
+				if ( ns->u.frm )
+					ns->u.frm = p->stack + (ns->u.frm - olds);
+			}
+		}
 	}
-	kfree(olds);
 }
 
 /* This sets of the sequence of instructions that's used for dragging */
