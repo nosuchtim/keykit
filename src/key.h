@@ -79,7 +79,7 @@ typedef struct Kobject *Kobjectp;
 // #define BIGDEBUG
 // #define DEBUGEXEC
 
-#define MDEBUG
+// #define MDEBUG
 
 /* If MDEP_MALLOC is defined, then a machine-dependent mdep.h can */
 /* provide its own macros for kmalloc and kfree. */
