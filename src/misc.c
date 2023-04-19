@@ -185,9 +185,23 @@ allocate(unsigned int s, char *tag)
 	char *p;
 
 	dummyusage(tag);
-	p = (char*) malloc(s);
+	p = malloc(s);
 	/* if ( Debugmalloc!=NULL && *Debugmalloc!=0 && recurse<=1 )
 		keyerrfile("allocate(%d %s)=%d\n",s,tag,p); */
+	if ( p == NULL )
+		allocerror();
+	return(p);
+}
+
+void *
+myrealloc(void *s, unsigned int size, char *tag)
+{
+	char *p;
+
+	dummyusage(tag);
+	p = realloc(s, size);
+	/* if ( Debugmalloc!=NULL && *Debugmalloc!=0 && recurse<=1 )
+		keyerrfile("myrealloc(%d %s)=%d\n",s,tag,p); */
 	if ( p == NULL )
 		allocerror();
 	return(p);
@@ -246,6 +260,39 @@ dbgallocate(unsigned int s,char *tag)
 	m->next = Topmm;
 	Topmm = m;
 	return(p);
+}
+
+void *
+dbgmyrealloc(void *s, unsigned int size, char *tag)
+{
+	extern long *Debug;
+	struct mminfo *m;
+	char *p;
+
+	if ( s == NULL )
+		return dbgallocate(size, tag);
+
+	for ( m=Topmm; m!=NULL; m=m->next ) {
+		if ( m->ptr == s )
+			break;
+	}
+	if ( m == NULL ) {
+		keyerrfile("Hey, myrealloc(0x%" KEY_PRIxPTR ") called with unallocated pointer\n", (KEY_PRIxPTR_TYPE)s);
+	}
+
+	p = realloc(s, size);
+	if ( p == NULL )
+		allocerror();
+
+	if(Debug && *Debug) {
+		keyerrfile("myrealloc(0x%" KEY_PRIxPTR ",%d)=0x%" KEY_PRIxPTR " tag=%s\n",s,size,(KEY_PRIxPTR_TYPE)p,tag==NULL?"":tag);
+	}
+
+	m->ptr = p;
+	m->size = size;
+	m->flag = 0;
+	m->tag = tag;
+	return p;
 }
 
 void
