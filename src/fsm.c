@@ -319,22 +319,6 @@ sysmess(int inbyte)
 void
 biggermess(Unchar **amessage,int *aMessleng)
 {
-	Unchar *oldmess = *amessage;
-	Unchar *newmess;
-	int oldleng = *aMessleng;
-
 	*aMessleng += MESSAGESIZE;
-	newmess = (Unchar *) kmalloc( (unsigned)(sizeof(char)*(*aMessleng)), "biggermess" );
-
-	/* copy old message into larger new message */
-	if ( oldmess != NULL ) {
-		register Unchar *p = newmess;
-		register Unchar *q = oldmess;
-		register Unchar *endq = &oldmess[oldleng];
-
-		for ( ; q!=endq ; p++,q++ )
-			*p = *q;
-		kfree(oldmess);
-	}
-	*amessage = newmess;
+	*amessage = krealloc(*amessage,*aMessleng,"biggermess");
 }
