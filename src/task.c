@@ -1884,10 +1884,10 @@ initstack(Ktaskp t)
 Ktaskp
 newtask(Codep cp)
 {
-	int stksize = INITSTACKSIZE;
+	unsigned int stksize = INITSTACKSIZE;
 	Ktaskp t = newtp(T_RUNNING);
 
-	t->stack = alloctaskstack(stksize);
+	t->stack = alloctaskstack(&stksize);
 	t->stacksize = stksize;
 	t->stackend = t->stack + stksize;
 
@@ -2415,32 +2415,43 @@ eprfunc(BYTEFUNC i)
  * when next task(w/stack) is created */
 struct Cachestack {
 	struct Cachestack *next;
-	void *stack;
-	unsigned int stacksize;
+	unsigned int size;
+	/* &Cachestack.next is base of cached stack - Cachestack.size in size */
 };
-
-/* Number of task stacks to cache; _MUST_ be a power of two */
-#define CSFREELIST_SIZE 8
-struct Cachestack csfreelist[CSFREELIST_SIZE];
-unsigned int csfreehead = 0, csfreetail = 0;
+#define MAX_CACHED_STACKS  16
+static struct Cachestack *cachedstacks = NULL;
+static unsigned int numcachedstacks = 0;
 
 /* Return a task stack of size stksize Datum structures */
 void *
-alloctaskstack(unsigned int stksize)
+alloctaskstack(unsigned int *stksizep)
 {
 	void *stack;
-	if (csfreehead - csfreetail)
+	unsigned int stksize = *stksizep;
+	unsigned int cachedsize;
+	
+	if (cachedstacks != NULL)
 	{
-		struct Cachestack *p = &csfreelist[csfreetail++ % CSFREELIST_SIZE];
-		if ( (p->stack == NULL) || (p->stacksize == 0)) {
-			execerror("Huh? cache stack pool corrupted!\n");
+		if ( cachedstacks->size == 0) {
+			execerror("Huh? cache stack size is zero?!?\n");
 		}
-		stack = p->stack;
-		if (p->stacksize < stksize)
+
+		/* Get stack base/size from cachedstacks */
+		cachedsize = cachedstacks->size;
+		stack = (void *)cachedstacks;
+		/* Peel stack off cachedstacks queue */
+		cachedstacks = cachedstacks->next;
+		--numcachedstacks;
+
+		/* If size of stack is too small resize the stack */
+		if (cachedsize < stksize)
 		{
-			/* Resize stack to make it large enough */
-			stack = krealloc(p->stack, stksize * sizeof(Datum), "alloctaskstack");
+			stack = krealloc(stack, stksize * sizeof(Datum), "alloctaskstack");
 		}
+		else {
+			stksize = cachedsize;
+		}
+		*stksizep = stksize;
 	}
 	else {
 		/* Don't have a cached stack... */
@@ -2453,18 +2464,21 @@ alloctaskstack(unsigned int stksize)
 void
 cachetaskstack(void *stack, unsigned int stksize)
 {
-	if (csfreehead - csfreetail < CSFREELIST_SIZE)
+	struct Cachestack *ptr;
+	if (numcachedstacks < MAX_CACHED_STACKS)
 	{
-		struct Cachestack *p = &csfreelist[csfreehead++ % CSFREELIST_SIZE];
 		unsigned int CUTOFFSTACKSIZE = 3*INITSTACKSIZE;
 		/* Limit cached stack to CUTOFFSTACKSIZE */
 		if (stksize > CUTOFFSTACKSIZE)
 		{
-			stack = krealloc(p->stack,CUTOFFSTACKSIZE*sizeof(Datum),"alloctaskstack");
+			stack = krealloc(stack,CUTOFFSTACKSIZE*sizeof(Datum),"alloctaskstack");
 			stksize = CUTOFFSTACKSIZE;
 		}			
-		p->stack = stack;
-		p->stacksize = stksize;
+		ptr = (struct Cachestack *)stack;
+		ptr->size = stksize;
+		ptr->next = cachedstacks;
+		cachedstacks = ptr;
+		numcachedstacks++;
 	}
 	else {
 		/* Already have enough cached task stacks... */
