@@ -96,7 +96,7 @@
 
 typedef struct Midimessdata {
 	int leng;
-	Unchar* bytes;
+	Unchar bytes[1]; /* allocation include 'leng' bytes of data here... */
 } Midimessdata;
 
 typedef struct Notedata {
