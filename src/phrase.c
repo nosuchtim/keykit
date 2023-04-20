@@ -135,16 +135,10 @@ Midimessp
 savemess(Unchar* mess,int leng)
 {
 	Midimessp m;
-	register Unchar *p, *q;
-	register int n;
 
-	m = (Midimessp) kmalloc(sizeof(Midimessdata),"savemess");
+	m = (Midimessp) kmalloc(sizeof(Midimessdata)+leng-sizeof(Unchar),"savemess");
 	m->leng = leng;
-	m->bytes = (Unchar*) kmalloc((unsigned)leng,"savebytes");
-	p = m->bytes;
-	q = mess;
-	for ( n=0; n<leng; n++ )
-		*p++ = *q++;
+	memcpy(m->bytes, mess, leng);
 	return(m);
 }
 
@@ -160,7 +154,6 @@ ntfree(Noteptr n)
 		return;
         if ( typeof(n) == NT_BYTES ) {
                 m = messof(n);
-                kfree(m->bytes);
                 kfree(m);
                 /* make sure we can't try to free it again */
                 messof(n) = NULL;
@@ -174,6 +167,7 @@ Noteptr
 ntcopy(register Noteptr n)
 {
 	register Noteptr nn;
+	Midimessp m;
 	int i, nb;
 
 	nn = newnt();
@@ -185,7 +179,8 @@ ntcopy(register Noteptr n)
 	portof(nn) = portof(n);
 	switch (typeof(nn) = typeof(n)) {
 	case NT_BYTES:
-		messof(nn) = savemess(messof(n)->bytes,messof(n)->leng);
+		m = messof(n);
+		messof(nn) = savemess(m->bytes,m->leng);
 		break;
 	case NT_LE3BYTES:
 		nb = le3_nbytesof(nn) = le3_nbytesof(n);
@@ -803,19 +798,12 @@ notetoke(INTFUNC infunc)
 
 		if ( p>=endofbuff ) {
 			/* increase size of notebuff */
-			char *r, *newbuff;
-			char *q = notebuff;
-
+			unsigned int oldbuffsize = buffsize;
 			buffsize += buffinc;
 			buffinc = (buffinc*3)/2;
-			newbuff = kmalloc(buffsize,"notetoke");
-			r = newbuff;
-			while ( q < p )
-				*r++ = *q++;
-			kfree(notebuff);
-			notebuff = newbuff;
+			notebuff = krealloc(notebuff, buffsize, "notetoke");
+			p = notebuff + oldbuffsize;
 			endofbuff = notebuff + buffsize;
-			p = r;
 		}
 
 		switch (state) {
@@ -1340,16 +1328,9 @@ messtont(char *s)
 			continue;
 		}
 		if ( nbytes >= bytesize ) {
-			Unchar *newbytes;
-			int oldsize = bytesize;
 			bytesize += messinc;
 			messinc = (messinc*3)/2;
-			/* should really use realloc for this */
-			newbytes = (Unchar*) kmalloc((unsigned)bytesize,"messtont");
-			while ( oldsize-- > 0 )
-				newbytes[oldsize] = bytes[oldsize];
-			kfree(bytes);
-			bytes = newbytes;
+			bytes = krealloc(bytes, bytesize, "messtont");
 		}
 		bytes[nbytes++] = 16*byte1 + h;
 		bytenum = 0;
@@ -1448,8 +1429,8 @@ ptrtobyte(register Noteptr n,register int num)
 		{
 		m = messof(n);
 
-		if ( m != NULL && m->bytes != NULL && num < m->leng )
-			return (Unchar*)(&(m->bytes[num]));
+		if ( m != NULL && num < m->leng )
+			return &m->bytes[num];
 		}
 		break;
 	}

@@ -61,24 +61,12 @@ void
 pushiseg(void)
 {
 	if ( ++Niseg >= Maxiseg ) {
-		/* I'm not sure why I avoid using realloc here... */
 		int newmax = Maxiseg + ISEGINC;
 		unsigned int newsize = newmax * sizeof(Instnodep);
-		Instnodep *newIseg = (Instnodep*) kmalloc(newsize,"pushiseg");
-		Instnodep *newLastin = (Instnodep*) kmalloc(newsize,"pushiseg");
-		Instnodep *newFuture = (Instnodep*) kmalloc(newsize,"pushiseg");
-		int n;
-		for ( n=0; n<Maxiseg; n++ ) {
-			newIseg[n] = Iseg[n];
-			newLastin[n] = Lastin[n];
-			newFuture[n] = Future[n];
-		}
-		kfree(Iseg);
-		kfree(Lastin);
-		kfree(Future);
-		Iseg = newIseg;
-		Lastin = newLastin;
-		Future = newFuture;
+
+		Iseg = krealloc(Iseg, newsize, "pushiseg");
+		Lastin = krealloc(Lastin, newsize, "pushiseg");
+		Future = krealloc(Future, newsize, "pushiseg");
 		Maxiseg  = newmax;
 	}
 	clriseg();
