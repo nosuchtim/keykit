@@ -507,14 +507,13 @@ k_chanpressure(int chan,int press)
 void
 threebytes(int c1,int c2,int c3)
 {
-	Unchar bytes[3];
 	Noteptr n = newnt();
 	timeof(n) = mfclicks();
-	typeof(n) = NT_BYTES;
-	bytes[0] = c1;
-	bytes[1] = c2;
-	bytes[2] = c3;
-	messof(n) = savemess(bytes,3);
+	typeof(n) = NT_LE_NBYTES;
+	le_nbytesof(n) = 3;
+	*ptrtobyte(n,0) = c1;
+	*ptrtobyte(n,1) = c2;
+	*ptrtobyte(n,2) = c3;
 	portof(n) = Defport;
 	nextnote(n) = NULL;
 	ntinsert(n,Noteq);
@@ -524,13 +523,12 @@ threebytes(int c1,int c2,int c3)
 void
 twobytes(int c1,int c2)
 {
-	Unchar bytes[2];
 	Noteptr n = newnt();
 	timeof(n) = mfclicks();
-	typeof(n) = NT_BYTES;
-	bytes[0] = c1;
-	bytes[1] = c2;
-	messof(n) = savemess(bytes,2);
+	typeof(n) = NT_LE_NBYTES;
+	le_nbytesof(n) = 2;
+	*ptrtobyte(n,0) = c1;
+	*ptrtobyte(n,1) = c2;
 	portof(n) = Defport;
 	nextnote(n) = NULL;
 	ntinsert(n,Noteq);
@@ -538,12 +536,22 @@ twobytes(int c1,int c2)
 }
 
 void
-queuemess(Unchar *mess,int leng)
+queuemess(Unchar *mess,unsigned int leng)
 {
 	Noteptr n = newnt();
+	unsigned int i;
 	timeof(n) = mfclicks();
-	typeof(n) = NT_BYTES;
-	messof(n) = savemess(mess,leng);
+	if (leng < NOTE_DATA_NBYTES) {
+		typeof(n) = NT_LE_NBYTES;
+		le_nbytesof(n) = leng;
+		for (i=0; i<leng; ++i) {
+			*ptrtobyte(n,i) = mess[i];
+		}
+	}
+	else {
+		typeof(n) = NT_BYTES;
+		messof(n) = savemess(mess,leng);
+	}
 	portof(n) = Defport;
 	nextnote(n) = NULL;
 	ntinsert(n,Noteq);
