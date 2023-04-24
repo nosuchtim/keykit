@@ -15,7 +15,7 @@
 #define NT_NOTE 2
 #define NT_ON 4
 #define NT_OFF 8
-#define NT_LE3BYTES 16
+#define NT_LE_NBYTES 16
 
 /* bits in .flags value of Notes */
 #define FLG_PICK 1
@@ -64,10 +64,10 @@
 #define durof(nt) ((nt)->u.n.duration)
 #define attribof(nt) ((nt)->attrib)
 #define flagsof(nt) ((nt)->flags)
-#define le3_nbytesof(nt) ((nt)->u.b.nbytes)
-#define gt3_nbytesof(nt) ((nt)->u.m->leng)
+#define le_nbytesof(nt) ((nt)->u.b.nbytes)
+#define gt_nbytesof(nt) ((nt)->u.m->leng)
 #define ntisnote(nt) (typeof(nt)==NT_NOTE||typeof(nt)==NT_ON||typeof(nt)==NT_OFF)
-#define ntisbytes(nt) (typeof(nt)==NT_BYTES||typeof(nt)==NT_LE3BYTES)
+#define ntisbytes(nt) (typeof(nt)==NT_BYTES||typeof(nt)==NT_LE_NBYTES)
 #define canonipitchof(p) ((p)%12)
 #define canoctave(p) (-2+(p)/12)
 #define setfirstnote(p) ((p)->p_notes)
@@ -99,23 +99,29 @@ typedef struct Midimessdata {
 	Unchar bytes[1]; /* allocation include 'leng' bytes of data here... */
 } Midimessdata;
 
+typedef struct {		/* for NT_NOTE, NT_ON, NT_OFF */
+	Unchar chan;
+	Unchar pitch;
+	Unchar vol;
+	DURATIONTYPE duration;
+} Notedatanote;
+
+#define NOTE_DATA_NBYTES ((unsigned int)(sizeof(Notedatanote)-sizeof(Unchar)))
+
+typedef struct {		/* for NT_LE_NBYTES */
+	Unchar nbytes;
+	Unchar bytes[NOTE_DATA_NBYTES];
+} Notedatanbytes;
+
 typedef struct Notedata {
 	Noteptr next;
 	long clicks;	/* # of clicks from start of phrase. */
 	union {
-		struct {		/* for NT_NOTE, NT_ON, NT_OFF */
-			Unchar chan;
-			Unchar pitch;
-			Unchar vol;
-			DURATIONTYPE duration;
-		} n;
-		struct {		/* for NT_LE3BYTES */
-			Unchar nbytes;
-			Unchar bytes[3];
-		} b;
+		Notedatanote n;		/* for NT_NOTE, NT_ON, NT_OFF */
+		Notedatanbytes b;	/* for NT_LE_NBYTES */
 		Midimessp m;		/* for NT_BYTES */
 	} u;
-	char type;	/* NT_NOTE, NT_BYTES, NT_LE3BYTES, NT_ON, NT_OFF */
+	char type;	/* NT_NOTE, NT_BYTES, NT_LE_NBYTES, NT_ON, NT_OFF */
 	Unchar port;
 	UINT16 flags;
 #ifdef NTATTRIB

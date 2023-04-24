@@ -539,7 +539,7 @@ phtrack(Phrasep p)
 
 			putdelta(timeof(n)-lasttime);
 			lasttime = timeof(n);
-			if ( typeof(n) == NT_BYTES || typeof(n) == NT_LE3BYTES) {
+			if ( typeof(n) == NT_BYTES || typeof(n) == NT_LE_NBYTES) {
 				putbytes(n);
 			}
 			else {

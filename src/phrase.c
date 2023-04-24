@@ -182,8 +182,8 @@ ntcopy(register Noteptr n)
 		m = messof(n);
 		messof(nn) = savemess(m->bytes,m->leng);
 		break;
-	case NT_LE3BYTES:
-		nb = le3_nbytesof(nn) = le3_nbytesof(n);
+	case NT_LE_NBYTES:
+		nb = le_nbytesof(nn) = le_nbytesof(n);
 		for ( i=0; i<nb; i++ )
 			*ptrtobyte(nn,i) = *ptrtobyte(n,i);
 		break;
@@ -712,7 +712,7 @@ usertypeof(Noteptr nt)
 	case NT_OFF:
 		return NT_OFF;
 	case NT_BYTES:
-	case NT_LE3BYTES:
+	case NT_LE_NBYTES:
 		bp = ptrtobyte(nt,0);
 		ch1 = *bp++;
 		switch (ch1 & 0xf0) {
@@ -988,8 +988,8 @@ ntbytesleng(Noteptr n)
 {
 	if ( typeof(n) == NT_BYTES )
 		return messof(n)->leng;
-	else	/* NT_LE3BYTES */
-		return le3_nbytesof(n);
+	else	/* NT_LE_NBYTES */
+		return le_nbytesof(n);
 }
 
 /*
@@ -1282,12 +1282,13 @@ Noteptr
 messtont(char *s)
 {
 	static Unchar *bytes = NULL;
-	static int bytesize = 0;
+	static unsigned int bytesize = 0;
 	static int messinc = 64;
 	Noteptr n;
 	char c;
-	int h, i, bytenum=0, byte1=0;
-	int nbytes = 0;
+	int h, bytenum=0, byte1=0;
+	unsigned int i;
+	unsigned int nbytes = 0;
 
 	n = newnt();
 
@@ -1339,9 +1340,9 @@ messtont(char *s)
 		ntfree(n);
 		return(NULL);
 	}
-	else if ( nbytes <= 3 ) {
-		typeof(n) = NT_LE3BYTES;
-		le3_nbytesof(n) = nbytes;
+	else if ( nbytes <= NOTE_DATA_NBYTES ) {
+		typeof(n) = NT_LE_NBYTES;
+		le_nbytesof(n) = nbytes;
 		for ( i=0; i<nbytes; i++ )
 			*ptrtobyte(n,i) = bytes[i];
 	}
@@ -1421,8 +1422,8 @@ ptrtobyte(register Noteptr n,register int num)
 	register Midimessp m;
 
 	switch(typeof(n)){
-	case NT_LE3BYTES:
-		if ( num < (int)(le3_nbytesof(n)) )
+	case NT_LE_NBYTES:
+		if ( num < (int)(le_nbytesof(n)) )
 			return (Unchar*)(&(n->u.b.bytes[num]));
 		break;
 	default:	/* NT_BYTES */

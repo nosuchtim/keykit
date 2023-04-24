@@ -456,8 +456,8 @@ addandput(int port, int n0, int chan, int c1,int c2)
 	int c0 = n0 | chan;
 
 	timeof(n) = *Now;
-	typeof(n) = NT_LE3BYTES;
-	le3_nbytesof(n) = 3;
+	typeof(n) = NT_LE_NBYTES;
+	le_nbytesof(n) = 3;
 	*ptrtobyte(n,0) = c0;
 	*ptrtobyte(n,1) = c1;
 	*ptrtobyte(n,2) = c2;
@@ -504,7 +504,7 @@ chkinput(void)
 			noteoff(q);
 			break;
 		case NT_BYTES:
-		case NT_LE3BYTES:
+		case NT_LE_NBYTES:
 			notemess(q);
 			break;
 		}
@@ -711,7 +711,7 @@ sametime:
 			recordit = ((*Recfilter & (1<<chanof(n)))==0);
 			break;
 		case NT_BYTES:
-		case NT_LE3BYTES:
+		case NT_LE_NBYTES:
 			recordit = *Recsysex;
 			break;
 		default:
@@ -955,7 +955,7 @@ rc_mess(Unchar *mess,int indx)
 }
 
 void
-rc_messhandle(Unchar *mess,int indx, int chan)
+rc_messhandle(Unchar *mess,unsigned int indx, int chan)
 {
 	register Noteptr q;
 
@@ -971,10 +971,10 @@ rc_messhandle(Unchar *mess,int indx, int chan)
 	}
 	if ( (q=qnote(-1)) == NULL )
 		return;
-	if ( indx <= 3 ) {
-		register int i;
-		typeof(q) = NT_LE3BYTES;
-		le3_nbytesof(q) = indx;
+	if ( indx <= NOTE_DATA_NBYTES ) {
+		register unsigned int i;
+		typeof(q) = NT_LE_NBYTES;
+		le_nbytesof(q) = indx;
 		for ( i=0; i<indx; i++ ) {
 			*ptrtobyte(q,i) = mess[i];
 		}

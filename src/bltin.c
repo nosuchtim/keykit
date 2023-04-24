@@ -780,22 +780,22 @@ bi_midibytes(int argc)
 {
 	Phrasep p;
 	Noteptr n;
-	int nbytes = 0;
+	unsigned int nbytes = 0;
 #define SOMEBYTES 10
 	Unchar sbytes[SOMEBYTES];
 	Unchar *bytes;
 	Datum d;
-	int i, bi, bn;
+	unsigned int i, bi, bn;
 
 	if ( argc<1 )
 		execerror("usage: midibytes(byte1,byte2,byte3...)");
 
 	/* count the number of bytes that will be in the final result */
-	for ( i=0; i<argc; i++ ) {
+	for ( i=0; i<(unsigned int)argc; i++ ) {
 		d = ARG(i);
 		if ( d.type == D_PHR ) {
 			for ( n=firstnote(d.u.phr); n!=NULL; n=nextnote(n) ) {
-				if ( typeof(n) != NT_BYTES && typeof(n)!=NT_LE3BYTES )
+				if ( typeof(n) != NT_BYTES && typeof(n)!=NT_LE_NBYTES )
 					continue;
 				nbytes += ntbytesleng(n);
 			}
@@ -811,12 +811,12 @@ bi_midibytes(int argc)
 		bytes = (Unchar*) kmalloc((unsigned)nbytes*sizeof(char),"bi_midibytes");
 
 	bi = 0;
-	for ( i=0; i<argc; i++ ) {
+	for ( i=0; i<(unsigned int)argc; i++ ) {
 		d = ARG(i);
 		if ( d.type == D_PHR ) {
 			for ( n=firstnote(d.u.phr); n!=NULL; n=nextnote(n) ) {
-				int nbb;
-				if ( typeof(n) != NT_BYTES && typeof(n)!=NT_LE3BYTES )
+				unsigned int nbb;
+				if ( typeof(n) != NT_BYTES && typeof(n)!=NT_LE_NBYTES )
 					continue;
 				nbb = ntbytesleng(n);
 				for ( bn=0; bn<nbb; bn++ )
@@ -844,9 +844,9 @@ bi_midibytes(int argc)
 #ifdef NTATTRIB
 		attribof(n) = Nullstr;
 #endif
-		if ( nbytes <= 3 ) {
-			typeof(n) = NT_LE3BYTES;
-			le3_nbytesof(n) = nbytes;
+		if ( nbytes <= NOTE_DATA_NBYTES ) {
+			typeof(n) = NT_LE_NBYTES;
+			le_nbytesof(n) = nbytes;
 			for ( i=0; i<nbytes; i++ )
 				*ptrtobyte(n,i) = bytes[i];
 		}
@@ -1349,13 +1349,13 @@ void
 bi_sbbyes(int argc)
 {
 	Datum d;
-	int off;
+	unsigned int off;
 	Phrasep p;
 	Noteptr n;
 	char *s = "subbytes";
 	long origtime;
 	Unchar* origbytes;
-	int origleng, newleng;
+	unsigned int origleng, newleng;
 
 	if ( argc != 2 && argc != 3 )
 		execerror("usage: subbytes(MIDIBYTES-phrase,start,length)");
@@ -1395,10 +1395,10 @@ bi_sbbyes(int argc)
 
 	n = newnt();
 	timeof(n) = origtime;
-	if ( newleng <= 3 ) {
-		int i;
-		typeof(n) = NT_LE3BYTES;
-		le3_nbytesof(n) = (unsigned char)newleng;
+	if ( newleng <= NOTE_DATA_NBYTES ) {
+		unsigned int i;
+		typeof(n) = NT_LE_NBYTES;
+		le_nbytesof(n) = (unsigned char)newleng;
 		for ( i=0; i<newleng; i++ )
 			*ptrtobyte(n,i) = origbytes[off-1+i];
 	}
