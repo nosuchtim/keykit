@@ -163,6 +163,7 @@ clobber : clean
 	rm -f key.dbg
 	rm -f *.sln *.vcxproj*
 	rm -fr x64 keygo/x64
+	rm -fr key.res
 
 d_regex.h : regex.c
 	.\protoflp -dd_regex.h < regex.c > tmp.c

@@ -615,7 +615,12 @@ getfontinfo(void)
 }
 
 static BOOL
-allowaccept(SOCKET sock, SOCKADDR_IN *acc_sin) {
+allowaccept(SOCKADDR_IN *acc_sin) {
+
+	// By default, we don't allow listening, as a security feature.
+	// Set the environment variable KEYALLOW to the hostname
+	// you want to allow listening on.
+
 	char* keyallow = getenv("KEYALLOW");
 	if (keyallow == NULL || *keyallow == '\0') {
 		return FALSE;
@@ -624,20 +629,6 @@ allowaccept(SOCKET sock, SOCKADDR_IN *acc_sin) {
 	allow_sin.sin_addr.s_addr = inet_addr(keyallow);
 	ULONG allow_addr = allow_sin.sin_addr.S_un.S_addr;
 	ULONG acc_addr = (*acc_sin).sin_addr.S_un.S_addr;
-	/*
-	char buff[1000];
-	sprintf(buff, "%d,%d,%d,%d  %d,%d,%d,%d",
-		allow_sin.sin_addr.S_un.S_un_b.s_b1,
-		allow_sin.sin_addr.S_un.S_un_b.s_b2,
-		allow_sin.sin_addr.S_un.S_un_b.s_b3,
-		allow_sin.sin_addr.S_un.S_un_b.s_b4,
-		
-		acc_sin->sin_addr.S_un.S_un_b.s_b1,
-		acc_sin->sin_addr.S_un.S_un_b.s_b2,
-		acc_sin->sin_addr.S_un.S_un_b.s_b3,
-		acc_sin->sin_addr.S_un.S_un_b.s_b4
-		);
-	*/
 	if ((allow_sin.sin_addr.S_un.S_addr) == (acc_sin->sin_addr.S_un.S_addr)) {
 		return TRUE;
 	}
@@ -661,7 +652,7 @@ doaccept(SOCKET sock) {
 		sockerror(sock,"accept() failed");
 		return;
 	}
-	if ( ! allowaccept(sock,&acc_sin) ) {
+	if ( ! allowaccept(&acc_sin) ) {
 		sockerror(sock,"accept() not allowed, set KEYALLOW to hostname allowed");
 		return;
 	}
@@ -841,7 +832,7 @@ WndProc (HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam)
 	case WM_SYSCOMMAND:
 		switch (wParam) {
 		case IDM_ABOUT: {
-			eprint("ABOUT Dialog has been disabled\n");
+			eprint("ABOUT Dialog has been disabled");
 			// FARPROC lpfnDlgProc = 
 			//	MakeProcInstance (AboutDlgProc, Khinstance);
 			// DialogBoxA(Khinstance, "AboutBox", Khwnd,
@@ -1642,7 +1633,7 @@ mdep_line(int x0,int y0,int x1,int y1)
 	pt[2].y = y1+1;
 
 	if ( Polyline(Khdc,pt,3) == FALSE )
-		eprint("Polyline fails in mdep_line!?\n");
+		eprint("Polyline fails in mdep_line!?");
 }
 
 void
@@ -1661,7 +1652,7 @@ mdep_box(int x0,int y0,int x1,int y1)
 	pt[4].x = x0;
 	pt[4].y = y0;
 	if ( Polyline(Khdc,pt,5) == FALSE )
-		eprint("Polyline fails in mdep_box!?\n");
+		eprint("Polyline fails in mdep_box!?");
 }
 
 void
@@ -2211,6 +2202,11 @@ tcpip_listen(char *hostname, char *servname)
 			*(char **)phe->h_addr_list, phe->h_length);
 	}
 
+	if ( ! allowaccept(&local_sin) ) {
+		sockerror(sock,"tcp_listen not allowed for hostname %s, set KEYALLOW to allow listening",hostname);
+		return INVALID_SOCKET;
+	}
+
   	if (bind( sock, (struct sockaddr FAR *) &local_sin, sizeof(local_sin)) == SOCKET_ERROR) {
 		sockerror(sock,"bind() failed");
 		return INVALID_SOCKET;
@@ -2455,6 +2451,11 @@ udp_listen(char *hostname, char *servname)
 			*(char **)phe->h_addr_list, phe->h_length);
 	}
 
+	if ( ! allowaccept(&local_sin) ) {
+		sockerror(sock,"udp_listen not allowed for hostname %s, set KEYALLOW to allow listening",hostname);
+		return INVALID_SOCKET;
+	}
+
   	if (bind( sock, (struct sockaddr FAR *) &local_sin, sizeof(local_sin)) == SOCKET_ERROR) {
 		sockerror(sock,"bind() failed");
 		return INVALID_SOCKET;
@@ -2578,7 +2579,7 @@ udp_recv(PORTHANDLE mp, char *buff, int buffsize)
 	len = sizeof(src_sin);
 	r = recvfrom(sock,buff,buffsize,0,(PSOCKADDR) &src_sin,&len);
 
-	if ( ! allowaccept(sock,&src_sin) ) {
+	if ( ! allowaccept(&src_sin) ) {
 		sockerror(sock,"udp_recv() failed");
 		return -1;
 	}
@@ -2898,7 +2899,7 @@ mdep_openport(char *name, char *mode, char *type)
 		return handle;
 	}
     }
-    eprint("Unknown port type - %s\n",type);
+    eprint("Unknown port type - %s",type);
     return NULL;
 }
 

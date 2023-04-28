@@ -1112,7 +1112,7 @@ load1keylib(char *dir, char *keylibk)
 				if ( sscanf(buff+8,"%s %s",wrd1,wrd2) != 2 )
 					eprint("Improper '#library' statement!\n");
 				else
-					addplibrary(dir,wrd1,wrd2);
+					addplibrary(dir, wrd1, wrd2);
 			}
 		}
 		myfclose(f);

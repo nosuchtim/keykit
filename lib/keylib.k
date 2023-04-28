@@ -1584,6 +1584,7 @@
 #library util2.k setdefaultchancolormap
 #library util2.k chancolortestphrase
 #library util2.k forwardmidi
+#library util2.k getenv
 #library var.k var1
 #library var.k var2
 #library var.k var3
