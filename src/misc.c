@@ -140,7 +140,7 @@ strsave(register char *s)
 {
 	register char *p = kmalloc((unsigned)(strlen(s)+1),"strsave");
 	strcpy(p,s);
-	if ( Debugmalloc!=NULL && *Debugmalloc ) {
+	if ( *Debugstrsave ) {
 		keyerrfile("strsave=(%s)(ch1=%d)\n",p,p[0]);
 	}
 	return(p);
@@ -186,8 +186,9 @@ allocate(unsigned int s, char *tag)
 
 	dummyusage(tag);
 	p = malloc(s);
-	/* if ( Debugmalloc!=NULL && *Debugmalloc!=0 && recurse<=1 )
-		keyerrfile("allocate(%d %s)=%d\n",s,tag,p); */
+	if ( *Debugmalloc ) {
+		keyerrfile("allocate(%u %s)=0x%" KEY_PRIxPTR "\n",s,tag,(KEY_PRIxPTR_TYPE)p);
+	}
 	if ( p == NULL )
 		allocerror();
 	return(p);
@@ -200,8 +201,9 @@ myrealloc(void *s, unsigned int size, char *tag)
 
 	dummyusage(tag);
 	p = realloc(s, size);
-	/* if ( Debugmalloc!=NULL && *Debugmalloc!=0 && recurse<=1 )
-		keyerrfile("myrealloc(%d %s)=%d\n",s,tag,p); */
+	if ( *Debugmalloc ) {
+		keyerrfile("myrealloc(0x%" KEY_PRIxPTR " %s)=0x%" KEY_PRIxPTR "\n",(KEY_PRIxPTR_TYPE)s,tag,(KEY_PRIxPTR_TYPE)p);
+	}
 	if ( p == NULL )
 		allocerror();
 	return(p);
@@ -210,6 +212,9 @@ myrealloc(void *s, unsigned int size, char *tag)
 void
 myfree(void *s)
 {
+	if ( *Debugmalloc ) {
+		keyerrfile("myfree(0x%" KEY_PRIxPTR ")\n",(KEY_PRIxPTR_TYPE)s);
+	}
 	if ( s == NULL )
 		return;
 	free(s);	/* DO NOT CHANGE THIS TO kfree() ! */
@@ -229,7 +234,6 @@ struct mminfo *Topmm = NULL;
 void *
 dbgallocate(unsigned int s,char *tag)
 {
-	extern long *Debug;
 	struct mminfo *m;
 	char *tg;
 	char *p;
@@ -239,7 +243,7 @@ dbgallocate(unsigned int s,char *tag)
 	p = malloc(s);
 	recurse++;
 	{
-		if(Debug && *Debug && recurse <= 1) {
+		if ( *Debugmalloc && recurse <= 1 ) {
 			keyerrfile("allocate(%d)=0x%" KEY_PRIxPTR " tag=%s\n",s,(KEY_PRIxPTR_TYPE)p,tag==NULL?"":tag);
 		}
 	}
@@ -265,7 +269,6 @@ dbgallocate(unsigned int s,char *tag)
 void *
 dbgmyrealloc(void *s, unsigned int size, char *tag)
 {
-	extern long *Debug;
 	struct mminfo *m;
 	char *p;
 
@@ -284,7 +287,7 @@ dbgmyrealloc(void *s, unsigned int size, char *tag)
 	if ( p == NULL )
 		allocerror();
 
-	if(Debug && *Debug) {
+	if ( *Debugmalloc ) {
 		keyerrfile("myrealloc(0x%" KEY_PRIxPTR ",%d)=0x%" KEY_PRIxPTR " tag=%s\n",s,size,(KEY_PRIxPTR_TYPE)p,tag==NULL?"":tag);
 	}
 
@@ -310,7 +313,7 @@ dbgmyfree(void *s)
 		keyerrfile("Hey, myfree(0x%" KEY_PRIxPTR ") called with unallocated pointer\n", (KEY_PRIxPTR_TYPE)s);
 	}
 	else {
-		if(Debug && *Debug) {
+		if ( *Debugmalloc ) {
 			keyerrfile("myfree(0x%" KEY_PRIxPTR ") tag=%s\n",(KEY_PRIxPTR_TYPE)s,m?m->tag:"");
 		}
 	}

@@ -33,6 +33,11 @@
 #define NO_RETURN_ATTRIBUTE
 #endif
 
+/* ARRAY_SIZE(arry) returns num elements in statically defined array 'arry' */
+#ifndef ARRAY_SIZE
+#define ARRAY_SIZE(arry) ((unsigned int)(sizeof(arry)/sizeof((arry)[0])))
+#endif
+
 #ifdef PYTHON
 #include "Python.h"
 #endif
@@ -469,7 +474,7 @@ typedef void (*PATHFUNC)();
 /* default separator for split() on strings */
 #define DEFSPLIT " \t\n"
 
-#define ISDEBUGON (Debug!=NULL && *Debug!=0)
+#define ISDEBUGON (*Debug!=0)
 
 /* KeyKit programs get parsed and 'compiled' into lists of Inst's. */
 /* Each program segment (e.g. a function) is kept in a separate list. */
@@ -1088,7 +1093,7 @@ extern Symlongp Redrawignoretime, Resizeignoretime, Mousefnum, Warningsleep;
 extern Symlongp Millires, Milliwarn, Mousefifolimit, Minbardx, Midithrottle;
 extern Symlongp Numinst1, Numinst2, Kobjectoffset, Mousemoveevents;
 extern Symlongp Deftimeout;
-extern Symlongp Debuggesture;
+extern Symlongp Debuggesture, Debugstrsave;
 extern Symlongp Chancolors;
 extern Phrasepp Currphr, Recphr;
 extern Symstrp Keypath, Musicpath, Keyroot, Initconfig, Keypagepersistent;

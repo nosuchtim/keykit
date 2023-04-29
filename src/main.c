@@ -45,7 +45,6 @@ int Errors = 0;
 int Doconsole = 0;
 int Gotanint = 0;
 int Errfileit = 0;
-int Dbg = 0;
 
 char Tty[] = "tty";
 char *Infile = Tty;		/* current input file name */
@@ -1649,6 +1648,28 @@ makeparts(Symstr path)
 }
 
 int
+parsedebugargs(int argc, char **argv)
+{
+	while ( argc > 1 && argv[1][0] == '-') {
+		switch(argv[1][1])
+		{
+			case 'd':
+			case 'D':
+				if (!checkdebugarg(&argv[1][1])) {
+					eprint("Unrecognized option: %s ??\n",argv[1]);
+					return -1;
+				}
+				break;
+			default:
+				break;
+		}
+		argc--;
+		argv++;
+	}
+	return 0;
+}
+
+int
 MAIN(int argc,char **argv)
 {
 	int nerrs = 0;
@@ -1657,6 +1678,14 @@ MAIN(int argc,char **argv)
 	char *p;
 	int c;
 	int realConsolefd;
+
+	/* Must parse debug options _early_ since this initializes
+	 * Debug Symlongp variables that can be referenced before
+	 * initsyms is called. */
+	if (parsedebugargs(argc, argv)) {
+		finalexit(-1);
+		return -1;
+	}
 
 	Argv = argv;
 	Argc = argc;
@@ -1702,11 +1731,8 @@ MAIN(int argc,char **argv)
 			*Initconfig = uniqstr(p);
 			break;
 		case 'D':
-			Dbg = 1;
-			break;
 		case 'd':
-			if ( Debug )
-				(*Debug)++;
+			/* -d/-D options are handled in parsedebugargs() */
 			break;
 		case 'f':	/* for setting font, but handled by mdep_startgraphics() */
 			if ( argv[1][2]=='\0' || argv[1][3]=='\0' ) {

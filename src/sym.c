@@ -15,18 +15,17 @@ static Htablep Freeht = NULL;
 Context *Currct = NULL;
 Context *Topct = NULL;
 
-Symlongp Merge, Now, Clicks, Debug, Sync, Optimize, Mergefilter, Nowoffset;
+Symlongp Merge, Now, Clicks, Sync, Optimize, Mergefilter, Nowoffset;
 Symlongp Mergeport1, Mergeport2;
-Symlongp Debugwait, Debugmidi, Debugrun, Debugfifo, Debugmouse, Debuggesture;
-Symlongp Clocksperclick, Clicksperclock, Graphics, Debugdraw, Debugmalloc;
+Symlongp Clocksperclick, Clicksperclock, Graphics;
 Symlongp Millicount, Throttle2, Loadverbose, Warnnegative, Midifilenoteoff;
 Symlongp Drawcount, Mousedisable, Forceinputport, Showsync, Echoport;
-Symlongp Inputistty, Debugoff, Fakewrap, Mfsysextype;
+Symlongp Inputistty, Fakewrap, Mfsysextype;
 Symlongp Tempotrack, Onoffmerge, Defrelease, Grablimit, Mfformat, Defoutport;
 Symlongp Filter, Record, Recsched, Throttle, Recfilter, Recinput, Recsysex;
 Symlongp Lowcorelim, Arraysort, Midithrottle, Defpriority;
-Symlongp Taskaddr, Debuginst, Usewindfifos, Prepoll, Printsplit;
-Symlongp Novalval, Eofval, Intrval, Debugkill, Debugkill1, Linetrace;
+Symlongp Taskaddr, Usewindfifos, Prepoll, Printsplit;
+Symlongp Novalval, Eofval, Intrval, Linetrace;
 Symlongp Abortonint, Abortonerr, Redrawignoretime, Resizeignoretime;
 Symlongp Consecho, Checkcount, Isofuncwarn, Consupdown, Monitor_fnum;
 Symlongp Consecho_fnum, Slashcheck, Directcount, SubstrCount;
@@ -46,6 +45,72 @@ Datum *Exitfuncd;
 Htablepp Track, Wpick;
 Htablepp Chancolormap;
 Symlongp Chancolors;
+
+#define INIT_DEBUGARG_PAIR(name)		\
+	long Default##name = 0;			\
+	Symlongp name = &Default##name
+
+INIT_DEBUGARG_PAIR(Debug);
+INIT_DEBUGARG_PAIR(Debugdraw);
+INIT_DEBUGARG_PAIR(Debugfifo);
+INIT_DEBUGARG_PAIR(Debuggesture);
+INIT_DEBUGARG_PAIR(Debuginst);
+INIT_DEBUGARG_PAIR(Debugkill);
+INIT_DEBUGARG_PAIR(Debugkill1);
+INIT_DEBUGARG_PAIR(Debugmalloc);
+INIT_DEBUGARG_PAIR(Debugmidi);
+INIT_DEBUGARG_PAIR(Debugmouse);
+INIT_DEBUGARG_PAIR(Debugoff);
+INIT_DEBUGARG_PAIR(Debugrun);
+INIT_DEBUGARG_PAIR(Debugstrsave);
+INIT_DEBUGARG_PAIR(Debugwait);
+
+struct {
+	char *str;
+	Symlongp *ptovar;
+	Symlongp ptodefaultvar;
+} debugargs[] = {
+	{ "Debug", &Debug, &DefaultDebug },
+	{ "Debugdraw", &Debugdraw, &DefaultDebugdraw },
+	{ "Debugfifo", &Debugfifo, &DefaultDebugfifo },
+	{ "Debuggesture", &Debuggesture, &DefaultDebuggesture },
+	{ "Debuginst", &Debuginst, &DefaultDebuginst },
+	{ "Debugkill", &Debugkill, &DefaultDebugkill },
+	{ "Debugkill1", &Debugkill1, &DefaultDebugkill1 },
+	{ "Debugmalloc", &Debugmalloc, &DefaultDebugmalloc },
+	{ "Debugmidi", &Debugmidi, &DefaultDebugmidi },
+	{ "Debugmouse", &Debugmouse, &DefaultDebugmouse },
+	{ "Debugoff", &Debugoff, &DefaultDebugoff },
+	{ "Debugrun", &Debugrun, &DefaultDebugrun },
+	{ "Debugstrsave", &Debugstrsave, &DefaultDebugstrsave },
+	{ "Debugwait", &Debugwait, &DefaultDebugwait },
+};
+
+/* Check if a commandline option specifies a debug option; if so then
+ * set its default value to nonzero and return non-zero */
+int
+checkdebugarg(char *arg)
+{
+	unsigned int idx;
+
+	if (!strcmp(arg, "d")) {
+		*Debug = 1;
+		return 1;
+	}
+	else {
+		for (idx=0; idx<ARRAY_SIZE(debugargs); ++idx) {
+			if (!strcmp(arg, debugargs[idx].str)) {
+				if (!debugargs[idx].ptodefaultvar) {
+					eprint("Huh? Symlongp %s is NULL!\n", debugargs[idx].str);
+				} else {
+					*debugargs[idx].ptodefaultvar = 1;
+				}
+				return 1;
+			}
+		}
+	}
+	return 0;
+}
 
 void
 newcontext(Symbolp s, int sz)
@@ -466,7 +531,7 @@ newarrdatum(int used,int size)
 	d.u.arr = newht(size>0 ? size : ARRAYHASHSIZE);
 	
 #ifdef OLDSTUFF
-if(Debug&&*Debug>1)eprint("newarrdatum(%d), d.u.arr=%ld\n",used,(long)(d.u.arr));
+if(*Debug>1)eprint("newarrdatum(%d), d.u.arr=%ld\n",used,(long)(d.u.arr));
 #endif
 	d.u.arr->h_used = used;
 	d.u.arr->h_tobe = 0;
@@ -741,20 +806,8 @@ static struct binum {
 	{ "Mergeport2", -1L, &Mergeport2 },   //
 	{ "Mergefilter", 0L, &Mergefilter },
 	{ "Clicks", (long)(DEFCLICKS), &Clicks },
-	{ "Debug", 0L, &Debug },
 	{ "Optimize", 1L, &Optimize },
-	{ "Debugwait", 0L, &Debugwait },
-	{ "Debugoff", 0L, &Debugoff },
 	{ "Fakewrap", 0L, &Fakewrap },
-	{ "Debugrun", 0L, &Debugrun },
-	{ "Debuginst", 0L, &Debuginst },
-	{ "Debugkill", 0L, &Debugkill },
-	{ "Debugfifo", 0L, &Debugfifo },
-	{ "Debugmalloc", 0L, &Debugmalloc },
-	{ "Debugdraw", 0L, &Debugdraw },
-	{ "Debugmouse", 0L, &Debugmouse },
-	{ "Debugmidi", 0L, &Debugmidi },
-	{ "Debuggesture", 0L, &Debuggesture },
 	{ "Now", -1L, &Now },
 	{ "Nowoffset", 0L, &Nowoffset },
 	{ "Sync", 0L, &Sync },
@@ -792,7 +845,6 @@ static struct binum {
 	{ "Trace", 1, &Linetrace },
 	{ "Abortonint", 0, &Abortonint },
 	{ "Abortonerr", 0, &Abortonerr },
-	{ "Debugkill1", 0, &Debugkill1 },
 	{ "Consecho", 1, &Consecho },
 	{ "Slashcheck", 1, &Slashcheck },
 	{ "Directcount", 0, &Directcount },
@@ -992,7 +1044,7 @@ static char *Stdmacros[] = {
 void
 initsyms(void)
 {
-	int i;
+	unsigned int i;
 	Symbolp s;
 	Datum *dp;
 	char *p;
@@ -1010,7 +1062,14 @@ initsyms(void)
 		/* Don't need to uniqstr(p), because installnum does it. */ 
 		installnum(p,binums[i].ptovar,binums[i].val);
 	}
-	
+
+	/* Initialize Debug values from DefualtDebug values that may
+	 * have been modified from initial values by commandline args */
+	for (i=0; i < ARRAY_SIZE(debugargs); ++i) {
+		/* Don't need to uniqstr(p), because installnum does it. */ 
+		installnum(debugargs[i].str,debugargs[i].ptovar,*debugargs[i].ptodefaultvar);
+	}
+
 	for (i=0; (p=biphrs[i].name)!=NULL; i++) {
 		s = globalinstallnew(uniqstr(p),VAR);
 		dp = symdataptr(s);

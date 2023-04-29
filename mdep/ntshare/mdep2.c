@@ -560,11 +560,11 @@ WndProc (HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam)
 #endif
 		return 0;
 	case MM_MIM_ERROR:
-		if ( Debugmidi!=NULL && *Debug != 0 )
+		if ( *Debug != 0 )
 			mdep_popup("WndProc got MM_MIM_ERROR!");
 		return 0;
 	case MM_MIM_LONGERROR:
-		if ( Debugmidi!=NULL && *Debug != 0 )
+		if ( *Debug != 0 )
 			mdep_popup("WndProc got MM_MIM_LONGERROR!");
 		return 0;
 #endif
