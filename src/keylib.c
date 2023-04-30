@@ -11,6 +11,7 @@
 
 #include "d_mdep1.h"
 
+long *Debugstrsave = NULL;
 long *Debugmalloc = NULL;
 extern char *myfgets(char*, int, FILE*);
 
