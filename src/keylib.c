@@ -11,6 +11,11 @@
 
 #include "d_mdep1.h"
 
+#ifdef __GNUC__
+/* GLIBC prefers int for errno type, not errno_t */
+#define errno_t int
+#endif
+
 long *Debugstrsave = NULL;
 long *Debugmalloc = NULL;
 extern char *myfgets(char*, int, FILE*);
@@ -22,17 +27,6 @@ FILE *Kf;
 char *Kl = "keylib.k";
 
 void
-strlowcpy(char *buff,char *p)
-{
-	char *q;
-
-	for ( q=buff; (*q=*p)!=0; q++,p++ ) {
-		if ( *q >= 'A' && *q <= 'Z' )
-			*q = *q - 'A' + 'a';
-	}
-}
-
-void
 eprint(char *fmt,...)
 {
 	va_list args;
@@ -42,33 +36,92 @@ eprint(char *fmt,...)
 	va_end(args);
 }
 
+char **lines;
+unsigned int linesdim = 0;
+unsigned int linescount;
+
+/* Add a line to the list read */
+void
+addline(const char *p)
+{
+	char **newlines;
+	char *q;
+	
+	if (linescount == linesdim)
+	{
+		linesdim = (3 * linesdim) / 2;
+		if (linesdim < 20) {
+			linesdim = 20;
+		}
+		newlines = realloc(lines, linesdim * sizeof(char **));
+		if (!newlines)
+		{
+			eprint("Failed to allocate space for %d lines\n", linesdim);
+			exit(1);
+		}
+		lines = newlines;
+	}
+	/* Dup the line and add to tail of array */
+	q = strdup(p);
+	if (!q)
+	{
+		eprint("Failed to duplicate '%s' string\n", p);
+		exit(1);
+	}
+	lines[linescount++] = q;
+}
+
+void
+sortlines(void)
+{
+	unsigned int i, j;
+	for (i=0; i<linescount; ++i) {
+		for (j=i+1; j<linescount; ++j) {
+			if (strcmp(lines[i],lines[j])>0) {
+				char *p;
+				p = lines[i];
+				lines[i] = lines[j];
+				lines[j] = p;
+			}
+		}
+	}
+}
+
+void
+printlines(FILE *f)
+{
+	unsigned int i;
+	for (i=0; i<linescount; ++i)
+	{
+		fprintf(f, "%s\n", lines[i]);
+	}
+}
+
 void
 cback(char *fname,int type)
 {
 	char buff[BUFSIZ];
-	char lowfname[BUFSIZ];
+	char line[BUFSIZ];
 	FILE *f;
 	char *p, *q;
 	int lng, l;
 
-	if ( type != 0 )	/* ignore non-files */
+	if ( type != 0 ) {	/* ignore non-files */
 		return;
+	}
 
-	strlowcpy(lowfname,fname);	 /* converted to lower case */
-
-	lng = (int) strlen(lowfname);
-	if ( lng <= 2 )
+	lng = (int) strlen(fname);
+	if ( lng <= 2 ) {
 		return;
+	}
 
 	/* We don't want to process keylib.k */
-	p = &lowfname[lng-2];
-	if ( strcmp(p,".k")!=0 && strcmp(p,".K")!=0 )
+	p = &fname[lng-2];
+	if ( strcasecmp(p,".k")!=0 || strcasecmp(fname,Kl) == 0 ) {
 		return;
+	}
 
-	if ( strcmp(lowfname,Kl) == 0 )
-		return;
-
-	eprint("Scanning %s...\n",lowfname);
+	eprint("Scanning %s...\n",fname);
 
 	errno_t err = 0;
 	f = fopen(fname,"r");	/* not lowfname */
@@ -84,23 +137,31 @@ cback(char *fname,int type)
 
 		/* look for lines beginning with function or class */
 
-		if ( strncmp(buff,"function",8) == 0 )
+		if ( strncmp(buff,"function",8) == 0 ) {
 			l = 8;
-		else if ( strncmp(buff,"class",5) == 0 )
+		}
+		else if ( strncmp(buff,"class",5) == 0 ) {
 			l = 5;
-		else
+		}
+		else {
 			continue;
-		if ( ! isspace(buff[l]) )
+		}
+		if ( ! isspace(buff[l]) ) {
 			continue;
+		}
 		q = &buff[l+1];
-		while ( isspace(*q) )
+		while ( isspace(*q) ) {
 			q++;
+		}
 		p = q;
-		while ( *q!=0 && strchr("({ \t\n\r",*q)==NULL )
+		while ( *q!=0 && strchr("({ \t\n\r",*q)==NULL ) {
 			q++;
-		if ( *q != 0 )
+		}
+		if ( *q != 0 ) {
 			*q = 0;
-		fprintf(Kf,"#library %s %s\n",lowfname,p);
+		}
+		sprintf(line,"#library %s %s",fname,p);
+		addline(line);
 	}
 	fclose(f);
 }
@@ -119,6 +180,8 @@ main()
 		exit(1);
 	}
 	mdep_lsdir(".","*",cback);
+	sortlines();
+	printlines(Kf);
 	fclose(Kf);
 	exit(0);
 	return(0);
@@ -144,8 +207,9 @@ keyerrfile(char *fmt, ...)
 
 	va_start(args,fmt);
 
-	if ( f == NULL )
+	if ( f == NULL ) {
 		vfprintf(stderr,fmt,args);	/* last resort */
+	}
 	else {
 		vfprintf(f,fmt,args);
 		fflush(f);

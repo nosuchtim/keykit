@@ -56,6 +56,8 @@ function updatelib(forceit,forcerekeylib,path,reread) {
 		if ( updateit ) {
 			anyupdated = 1
 			klf = open(keylibfn,"w")
+                        lines = []
+                        linecount = 0
 			for ( fn in files ) {
 				fullpath = dir + Dirseparator + fn
 				f = open(fullpath)
@@ -74,11 +76,19 @@ function updatelib(forceit,forcerekeylib,path,reread) {
 						} else {
 							seen[w1] = fn
 						}
-						put(klf,"#library "+fn+" "+w1+"\n")
+						lines["#library "+fn+" "+w1+"\n"] = 1
+
 					}
 				}
 				close(f)
 			}
+			# write out the list in alphabetical order
+			old = Arraysort
+			Arraysort = 1
+			for (i in lines) {
+				put(klf, i);
+			}
+			Arraysort = old
 			close(klf)
 		}
 	}
