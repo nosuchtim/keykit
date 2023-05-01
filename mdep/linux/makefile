@@ -16,7 +16,7 @@ KEY = key
 PROTO = -p
 
 BIN=../bin
-EXECS = $(KEY)
+EXECS = $(KEY) keylib
 OBJS = yacc.o sym.o real.o code.o code2.o main.o util.o mdep1.o mfin.o \
 	phrase.o misc.o fsm.o grid.o view.o midi.o clock.o mdep2.o \
 	keyto.o regex.o task.o fifo.o kwind.o menu.o bltin.o meth.o
@@ -37,6 +37,9 @@ demo :
 
 install : all
 	cp $(KEY) $(BIN)/$(KEY)
+	rm -f ../bin/keylib
+	cp keylib ../bin/keylib
+	cd ../lib ; ../bin/keylib
 	cd ../src
 
 protoproc : protoflp
