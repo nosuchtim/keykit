@@ -70,3 +70,4 @@ void KeyTimerFunc(UINT, UINT, DWORD, DWORD, DWORD);
 #define WM_KEY_PORT    (WM_USER + 6)
 
 #define unlink _unlink
+#define strcasecmp _stricmp

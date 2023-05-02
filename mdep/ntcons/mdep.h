@@ -47,3 +47,4 @@ typedef void (*SIGFUNCTYPE)(int);
 #define SEPARATOR "\\"
 
 #define unlink _unlink
+#define strcasecmp _stricmp

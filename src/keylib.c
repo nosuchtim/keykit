@@ -10,6 +10,7 @@
 #include <errno.h>
 
 #include "d_mdep1.h"
+#include "mdep.h"
 
 #ifdef __GNUC__
 /* GLIBC prefers int for errno type, not errno_t */
