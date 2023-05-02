@@ -19,10 +19,13 @@ BIN=../bin
 EXECS = $(KEY) keylib
 OBJS = yacc.o sym.o real.o code.o code2.o main.o util.o mdep1.o mfin.o \
 	phrase.o misc.o fsm.o grid.o view.o midi.o clock.o mdep2.o \
-	keyto.o regex.o task.o fifo.o kwind.o menu.o bltin.o meth.o
+	keyto.o regex.o task.o fifo.o kwind.o menu.o bltin.o meth.o \
+	chkkey.o
 SRC = real.c yacc.c code.c code2.c sym.c main.c util.c mdep1.c mfin.c \
 	phrase.c misc.c fsm.c grid.c view.c midi.c clock.c mdep2.c \
-	keyto.c regex.c task.c fifo.c kwind.c menu.c bltin.c meth.c
+	keyto.c regex.c task.c fifo.c kwind.c menu.c bltin.c meth.c \
+	chkkey.c
+
 PROFILE = -g
 CFLAGS = -Wall -Wextra -O $(INC) $(PROFILE)
 
@@ -73,7 +76,7 @@ protoproc : protoflp
 ALLDECS = d_code.h d_code2.h d_fsm.h d_grid.h d_keyto.h d_main.h d_mdep1.h \
 	d_menu.h d_mfin.h d_midi.h d_misc.h d_phrase.h d_real.h d_sym.h \
 	d_util.h d_view.h d_task.h d_fifo.h d_kwind.h d_regex.h d_bltin.h \
-	d_clock.h d_meth.h d_mdep2.h
+	d_clock.h d_meth.h d_mdep2.h d_chkkey.h
 
 # Using protoflp, Create d_xx.h from xx.c (using d_xx_h.tmp temp file):
 # 1) if d_xx.h doesn't exist
