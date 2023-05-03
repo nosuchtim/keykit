@@ -55,6 +55,7 @@ INIT_DEBUGARG_PAIR(Debugdraw);
 INIT_DEBUGARG_PAIR(Debugfifo);
 INIT_DEBUGARG_PAIR(Debuggesture);
 INIT_DEBUGARG_PAIR(Debuginst);
+INIT_DEBUGARG_PAIR(Debugkeylib);
 INIT_DEBUGARG_PAIR(Debugkill);
 INIT_DEBUGARG_PAIR(Debugkill1);
 INIT_DEBUGARG_PAIR(Debugmalloc);
@@ -75,6 +76,7 @@ struct {
 	{ "Debugfifo", &Debugfifo, &DefaultDebugfifo },
 	{ "Debuggesture", &Debuggesture, &DefaultDebuggesture },
 	{ "Debuginst", &Debuginst, &DefaultDebuginst },
+	{ "Debugkeylib", &Debugkeylib, &DefaultDebugkeylib },
 	{ "Debugkill", &Debugkill, &DefaultDebugkill },
 	{ "Debugkill1", &Debugkill1, &DefaultDebugkill1 },
 	{ "Debugmalloc", &Debugmalloc, &DefaultDebugmalloc },

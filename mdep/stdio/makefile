@@ -8,17 +8,17 @@ BIN=../bin
 KEYOBJ = yacc.o main.o util.o misc.o phrase.o sym.o keyto.o \
 	code.o code2.o grid.o view.o menu.o task.o fifo.o \
 	mfin.o real.o mdep1.o mdep2.o kwind.o fsm.o bltin.o \
-	meth.o regex.o midi.o clock.o
+	meth.o regex.o midi.o clock.o chkkey.o
 
 KEYFILES = main util misc phrase sym keyto yacc \
 	code code2 grid view menu task fifo \
 	mfin real mdep1 mdep2 kwind fsm bltin meth \
-	regex midi clock
+	regex midi clock chkkey
 
 ALLDECS = d_code.h d_code2.h d_fsm.h d_grid.h d_keyto.h d_main.h d_mdep1.h \
 	d_menu.h d_mfin.h d_midi.h d_misc.h d_phrase.h d_real.h d_sym.h \
 	d_util.h d_view.h d_task.h d_fifo.h d_kwind.h d_regex.h d_bltin.h \
-	d_meth.h d_clock.h d_mdep2.h
+	d_meth.h d_clock.h d_mdep2.h d_chkkey.h
 
 libs =  libc.lib kernel32.lib user32.lib gdi32.lib winmm.lib comdlg32.lib
 
@@ -112,6 +112,8 @@ d_menu.h : menu.c
 	./protoflp -s $(PROTO) -dd_menu.h < menu.c
 d_kwind.h : kwind.c
 	./protoflp -s $(PROTO) -dd_kwind.h < kwind.c
+d_chkkey.h : chkkey.c
+	./protoflp -s $(PROTO) -dd_chkkey.h < chkkey.c
 
 mdepback :
 	cp mdep1.c ../mdep/stdio/mdep1.c

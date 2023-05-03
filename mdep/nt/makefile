@@ -9,7 +9,7 @@ WINDOWS10SDK = 10.0.18362.0
 
 VCPATHS="/libpath:\program files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.26.28801\lib\x64" \
 	"/libpath:\program files (x86)\windows kits\10\lib\$(WINDOWS10SDK)\ucrt\x64" \
-       	"/libpath:\program files (x86)\windows kits\10\lib\$(WINDOWS10SDK)\um\x64"
+	"/libpath:\program files (x86)\windows kits\10\lib\$(WINDOWS10SDK)\um\x64"
 
 
 # Reverse the order of these statements to toggle debug info
@@ -36,17 +36,17 @@ WINSOCK = wsock32.lib
 KEYOBJ = yacc.obj main.obj util.obj misc.obj phrase.obj sym.obj keyto.obj \
 	code.obj code2.obj grid.obj view.obj menu.obj task.obj fifo.obj \
 	mfin.obj real.obj mdep1.obj mdep2.obj kwind.obj fsm.obj bltin.obj \
-	meth.obj regex.obj midi.obj clock.obj rtmidi.obj rtmidi_c.obj
+	meth.obj regex.obj midi.obj clock.obj rtmidi.obj rtmidi_c.obj chkkey.obj
 
 KEYFILES = main util misc phrase sym keyto yacc \
 	code code2 grid view menu task fifo \
 	mfin real mdep1 mdep2 kwind fsm bltin meth \
-	regex midi clock
+	regex midi clock chkkey
 
 ALLDECS = d_code.h d_code2.h d_fsm.h d_grid.h d_keyto.h d_main.h d_mdep1.h \
 	d_menu.h d_mfin.h d_midi.h d_misc.h d_phrase.h d_real.h d_sym.h \
 	d_util.h d_view.h d_task.h d_fifo.h d_kwind.h d_regex.h d_bltin.h \
-	d_meth.h d_clock.h d_mdep2.h
+	d_meth.h d_clock.h d_mdep2.h d_chkkey.h
 
 # libs = $(LIBC) kernel32.lib user32.lib gdi32.lib winmm.lib comdlg32.lib $(WINSOCK) ole32.lib $(FWTRACK) setupapi.lib quartz.lib msacm32.lib oleaut32.lib advapi32.lib strmiids.lib
 #
@@ -213,6 +213,9 @@ d_menu.h : menu.c
 	.\protoflp -dd_menu.h < menu.c > tmp.c
 d_kwind.h : kwind.c
 	.\protoflp -dd_kwind.h < kwind.c > tmp.c
+d_chkkey.h : chkkey.c
+	.\protoflp -dd_chkkey.h < chkkey.c > tmp.c
+
 
 mdepback :
 	cp makefile ..\mdep\nt\makefile

@@ -131,6 +131,7 @@ keystart(void)
 
 	initstrs();
 	initsyms();
+	checkkeylib(); /* Make sure <libdirs>/keylib.k is up to date */
 	pushiseg();
 	inittasks();
 	initfifos();

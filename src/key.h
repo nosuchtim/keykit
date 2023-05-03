@@ -1095,6 +1095,7 @@ extern Symlongp Numinst1, Numinst2, Kobjectoffset, Mousemoveevents;
 extern Symlongp Deftimeout;
 extern Symlongp Debuggesture, Debugstrsave;
 extern Symlongp Chancolors;
+extern Symlongp Debugkeylib;
 extern Phrasepp Currphr, Recphr;
 extern Symstrp Keypath, Musicpath, Keyroot, Initconfig, Keypagepersistent;
 extern Symstrp Printsep, Printend, Pathsep, Dirseparator, Devmidi, Machine;
@@ -1215,6 +1216,7 @@ Hey, mdep_statmidi is no longer used!
 #include "d_regex.h"
 #include "d_clock.h"
 #include "d_menu.h"
+#include "d_chkkey.h"
 
 /* GCC compiler only wants the no return attribute on a function's
  * prototype, _not_ its declaration. Other targets that don't define

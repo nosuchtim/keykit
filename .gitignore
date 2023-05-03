@@ -35,6 +35,7 @@ bin/savefpp_google
 doc/electromusic2005
 bin/key
 bin/lowkey
+bin/keylib
 byacc/byacc
 src/protoflp
 src/keykit.ico
@@ -44,6 +45,7 @@ src/yacc.[hc]
 src/clock.c
 src/key
 src/lowkey
+src/keylib
 src/mdep.h
 src/mdep[12].c
 src/midi.c
