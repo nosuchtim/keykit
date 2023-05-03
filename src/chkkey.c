@@ -4,9 +4,6 @@
 #define KEYLIB_K "keylib.k"
 
 
-/* Non-zero if error occured trying to check keylib.k */
-int checkkeylibfailed = 0;
-
 /* Duplicate string str */
 char *
 mystrdup(const char *str)
@@ -51,10 +48,6 @@ addfilentime(char *fname, long mtime)
 	char *dupfname;
 	struct fileandtime *newftimearry;
 
-	if ( checkkeylibfailed ) {
-		return;
-	}
-
 	if ( ftime.count == ftime.dim )
 	{
 		ftime.dim = (3 * ftime.dim) / 2;
@@ -64,17 +57,15 @@ addfilentime(char *fname, long mtime)
 		newftimearry = realloc(ftime.arry, ftime.dim * sizeof(*ftime.arry));
 		if ( newftimearry == NULL ) {
 			eprint("Failed to allocates space for %d fileandtime structs\n", ftime.dim);
-			checkkeylibfailed = 1;
 			freeftime();
 			return;
 		}
 		ftime.arry = newftimearry;
 	}
 	dupfname = mystrdup(fname);
-	if ( dupfname = NULL )
+	if ( dupfname == NULL )
 	{
-		eprint("Faile to duplicate '%s' string\n", fname);
-		checkkeylibfailed = 1;
+		eprint("Failed to duplicate '%s' string\n", fname);
 		return;
 	}
 	ftime.arry[ftime.count].mtime = mtime;
@@ -91,7 +82,7 @@ cback(char *fname, int type)
 	long mtime;
 	unsigned int len;
 
-	if ( checkkeylibfailed != 0 || type != 0 ) {
+	if ( type != 0 ) {
 		return;
 	}
 
@@ -219,7 +210,6 @@ rebuildkeylibdir(char *keylibdir, const char *reason)
 		f = fopen(fullfname, "r");
 		if ( f == NULL ) {
 			eprint("Failed to open '%s%s%s' for reading\n", keylibdir, SEPARATOR, ftime.arry[i].fname);
-			checkkeylibfailed = 1;
 			return -1;
 		}
 		if ( *Debugkeylib ) {
@@ -264,9 +254,8 @@ rebuildkeylibdir(char *keylibdir, const char *reason)
 	return 0;
 }
 
-/* Check keylib.k in keylibdir to see if exits and if
- * not uptodate compared to corresponding .k files then
- * regenerate it. */
+/* If keylib.k in keylibdir doesn't exist, or is out of date
+ * relative to any .k file in keylibdir, then regenerate it. */
 int
 checkkeylibdir(char *keylibdir)
 {
@@ -279,9 +268,6 @@ checkkeylibdir(char *keylibdir)
 
 	lsdir_prefix=keylibdir;
 	mdep_lsdir(keylibdir,"*",cback);
-	if ( checkkeylibfailed ) {
-		return -1;
-	}
 	if ( ftime.count != 0L ) {
 		if ( ftime.keylib_mtime == 0L ) {
 			/* keylib.k not found - needs to be rebuilt */
@@ -318,8 +304,6 @@ checkkeylib(void)
 	unsigned int pathseplen;
 	char *p, *q;
 
-	checkkeylibfailed = 0;
-	
 	/* For each <dir> part of mdep_keypath() do:
 	 * 1) determine whether <dir>/keylib.k exists
 	 * 2) if so, determine if any <dir>/<file>.k (except keylib.k) is newer
@@ -337,12 +321,16 @@ checkkeylib(void)
 			ret = -1;
 			goto cleanup;
 		}
-		if ( q = NULL ) {
+		if ( q == NULL ) {
 			break;
 		}
 	}
   cleanup:
 	freeftime();
 	kfree(dupkeypath);
+	if ( ret < 0 ) {
+		eprint("checkkeylib() failed...\n");
+		exit(1);
+	}
 	return ret;
 }
