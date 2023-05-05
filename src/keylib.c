@@ -17,8 +17,15 @@
 #define errno_t int
 #endif
 
-long *Debugstrsave = NULL;
-long *Debugmalloc = NULL;
+typedef long *Symlongp;
+#define INIT_DEBUGARG_PAIR(name)		\
+	long Default##name = 0;			\
+	Symlongp name = &Default##name
+
+INIT_DEBUGARG_PAIR(Debugmemscribble);
+INIT_DEBUGARG_PAIR(Debugstrsave);
+INIT_DEBUGARG_PAIR(Debugmalloc);
+
 extern char *myfgets(char*, int, FILE*);
 
 /* Read all *.k file in the current directory and construct a keylib.k file */

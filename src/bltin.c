@@ -1356,6 +1356,7 @@ bi_sbbyes(int argc)
 	long origtime;
 	Unchar* origbytes;
 	unsigned int origleng, newleng;
+	Unchar origport;
 
 	if ( argc != 2 && argc != 3 )
 		execerror("usage: subbytes(MIDIBYTES-phrase,start,length)");
@@ -1379,6 +1380,7 @@ bi_sbbyes(int argc)
 	origtime = timeof(n);
 	origbytes = ptrtobyte(n,0);
 	origleng = ntbytesleng(n);
+	origport = portof(n);
 
 	if ( argc >= 3 )
 		newleng = neednum(s,ARG(2));
@@ -1395,6 +1397,7 @@ bi_sbbyes(int argc)
 
 	n = newnt();
 	timeof(n) = origtime;
+	portof(n) = origport;
 	if ( newleng <= NOTE_DATA_NBYTES ) {
 		unsigned int i;
 		typeof(n) = NT_LE_NBYTES;
