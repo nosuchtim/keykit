@@ -1,5 +1,5 @@
 CC = gcc
-CFLAGS = -Wall -Wextra -O
+CFLAGS = -Wall -Wextra -O -g
 STATIC = -static
 
 PROTO = -p
