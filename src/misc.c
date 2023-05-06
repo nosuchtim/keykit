@@ -191,6 +191,9 @@ allocate(unsigned int s, char *tag)
 	}
 	if ( p == NULL )
 		allocerror();
+	if ( *Debugmemscribble ) {
+		memset(p, 0xa5, s);
+	}
 	return(p);
 }
 
@@ -239,7 +242,6 @@ dbgallocate(unsigned int s,char *tag)
 	char *p;
 	static int recurse = 0;
 
-
 	p = malloc(s);
 	recurse++;
 	{
@@ -248,6 +250,10 @@ dbgallocate(unsigned int s,char *tag)
 		}
 	}
 	recurse--;
+
+	if ( *Debugmemscribble ) {
+		memset(p, 0xa5, s);
+	}
 
 	m = (struct mminfo *)malloc(sizeof(struct mminfo));
 	m->ptr = p;

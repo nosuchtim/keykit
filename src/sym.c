@@ -59,6 +59,7 @@ INIT_DEBUGARG_PAIR(Debugkeylib);
 INIT_DEBUGARG_PAIR(Debugkill);
 INIT_DEBUGARG_PAIR(Debugkill1);
 INIT_DEBUGARG_PAIR(Debugmalloc);
+INIT_DEBUGARG_PAIR(Debugmemscribble);
 INIT_DEBUGARG_PAIR(Debugmidi);
 INIT_DEBUGARG_PAIR(Debugmouse);
 INIT_DEBUGARG_PAIR(Debugoff);
@@ -80,6 +81,7 @@ struct {
 	{ "Debugkill", &Debugkill, &DefaultDebugkill },
 	{ "Debugkill1", &Debugkill1, &DefaultDebugkill1 },
 	{ "Debugmalloc", &Debugmalloc, &DefaultDebugmalloc },
+	{ "Debugmemscribble", &Debugmemscribble, &DefaultDebugmemscribble },
 	{ "Debugmidi", &Debugmidi, &DefaultDebugmidi },
 	{ "Debugmouse", &Debugmouse, &DefaultDebugmouse },
 	{ "Debugoff", &Debugoff, &DefaultDebugoff },

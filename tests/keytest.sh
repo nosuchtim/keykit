@@ -1,4 +1,11 @@
+#!/bin/sh
+
+ARGS="-Debugmemscribble"
+
+echo "Arg passed to lowkey: '${ARGS}'"
+
 echo Running ack test ...
+
 KEYPATH=../lib ../bin/lowkey ack.k > ack.out
 diff ack.out ack.sav
 
