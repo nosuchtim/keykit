@@ -204,7 +204,10 @@ rebuildkeylibdir(char *keylibdir, const char *reason)
 	char *p, *q;
 	FILE *f;
 
-	eprint("Rebuild %s%s%s since it %s\n", keylibdir, SEPARATOR, KEYLIB_K, reason);
+	if ( *Debugkeylib ) {
+		eprint("Rebuild %s%s%s since it %s\n", keylibdir, SEPARATOR, KEYLIB_K, reason);
+	}
+
 	for (i=0; i<ftime.count; ++i) {
 		snprintf(fullfname, sizeof(fullfname), "%s%s%s", keylibdir, SEPARATOR, ftime.arry[i].fname);
 		f = fopen(fullfname, "r");
@@ -291,6 +294,7 @@ checkkeylibdir(char *keylibdir)
 			rebuildkeylibdir(keylibdir, rebuild_reason);
 		}
 	}
+	freeftime();
 	
 	return 0;
 }

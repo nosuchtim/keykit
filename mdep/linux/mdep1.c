@@ -116,7 +116,7 @@ mdep_lsdir(char *dir, char *exp, void (*callback)(char*,int))
 	FILE *f;
 	struct stat sb;
 	int dleng = strlen(dir);
-	char *sep = "/";
+	char *sep = SEPARATOR;
 
 	/* If dir ends in "/", don't add an additional "/" */
 	if ( dleng > 0 && dir[dleng-1] == '/' )
@@ -134,15 +134,16 @@ mdep_lsdir(char *dir, char *exp, void (*callback)(char*,int))
 			*p = '\0';
 		if ( stat(buff,&sb) < 0 )
 			continue;
-		/* Strip off original directory and prefix */
+
+		/* Strip off original directory and separator(if there) */
 		len = strlen(dir);
 		p = buff;
 		if ( strncmp(p, dir, len) == 0 ) {
 			p += len;
-		}
-		len = strlen(sep);
-		if ( strncmp(p, sep, len) == 0 ) {
-			p += len;
+			len = strlen(sep);
+			if ( strncmp(p, sep, len) == 0 ) {
+				p += len;
+			}
 		}
 		callback(p,S_ISDIR(sb.st_mode)?1:0);
 	}
