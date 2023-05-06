@@ -131,19 +131,32 @@ mdep_lsdir(char *dir, char *exp, void (*callback)(char*,int))
 	char buff[BUFSIZ];
 	FILE *f;
 	struct stat sb;
+	char *sep = SEPARATOR;
 
-	sprintf(buff,"ls %s/%s",dir,exp);
+	sprintf(buff,"ls %s%s%s 2>/dev/null",dir,sep,exp);
 	f = popen(buff,"r");
 	if ( f == NULL ) {
 		return 1;
 	}
 	while ( fgets(buff,BUFSIZ,f) != NULL ) {
+		unsigned int len;
 		char *p = strchr(buff,'\n');
 		if ( p )
 			*p = '\0';
 		if ( stat(buff,&sb) < 0 )
 			continue;
-		callback(buff,S_ISDIR(sb.st_mode)?1:0);
+
+		/* Strip off original directory and separator(if there) */
+		len = strlen(dir);
+		p = buff;
+		if ( strncmp(p, dir, len) == 0 ) {
+			p += len;
+			len = strlen(sep);
+			if ( strncmp(p, sep, len) == 0 ) {
+				p += len;
+			}
+		}
+		callback(p,S_ISDIR(sb.st_mode)?1:0);
 	}
 	pclose(f);
 	return 0;
