@@ -867,8 +867,9 @@ popfin(void)
 		Lineno = 0;
 	}
 	else {
-		if ( Infile != Tty )
+		if ( Infile && (Infile != Tty) ) {
 			kfree(Infile);
+		}
 		Fin = *--Fstackp;
 		Infile = *--Fnstackp;
 		Lineno = *--Lnstackp;
@@ -912,6 +913,9 @@ flushfin(void)
 		 * what's going on.
 		 */
 		fclose(Fin);
+		/* Set Fin to NULL to prevent multiple flushfin()
+		 * calls from fclosing Fin. */
+		Fin = NULL;
 	}
 }
 
@@ -1492,7 +1496,12 @@ loadsymfile(Symbolp s,int pushit)
 		nestinstruct(cp);
 
 	popfin();
-	myfclose(f);
+
+	/* If yyparse failed, flushfin (called
+	 * from yyerror) already closed f... */
+	if ( Errors == 0 ) {
+		myfclose(f);
+	}
 
 	if ( isnoval(s->sd) ) {
 		eprint("Warning: no value for '%s' found in file '%s' !?\n",
