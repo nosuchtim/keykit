@@ -26,9 +26,9 @@ int
 mdep_initmidi(Midiport *inputs, Midiport *outputs)
 {
 	outputs[0].name = "alsa";
-	outputs[0].private1 = (int) NULL;
+	outputs[0].private1 = (intptr_t) NULL;
 	inputs[0].name = "alsa";
-	inputs[0].private1 = (int) NULL;
+	inputs[0].private1 = (intptr_t) NULL;
 
 	alsa_rawmidi_in.midihandle = NULL;
 	alsa_rawmidi_in.midifd = -1;
@@ -54,7 +54,7 @@ openmidiout(Midiport * port)
 		/*
 		 * It's already open.
 		 */
-		port->private1 = (int) a;
+		port->private1 = (intptr_t) a;
 		return 0;
 	}
 
@@ -87,7 +87,7 @@ openmidiout(Midiport * port)
 		fprintf(stderr,"Hey, midifd isn't muxable!\n");
 		exit(1);
 	}
-	port->private1 = (int) a;
+	port->private1 = (intptr_t) a;
 	
 	return(ret);
 }
@@ -106,7 +106,7 @@ openmidiin(Midiport * port)
 		/*
 		 * It's already open.
 		 */
-		port->private1 = (int) a;
+		port->private1 = (intptr_t) a;
 		return 0;
 	}
 
@@ -140,7 +140,7 @@ openmidiin(Midiport * port)
 		fprintf(stderr,"Hey, midifd isn't muxable!\n");
 		exit(1);
 	}
-	port->private1 = (int) a;
+	port->private1 = (intptr_t) a;
 
 	return(ret);
 }

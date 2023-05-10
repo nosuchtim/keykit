@@ -756,7 +756,7 @@ typedef struct Kobject {
 typedef struct Midiport {
 	int opened;
 	Symstr name;
-	int private1;	/* mdep layer can use this for whatever it wants */
+	intptr_t private1;	/* mdep layer can use this for whatever it wants */
 } Midiport;
 
 /*
