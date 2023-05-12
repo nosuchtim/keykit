@@ -16,6 +16,7 @@ Kboom:wkboom2:trackable
 Mouse Matrix:wmatrix
 Parameters:wparam
 Port Enabler:wportpick
+Alsa Port Enabler:walsaportpick
 Port Map:wportmap1
 Riff:wriff:trackable
 RiffNames:wriffnames:trackable

@@ -2135,13 +2135,15 @@ bi_midi(int argc)
 	/*
 	 * recognized commands are:
 	 *     input list
-	 *     input open {n}
+	 *     input open {n} [{m}]
 	 *     input close {n}
 	 *     input isopen {n}
+	 *     input isopento {n}
 	 *     output list
-	 *     output open {n}
+	 *     output open {n} [{m}]
 	 *     output close {n}
 	 *     output isopen {n}
+	 *     output isopento {n}
 	 *     output default {n}
 	 *     output default {n} {channel}
 	 */
@@ -2176,18 +2178,33 @@ bi_midi(int argc)
 			d = numdatum(r);
 		}
 		else if ( strcmp(arg1,"open")==0 ) {
+			int selection;
 			if ( argc > 2 )
 				portno = neednum("midi",ARG(2));
 			else
 				execerror("usage: midi(input,open,#)\n");
+			selection = 0;
+			if ( argc > 3 ) {
+				selection = neednum("midi", ARG(3));
+			}
 			chkinputport(portno);
 			/* Convert input portno to offset in Midiinputs */
 			p = portno - MIDI_IN_PORT_OFFSET;
-			if ( Midiinputs[p-1].opened == 1 )
+			if ( Midiinputs[p-1].opened != 0 )
 				execerror("midi: input port %d is already open !?\n",portno);
-			r = mdep_midi(MIDI_OPEN_INPUT,&Midiinputs[p-1]);
+			if (selection) {
+				MidiOpenInfo moinfo;
+				moinfo.port = &Midiinputs[p-1];
+				moinfo.portno = p-1;
+				moinfo.selection = selection;
+				r = mdep_midi(MIDI_OPEN_INPUT_INFO, &moinfo);
+			}
+			else {
+				r = mdep_midi(MIDI_OPEN_INPUT,&Midiinputs[p-1]);
+				selection = 1;
+			}
 			if ( r == 0 )
-				Midiinputs[p-1].opened = 1;
+				Midiinputs[p-1].opened = selection;
 			d = numdatum(r);
 		}
 		else if ( strcmp(arg1,"isopen")==0 ) {
@@ -2195,6 +2212,17 @@ bi_midi(int argc)
 				portno = neednum("midi",ARG(2));
 			else
 				execerror("usage: midi(input,isopen,#)\n");
+			chkinputport(portno);
+			/* Convert input portno to offset in Midiinputs */
+			p = portno - MIDI_IN_PORT_OFFSET;
+			r = Midiinputs[p-1].opened != 0;
+			d = numdatum(r);
+		}
+		else if ( strcmp(arg1,"isopento")==0 ) {
+			if ( argc > 2 )
+				portno = neednum("midi",ARG(2));
+			else
+				execerror("usage: midi(input,isopento,#)\n");
 			chkinputport(portno);
 			/* Convert input portno to offset in Midiinputs */
 			p = portno - MIDI_IN_PORT_OFFSET;
@@ -2235,16 +2263,31 @@ bi_midi(int argc)
 			d = numdatum(r);
 		}
 		else if ( strcmp(arg1,"open")==0 ) {
+			int selection;
 			if ( argc > 2 )
 				portno = neednum("midi",ARG(2));
 			else
 				execerror("usage: midi(output,open,#)\n");
+			selection = 0;
+			if (argc > 3 ) {
+				selection = neednum("midi", ARG(3));
+			}
 			chkoutputport(portno);
-			if ( Midioutputs[portno-1].opened == 1 )
+			if ( Midioutputs[portno-1].opened != 0 )
 				execerror("midi: output port %d is already open !?\n",portno);
-			r = mdep_midi(MIDI_OPEN_OUTPUT,&Midioutputs[portno-1]);
+			if (argc > 3) {
+				MidiOpenInfo moinfo;
+				moinfo.port = &Midioutputs[portno-1];
+				moinfo.portno = portno-1;
+				moinfo.selection = selection;
+				r = mdep_midi(MIDI_OPEN_OUTPUT_INFO, &moinfo);
+			}
+			else {
+				selection = 1;
+				r = mdep_midi(MIDI_OPEN_OUTPUT,&Midioutputs[portno-1]);
+			}
 			if ( r == 0 ) {
-				Midioutputs[portno-1].opened = 1;
+				Midioutputs[portno-1].opened = selection;
 				/*
 				 * The very first time an output is opened,
 				 * set the default output port to that.
@@ -2262,6 +2305,15 @@ bi_midi(int argc)
 				portno = neednum("midi",ARG(2));
 			else
 				execerror("usage: midi(output,isopen,#)\n");
+			chkoutputport(portno);
+			r = Midioutputs[portno-1].opened != 0;
+			d = numdatum(r);
+		}
+		else if ( strcmp(arg1,"isopento")==0 ) {
+			if ( argc > 2 )
+				portno = neednum("midi",ARG(2));
+			else
+				execerror("usage: midi(output,isopento,#)\n");
 			chkoutputport(portno);
 			r = Midioutputs[portno-1].opened;
 			d = numdatum(r);

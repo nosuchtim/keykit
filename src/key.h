@@ -759,6 +759,12 @@ typedef struct Midiport {
 	intptr_t private1;	/* mdep layer can use this for whatever it wants */
 } Midiport;
 
+typedef struct MidiOpenInfo {
+	Midiport *port;		/* Pointer to keykit Midiport */
+	unsigned int portno;	/* port index in keykit space */
+	unsigned int selection;	/* Which mdep midiport to associate keykit port with */
+} MidiOpenInfo;
+
 /*
  * The index into this array is the port number minus 1.
  */
@@ -769,9 +775,11 @@ extern Midiport Midioutputs[MIDI_OUT_DEVICES];
  * Used for the first argument of the mdep_midi function.
  */
 #define MIDI_OPEN_OUTPUT 0
-#define MIDI_CLOSE_OUTPUT 1
-#define MIDI_OPEN_INPUT 2
-#define MIDI_CLOSE_INPUT 3
+#define MIDI_OPEN_OUTPUT_INFO 1
+#define MIDI_CLOSE_OUTPUT 2
+#define MIDI_OPEN_INPUT 3
+#define MIDI_OPEN_INPUT_INFO 4
+#define MIDI_CLOSE_INPUT 5
 
 /* values of T->state */
 /* T_RUNNING is a task that is currently free, available for use */
