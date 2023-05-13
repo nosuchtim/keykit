@@ -960,7 +960,7 @@ mdep_midi(int openclose, void *ptr)
 	int r, windevno;
 	Midiport *p;
 
-	p = (Midiport *)p;
+	p = (Midiport *)ptr;
 	switch (openclose) {
 	case MIDI_CLOSE_INPUT:
 		windevno = p->private1;
