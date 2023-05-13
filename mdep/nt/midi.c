@@ -955,10 +955,12 @@ openmidiout(int windevno)
 }
 
 int
-mdep_midi(int openclose, Midiport * p)
+mdep_midi(int openclose, void *ptr)
 {
 	int r, windevno;
+	Midiport *p;
 
+	p = (Midiport *)p;
 	switch (openclose) {
 	case MIDI_CLOSE_INPUT:
 		windevno = p->private1;

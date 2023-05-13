@@ -182,10 +182,12 @@ closemidiout(Midiport * p)
 }
 
 int
-mdep_midi(int openclose, Midiport * p)
+mdep_midi(int openclose, void *ptr)
 {
+	Midiport * p;
 	int r;
 
+	p = (Midiport *)ptr;
 	switch (openclose) {
 	case MIDI_CLOSE_INPUT:
 		r = closemidiin(p);
