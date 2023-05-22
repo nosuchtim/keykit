@@ -2399,7 +2399,7 @@ eprfunc(BYTEFUNC i)
 
 	ii = (intptr_t)i;
 	if ( ii>=0 && ii < (int)(sizeof(Bytenames)/sizeof(Bytenames[0])) ) {
-		keyerrfile("%s (%ld)",Bytenames[ii],ii);
+		keyerrfile("%s",Bytenames[ii],ii);
 	}
 	else {
 		p = funcnameof(i);
