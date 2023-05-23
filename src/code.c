@@ -303,14 +303,8 @@ multicodeiseg(Instnodep i)
 		    skip = 1; /* Skip single IC_INST */
 		    keyerrfile("IC_FUNC ");
 		    eprfunc(i->code.u.func);
-		    if ( funcidx == I_TCONDEVAL ) {
-			    opstr="T:";
-		    }
-		    else {
-			    opstr="";
-		    }
 		    if (j->code.u.in != NULL) {
-			    keyerrfile(" [%s0x%" KEY_PRIxPTR "]", opstr, (KEY_PRIxPTR_TYPE)j->code.u.in);
+			    keyerrfile(" [0x%" KEY_PRIxPTR "]", (KEY_PRIxPTR_TYPE)j->code.u.in);
 		    }
 		    else {
 			    keyerrfile(" [NULL!]");
@@ -331,16 +325,16 @@ multicodeiseg(Instnodep i)
 		    keyerrfile("IC_FUNC ");
 		    eprfunc(i->code.u.func);
 		    if (j->code.u.in != NULL) {
-			    keyerrfile(" [T:0x%" KEY_PRIxPTR "", (KEY_PRIxPTR_TYPE)j->code.u.in);
+			    keyerrfile(" [0x%" KEY_PRIxPTR "", (KEY_PRIxPTR_TYPE)j->code.u.in);
 		    }
 		    else {
-			    keyerrfile(" [T:NULL!");
+			    keyerrfile(" [NULL!");
 		    }
 		    if (k->code.u.in != NULL) {
-			    keyerrfile(" F:0x%" KEY_PRIxPTR "]", (KEY_PRIxPTR_TYPE)k->code.u.in);
+			    keyerrfile(" 0x%" KEY_PRIxPTR "]", (KEY_PRIxPTR_TYPE)k->code.u.in);
 		    }
 		    else {
-			    keyerrfile("F:NULL!] ");
+			    keyerrfile("NULL!] ");
 		    }
 		    break;
 
@@ -431,8 +425,7 @@ multicodeiseg(Instnodep i)
 		    if (funcidx == I_DOTASSIGN || funcidx == I_MODDOTASSIGN) {
 			    dotnode = opnode;
 			    opnode = nextinode(dotnode);
-			    if (opnode->code.type != IC_NUM)
-			    {
+			    if (opnode->code.type != IC_NUM) {
 				    return 0;
 			    }
 			    skip=2; /* Skip two following IC_NUM */
@@ -507,75 +500,72 @@ dumpcodeiseg(Instnodep t, const char *msg)
 	Instnodep i;
 	unsigned int skip, idx;
 
-	if ( *Debuginst ) {
-		keyerrfile("%s\n", msg);
-		for ( i=t; i!=NULL; i=nextinode(i) ) {
-			int decoded = 0;
-			keyerrfile("  0x%" KEY_PRIxPTR " ",(KEY_PRIxPTR_TYPE)i);
-			skip = multicodeiseg(i);
-			for (idx = 0; idx<skip; ++idx) {
-				i = nextinode(i);
-			}
-			decoded = skip != 0;
-
-			if ( !decoded ) {
-				switch(i->code.type)
-				{
-				    case IC_NUM:
-					    keyerrfile("IC_NUM %ld", i->code.u.val);
-					    break;
-				    case IC_STR:
-					    if ( i->code.u.str != NULL ) {
-						    keyerrfile("IC_STR 0x%" KEY_PRIxPTR " '%s'", i->code.u.str, i->code.u.str);
-					    }
-					    else {
-						    keyerrfile("IC_STR NULL!");
-					    }
-					    break;
-				    case IC_DBL:
-					    keyerrfile("IC_DBL %g", i->code.u.dbl);
-					    break;
-				    case IC_SYM:
-					    if ( i->code.u.sym != NULL ) {
-						    keyerrfile("IC_SYM 0x%" KEY_PRIxPTR " '%s'", i->code.u.sym, i->code.u.sym->name.u.str);
-					    }
-					    else {
-						    keyerrfile("IC_SYM NULL!");
-					    }
-					    break;
-				    case IC_INST:
-					    if (i->code.u.func == (BYTEFUNC)I_STOP) {
-						    /* Could be an unconverted stop */
-						    keyerrfile("IC_INST => IC_FUNC(STOP)");
-					    }
-					    else {
-						    keyerrfile("IC_INST => 0x%" KEY_PRIxPTR "", (KEY_PRIxPTR_TYPE)i->code.u.in);
-					    }
-					    break;
-				    case IC_BLTIN:
-					    keyerrfile("IC_BLTIN ");
-					    eprfunc(i->code.u.func);
-					    break;
-				    case IC_NONE:
-					    keyerrfile("IC_NONE! ");
-					    eprfunc(i->code.u.func);
-					    break;
-				    case IC_PHR:
-					    keyerrfile("IC_PHR => 0x%" KEY_PRIxPTR "", (KEY_PRIxPTR_TYPE)i->code.u.phr);
-					    break;
-				    case IC_FUNC:
-					    keyerrfile("IC_FUNC ");
-					    eprfunc(i->code.u.func);
-					    break;
-				    
-				    default:
-					    keyerrfile("IC_(0x%x) ", i->code.type);
-					    eprfunc(i->code.u.func);
-					    break;
-				}
-			}
-			keyerrfile("\n");
+	keyerrfile("%s\n", msg);
+	for ( i=t; i!=NULL; i=nextinode(i) ) {
+		int decoded = 0;
+		keyerrfile("  0x%" KEY_PRIxPTR " ",(KEY_PRIxPTR_TYPE)i);
+		skip = multicodeiseg(i);
+		for (idx = 0; idx<skip; ++idx) {
+			i = nextinode(i);
 		}
+		decoded = skip != 0;
+
+		if ( !decoded ) {
+			switch(i->code.type) {
+			    case IC_NUM:
+				    keyerrfile("IC_NUM %ld", i->code.u.val);
+				    break;
+			    case IC_STR:
+				    if ( i->code.u.str != NULL ) {
+					    keyerrfile("IC_STR 0x%" KEY_PRIxPTR " '%s'", i->code.u.str, i->code.u.str);
+				    }
+				    else {
+					    keyerrfile("IC_STR NULL!");
+				    }
+				    break;
+			    case IC_DBL:
+				    keyerrfile("IC_DBL %g", i->code.u.dbl);
+				    break;
+			    case IC_SYM:
+				    if ( i->code.u.sym != NULL ) {
+					    keyerrfile("IC_SYM 0x%" KEY_PRIxPTR " '%s'", i->code.u.sym, i->code.u.sym->name.u.str);
+				    }
+				    else {
+					    keyerrfile("IC_SYM NULL!");
+				    }
+				    break;
+			    case IC_INST:
+				    if (i->code.u.func == (BYTEFUNC)I_STOP) {
+					    /* Could be an unconverted stop */
+					    keyerrfile("IC_INST => IC_FUNC(STOP)");
+				    }
+				    else {
+					    keyerrfile("IC_INST => 0x%" KEY_PRIxPTR "", (KEY_PRIxPTR_TYPE)i->code.u.in);
+				    }
+				    break;
+			    case IC_BLTIN:
+				    keyerrfile("IC_BLTIN ");
+				    eprfunc(i->code.u.func);
+				    break;
+			    case IC_NONE:
+				    keyerrfile("IC_NONE! ");
+				    eprfunc(i->code.u.func);
+				    break;
+			    case IC_PHR:
+				    keyerrfile("IC_PHR => 0x%" KEY_PRIxPTR "", (KEY_PRIxPTR_TYPE)i->code.u.phr);
+				    break;
+			    case IC_FUNC:
+				    keyerrfile("IC_FUNC ");
+				    eprfunc(i->code.u.func);
+				    break;
+				    
+			    default:
+				    keyerrfile("IC_(0x%x) ", i->code.type);
+				    eprfunc(i->code.u.func);
+				    break;
+			}
+		}
+		keyerrfile("\n");
 	}
 }
 
@@ -601,7 +591,9 @@ optiseg(Instnodep t)
 		}
 	}
 
-	dumpcodeiseg(t, "ISEG BEFORE Optimization");
+	if ( *Debuginst != 0) {
+		dumpcodeiseg(t, "ISEG BEFORE Optimization");
+	}
 
 	if ( *Optimize == 0 )
 		return;
@@ -627,7 +619,7 @@ optiseg(Instnodep t)
 			&& codeis(i5->code,I_POPIGNORE) ) {
 
 			if ( *Debuginst )
-				keyerrfile("Optimization X at i1=%" KEY_PRIxPTR "\n",(KEY_PRIxPTR_TYPE)i1);
+				keyerrfile("Optimization X at i1=0x%" KEY_PRIxPTR "\n",(KEY_PRIxPTR_TYPE)i1);
 
 			/* A global var is being pushed and then ignored. */
 			/* It's probably a standalone function definition. */
@@ -649,7 +641,7 @@ optiseg(Instnodep t)
 			&& i2 && i3 && codeis(i3->code,I_LINENUM) ) {
 
 			if ( *Debuginst )
-				keyerrfile("Optimization A at i1=%" KEY_PRIxPTR "\n",(KEY_PRIxPTR_TYPE)i1);
+				keyerrfile("Optimization A at i1=0x%" KEY_PRIxPTR "\n",(KEY_PRIxPTR_TYPE)i1);
 
 			/* multiple consecutive I_LINENUMS, delete the first */
 			oldi1 = i1;
@@ -665,7 +657,7 @@ optiseg(Instnodep t)
 			&& i2 && i3 && codeis(i3->code,I_POPIGNORE) ) {
 
 			if ( *Debuginst )
-				keyerrfile("Optimization B at i1=%" KEY_PRIxPTR "\n",(KEY_PRIxPTR_TYPE)i1);
+				keyerrfile("Optimization B at i1=0x%" KEY_PRIxPTR "\n",(KEY_PRIxPTR_TYPE)i1);
 
 			/* A constant is being pushed and then ignored. */
 			/* It's probably the fakeval/popignore that we */
@@ -688,7 +680,7 @@ optiseg(Instnodep t)
 			&& i2 && i3 && codeis(i3->code,I_POPIGNORE) ) {
 
 			if ( *Debuginst )
-				keyerrfile("Optimization C at i1=%" KEY_PRIxPTR "\n",(KEY_PRIxPTR_TYPE)i1);
+				keyerrfile("Optimization C at i1=0x%" KEY_PRIxPTR "\n",(KEY_PRIxPTR_TYPE)i1);
 
 			/* It's a varassign whose result is being ignored, */
 			/* so we get rid of the popignore, and adjust */
@@ -702,7 +694,7 @@ optiseg(Instnodep t)
 		}
 		if ( codeis(i1->code,I_NOOP) ) {
 			if ( *Debuginst )
-				keyerrfile("Optimization D at i1=%" KEY_PRIxPTR "\n",(KEY_PRIxPTR_TYPE)i1);
+				keyerrfile("Optimization D at i1=0x%" KEY_PRIxPTR "\n",(KEY_PRIxPTR_TYPE)i1);
 			rminstnode(t,pi,1);
 			i1 = nextinode(pi);
 			anyopt++;
@@ -711,8 +703,8 @@ optiseg(Instnodep t)
 		pi=i1;
 		i1=i2;
 	    }
-	    if (anyopt) {
-		    char buf[64];
+	    if ( *Debuginst && anyopt ) {
+		    char buf[80];
 		    snprintf(buf, sizeof(buf), "ISEG AFTER %d optimizations in pass %d", anyopt, pass);
 		    dumpcodeiseg(t, buf);
 	    }
