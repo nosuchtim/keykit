@@ -533,7 +533,7 @@ typedef struct Instcode {
 
 typedef struct Instnode {
 	Instcode code;
-	Instnodep inext;
+	Instnodep iprev, inext;
 	int offset;	/* only used in inodes2code() */
 } Instnode;
 
@@ -951,6 +951,7 @@ extern Datum _Dnumtmp_;
 #define pushfunc_nochk(x) pushstk(x)
 
 #define setpc(i) Pc=(Unchar*)(i)
+#define previnode(in) ((in)->iprev)
 #define nextinode(in) ((in)->inext)
 
 #define SCAN_FUNCCODE(p) *(p)++
