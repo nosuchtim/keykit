@@ -111,8 +111,8 @@ struct ilist {
 	{ i_stringpush, "i_stringpush" },
 	{ i_subcode, "i_subcode" },
 	{ i_task, "i_task" },
+	{ i_fcondeval, "i_fcondeval" },
 	{ i_tcondeval, "i_tcondeval" },
-	{ i_tfcondeval, "i_tfcondeval" },
 	{ i_tilda, "i_tilda" },
 	{ i_undefine, "i_undefine" },
 	{ i_varassign, "i_varassign" },
@@ -455,7 +455,7 @@ char *Bytenames[] = {
 	"i_select3",
 	"i_print",
 	"i_goto",
-	"i_tfcondeval",
+	"i_fcondeval",
 	"i_tcondeval",
 	"i_constant",
 	"i_dotdotarg",
@@ -549,7 +549,7 @@ BYTEFUNC Bytefuncs[] = {
 	i_select3,
 	i_print,
 	i_goto,
-	i_tfcondeval,
+	i_fcondeval,
 	i_tcondeval,
 	i_constant,
 	i_dotdotarg,
@@ -1149,8 +1149,8 @@ i_forin1(void)
 	Datum d;
 	Codep i1;
 
-	s = use_symcode();
 	i1 = use_ipcode();
+	s = use_symcode();
 	popinto(d);
 
 	pushexp(codepdatum(i1));	/* for final jumping out of loop */
@@ -1547,19 +1547,16 @@ i_goto(void)
 }
 
 void
-i_tfcondeval(void)
+i_fcondeval(void)
 {
-	Codep i1, i2;
+	Codep i1;
 	Datum d;
 
 	i1 = use_ipcode();
-	i2 = use_ipcode();
 
 	popinto(d);
 	if ( numval(d) )
 		setpc(i1);
-	else
-		setpc(i2);
 }
 
 void

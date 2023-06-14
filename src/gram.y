@@ -137,7 +137,7 @@ expr	: '{' stmts '}'		{ $$ = $2; fakeval(); }
 		optrelx tfcond ';' optstmt goto ')' stmt goto end {
 
 		STUFFCODE($7,1, instnodeinst($12));	/* cond succeeds */
-		STUFFCODE($7,2, instnodeinst($14));	/* cond fails */
+		STUFFCODE($7,3, instnodeinst($14));	/* cond fails */
 		STUFFCODE($10,1, instnodeinst($6));
 		STUFFCODE($13,1, instnodeinst($9));
 		$$ = $3;
@@ -146,8 +146,8 @@ expr	: '{' stmts '}'		{ $$ = $2; fakeval(); }
 		}
 
 	| FOR '(' var SYM_IN {loopstart();} expr forin1 forin2 ')' stmt goto forinend {
-		STUFFCODE($7,1, syminst($3));
-		STUFFCODE($7,2, instnodeinst($12));
+		STUFFCODE($7,1, instnodeinst($12));
+		STUFFCODE($7,2, syminst($3));
 		STUFFCODE($11,1, instnodeinst($8));
 		$$ = $6;
 		loopend($8,$12);
@@ -485,7 +485,7 @@ goto	: /* nothing */	{ $$ = code2(funcinst(I_GOTO),Stopcode); }
 	;
 tcond	: /* nothing */	{ $$ = code2(funcinst(I_TCONDEVAL),Stopcode);}
 	;
-tfcond	: /* nothing */	{ $$ = code3(funcinst(I_TFCONDEVAL),Stopcode,Stopcode);}
+tfcond	: /* nothing */	{ $$ = code4(funcinst(I_FCONDEVAL),Stopcode,funcinst(I_GOTO),Stopcode);}
 	;
 optrelx	: /* nothing */	{ $$ = code2(funcinst(I_CONSTANT), numinst(1)); }
 	| expr
