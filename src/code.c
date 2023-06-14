@@ -169,6 +169,95 @@ fprintf(FF,"INODES2CODE start\n");
 	return(ip);
 }
 
+Instnodebranchlist iblist;
+
+void
+freeinstnodebranchlist(void)
+{
+	iblist.used = 0;
+}
+
+/* Add branch instruction address (and target) to instnode branch list */
+void
+addinstnodebranch(Instnodep addr, Instnodep target)
+{
+	Instnodebranchp ib;
+	makeroom(sizeof(iblist.arry[0])*(iblist.used+1), (char **)&iblist.arry, &iblist.size);
+	ib = &iblist.arry[iblist.used++];
+	ib->addr = addr;
+	ib->target = target;
+}
+
+/* Initially build list of branch instructions before optimization */
+void
+buildinstnodebranchlist(Instnodep t)
+{
+	Instnodep i,j,target;
+	intptr_t funcidx;
+	
+	for (i = t; i; i=nextinode(i)) {
+		switch(i->code.type) {
+		    case IC_FUNC:
+			    funcidx = (intptr_t)i->code.u.func;
+			    switch(funcidx) {
+				case I_DOSWEEPCONT:
+				case I_SELECT2:
+				case I_SELECT3:
+				case I_TCONDEVAL:
+				case I_FCONDEVAL:
+				case I_GOTO:
+				case I_AND1:
+				case I_OR1:
+				case I_FORIN1:
+					/* IC_INST follows */
+					j = nextinode(i);
+					if (j->code.type != IC_INST)
+					{
+						execerror("0x%" KEY_PRIxPTR ": ", (KEY_PRIxPTR_TYPE)i);
+						Errors++;
+						return;
+					}
+					target = j->code.u.in;
+					addinstnodebranch(i, target);
+					if ( *Debuginst )
+						keyerrfile("insn 0x%" KEY_PRIxPTR " points to 0x%" KEY_PRIxPTR "\n", (KEY_PRIxPTR_TYPE)i, (KEY_PRIxPTR_TYPE)target);
+					i = j; /* skip over the tailing IC_INST */
+					break;
+				default:
+					break;
+			    }
+			    break;
+		    case IC_INST:
+		    {
+			    if (i->code.u.func != (BYTEFUNC)I_STOP) {
+				    keyerrfile("warning: 0x%" KEY_PRIxPTR ": IC_INST found!\n", (KEY_PRIxPTR_TYPE)i);
+			    }
+			    break;
+		    }
+		    default:
+			    break;
+		}
+	}
+}
+
+/* Update the branch poriton of insn to jump to new target */
+void
+instnodebranchupdate(Instnodep insn, Instnodep newtarget)
+{
+	Instnodebranchp ib, ibend;
+
+	ibend = &iblist.arry[iblist.used];
+	for (ib=iblist.arry; ib<ibend; ++ib) {
+		if (ib->addr == insn) {
+			if ( *Debuginst )
+				keyerrfile("udpate insnnodelist 0x%" KEY_PRIxPTR " from 0x%" KEY_PRIxPTR " to 0x%" KEY_PRIxPTR "\n", (KEY_PRIxPTR_TYPE)insn, (KEY_PRIxPTR_TYPE)ib->target, (KEY_PRIxPTR_TYPE)newtarget);
+			ib->target = newtarget;
+			return;
+		}
+	}
+	execerror("%s: couldn't find insn 0x%" KEY_PRIxPTR "", __FUNCTION__, (KEY_PRIxPTR_TYPE)insn);
+}
+
 Codep
 popiseg(void)
 {
@@ -183,8 +272,11 @@ popiseg(void)
 	addinode(Future[Niseg]);
 
 	poppedin = Iseg[Niseg--];
-	if ( Errors == 0 )
+	if ( Errors == 0 ) {
+		buildinstnodebranchlist(poppedin);
 		optiseg(poppedin);
+		freeinstnodebranchlist();
+	}
 	ip = inodes2code(poppedin);
 	freeiseg(poppedin);
 	return ip;
@@ -192,24 +284,33 @@ popiseg(void)
 
 /* Remove the inode following prei */
 void
-rminstnode(Instnodep t,Instnodep prei,int adjust)
+rminstnode(Instnodep prei,int adjust)
 {
 	Instnodep rmi = nextinode(prei);
 	nextinode(prei) = nextinode(rmi);
 	freeinode(rmi);
 	if ( adjust )
-		instnodepatch(t,rmi,nextinode(prei));
+		instnodepatch(rmi,nextinode(prei));
 }
 
 void
-instnodepatch(Instnodep t,Instnodep i1,Instnodep i2)
+instnodepatch(Instnodep oldtarget,Instnodep newtarget)
 {
 	/* Backpatch any pointers to an inode, i.e. change all */
-	/* occurrences of pointers to i1 into pointers to i2 */
-	register Instnodep i;
-	for ( i=t; i!=NULL; i=nextinode(i) ) {
-		if ( i->code.u.in == i1 )
-			i->code.u.in = i2;
+	/* occurrences of pointers to oldtarget into pointers to newtarget */
+	Instnodebranchp ib, ibend;
+
+	ibend = &iblist.arry[iblist.used];
+	for (ib = iblist.arry; ib<ibend; ++ib) {
+		if ( ib->target == oldtarget ) {
+			if ( *Debuginst )
+				keyerrfile("Patching insn 0x%" KEY_PRIxPTR "; branch 0x%" KEY_PRIxPTR " => 0x%" KEY_PRIxPTR "\n", (KEY_PRIxPTR_TYPE)ib->addr, (KEY_PRIxPTR_TYPE)oldtarget, (KEY_PRIxPTR_TYPE)newtarget);
+			/* ib->insn banches to i1 - make it branch to i2 */
+			ib->target = newtarget;
+			/* Note: nextnode(ib->addr) is IC_INST of i1 branch
+			 * insn(since all brnach insns have IC_INST follow */
+			nextinode(ib->addr)->code.u.in = newtarget;
+		}
 	}
 }
 
@@ -571,9 +672,7 @@ optiseg(Instnodep t)
 	if ( *Optimize == 0 )
 		return;
 
-	/* Multiple optimization passes - the benefit is questionable, */
-	/* considering how expensive instnodepatch is. */
-
+	/* Multiple optimization passes */
 	anyopt = 1;
 	for ( pass=1; pass<3 && anyopt; pass++ ) {
 	    anyopt = 0;
@@ -598,14 +697,14 @@ optiseg(Instnodep t)
 			/* It's probably a standalone function definition. */
 
 			oldi1 = i1;
-			rminstnode(t,pi,0);	/* I_GVAREVAL */
-			rminstnode(t,pi,0);	/* symbol */
-			rminstnode(t,pi,0);	/* I_LINENUM */
-			rminstnode(t,pi,0);	/* number */
-			rminstnode(t,pi,0);	/* I_POPIGNORE */
+			rminstnode(pi,0);	/* I_GVAREVAL */
+			rminstnode(pi,0);	/* symbol */
+			rminstnode(pi,0);	/* I_LINENUM */
+			rminstnode(pi,0);	/* number */
+			rminstnode(pi,0);	/* I_POPIGNORE */
 			i1 = nextinode(pi);
 
-			instnodepatch(t,oldi1,i1);
+			instnodepatch(oldi1,i1);
 			anyopt++;
 			continue;
 		}
@@ -618,10 +717,10 @@ optiseg(Instnodep t)
 
 			/* multiple consecutive I_LINENUMS, delete the first */
 			oldi1 = i1;
-			rminstnode(t,pi,0);	/* I_LINENUM */
-			rminstnode(t,pi,0);	/* constant value */
+			rminstnode(pi,0);	/* I_LINENUM */
+			rminstnode(pi,0);	/* constant value */
 			i1 = i3;
-			instnodepatch(t,oldi1,i1);
+			instnodepatch(oldi1,i1);
 			anyopt++;
 			continue;
 		}
@@ -639,12 +738,12 @@ optiseg(Instnodep t)
 			/* so we can go back and patch any pointers to it. */
 
 			oldi1 = i1;
-			rminstnode(t,pi,0);	/* I_CONSTANT */
-			rminstnode(t,pi,0);	/* constant value */
-			rminstnode(t,pi,0);	/* popignore */
+			rminstnode(pi,0);	/* I_CONSTANT */
+			rminstnode(pi,0);	/* constant value */
+			rminstnode(pi,0);	/* popignore */
 			i1 = nextinode(pi);
 
-			instnodepatch(t,oldi1,i1);
+			instnodepatch(oldi1,i1);
 			anyopt++;
 			continue;
 		}
@@ -658,7 +757,7 @@ optiseg(Instnodep t)
 			/* It's a varassign whose result is being ignored, */
 			/* so we get rid of the popignore, and adjust */
 			/* the assign code so that the value isn't pushed. */
-			rminstnode(t,i2,1);	/* gets rid of i3 */
+			rminstnode(i2,1);	/* gets rid of i3 */
 			i2->code.u.val |= DONTPUSH;
 			pi = i2;
 			i1 = nextinode(pi);
@@ -668,7 +767,7 @@ optiseg(Instnodep t)
 		if ( codeis(i1->code,I_NOOP) ) {
 			if ( *Debuginst )
 				keyerrfile("Optimization D at i1=0x%" KEY_PRIxPTR "\n",(KEY_PRIxPTR_TYPE)i1);
-			rminstnode(t,pi,1);
+			rminstnode(pi,1);
 			i1 = nextinode(pi);
 			anyopt++;
 			continue;

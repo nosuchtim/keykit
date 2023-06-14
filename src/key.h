@@ -53,6 +53,7 @@
 typedef unsigned char Unchar;
 typedef Unchar *Codep;
 typedef struct Instnode *Instnodep;
+typedef struct Instnodebranch *Instnodebranchp;
 typedef struct Midimessdata *Midimessp;
 typedef struct Notedata *Noteptr;
 typedef char *Bytep;
@@ -536,6 +537,17 @@ typedef struct Instnode {
 	Instnodep inext;
 	int offset;	/* only used in inodes2code() */
 } Instnode;
+
+typedef struct Instnodebranch {
+	Instnodep addr; /* Address of branch instruction */
+	Instnodep target; /* Target of branch instruction */
+} Instnodebranch;
+
+typedef struct Instnodebranchlist {
+	long size;		/* dimension of arry */
+	long used;		/* number of entries in arry */
+	Instnodebranchp arry;
+} Instnodebranchlist;
 
 /* The Datum is the basic type for the Stack that gets manipulated during */
 /* the execution of Inst's. */
