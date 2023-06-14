@@ -1149,8 +1149,8 @@ i_forin1(void)
 	Datum d;
 	Codep i1;
 
-	s = use_symcode();
 	i1 = use_ipcode();
+	s = use_symcode();
 	popinto(d);
 
 	pushexp(codepdatum(i1));	/* for final jumping out of loop */

@@ -146,8 +146,8 @@ expr	: '{' stmts '}'		{ $$ = $2; fakeval(); }
 		}
 
 	| FOR '(' var SYM_IN {loopstart();} expr forin1 forin2 ')' stmt goto forinend {
-		STUFFCODE($7,1, syminst($3));
-		STUFFCODE($7,2, instnodeinst($12));
+		STUFFCODE($7,1, instnodeinst($12));
+		STUFFCODE($7,2, syminst($3));
 		STUFFCODE($11,1, instnodeinst($8));
 		$$ = $6;
 		loopend($8,$12);

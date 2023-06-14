@@ -265,26 +265,26 @@ multicodeiseg(Instnodep i)
 	funcidx = (intptr_t)i->code.u.func;
 	switch(funcidx) {
 	    case I_FORIN1:
-		    /* Should have IC_SYM and IC_INST following */
+		    /* Should have IC_INST and IC_SYM following */
 		    j = nextinode(i);
-		    if ( j->code.type != IC_SYM ) {
+		    if ( j->code.type != IC_INST ) {
 			    return 0;
 		    }
 		    k = nextinode(j);
-		    if ( k->code.type != IC_INST ) {
+		    if ( k->code.type != IC_SYM ) {
 			    return 0;
 		    }
-		    skip = 2; /* Skip IC_SYM and IC_INST */
+		    skip = 2; /* Skip IC_INST and IC_SYM */
 		    keyerrfile("IC_FUNC ");
 		    eprfunc(i->code.u.func);
-		    if (j->code.u.sym->name.u.str != NULL) {
-			    keyerrfile(" [%s", j->code.u.sym->name.u.str);
+		    if (k->code.u.sym->name.u.str != NULL) {
+			    keyerrfile(" [%s", k->code.u.sym->name.u.str);
 		    }
 		    else {
 			    keyerrfile(" [NULL!");
 		    }
-		    if (k->code.u.in != NULL) {
-			    keyerrfile(" 0x%" KEY_PRIxPTR "]", (KEY_PRIxPTR_TYPE)k->code.u.in);
+		    if (j->code.u.in != NULL) {
+			    keyerrfile(" 0x%" KEY_PRIxPTR "]", (KEY_PRIxPTR_TYPE)j->code.u.in);
 		    }
 		    else {
 			    keyerrfile(" NULL!] ");
