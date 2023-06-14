@@ -227,7 +227,7 @@ typedef void (*PATHFUNC)();
 #define I_SELECT3	66
 #define I_PRINT		67
 #define I_GOTO		68
-#define I_TFCONDEVAL	69
+#define I_FCONDEVAL	69
 #define I_TCONDEVAL	70
 #define I_CONSTANT	71
 #define I_DOTDOTARG	72

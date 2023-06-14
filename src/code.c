@@ -311,33 +311,6 @@ multicodeiseg(Instnodep i)
 		    }
 		    break;
 
-	    case I_TFCONDEVAL:
-		    /* Should have two IC_INST following */
-		    j = nextinode(i);
-		    if ( j->code.type != IC_INST ) {
-			    return 0;
-		    }
-		    k = nextinode(j);
-		    if ( k->code.type != IC_INST ) {
-			    return 0;
-		    }
-		    skip = 2; /* Skip two IC_INST */
-		    keyerrfile("IC_FUNC ");
-		    eprfunc(i->code.u.func);
-		    if (j->code.u.in != NULL) {
-			    keyerrfile(" [0x%" KEY_PRIxPTR "", (KEY_PRIxPTR_TYPE)j->code.u.in);
-		    }
-		    else {
-			    keyerrfile(" [NULL!");
-		    }
-		    if (k->code.u.in != NULL) {
-			    keyerrfile(" 0x%" KEY_PRIxPTR "]", (KEY_PRIxPTR_TYPE)k->code.u.in);
-		    }
-		    else {
-			    keyerrfile("NULL!] ");
-		    }
-		    break;
-
 	    case I_UNDEFINE:
 	    case I_DEFINED:
 	    case I_OBJCALLFUNC:
