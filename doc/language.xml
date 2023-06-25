@@ -31,6 +31,7 @@
 <headercontents name="Window Objects" key="windowobjects"/>
 <headercontents name="Phrase Window Objects" key="phraseobjects"/>
 <headercontents name="Menu Window Objects" key="menuobjects"/>
+<headercontents name="Text Window Objects" key="textobjects"/>
 <headercontents name="Built-In Functions" key="builtins"/>
 <headercontents name="Acknowledgments" key="acknowledgments"/>
 <header1 name="Introduction" key="intro"/>
@@ -1703,6 +1704,24 @@ Adds an item with the specified <i>label</i> to a menu object.
 <listitem name="menuitems()"/>
 Returns an array containing the current list of menu items in the menu.
 The index values of the array are the menu item labels.
+<br/>
+</list>
+</blockquote>
+<header1 name="Text Window Objects" key="textobjects"/>
+<keyword name="objects"/>
+<keyword name="text"/>
+For creating window objects that handle text(e.g. consoles), use a <font face="Courier">"text"</font>
+argument: <font face="Courier">o = new windowobject("text")</font>.
+This creates a window object with the following additional methods:
+<blockquote>
+<list>
+<keyword name="setselection()"/>
+<listitem name="setselection(x0, y0, x1, y1)"/>
+Defines a selection box in pixels relative to the text window(where x0/y0 are "less" than x1/y1). When text window redrawn with an active selection box, text within the seleciton box is highlighted. If invoked with no args the selection box is disabled.
+<br/>
+<keyword name="getselection()"/>
+<listitem name="getselection()"/>
+Returns a string containing the text within the active seleciton box previously defined for the window.
 <br/>
 </list>
 </blockquote>

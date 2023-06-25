@@ -1697,6 +1697,8 @@
 #library wchord.k wchord
 #library wcomment.k wcomment
 #library wconsole.k wconsole
+#library wconsole2.k mkmenu_wconsole2
+#library wconsole2.k wconsole2
 #library wcontrol.k mkmenu_control1
 #library wcontrol.k wcontrol
 #library wcurve.k mkmenu_curvedensity

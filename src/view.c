@@ -11,10 +11,10 @@ Pbitmap Tmap = EMPTYBITMAP;
 
 char Curschar = '_' /* 0x7f would be a small square */;
 
-#define v_rowsize() (mdep_fontheight()+2)
-#define v_colsize() (mdep_fontwidth())
-#define columnx(w,c) ((w)->tx0+v_colsize()/2+1+(c)*v_colsize())
-#define rowy(w,r) (w->y1-v_rowsize()/4-v_rowsize()*(w->disprows-(r)))
+#define v_rowsize(w) ((w)->fheight+2)
+#define v_colsize(w) ((w)->fwidth)
+#define columnx(w,c) ((w)->tx0+v_colsize(w)/2+1+(c)*v_colsize(w))
+#define rowy(w,r) (w->y1-v_rowsize(w)/4-v_rowsize(w)*(w->disprows-(r)))
 
 Pbitmap
 v_reallocbitmap(int x,int y,Pbitmap p)
@@ -45,9 +45,9 @@ v_settextsize(Kwind *w)
 	if ( w->type != WIND_TEXT )
 		return;
 
-	w->tx0 = w->x0 + v_colsize()*3;
-	xsize = v_colsize();
-	ysize = v_rowsize();
+	w->tx0 = w->x0 + v_colsize(w)*3;
+	xsize = v_colsize(w);
+	ysize = v_rowsize(w);
 	/* The computation below for Trows parallels what's done in rowtoy() */
 	new_trows = (w->y1 - w->y0 - ysize/4 - 2) / ysize;
 	if ( new_trows < 1 )
@@ -388,7 +388,7 @@ void
 v_echar(Kwind *w)
 {
 	my_plotmode(P_CLEAR);
-	mdep_boxfill(w->currx,w->curry,w->currx+v_colsize(),w->curry+v_rowsize()-1);
+	mdep_boxfill(w->currx,w->curry,w->currx+v_colsize(w),w->curry+v_rowsize(w)-1);
 	my_plotmode(P_STORE);
 }
 
@@ -493,7 +493,7 @@ textscrollupdate(Kwind *w,int mx,int my)
 void
 v_scrolldisplay(Kwind *w)
 {
-	int ysize = v_rowsize();
+	int ysize = v_rowsize(w);
 	int wid, hgt, x, y;
 
 	my_plotmode(P_STORE);
@@ -553,41 +553,211 @@ drawtextbar(Kwind *w)
 	mdep_boxfill(w->x0+4,by0,w->tx0-6,by1);
 }
 
+#undef DEBUG_REDRAWTEXT
+
 void
 redrawtext(Kwind *w)
 {
 	char str[2];
-	int x, y, i, n;
+	int x, y, y1, i, n;
 
 	my_plotmode(P_STORE);
 	drawtextbar(w);
+	str[1] = '\0';
 
 	/* the line separating scroll bar and text */
 	mdep_line(w->tx0-2,w->y0+1,w->tx0-2,w->y1-1);
 
 	x = columnx(w,0);
 	y = rowy(w,0);
+	y1 = y + v_rowsize(w);
+	keyerrfile("%s:%d sel_flag %d", __FUNCTION__, __LINE__, w->sel_flag);
+	if (w->sel_flag) {
+		keyerrfile(" [%d %d] [%d %d] x %u y %u y1 %u\n", w->sel_x0, w->sel_y0, w->sel_x1, w->sel_y1, x, y, y1);
+	}
+	else {
+		keyerrfile("\n");
+	}
+	i = w->toplnum;
+#ifdef DEBUG_REDRAWTEXT
+	int oldbottom=0, oldtop=0;
+#endif
+	for ( n=0; n<w->disprows; n++ ) {
+		char *p = w->bufflines[i];
+		int painted = 0;
+		if ( p ) {
+			int lng;
+			lng = (int)strlen(p);
+			if ( w->sel_flag ) {
+				if ( !((w->sel_y1 < y) || (w->sel_y0 > y1)) ) {
+					int x0, x1, idx;
+					int top=0, bottom=0;
+					/* string vertically straddles selection box */
+					if ((y <= w->sel_y0) && (y1 > w->sel_y0)) {
+						top = 1;
+					}
+				        if ((y <= w->sel_y1) && (y1 > w->sel_y1)) {
+						bottom = 1;
+					}
+#ifdef DEBUG_REDRAWTEXT
+					if (top != oldtop || bottom != oldbottom) {
+						keyerrfile("%s:%d y %d y1 %d sel_y0 %d sel_y1 %d top %d bottom %d\n",
+							   __FUNCTION__, __LINE__, y, y1, w->sel_y0, w->sel_y1, top, bottom);
+					}
+#endif
+					lng = (int)strlen(p);
+					if ( lng > w->currcols )
+						lng = w->currcols;
+					x0 = x;
+					x1 = x0 + v_colsize(w);
+#ifdef DEBUG_REDRAWTEXT
+					int inside = 0;
+#endif
+					for (idx = 0; idx < lng; ++idx)
+					{
+						if ( (!top && !bottom)
+						     || ((top && !bottom) && (x0 >= w->sel_x0))
+						     || ((!top && bottom) && (x0 < w->sel_x1))
+						     || ((top && bottom) && (x0 >= w->sel_x0 && x0 < w->sel_x1)) ) {
+							/* char is inside selection; draw a black em-square */
+#ifdef DEBUG_REDRAWTEXT
+							if (!inside) {
+								keyerrfile("%s:%d inside: x0 %d x1 %d [%d => %d]\n",
+									   __FUNCTION__, __LINE__, x0, x1, w->sel_x0, w->sel_x1);
+								inside = 1;
+							}
+#endif							
+							my_plotmode(P_XOR);
+#ifdef DEBUG_REDRAWTEXT
+							keyerrfile("%s:%d XOR box [%d %d] [%d %d]\n", __FUNCTION__, __LINE__,
+								   x0, y, x1-1, y1-1);
+#endif
+							mdep_boxfill(x0, y, x1-1, y1-1);
+						}
+						else
+						{
+							/* char is horizontally outside; draw normally */
+						}
+						str[0] = p[idx];
+						/* draw character - if XOR'd then will show
+						 * character in reverse */
+						mdep_string(x0, y, str);
+
+						my_plotmode(P_STORE);
+						x0 = x1;
+						x1 += v_colsize(w);
+					}
+					painted = 1;
+#ifdef DEBUG_REDRAWTEXT
+					oldtop = top; oldbottom = bottom;
+#endif
+				}
+			}
+			if ( !painted )
+			{
+				if ( lng <= w->currcols )
+					mdep_string(x,y,p);
+				else {
+					strncpy(Msg1,p,w->currcols);
+					Msg1[w->currcols] = '\0';
+					mdep_string(x,y,Msg1);
+				}
+			}
+		}
+		if ( --i < 0 )
+			i = w->numlines-1;
+		y = y1;
+		y1 += v_rowsize(w);
+	}
+	/* draw text cursor (typically an underline) */
+	v_setxy(w);
+	str[0] = Curschar;
+	mdep_string(w->currx,w->curry,str);
+}
+
+static void
+addtotextbuf(Copybuf *tb, char ch)
+{
+	makeroom(tb->used+1, &tb->str, &tb->size);
+	tb->str[tb->used++] = ch;
+}
+
+/* return a string of what's displayed in console that's inside selection box */
+char *
+readconsoletext(Kwind *w)
+{
+	int x, y, last_y, y1, i, n;
+
+	if ( w->sel_flag == 0 ) {
+		return NULL;
+	}
+
+	w->cb.used = 0;
+	x = columnx(w,0);
+	last_y = y = rowy(w,0);
+	y1 = y + v_rowsize(w);
 	i = w->toplnum;
 	for ( n=0; n<w->disprows; n++ ) {
 		char *p = w->bufflines[i];
 		if ( p ) {
 			int lng;
 			lng = (int)strlen(p);
-			if ( lng <= w->currcols )
-				mdep_string(x,y,p);
-			else {
-				strncpy(Msg1,p,w->currcols);
-				Msg1[w->currcols] = '\0';
-				mdep_string(x,y,Msg1);
+			if ( w->sel_flag ) {
+				if ( !((w->sel_y1 < y) || (w->sel_y0 > y1)) ) {
+					int x0, x1, idx;
+					int top=0, bottom=0;
+					/* string vertically straddles selection box */
+					if ((y <= w->sel_y0) && (y1 > w->sel_y0)) {
+						top = 1;
+					}
+				        if ((y <= w->sel_y1) && (y1 > w->sel_y1)) {
+						bottom = 1;
+					}
+
+					lng = (int)strlen(p);
+					if ( lng > w->currcols )
+						lng = w->currcols;
+					x0 = x;
+					x1 = x0 + v_colsize(w);
+					for (idx = 0; idx < lng; ++idx)
+					{
+						if ( (!top && !bottom)
+						     || ((top && !bottom) && (x0 >= w->sel_x0))
+						     || ((!top && bottom) && (x0 < w->sel_x1))
+						     || ((top && bottom) && (x0 >= w->sel_x0 && x0 < w->sel_x1)) ) {
+							/* character is inside; append to str */
+							if (y != last_y) {
+								if ( w->cb.used ) {
+									/* Only add new line if already have data
+									 * _and_ this is start of new line */
+									addtotextbuf(&w->cb, '\n');
+								}
+								last_y = y;
+							}
+							addtotextbuf(&w->cb, p[idx]);
+						}
+						else
+						{
+							/* char is horizontally outside of selection; ignore */
+						}
+						x0 = x1;
+						x1 += v_colsize(w);
+					}
+				}
 			}
 		}
 		if ( --i < 0 )
 			i = w->numlines-1;
-		y += v_rowsize();
+		y = y1;
+		y1 += v_rowsize(w);
+		if (w->cb.str && (y1 < w->sel_y1) ) {
+			/* Add a trailing newline */
+			addtotextbuf(&w->cb, '\n');
+		}
 	}
-	/* draw text cursor (typically an underline) */
-	v_setxy(w);
-	str[0] = Curschar;
-	str[1] = '\0';
-	mdep_string(w->currx,w->curry,str);
+	if ( w->cb.str != NULL ) {
+		w->cb.str[w->cb.used]='\0';
+	}
+	return w->cb.used ? w->cb.str : NULL;
 }
+

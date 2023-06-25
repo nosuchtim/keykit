@@ -240,18 +240,161 @@ millisleep(int n)
 }
 #endif
 
+static struct Clipboard {
+	long size; /* size of buf buffer */
+	long offset; /* where next character to read is in buf */
+	char *buf;
+} clipboard;
+
+static void
+empty_clipboard(void)
+{
+	if (clipboard.buf)
+	{
+		free(clipboard.buf);
+	}
+	clipboard.buf = NULL;
+	clipboard.size = clipboard.offset = 0;
+}
+
 static int
 kbdchar(void)
 {
 	int i;
 
-	if(!kbdbuf.cnt)
+	if ( !kbdbuf.cnt && !(clipboard.offset < clipboard.size) ) {
 		return -1;
+	}
+
+	if ( clipboard.offset < clipboard.size ) {
+		i = clipboard.buf[clipboard.offset++];
+		if ( clipboard.offset == clipboard.size ) {
+			empty_clipboard();
+		}
+		return i;
+	}
+
 	i = *kbdbuf.out++;
-	if(kbdbuf.out == &kbdbuf.buf[kbdbuf.size])
+	if( kbdbuf.out == &kbdbuf.buf[kbdbuf.size] ) {
 		kbdbuf.out = kbdbuf.buf;
+	}
 	kbdbuf.cnt--;
 	return(i);
+}
+
+
+static int
+mdep_getclipboard(void)
+{
+	char command[] = "xclip -o";
+	const int chunk_size = 64;
+	FILE *fp;
+	int cnt;
+
+	/* Assume want to drop any remaining clipboard content */
+	empty_clipboard();
+
+	/* Open xclip pipe and slurp in content of clipboard */
+	fp = popen(command, "r");
+	if (fp == NULL)
+	{
+		eprint("Failed to open xclip pipe; %s", strerror(errno));
+		return -1;
+	}
+
+	clipboard.buf = malloc(chunk_size);
+	if (!clipboard.buf)
+	{
+		eprint("Failed to allocate clipboard");
+		empty_clipboard();
+		return -1;
+	}
+	clipboard.size = chunk_size;
+	clipboard.offset = 0; /* Use offset to track data added to clipboard */
+	while (!feof(fp))
+	{
+		if ((clipboard.size - clipboard.offset) < chunk_size)
+		{
+			int newsize = (clipboard.size * 3) / 2;
+			void *new_buff = malloc(newsize);
+			if (!new_buff)
+			{
+				eprint("Failed to allocated larger clipboard");
+				empty_clipboard();
+				return -1;
+				pclose(fp);
+			}
+			memcpy(new_buff, clipboard.buf, clipboard.size);
+			free(clipboard.buf);
+			clipboard.buf = new_buff;
+			clipboard.size = newsize;
+		}
+		cnt = fread(&clipboard.buf[clipboard.offset], 1, clipboard.size - clipboard.offset, fp);
+		if (cnt < 0)
+		{
+			eprint("Failed to read from xclip; %s", strerror(errno));
+			empty_clipboard();
+			pclose(fp);
+			return -1;
+		}
+		clipboard.offset += cnt;
+	}
+	pclose(fp);
+	
+	/* Reset size to what was actually read, clean offset
+	 * for kbdchar() to slurp out content */
+	if (!clipboard.size)
+	{
+		empty_clipboard();
+	}
+	else
+	{
+		clipboard.size = clipboard.offset;
+		clipboard.offset = 0;
+	}
+	return 0;
+}
+
+static int
+mdep_setclipboard(char *text)
+{
+	char command[] = "xclip -i";
+	FILE *fp;
+	int offset, size, nwrite;
+	int cnt;
+
+	size = strlen(text);
+	if ( size == 0 ) {
+		return -1;
+	}
+
+	/* Open xclip pipe and pump the content of clipboard to it */
+	fp = popen(command, "w");
+	if (fp == NULL)
+	{
+		eprint("Failed to open xclip pipe; %s", strerror(errno));
+		return -1;
+	}
+
+	offset = 0;
+	while ( offset < size ) {
+		nwrite = size - offset;
+		if ( nwrite > BUFSIZ )
+		{
+			nwrite = BUFSIZ;
+		}
+		cnt = fwrite(&text[offset], 1, nwrite, fp);
+		if (cnt < 0)
+		{
+			eprint("Failed to write to xclip; %s", strerror(errno));
+			pclose(fp);
+			return -1;
+		}
+		offset += cnt;
+	}
+	pclose(fp);
+
+	return 0;
 }
 
 static int
@@ -448,6 +591,11 @@ mdep_statconsole(void)
 	int n;
 
 	if ( Nextchar!=NOCHAR ) {
+		return 1;
+	}
+
+	if ( clipboard.size - clipboard.offset ) {
+		/* data is on the clipboard */
 		return 1;
 	}
 
@@ -2112,6 +2260,22 @@ mdep_mdep(int argc)
 			}
 		} else {
 			execerror("mdep(\"env\",... ) doesn't recognize %s\n",args[1]);
+		}
+	}
+	else if ( strcmp(args[0], "clipboard") == 0 ) {
+		if (strcmp(args[1], "get") == 0 ) {
+			/* If not already reading from clipboard, get
+			 * clibpoard content and force into keyboard stream */
+			mdep_getclipboard();
+			d = numdatum(0);
+		}
+		else if ( strcmp(args[1], "set" ) == 0 ) {
+			if ( mdep_setclipboard(args[2]) != 0 ) {
+				d = numdatum(0);
+			}
+		}
+		else {
+			eprint("mdep(\"cliboard\",... ) doesn't recognize %s\n", args[1]);
 		}
 	}
 	else {

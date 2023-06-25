@@ -49,6 +49,13 @@ struct Kmenu {
 			/* more than this enables a scrollbar. */
 };
 
+typedef struct {
+	long size;
+	long used;
+	char *str;
+	char *linestart;
+} Copybuf;
+
 struct Kwind {
 	int wnum;
 	int type;	/* WIND_* */
@@ -65,6 +72,7 @@ struct Kwind {
 	int lasty;
 
 	/* following fields used for WIND_TEXT */
+	int fwidth, fheight;	/* Font widht/height when window created */
 	int tx0;		/* This is where text starts (taking into */
 				/* account scroll bar)*/
 	int currrow, currcol;	/* Current row and column within display area*/
@@ -72,6 +80,11 @@ struct Kwind {
 	int currx, curry;	/* Coordinates of currrow,currcol */
 	int currcols;		/* Number of cols shown */
 	int disprows;		/* Number of rows shown */
+
+	int sel_flag;		/* Set if following sel_x/y0/1 are in effect */
+	int sel_x0, sel_y0, sel_x1, sel_y1;
+	Copybuf cb;
+
 	char **bufflines;	/* Circular buffer of saved lines.  The */
 				/* direction is reversed from what you might */
 				/* think.  If toplnum is 50 (i.e. the 1st */

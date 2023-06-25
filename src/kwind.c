@@ -325,6 +325,9 @@ k_inittext(Kwind *w)
 	w->currcol = 0;
 	w->currrow = 0;
 
+	w->fwidth = mdep_fontwidth();
+	w->fheight = mdep_fontheight();
+
 /* Hmmm, if the screen gets resized, the MAXCOLS may not be enough. */
 /* This might be the reason for resize problems?  I'll add a 4* to make */
 /* sure it's not a problem.  Small waste of memory, but not that much.  */
@@ -341,6 +344,10 @@ k_inittext(Kwind *w)
 	w->currlnum = 0;
 	w->bufflines[w->currlnum] = w->currline;
 	w->toplnum = 0;
+
+	w->sel_flag = 0;
+	w->sel_x0 = w->sel_x1 = w->sel_y0 = w->sel_y1 = 0;
+	memset(&w->cb, 0x00, sizeof(w->cb));
 }
 
 void

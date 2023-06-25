@@ -912,6 +912,21 @@ bi_printf(int argc)
 }
 
 void
+bi_keyerrfile(int argc)
+{
+	char *fmt;
+	Datum d;
+
+	d = ARG(0);
+	fmt = needstr("printf",d);
+
+	reinitmsg3();
+	keyprintf(fmt,1,argc-1,ptomsg3);
+	keyerrfile("%s", Msg3);
+	ret(Nullval);
+}	
+
+void
 bi_argv(int argc)
 {
 	int n, npassed;
@@ -2842,6 +2857,9 @@ struct bltinfo builtins[] = {
 	{ "midi",		bi_midi,	BI_MIDI },
 	{ "bitmap",	bi_bitmap,	BI_BITMAP },
 	{ "objectinfo",	bi_objectinfo,	BI_OBJECTINFO },
+	{ "setselection",	o_setselection,	O_SETSELECTION },
+	{ "getselection",	o_getselection,	O_GETSELECTION },
+	{ "keyerrfile",	bi_keyerrfile,	BI_KEYERRFILE },
 	{ 0,		0,		0 }
 };
 
@@ -2975,5 +2993,10 @@ BLTINFUNC Bltinfuncs[] = {
 	bi_midi,
 	bi_bitmap,
 	bi_objectinfo,
-	o_fillpolygon
+	o_fillpolygon,
+	o_setselection,
+	o_getselection,
+	bi_keyerrfile,
 };
+
+unsigned int Bltinfuncssize = ARRAY_SIZE(Bltinfuncs);

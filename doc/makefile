@@ -9,12 +9,12 @@ clean :
 	@echo Nothing to clean
 
 makelibdoc :
-	cd ..
-	cd lib
-	ls *.k > ..\doc\liblist
-	sh ..\doc\libdoc.sh < ..\doc\liblist > ..\doc\libdoc.xml
-	cd ..
-	cd doc
+	cd ..; \
+	cd lib; \
+	ls *.k > ../doc/liblist; \
+	sh ../doc/libdoc.sh < ../doc/liblist > ../doc/libdoc.xml; \
+	cd ..; \
+	cd doc; \
 	rm -f liblist
 
 html : faq.html tutorial.html language.html hacking.html keyvar.html libdoc.html
@@ -23,14 +23,13 @@ html : faq.html tutorial.html language.html hacking.html keyvar.html libdoc.html
 # file in that directory.
 
 maketools :
-	cd ..
-	cd lib
-	perl.exe -I ../doc ../doc/xml2html.pl .
-	unix2dos *.html
-	cd ..
+	cd ..; \
+	cd lib; \
+	perl -I ../doc ../doc/xml2html.pl .; \
+	cd ..; \
 	cd doc
 
 .xml.html :
-	perl.exe -I . xml2html.pl $*.xml
-	unix2dos $*.html
+	perl -I . xml2html.pl $*.xml
+#	unix2dos $*.html
 

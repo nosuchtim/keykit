@@ -944,8 +944,11 @@ i_phrasepush(void)
 void
 makeroom(long n,char **aptr,long *asize)
 {
+#if 0
 	char *s, *t, *ns;
-	long k, newsize;
+	long k;
+#endif
+	long newsize;
 
 	if ( *asize >= n )
 		return;
@@ -953,12 +956,16 @@ makeroom(long n,char **aptr,long *asize)
 	while ( newsize < n )
 		newsize = ((newsize+1)*3)/2;   /* increase by 50% */
 
+#if 1
+	*aptr = krealloc(*aptr, (unsigned)newsize,"makeroom");
+#else
 	ns = s = (char *) kmalloc((unsigned)newsize,"makeroom");
 	t = *aptr;
 	for ( k = *asize; k>0; k-- )
 		*s++ = *t++;
 	kfree(*aptr);	/* NULL value okay */
 	*aptr = ns;
+#endif
 	*asize = newsize;
 }
 
@@ -1174,7 +1181,8 @@ enddef(register Symbolp sp)
 void
 callfuncd(Symbolp s)
 {
-	int npassed, nlocals, varsize, bi, needed;
+	unsigned int bi;
+	int npassed, nlocals, varsize, needed;
 	Datum d, funcd, dnpassed;
 	Datum *objdp, *realobjdp, *methdp, *dp;
 	Codep cp;
@@ -1335,7 +1343,7 @@ callfuncd(Symbolp s)
 	}
 
 	if ( bi != 0 ) {
-		if (bi > 127) {
+		if (bi > Bltinfuncssize) {
 			eprint("Internal error: bi=%d\n", bi);
 		}
 		/* it's a built-in function - execute it right away */

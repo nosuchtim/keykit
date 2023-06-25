@@ -364,6 +364,9 @@ Datum mdep_mdep(int argc)
 	mdep("midi","output","close")	# closes the current MIDI output device
 	mdep("midi","output","open",N)	# opens MIDI output device #N
 
+        mdep("cliboard","get")		# snaps current OS selection content and causes it to appear as if from keyboard
+        mdep("cliboard","set",<str>)    # sets OS selection content to content of <str>
+
 	If you don't want any machine-dependent capabilies, just
 	have mdep_mdep() return the value Noval.
 

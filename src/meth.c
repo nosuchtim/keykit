@@ -920,6 +920,90 @@ o_menuitems(int argc)
 	ret(d);
 }
 
+void
+o_setselection(int argc)
+{
+	int x0, y0, x1, y1;
+	Kwind *w = windid(T->obj);
+	Datum d;
+
+	if ( w->type != WIND_TEXT )
+		execerror(".setselection() must be applied to a text window!?");
+
+	if (argc == 0)
+	{
+		/* No args - clear selection flag */
+		w->sel_flag = 0;
+		keyerrfile("%s:%d sel_flag %d\n", __FUNCTION__, __LINE__, w->sel_flag);
+		d.type = D_NUM;
+		d.u.val = 0;
+		ret(d);
+		return;
+	}
+
+	if ( argc != 4 )
+		execerror(".setselection() expects x0,y0,x1,y1 args!?");
+
+	x0 = neednum(".setselection", ARG(0));
+	y0 = neednum(".setselection", ARG(1));
+	x1 = neednum(".setselection", ARG(2));
+	y1 = neednum(".setselection", ARG(3));
+    
+	/* Order the selection point pair so 1st is "lower left" of 2nd */
+	if (x0 > x1)
+	{
+		int tmp;
+		tmp = x0; x0 = x1; x1 = tmp;
+	}
+	if (y0 > y1)
+	{
+		int tmp;
+		tmp = y0; y0 = y1; y1 = tmp;
+	}
+    
+	/* If selection is different save and return non-zero */
+	if (!w->sel_flag || (x0 != w->sel_x0) || (y0 != w->sel_y0)
+	    || (x1 != w->sel_x1) || (y1 != w->sel_y1))
+	{
+#ifdef DEBUG_TEXT_SELECTION
+		keyerrfile("%s:%d [%u %u] [%u %u]\n", __FUNCTION__, __LINE__, x0, y0, x1, y1);
+#endif
+		w->sel_x0 = x0;
+		w->sel_y0 = y0;
+		w->sel_x1 = x1;
+		w->sel_y1 = y1;
+		w->sel_flag = 1;
+	}
+	d.type = D_NUM;
+	d.u.val = 1;
+	ret(d);
+}
+
+void
+o_getselection(int argc)
+{
+	Datum d;
+	Kwind *w = windid(T->obj);
+	char *p;
+	dummyusage(argc);
+
+	if ( w->type != WIND_TEXT )
+		execerror(".getselection() must be applied to a text window!?");
+
+#ifdef DEBUG_TEXT_SELECTION
+	keyerrfile("%s:%d sel_flag %d [%d %d] [%d %d]\n", __FUNCTION__, __LINE__,
+		   w->sel_flag, w->sel_x0, w->sel_y0, w->sel_x1, w->sel_y1);
+#endif
+	p = readconsoletext(w);
+	if (p) {
+		d = strdatum(p);
+	}
+	else {
+		d = strdatum(uniqstr(""));
+	}
+	ret(d);
+}
+
 Kobjectp
 windobject(long id,int complain,char *type)
 {
@@ -1025,6 +1109,12 @@ windobject(long id,int complain,char *type)
 	/* menu window methods */
 	setmethod(o,"menuitem",O_MENUITEM);
 	setmethod(o,"menuitems",O_MENUITEMS);
+
+	/* text window methods */
+	if ( strcmp(type,"text") == 0 ) {
+		setmethod(o, "setselection",O_SETSELECTION);
+		setmethod(o, "getselection",O_GETSELECTION);
+	}
 
 	return o;
 }

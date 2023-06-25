@@ -1,0 +1,8 @@
+#
+# This file defines the list of local tools in the Tools1 menu.
+# The "trackable" word, if present, indicates that a tool can also
+# be used within the tracks of the Group tool.
+#
+# NOTE: use ":" to separate the fields.
+
+Console2:wconsole2

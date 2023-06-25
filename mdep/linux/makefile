@@ -27,7 +27,7 @@ SRC = real.c yacc.c code.c code2.c sym.c main.c util.c mdep1.c mfin.c \
 	chkkey.c
 
 PROFILE = -g
-CFLAGS = -Wall -Wextra -O $(INC) $(PROFILE)
+CFLAGS = -Wall -Wextra $(INC) $(PROFILE)
 
 all : $(EXECS)
 
