@@ -731,11 +731,25 @@ i_objvareval(void)
 
 	s = findobjsym(p,o,&fo);
 	if ( s == NULL ) {
-		execerror("No element '%s' in object $%ld !?",
-			p,o->id);
+		Symbolp sc = findobjsym(uniqstr("class"),o,&fo);
+		if ( (sc != NULL) && (sc->sd.u.str != NULL) ) {
+			execerror("No element '%s' in object $%ld(class '%s') !?",
+				  p,o->id,sc->sd.u.str);
+		}
+		else {
+			execerror("No element '%s' in object $%ld !?",
+				  p,o->id);
+		}
 	}
-	if ( T->obj->id != o->id && T->realobj->id != o->id )
-		execerror("Element .%s of $%ld can't be accessed from outside!",p,o->id);
+	if ( T->obj->id != o->id && T->realobj->id != o->id ) {
+		Symbolp sc = findobjsym(uniqstr("class"),o,&fo);
+		if ( (sc != NULL) && (sc->sd.u.str != NULL) ) {
+			execerror("Element .%s of $%ld(class '%s') can't be accessed from outside!",p,o->id,sc->sd.u.str);
+		}
+		else {
+			execerror("Element .%s of $%ld can't be accessed from outside!",p,o->id);
+		}
+	}
 	d = *symdataptr(s);
 	pushm(d);
 }
@@ -838,7 +852,7 @@ i_objvarpush(void)
 {
 	Datum d, d2;
 	Symbolp s;
-	Kobjectp obj;
+	Kobjectp o,fo;
 	Symstr p;
 
 	popinto(d);
@@ -848,14 +862,21 @@ i_objvarpush(void)
 	popinto(d2);
 	if ( d2.type != D_OBJ )
 		execerror("object expression expects an object, but got %s!\n",atypestr(d2.type));
-	obj = d2.u.obj;
-	if ( obj == NULL )
+	o = d2.u.obj;
+	if ( o == NULL )
 		execerror("Internal error, obj==NULL in objvarpush!?");
-	if ( obj->symbols == NULL )
+	if ( o->symbols == NULL )
 		execerror("Internal error, symbols==NULL in objvarpush!?");
-	if ( obj->id != T->obj->id && obj->id != T->realobj->id )
-		execerror("Element .%s of object $%ld can only be set from within a method!",p,obj->id);
-	s = syminstall(p,obj->symbols,VAR);	/* NOT findobjsym */
+	if ( o->id != T->obj->id && o->id != T->realobj->id ) {
+		Symbolp sc = findobjsym(uniqstr("class"),o,&fo);
+		if ( (sc != NULL) && (sc->sd.u.str != NULL) ) {
+			execerror("Element .%s of object $%ld(class '%s') can only be set from within a method!",p,o->id,sc->sd.u.str);
+		}
+		else {
+			execerror("Element .%s of object $%ld can only be set from within a method!",p,o->id);
+		}
+	}
+	s = syminstall(p,o->symbols,VAR);	/* NOT findobjsym */
 	pushexp(symdatum(s));
 }
 
@@ -888,16 +909,30 @@ i_objcallfuncpush(void)
 
 	s = findobjsym(p,o,&fo);
 	if ( s == NULL ) {
-		execerror("Element '%s' of object $%ld doesn't exist!?",
-			p,o->id);
+		Symbolp sc = findobjsym(uniqstr("class"),o,&fo);
+		if ( (sc != NULL) && (sc->sd.u.str != NULL) ) {
+			execerror("No element '%s' in object $%ld(class '%s') !?",
+				  p,o->id,sc->sd.u.str);
+		}
+		else {
+			execerror("No element '%s' in object $%ld !?",
+				  p,o->id);
+		}
 	}
 
 	/* We want to push the function, object, and method. */
 
 	d = *symdataptr(s);
 	if ( d.type != D_CODEP ) {
-		execerror("Element '%s' of object $%ld isn't a function!?  (it's %s)",
-			p,fo->id,atypestr(d.type));
+		Symbolp sc = findobjsym(uniqstr("class"),fo,&o);
+		if ( (sc != NULL) && (sc->sd.u.str != NULL) ) {
+			execerror("Element '%s' of object $%ld(class '%s') is a %s (not a function)!?",
+				  p,fo->id,sc->sd.u.str,atypestr(d.type));
+		}
+		else {
+			execerror("Element '%s' of object $%ld is a %s (not a function)!?",
+				  p,fo->id,atypestr(d.type));
+		}
 	}
 	pushnoinc(d);
 	d = objdatum(o);
@@ -1085,7 +1120,7 @@ i_classinit(void)
 {
 	Datum d, d2;
 	Symbolp sym;
-	Kobjectp o;
+	Kobjectp o, fo;
 
 	d = ARG(0);
 	if ( d.type == D_OBJ )
@@ -1124,8 +1159,15 @@ i_classinit(void)
 	/* grammar. */
 
 	sym = findsym(Str_init.u.str,o->symbols);
-	if ( sym == NULL )
-		execerror("No init method found in i_classinit\n");
+	if ( sym == NULL ) {
+		Symbolp sc = findobjsym(uniqstr("class"),o,&fo);
+		if ( (sc != NULL) && (sc->sd.u.str != NULL) ) {
+			execerror("No init method found in class '%s'\n", sc->sd.u.str);
+		}
+		else {
+			execerror("No init method found in i_classinit\n");
+		}
+	}
 
 	d = *symdataptr(sym);
 	pushexp(d);
