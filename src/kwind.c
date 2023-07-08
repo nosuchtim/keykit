@@ -318,12 +318,12 @@ k_inittext(Kwind *w)
 	char **pp;
 
 	w->inscroll = 0;
-	w->currcols = 0;
-	w->disprows = 0;
-	w->currx = 0;
-	w->curry = 0;
-	w->currcol = 0;
-	w->currrow = 0;
+	w->kt.currcols = 0;
+	w->kt.disprows = 0;
+	w->kt.currx = 0;
+	w->kt.curry = 0;
+	w->kt.currcol = 0;
+	w->kt.currrow = 0;
 
 /* Hmmm, if the screen gets resized, the MAXCOLS may not be enough. */
 /* This might be the reason for resize problems?  I'll add a 4* to make */
@@ -331,16 +331,16 @@ k_inittext(Kwind *w)
 
 #define MAXCOLS (2+4*(Wroot->x1/mdep_fontwidth()))
 
-	w->numlines = *Textscrollsize;
-	w->bufflines = (char **) kmalloc(w->numlines*sizeof(char *),"inittext");
-	for ( pp=w->bufflines,n=w->numlines-1; n>=0 ; n-- )
+	w->kt.numlines = *Textscrollsize;
+	w->kt.bufflines = (char **) kmalloc(w->kt.numlines*sizeof(char *),"inittext");
+	for ( pp=w->kt.bufflines,n=w->kt.numlines-1; n>=0 ; n-- )
 		*pp++ = NULL;
-	w->currline = kmalloc((unsigned)MAXCOLS,"inittext");
-	w->currline[0] = '\0';
-	w->lastused = 0;
-	w->currlnum = 0;
-	w->bufflines[w->currlnum] = w->currline;
-	w->toplnum = 0;
+	w->kt.currline = kmalloc((unsigned)MAXCOLS,"inittext");
+	w->kt.currline[0] = '\0';
+	w->kt.lastused = 0;
+	w->kt.currlnum = 0;
+	w->kt.bufflines[w->kt.currlnum] = w->kt.currline;
+	w->kt.toplnum = 0;
 }
 
 void
@@ -351,26 +351,26 @@ k_reinittext(Kwind *w)
 
 #if 0
 	w->inscroll = 0;
-	w->currcols = 0;
-	w->disprows = 0;
-	w->currx = 0;
-	w->curry = 0;
+	w->kt.currcols = 0;
+	w->kt.disprows = 0;
+	w->kt.currx = 0;
+	w->kt.curry = 0;
 
 #define MAXCOLS (2+Wroot->x1/mdep_fontwidth())
-	w->numlines = *Textscrollsize;
+	w->kt.numlines = *Textscrollsize;
 	/* Don't realloc bufflines */
 
-	w->currcol = 0;
-	w->currrow = 0;
+	w->kt.currcol = 0;
+	w->kt.currrow = 0;
 #endif
 
-	for ( pp=w->bufflines,n=w->numlines-1; n>=0 ; n-- )
+	for ( pp=w->kt.bufflines,n=w->kt.numlines-1; n>=0 ; n-- )
 		*pp++ = NULL;
-	w->currline[0] = '\0';
-	w->lastused = 0;
-	w->currlnum = 0;
-	w->bufflines[w->currlnum] = w->currline;
-	w->toplnum = 0;
+	w->kt.currline[0] = '\0';
+	w->kt.lastused = 0;
+	w->kt.currlnum = 0;
+	w->kt.bufflines[w->kt.currlnum] = w->kt.currline;
+	w->kt.toplnum = 0;
 }
 
 void

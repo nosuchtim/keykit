@@ -49,21 +49,7 @@ struct Kmenu {
 			/* more than this enables a scrollbar. */
 };
 
-struct Kwind {
-	int wnum;
-	int type;	/* WIND_* */
-	int flags;	/* WFLAG_* */
-	struct Kwind *next;
-	struct Kwind *prev;
-
-	/* Window area in physical coordinate space (0,0,mdep_maxx(),mdep_maxy()) */
-	int x0, y0, x1, y1;
-
-	/* These are shared by windows (MENU,TEXT) that have scrollbars */
-	int inscroll;		/* whether mouse is in scrollbar (only for */
-				/* WIND_TEXT, WIND_MENU) */
-	int lasty;
-
+struct Ktext {
 	/* following fields used for WIND_TEXT */
 	int tx0;		/* This is where text starts (taking into */
 				/* account scroll bar)*/
@@ -82,6 +68,24 @@ struct Kwind {
 	int currlnum;		/* index of that line in bufflines */
 	int toplnum;		/* index (in bufflines) of top row in display*/
 	int lastused;		/* last used line (often equal to currlnum) */
+};
+
+struct Kwind {
+	int wnum;
+	int type;	/* WIND_* */
+	int flags;	/* WFLAG_* */
+	struct Kwind *next;
+	struct Kwind *prev;
+
+	/* Window area in physical coordinate space (0,0,mdep_maxx(),mdep_maxy()) */
+	int x0, y0, x1, y1;
+
+	/* These are shared by windows (MENU,TEXT) that have scrollbars */
+	int inscroll;		/* whether mouse is in scrollbar (only for */
+				/* WIND_TEXT, WIND_MENU) */
+	int lasty;
+
+	struct Ktext kt;
 
 	/* following fields used for WIND_PHRASE */
 	Symstr trk;
