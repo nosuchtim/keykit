@@ -73,30 +73,30 @@ showsane(Kwind *w)
 		menucalcxy(w);
 		break;
 	case WIND_PHRASE:
-		if ( w->kp.showlow < 0 )
-			w->kp.showlow = 0;
-		else if ( w->kp.showlow > 127 )
-			w->kp.showlow = 127;
+		if ( w->u.kp.showlow < 0 )
+			w->u.kp.showlow = 0;
+		else if ( w->u.kp.showlow > 127 )
+			w->u.kp.showlow = 127;
 	
-		if ( w->kp.showhigh < 0 )
-			w->kp.showhigh = 0;
-		else if ( w->kp.showhigh > 127 )
-			w->kp.showhigh = 127;
+		if ( w->u.kp.showhigh < 0 )
+			w->u.kp.showhigh = 0;
+		else if ( w->u.kp.showhigh > 127 )
+			w->u.kp.showhigh = 127;
 	
-		if ( w->kp.showlow > w->kp.showhigh ) {
-			int t = w->kp.showlow;
-			w->kp.showlow = w->kp.showhigh;
-			w->kp.showhigh = t;
+		if ( w->u.kp.showlow > w->u.kp.showhigh ) {
+			int t = w->u.kp.showlow;
+			w->u.kp.showlow = w->u.kp.showhigh;
+			w->u.kp.showhigh = t;
 		}
 	
-		if ( w->kp.showlow == w->kp.showhigh ) {
-			if ( w->kp.showlow > 0 )
-				(w->kp.showlow)--;
+		if ( w->u.kp.showlow == w->u.kp.showhigh ) {
+			if ( w->u.kp.showlow > 0 )
+				(w->u.kp.showlow)--;
 			else
-				(w->kp.showhigh)++;
+				(w->u.kp.showhigh)++;
 		}
-		if ( w->kp.showleng <= 0 )
-			w->kp.showleng = *Clicks;
+		if ( w->u.kp.showleng <= 0 )
+			w->u.kp.showleng = *Clicks;
 		break;
 	}
 }
@@ -104,10 +104,10 @@ showsane(Kwind *w)
 void
 redrawpwind(Kwind *w)
 {
-	if ( (intptr_t)(*(w->kp.pph)) < 1000 ) {
-		execerror("Internal error, redrawpwind (trk=%s) has bad phrase!?\n",w->kp.trk);
+	if ( (intptr_t)(*(w->u.kp.pph)) < 1000 ) {
+		execerror("Internal error, redrawpwind (trk=%s) has bad phrase!?\n",w->u.kp.trk);
 	}
-	drawph(w,*(w->kp.pph));
+	drawph(w,*(w->u.kp.pph));
 	my_plotmode(P_STORE);
 	mdep_box(w->x0,w->y0,w->x1,w->y1);
 	drawbars(w,w->x0+1,w->y0+1,w->x1-1,w->y1-1);
@@ -121,20 +121,20 @@ drawbars(Kwind *w,int sx,int sy,int ex,int ey)
 	int x0, lastx;
 	int min_dx = (int)(*Minbardx);
 
-	if ( w->kp.showbar == 0 )
+	if ( w->u.kp.showbar == 0 )
 		return;
 	mdep_color(Lightcolor);
 	my_plotmode(P_STORE);
 
 	/* figure out where the first bar goes (and purposely don't draw */	
 	/* one on the left edge of the display, ie. when mod == 0) */
-	mod = (w->kp.showstart) % (w->kp.showbar);
+	mod = (w->u.kp.showstart) % (w->u.kp.showbar);
 
-	click = (w->kp.showstart)-mod;
-	eclick = (w->kp.showstart) + (w->kp.showleng);
+	click = (w->u.kp.showstart)-mod;
+	eclick = (w->u.kp.showstart) + (w->u.kp.showleng);
 
 	lastx = -9999;
-	for ( ; click<eclick; click += w->kp.showbar ) {
+	for ( ; click<eclick; click += w->u.kp.showbar ) {
 		x0 = clktox(click);
 		if ( x0 < sx || x0 > ex )
 			continue;
@@ -193,8 +193,8 @@ windorigx(Kwind *w)
 void
 drawph(Kwind *w,Phrasep p)
 {
-	drawclipped(w,p,w->kp.showstart,w->kp.showstart+w->kp.showleng,
-		w->kp.showlow,w->kp.showhigh,
+	drawclipped(w,p,w->u.kp.showstart,w->u.kp.showstart+w->u.kp.showleng,
+		w->u.kp.showlow,w->u.kp.showhigh,
 		w->x0+1,w->y0+1,w->x1-1,w->y1-1);
 }
 
@@ -249,7 +249,7 @@ drawclipped(Kwind *w,Phrasep p,long sclicks,long eclicks,int spitch,int epitch,i
 
 	/* removal of loop constants in computation of y values */
 	yhigh = Disporigy + SHOWYHIGH;
-	denom = w->kp.showhigh - w->kp.showlow;
+	denom = w->u.kp.showhigh - w->u.kp.showlow;
 	if ( denom == 0 )
 		return;
 
@@ -956,7 +956,7 @@ longquant(long v,long q)
 int
 pitchyraw(Kwind *w,int pitch)
 {
-	int denom = w->kp.showhigh - w->kp.showlow;
+	int denom = w->u.kp.showhigh - w->u.kp.showlow;
 	return denom==0 ? 0 : (int)(((long)pitch*(long)Dispdy)/denom);
 }
 
@@ -969,8 +969,8 @@ pitchtoy(Kwind *w,int pitch)
 void
 xytogrid(Kwind *w,long x,long y,long *aclick,long *apitch,long quant)
 {
-	int shigh = w->kp.showhigh;
-	int slow = w->kp.showlow;
+	int shigh = w->u.kp.showhigh;
+	int slow = w->u.kp.showlow;
 	int dp = shigh-slow;
 	int tmpx, tmpy;
 	int redo = 0;
@@ -982,7 +982,7 @@ xytogrid(Kwind *w,long x,long y,long *aclick,long *apitch,long quant)
 	if ( ddx <= 0 )
 		ddx = 1;
 
-	*aclick = (w->kp.showstart) + ((long)(x-Disporigx) * (w->kp.showleng)) / ddx;
+	*aclick = (w->u.kp.showstart) + ((long)(x-Disporigx) * (w->u.kp.showleng)) / ddx;
 	*apitch = shigh - ((long)(y-Disporigy) * dp) / ddy;
 
 	/* the gyrations here are to guarantee that xytogrid is */
@@ -1050,8 +1050,8 @@ gridpan(Kwind *w,long cshift,int pshift)
 	if ( cshift == 0 && pshift == 0 )
 		return;
 
-	shigh = w->kp.showhigh;
-	slow = w->kp.showlow;
+	shigh = w->u.kp.showhigh;
+	slow = w->u.kp.showlow;
 
 	/* make sure pitches doesn't take us out of the 0-127 range */
 	if ( pshift > 0 && (shigh+pshift)>127 )
@@ -1062,28 +1062,28 @@ gridpan(Kwind *w,long cshift,int pshift)
 	/* If we pan more than what we're currently showing, just redraw. */
 	/* Also, the Panraster variable can be used to disable the use of */
 	/* raster operations for panning, to save memory. */
-	if ( *Panraster==0 || cshift >= w->kp.showleng || -cshift >= w->kp.showleng ) {
-		w->kp.showstart -= cshift;
-		w->kp.showhigh += pshift;
-		w->kp.showlow += pshift;
+	if ( *Panraster==0 || cshift >= w->u.kp.showleng || -cshift >= w->u.kp.showleng ) {
+		w->u.kp.showstart -= cshift;
+		w->u.kp.showhigh += pshift;
+		w->u.kp.showlow += pshift;
 		wredraw1(w);
 		return;
 	}
 
 	fromx = tox = Disporigx;
-	sclick2 = w->kp.showstart;
-	eclick2 = w->kp.showstart + w->kp.showleng;
+	sclick2 = w->u.kp.showstart;
+	eclick2 = w->u.kp.showstart + w->u.kp.showleng;
 	clrx2a = Disporigx;
 	clrx2b = Dispcornx;
 
 	if ( cshift == 0 )
 		xshift = 0;
 	else
-		xshift = SHOWXSTART - clktoxraw(w->kp.showstart-cshift);
+		xshift = SHOWXSTART - clktoxraw(w->u.kp.showstart-cshift);
 
 	if ( xshift < 0 ) {
 		/* we're panning left */
-		sclicks = w->kp.showstart + w->kp.showleng;
+		sclicks = w->u.kp.showstart + w->u.kp.showleng;
 		eclicks = sclicks - cshift;/* cshift is negative */
 		xshift = - xshift;
 		fromx += xshift;
@@ -1093,8 +1093,8 @@ gridpan(Kwind *w,long cshift,int pshift)
 	}
 	else if ( xshift > 0 ) {
 		/* panning right */
-		eclicks = w->kp.showstart;
-		sclicks = w->kp.showstart - cshift;
+		eclicks = w->u.kp.showstart;
+		sclicks = w->u.kp.showstart - cshift;
 		tox += xshift;
 		clrx = Disporigx;
 		clrx2a = tox+1;
@@ -1143,20 +1143,20 @@ gridpan(Kwind *w,long cshift,int pshift)
 	if ( pshift != 0 )
 		mdep_boxfill(Disporigx,clry,Dispcornx,clry+yshift);
 
-	w->kp.showstart -= cshift;
-	w->kp.showlow += pshift;
-	w->kp.showhigh += pshift;
+	w->u.kp.showstart -= cshift;
+	w->u.kp.showlow += pshift;
+	w->u.kp.showhigh += pshift;
 
 	/* redraw */
 	my_plotmode(P_STORE);
 	if ( cshift != 0 ) {
-		drawclipped(w,*(w->kp.pph),sclicks,eclicks,
-				w->kp.showlow,w->kp.showhigh,
+		drawclipped(w,*(w->u.kp.pph),sclicks,eclicks,
+				w->u.kp.showlow,w->u.kp.showhigh,
 				clrx,Disporigy,clrx+xshift,Dispcorny);
 		drawbars(w,clrx,Disporigy,clrx+xshift,Dispcorny);
 	}
 	if ( pshift != 0 ) {
-		drawclipped(w,*(w->kp.pph),sclick2,eclick2,
+		drawclipped(w,*(w->u.kp.pph),sclick2,eclick2,
 				spitch,epitch,
 				clrx2a,clry,clrx2b,clry+yshift);
 		drawbars(w,clrx2a,clry,clrx2b,clry+yshift);
@@ -1172,8 +1172,8 @@ char Y0inc[] =		{ 0, 0, 1, 0, 1, 0, 0, 1, 0, 1, 0, 1 };
 void
 drawkeyboard(Kwind *w,int erasefirst)
 {
-	int low = w->kp.showlow;
-	int high = w->kp.showhigh;
+	int low = w->u.kp.showlow;
+	int high = w->u.kp.showhigh;
 	int dx = (w->dispx0 - w->x0)/10;
 	int x0 = w->x0 + 2;
 	int xb = x0 + dx*6;

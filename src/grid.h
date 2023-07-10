@@ -29,6 +29,7 @@ struct Kitem {
 };
 
 struct Kmenu {
+	/* following fields used for WIND_MENU */
 	struct Kitem *items;
 	int nitems;
 	struct Kmenu *next;
@@ -96,14 +97,11 @@ struct Kwind {
 				/* WIND_TEXT, WIND_MENU) */
 	int lasty;
 
-	struct Ktext kt;
-
-	struct Kphrase kp;
-
-	/* following fields used for WIND_MENU */
-	/* NOTE: km SHOULD EVENTUALLY BE A POINTER, CAUSE KM TAKES A LOT OF */
-	/* SPACE THAT SHOULDN'T BE USED FOR EVERY WINDOW. */
-	struct Kmenu km;
+	union {
+		struct Ktext kt;
+		struct Kphrase kp;
+		struct Kmenu km;
+	} u;
 
 	struct Pbitmap saveunder;  /* used when WFLAG_SAVEDUNDER is set*/
 };
@@ -118,12 +116,12 @@ typedef struct Pbitmap Pbitmap;
 
 #define EMPTYBITMAP {0,0,0,0,0}
 
-/* avoid recomputing the x value of w->kp.showstart unless it's changed */
-#define SHOWXSTART ((Lastst==w->kp.showstart)?Lastxs:clktoxraw(w->kp.showstart))
-/* avoid recomputing the y value of w->kp.showhigh unless it's changed */
-#define SHOWYHIGH ((Lastsh==w->kp.showhigh)?Lastys:pitchyraw(w,w->kp.showhigh))
+/* avoid recomputing the x value of w->u.kp.showstart unless it's changed */
+#define SHOWXSTART ((Lastst==w->u.kp.showstart)?Lastxs:clktoxraw(w->u.kp.showstart))
+/* avoid recomputing the y value of w->u.kp.showhigh unless it's changed */
+#define SHOWYHIGH ((Lastsh==w->u.kp.showhigh)?Lastys:pitchyraw(w,w->u.kp.showhigh))
 
-#define clktoxraw(clicks) ((w->kp.showleng==0) ? 0 : (int)(((clicks)*Dispdx + Dispdx/2)/w->kp.showleng))
+#define clktoxraw(clicks) ((w->u.kp.showleng==0) ? 0 : (int)(((clicks)*Dispdx + Dispdx/2)/w->u.kp.showleng))
 #define clktox(clicks) (Disporigx+clktoxraw(clicks)-SHOWXSTART)
 
 #define Disporigy (w->y0+1)

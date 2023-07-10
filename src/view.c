@@ -13,8 +13,8 @@ char Curschar = '_' /* 0x7f would be a small square */;
 
 #define v_rowsize() (mdep_fontheight()+2)
 #define v_colsize() (mdep_fontwidth())
-#define columnx(w,c) ((w)->kt.tx0+v_colsize()/2+1+(c)*v_colsize())
-#define rowy(w,r) (w->y1-v_rowsize()/4-v_rowsize()*(w->kt.disprows-(r)))
+#define columnx(w,c) ((w)->u.kt.tx0+v_colsize()/2+1+(c)*v_colsize())
+#define rowy(w,r) ((w)->y1-v_rowsize()/4-v_rowsize()*((w)->u.kt.disprows-(r)))
 
 Pbitmap
 v_reallocbitmap(int x,int y,Pbitmap p)
@@ -30,10 +30,10 @@ v_reallocbitmap(int x,int y,Pbitmap p)
 int
 v_linenorm(Kwind *w,int ln)
 {
-	while ( ln >= w->kt.numlines )
-		ln -= w->kt.numlines;
+	while ( ln >= w->u.kt.numlines )
+		ln -= w->u.kt.numlines;
 	while ( ln < 0 )
-		ln += w->kt.numlines;
+		ln += w->u.kt.numlines;
 	return ln;
 }
 
@@ -45,30 +45,30 @@ v_settextsize(Kwind *w)
 	if ( w->type != WIND_TEXT )
 		return;
 
-	w->kt.tx0 = w->x0 + v_colsize()*3;
+	w->u.kt.tx0 = w->x0 + v_colsize()*3;
 	xsize = v_colsize();
 	ysize = v_rowsize();
 	/* The computation below for Trows parallels what's done in rowtoy() */
 	new_trows = (w->y1 - w->y0 - ysize/4 - 2) / ysize;
 	if ( new_trows < 1 )
 		new_trows = 1;
-	new_tcols = (w->x1 - w->kt.tx0 - xsize) / xsize;
+	new_tcols = (w->x1 - w->u.kt.tx0 - xsize) / xsize;
 	if ( new_tcols < 1 )
 		new_tcols = 1;
 
-	if ( new_tcols != w->kt.currcols || new_trows != w->kt.disprows ) {
-		w->kt.currcols = new_tcols;
-		w->kt.disprows = new_trows;
-		w->kt.toplnum = v_linenorm(w,w->kt.lastused + w->kt.disprows - 1);
-		w->kt.currrow = w->kt.disprows - 1;
+	if ( new_tcols != w->u.kt.currcols || new_trows != w->u.kt.disprows ) {
+		w->u.kt.currcols = new_tcols;
+		w->u.kt.disprows = new_trows;
+		w->u.kt.toplnum = v_linenorm(w,w->u.kt.lastused + w->u.kt.disprows - 1);
+		w->u.kt.currrow = w->u.kt.disprows - 1;
 	}
 }
 
 void
 v_setxy(Kwind *w)
 {
-	w->kt.currx = columnx(w,w->kt.currcol);
-	w->kt.curry = rowy(w,w->kt.currrow);
+	w->u.kt.currx = columnx(w,w->u.kt.currcol);
+	w->u.kt.curry = rowy(w,w->u.kt.currrow);
 }
 
 void
@@ -143,7 +143,7 @@ redrawmenu(Kwind *w)
 	werase(w);
 	menucalcxy(w);
 	menuconstruct(w,0);
-	if ( w->km.choice >= 0 ) {
+	if ( w->u.km.choice >= 0 ) {
 		highchoice(w);
 	}
 }
@@ -165,14 +165,14 @@ xyquant(Kwind *w,long *amx,long *amy,long quant,long *aclk,long *apitch)
 
 	qnt = sanequant(w,quant);
 	xytogrid(w,*amx,*amy,&clk,&pitch,qnt);
-	if ( clk < w->kp.showstart )
-		clk = w->kp.showstart;
-	else if ( clk > (w->kp.showstart+w->kp.showleng) )
-		clk = (w->kp.showstart+w->kp.showleng);
-	if ( pitch < w->kp.showlow )
-		pitch = w->kp.showlow;
-	else if ( pitch > w->kp.showhigh )
-		pitch = w->kp.showhigh;
+	if ( clk < w->u.kp.showstart )
+		clk = w->u.kp.showstart;
+	else if ( clk > (w->u.kp.showstart+w->u.kp.showleng) )
+		clk = (w->u.kp.showstart+w->u.kp.showleng);
+	if ( pitch < w->u.kp.showlow )
+		pitch = w->u.kp.showlow;
+	else if ( pitch > w->u.kp.showhigh )
+		pitch = w->u.kp.showhigh;
 	*amx = clktox(clk);
 	*amy = pitchtoy(w,(int)pitch);
 	if ( aclk )
@@ -287,7 +287,7 @@ i_dosweepcont(void)
 		break;
 	case M_UPDOWN:
 		lx0 = 0;
-		lx1 = (w->type==WIND_PHRASE) ? ((*(w->kp.pph))->p_leng) : w->x1;
+		lx1 = (w->type==WIND_PHRASE) ? ((*(w->u.kp.pph))->p_leng) : w->x1;
 		break;
 	}
 
@@ -305,7 +305,7 @@ i_dosweepcont(void)
 char *
 ptbuffer(Kwind *w,int c)
 {
-	char *p = &(w->kt.currline[c]);
+	char *p = &(w->u.kt.currline[c]);
 	return p;
 }
 
@@ -332,7 +332,7 @@ v_stringwind(char *s,Kwind *w)
 	char c;
 	char str[2];
 
-	if ( w == NULL || w->kt.disprows==0 || w->kt.currcols==0 ) {
+	if ( w == NULL || w->u.kt.disprows==0 || w->u.kt.currcols==0 ) {
 		eprint("%s",s);	/* last resort, to get it out somehow */
 		return;
 	}
@@ -345,10 +345,10 @@ v_stringwind(char *s,Kwind *w)
 	while ( (c=(*s++)) != '\0' ) {
 
 		if ( c == '\b' || c == Erasechar) {
-			if ( w->kt.currcol > 0 ) {
-				w->kt.currcol--;
+			if ( w->u.kt.currcol > 0 ) {
+				w->u.kt.currcol--;
 				v_setxy(w);
-				*ptbuffer(w,w->kt.currcol) = '\0';
+				*ptbuffer(w,w->u.kt.currcol) = '\0';
 				v_echar(w);
 				
 			}
@@ -356,7 +356,7 @@ v_stringwind(char *s,Kwind *w)
 		else {
 			newline = (c=='\n' || c=='\r');
 			if ( ! newline ) {
-				char *pt = ptbuffer(w,w->kt.currcol);
+				char *pt = ptbuffer(w,w->u.kt.currcol);
 				if ( pt == NULL ) {
 					eprint("WARNING!! pt==NULL in v_string()\n");
 					return;
@@ -364,12 +364,12 @@ v_stringwind(char *s,Kwind *w)
 				*pt = c;
 				str[0] = c;
 				my_plotmode(P_STORE);
-				mdep_string(w->kt.currx,w->kt.curry,str);
-				w->kt.currcol++;
-				*ptbuffer(w,w->kt.currcol) = '\0';
+				mdep_string(w->u.kt.currx,w->u.kt.curry,str);
+				w->u.kt.currcol++;
+				*ptbuffer(w,w->u.kt.currcol) = '\0';
 			}
-			if ( newline || w->kt.currcol >= w->kt.currcols ) {
-				w->kt.currcol = 0;
+			if ( newline || w->u.kt.currcol >= w->u.kt.currcols ) {
+				w->u.kt.currcol = 0;
 				if ( c != '\r' ) {
 					v_scrolldisplay(w);
 					v_scrollbuff(w);
@@ -381,14 +381,14 @@ v_stringwind(char *s,Kwind *w)
 	/* print the cursor after the last character */
 	str[0] = Curschar;
 	my_plotmode(P_STORE);
-	mdep_string(w->kt.currx,w->kt.curry,str);
+	mdep_string(w->u.kt.currx,w->u.kt.curry,str);
 }
 
 void
 v_echar(Kwind *w)
 {
 	my_plotmode(P_CLEAR);
-	mdep_boxfill(w->kt.currx,w->kt.curry,w->kt.currx+v_colsize(),w->kt.curry+v_rowsize()-1);
+	mdep_boxfill(w->u.kt.currx,w->u.kt.curry,w->u.kt.currx+v_colsize(),w->u.kt.curry+v_rowsize()-1);
 	my_plotmode(P_STORE);
 }
 
@@ -402,9 +402,9 @@ v_textdo(Kwind *w,int butt,int x,int y)
 void
 v_texttobottom(Kwind *w)
 {
-	int newtop = v_linenorm(w,w->kt.lastused+w->kt.disprows-1);
-	if ( newtop != w->kt.toplnum )  {
-		w->kt.toplnum = newtop;
+	int newtop = v_linenorm(w,w->u.kt.lastused+w->u.kt.disprows-1);
+	if ( newtop != w->u.kt.toplnum )  {
+		w->u.kt.toplnum = newtop;
 		wredraw1(w);
 	}
 }
@@ -412,9 +412,9 @@ v_texttobottom(Kwind *w)
 int
 toplnum_decr(Kwind *w)
 {
-	int toplimit = v_linenorm(w,w->kt.currlnum+w->kt.disprows-1);
-	if( w->kt.toplnum != toplimit ) {
-		w->kt.toplnum = v_linenorm(w,w->kt.toplnum-1);
+	int toplimit = v_linenorm(w,w->u.kt.currlnum+w->u.kt.disprows-1);
+	if( w->u.kt.toplnum != toplimit ) {
+		w->u.kt.toplnum = v_linenorm(w,w->u.kt.toplnum-1);
 		return 1;
 	}
 	else
@@ -424,9 +424,9 @@ toplnum_decr(Kwind *w)
 int
 toplnum_incr(Kwind *w)
 {
-	int toplimit = v_linenorm(w,w->kt.currlnum-1);
-	if( w->kt.toplnum != toplimit ) {
-		w->kt.toplnum = v_linenorm(w,w->kt.toplnum+1);
+	int toplimit = v_linenorm(w,w->u.kt.currlnum-1);
+	if( w->u.kt.toplnum != toplimit ) {
+		w->u.kt.toplnum = v_linenorm(w,w->u.kt.toplnum+1);
 		return 1;
 	}
 	else
@@ -438,7 +438,7 @@ textscrollupdate(Kwind *w,int mx,int my)
 {
 	int newtop, wheight;
 
-	if ( ! (mx > w->x0 && mx < w->kt.tx0 ) ) {
+	if ( ! (mx > w->x0 && mx < w->u.kt.tx0 ) ) {
 		w->inscroll = 0;
 		return 0;
 	}
@@ -452,14 +452,14 @@ textscrollupdate(Kwind *w,int mx,int my)
 			/* The first time you go into the scroll */
 			/* bar, it attempts to center the scroll bar */
 			/* on the current mouse position. */
-			barheight = (wheight*w->kt.disprows)/w->kt.numlines;
-			scrdy = (wheight-barheight)/(w->kt.numlines-w->kt.disprows);
+			barheight = (wheight*w->u.kt.disprows)/w->u.kt.numlines;
+			scrdy = (wheight-barheight)/(w->u.kt.numlines-w->u.kt.disprows);
 			if ( scrdy <= 0 )
 				scrdy = 1;
 			newtop = ( my - w->y0 - barheight/2) / scrdy;
-			newtop = boundit(newtop,0,w->kt.numlines-w->kt.disprows);
-			if ( newtop != w->kt.toplnum ) {
-				w->kt.toplnum = newtop;
+			newtop = boundit(newtop,0,w->u.kt.numlines-w->u.kt.disprows);
+			if ( newtop != w->u.kt.toplnum ) {
+				w->u.kt.toplnum = newtop;
 				wredraw1(w);
 			}
 		}
@@ -469,7 +469,7 @@ textscrollupdate(Kwind *w,int mx,int my)
 		int sz, dm, chgtop;
 		int changed = 0;
 
-		sz = (wheight/(3*w->kt.numlines/2));
+		sz = (wheight/(3*w->u.kt.numlines/2));
 		if ( sz <= 0 )
 			sz = 1;
 		dm = (my - w->lasty);
@@ -500,7 +500,7 @@ v_scrolldisplay(Kwind *w)
 
 	x = columnx(w,0);
 	y = rowy(w,0);
-	hgt = rowy(w,w->kt.disprows-1) - y;
+	hgt = rowy(w,w->u.kt.disprows-1) - y;
 	wid = w->x1 - 1 - x;
 
 	if ( hgt > 0 ) {
@@ -524,16 +524,16 @@ v_scrollbuff(Kwind *w)
 {
 	char *p;
 
-	w->kt.toplnum = v_linenorm(w,w->kt.toplnum-1);
-	p = w->kt.bufflines[w->kt.currlnum];
-	if ( p != w->kt.currline )
-		eprint("Hey, p!=w->kt.currline!?\n");
+	w->u.kt.toplnum = v_linenorm(w,w->u.kt.toplnum-1);
+	p = w->u.kt.bufflines[w->u.kt.currlnum];
+	if ( p != w->u.kt.currline )
+		eprint("Hey, p!=w->u.kt.currline!?\n");
 	
-	w->kt.bufflines[w->kt.currlnum] = uniqstr(p);
-	w->kt.currlnum = v_linenorm(w,w->kt.currlnum-1);
-	w->kt.lastused = w->kt.currlnum;
-	w->kt.bufflines[w->kt.currlnum] = w->kt.currline;
-	*(w->kt.currline) = '\0';
+	w->u.kt.bufflines[w->u.kt.currlnum] = uniqstr(p);
+	w->u.kt.currlnum = v_linenorm(w,w->u.kt.currlnum-1);
+	w->u.kt.lastused = w->u.kt.currlnum;
+	w->u.kt.bufflines[w->u.kt.currlnum] = w->u.kt.currline;
+	*(w->u.kt.currline) = '\0';
 }
 
 void
@@ -544,13 +544,13 @@ drawtextbar(Kwind *w)
 	y0 = w->y0 + 1;
 	y1 = w->y1 - 1;
 	dy = y1 - y0;
-	realtop = w->kt.toplnum - w->kt.lastused;
+	realtop = w->u.kt.toplnum - w->u.kt.lastused;
 	if ( realtop < 0 )
-		realtop += w->kt.numlines;
-	realbottom = realtop - w->kt.disprows + 1;
-	by0 = y1 - (dy*realtop)/(w->kt.numlines-1);
-	by1 = y1 - (dy*realbottom)/(w->kt.numlines-1);
-	mdep_boxfill(w->x0+4,by0,w->kt.tx0-6,by1);
+		realtop += w->u.kt.numlines;
+	realbottom = realtop - w->u.kt.disprows + 1;
+	by0 = y1 - (dy*realtop)/(w->u.kt.numlines-1);
+	by1 = y1 - (dy*realbottom)/(w->u.kt.numlines-1);
+	mdep_boxfill(w->x0+4,by0,w->u.kt.tx0-6,by1);
 }
 
 void
@@ -563,31 +563,31 @@ redrawtext(Kwind *w)
 	drawtextbar(w);
 
 	/* the line separating scroll bar and text */
-	mdep_line(w->kt.tx0-2,w->y0+1,w->kt.tx0-2,w->y1-1);
+	mdep_line(w->u.kt.tx0-2,w->y0+1,w->u.kt.tx0-2,w->y1-1);
 
 	x = columnx(w,0);
 	y = rowy(w,0);
-	i = w->kt.toplnum;
-	for ( n=0; n<w->kt.disprows; n++ ) {
-		char *p = w->kt.bufflines[i];
+	i = w->u.kt.toplnum;
+	for ( n=0; n<w->u.kt.disprows; n++ ) {
+		char *p = w->u.kt.bufflines[i];
 		if ( p ) {
 			int lng;
 			lng = (int)strlen(p);
-			if ( lng <= w->kt.currcols )
+			if ( lng <= w->u.kt.currcols )
 				mdep_string(x,y,p);
 			else {
-				strncpy(Msg1,p,w->kt.currcols);
-				Msg1[w->kt.currcols] = '\0';
+				strncpy(Msg1,p,w->u.kt.currcols);
+				Msg1[w->u.kt.currcols] = '\0';
 				mdep_string(x,y,Msg1);
 			}
 		}
 		if ( --i < 0 )
-			i = w->kt.numlines-1;
+			i = w->u.kt.numlines-1;
 		y += v_rowsize();
 	}
 	/* draw text cursor (typically an underline) */
 	v_setxy(w);
 	str[0] = Curschar;
 	str[1] = '\0';
-	mdep_string(w->kt.currx,w->kt.curry,str);
+	mdep_string(w->u.kt.currx,w->u.kt.curry,str);
 }

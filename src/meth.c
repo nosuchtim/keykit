@@ -292,10 +292,10 @@ o_mousedo(int argc)
 
 	if ( w->type == WIND_MENU ) {
 		m_menudo(w,butt,x0,y0,nodraw);
-		if ( w->km.choice >= 0 )
-			r = w->km.choice + w->km.top;
+		if ( w->u.km.choice >= 0 )
+			r = w->u.km.choice + w->u.km.top;
 		else
-			r = w->km.choice;
+			r = w->u.km.choice;
 	}
 	else if ( w->type == WIND_TEXT ) {
 		v_textdo(w,butt,x0,y0);
@@ -802,7 +802,7 @@ o_closestnote(int argc)
 	if ( n != 2 )
 		execerror(bad);
 	ph = newph(1);
-	nt = closestnt(w,*(w->kp.pph),x0,y0);
+	nt = closestnt(w,*(w->u.kp.pph),x0,y0);
 	if ( nt )
 		ntinsert(ntcopy(nt),ph);
 	d = phrdatum(ph);
@@ -825,13 +825,13 @@ o_view(int argc)
 		n = getxy01(arr,&x0,&y0,&x1,&y1,1,bad);
 		if ( n != 4 )
 			execerror(bad);
-		w->kp.showlow = y0;
-		w->kp.showhigh = y1;
-		w->kp.showstart = x0;
-		w->kp.showleng = x1-x0;
+		w->u.kp.showlow = y0;
+		w->u.kp.showhigh = y1;
+		w->u.kp.showstart = x0;
+		w->u.kp.showleng = x1-x0;
 	}
-	retval = xy01arr(w->kp.showstart,(long)(w->kp.showlow),
-		w->kp.showstart+w->kp.showleng,(long)(w->kp.showhigh));
+	retval = xy01arr(w->u.kp.showstart,(long)(w->u.kp.showlow),
+		w->u.kp.showstart+w->u.kp.showleng,(long)(w->u.kp.showhigh));
 	ret(retval);
 }
 
@@ -867,7 +867,7 @@ o_trackname(int argc)
 	if ( w->type != WIND_PHRASE )
 		execerror(".trackname() can only be used on phrase windows");
 	if ( argc == 0 ) {
-		retval=strdatum(w->type!=WIND_PHRASE ? Nullstr:w->kp.trk);
+		retval=strdatum(w->type!=WIND_PHRASE ? Nullstr:w->u.kp.trk);
 	}
 	else if ( argc == 1 ) {
 		char *s;
@@ -914,7 +914,7 @@ o_menuitems(int argc)
 		execerror(".menuitems() must be applied to a menu window!?");
 	
 	d = newarrdatum(0,11);
-	for ( ki=w->km.items; ki!=NULL; ki=ki->next ) {
+	for ( ki=w->u.km.items; ki!=NULL; ki=ki->next ) {
 		setarraydata(d.u.arr,strdatum(ki->name),numdatum(0));
 	}
 	ret(d);

@@ -304,11 +304,11 @@ newkwind(void)
 void
 k_initphrase(Kwind *w)
 {
-	w->kp.showlow = 0;
-	w->kp.showhigh = 127;
-	w->kp.showstart = 0;
-	w->kp.showbar = *Showbar;
-	w->kp.showleng = 2 * w->kp.showbar;
+	w->u.kp.showlow = 0;
+	w->u.kp.showhigh = 127;
+	w->u.kp.showstart = 0;
+	w->u.kp.showbar = *Showbar;
+	w->u.kp.showleng = 2 * w->u.kp.showbar;
 }
 
 void
@@ -318,12 +318,12 @@ k_inittext(Kwind *w)
 	char **pp;
 
 	w->inscroll = 0;
-	w->kt.currcols = 0;
-	w->kt.disprows = 0;
-	w->kt.currx = 0;
-	w->kt.curry = 0;
-	w->kt.currcol = 0;
-	w->kt.currrow = 0;
+	w->u.kt.currcols = 0;
+	w->u.kt.disprows = 0;
+	w->u.kt.currx = 0;
+	w->u.kt.curry = 0;
+	w->u.kt.currcol = 0;
+	w->u.kt.currrow = 0;
 
 /* Hmmm, if the screen gets resized, the MAXCOLS may not be enough. */
 /* This might be the reason for resize problems?  I'll add a 4* to make */
@@ -331,16 +331,16 @@ k_inittext(Kwind *w)
 
 #define MAXCOLS (2+4*(Wroot->x1/mdep_fontwidth()))
 
-	w->kt.numlines = *Textscrollsize;
-	w->kt.bufflines = (char **) kmalloc(w->kt.numlines*sizeof(char *),"inittext");
-	for ( pp=w->kt.bufflines,n=w->kt.numlines-1; n>=0 ; n-- )
+	w->u.kt.numlines = *Textscrollsize;
+	w->u.kt.bufflines = (char **) kmalloc(w->u.kt.numlines*sizeof(char *),"inittext");
+	for ( pp=w->u.kt.bufflines,n=w->u.kt.numlines-1; n>=0 ; n-- )
 		*pp++ = NULL;
-	w->kt.currline = kmalloc((unsigned)MAXCOLS,"inittext");
-	w->kt.currline[0] = '\0';
-	w->kt.lastused = 0;
-	w->kt.currlnum = 0;
-	w->kt.bufflines[w->kt.currlnum] = w->kt.currline;
-	w->kt.toplnum = 0;
+	w->u.kt.currline = kmalloc((unsigned)MAXCOLS,"inittext");
+	w->u.kt.currline[0] = '\0';
+	w->u.kt.lastused = 0;
+	w->u.kt.currlnum = 0;
+	w->u.kt.bufflines[w->u.kt.currlnum] = w->u.kt.currline;
+	w->u.kt.toplnum = 0;
 }
 
 void
@@ -351,26 +351,26 @@ k_reinittext(Kwind *w)
 
 #if 0
 	w->inscroll = 0;
-	w->kt.currcols = 0;
-	w->kt.disprows = 0;
-	w->kt.currx = 0;
-	w->kt.curry = 0;
+	w->u.kt.currcols = 0;
+	w->u.kt.disprows = 0;
+	w->u.kt.currx = 0;
+	w->u.kt.curry = 0;
 
 #define MAXCOLS (2+Wroot->x1/mdep_fontwidth())
-	w->kt.numlines = *Textscrollsize;
+	w->u.kt.numlines = *Textscrollsize;
 	/* Don't realloc bufflines */
 
-	w->kt.currcol = 0;
-	w->kt.currrow = 0;
+	w->u.kt.currcol = 0;
+	w->u.kt.currrow = 0;
 #endif
 
-	for ( pp=w->kt.bufflines,n=w->kt.numlines-1; n>=0 ; n-- )
+	for ( pp=w->u.kt.bufflines,n=w->u.kt.numlines-1; n>=0 ; n-- )
 		*pp++ = NULL;
-	w->kt.currline[0] = '\0';
-	w->kt.lastused = 0;
-	w->kt.currlnum = 0;
-	w->kt.bufflines[w->kt.currlnum] = w->kt.currline;
-	w->kt.toplnum = 0;
+	w->u.kt.currline[0] = '\0';
+	w->u.kt.lastused = 0;
+	w->u.kt.currlnum = 0;
+	w->u.kt.bufflines[w->u.kt.currlnum] = w->u.kt.currline;
+	w->u.kt.toplnum = 0;
 }
 
 void
@@ -664,10 +664,10 @@ scalephr2raw(Kwind *w,long *ax,long *ay)
 	long toy0 = w->y0+1;
 	long tox1 = w->x1-1;
 	long toy1 = w->y1-1;
-	long fromx0 = w->kp.showstart;
-	long fromx1 = w->kp.showstart + w->kp.showleng;
-	long fromy0 = w->kp.showhigh;
-	long fromy1 = w->kp.showlow;
+	long fromx0 = w->u.kp.showstart;
+	long fromx1 = w->u.kp.showstart + w->u.kp.showleng;
+	long fromy0 = w->u.kp.showhigh;
+	long fromy1 = w->u.kp.showlow;
 	scalexy(ax,ay,fromx0,fromy0,fromx1,fromy1,tox0,toy0,tox1,toy1);
 }
 
@@ -677,8 +677,8 @@ scalegrid2wind(Kwind *w,long *ax,long *ay)
 	if ( w->type != WIND_PHRASE )
 		execerror("scalegrid2wind applied to a non-phrase window?!");
 	scalexy(ax,ay,
-		w->kp.showstart, (long)(w->kp.showhigh),
-		w->kp.showstart + w->kp.showleng, (long)(w->kp.showlow),
+		w->u.kp.showstart, (long)(w->u.kp.showhigh),
+		w->u.kp.showstart + w->u.kp.showleng, (long)(w->u.kp.showlow),
 		(long)windxmin(w)+1,(long)windymin(w)+1,
 		(long)windxmax(w)-1,(long)windymax(w)-1);
 }
@@ -691,8 +691,8 @@ scalewind2grid(Kwind *w,long *ax,long *ay)
 	scalexy(ax,ay,
 		(long)windxmin(w)+1,(long)windymin(w)+1,
 		(long)windxmax(w)-1,(long)windymax(w)-1,
-		w->kp.showstart, (long)(w->kp.showhigh),
-		w->kp.showstart + w->kp.showleng, (long)(w->kp.showlow));
+		w->u.kp.showstart, (long)(w->u.kp.showhigh),
+		w->u.kp.showstart + w->u.kp.showleng, (long)(w->u.kp.showlow));
 }
 
 void
@@ -709,7 +709,7 @@ k_setsize(Kwind *w,int x0,int y0,int x1,int y1)
 		w->y1 = y1;
 	}
 	if ( w->type == WIND_PHRASE ) {
-		w->kp.showbar = *Showbar;
+		w->u.kp.showbar = *Showbar;
 	}
 	if ( *Resizefix ) {
 		if ( w->x0 < 0 ) {
@@ -748,7 +748,7 @@ k_findmenuitem(Symstr name,Kwind *w,int create)
 {
 	Kitem *ki, *ki2;
 
-	for ( ki=w->km.items; ki!=NULL; ki=ki->next ) {
+	for ( ki=w->u.km.items; ki!=NULL; ki=ki->next ) {
 		if ( name == ki->name )
 			return ki;
 	}
@@ -756,14 +756,14 @@ k_findmenuitem(Symstr name,Kwind *w,int create)
 		return (Kitem*)NULL;
 	/* not found, add it to end of items list */
 	ki = newkitem(name);
-	if ( w->km.items == NULL )
-		w->km.items = ki;
+	if ( w->u.km.items == NULL )
+		w->u.km.items = ki;
 	else {
-		for ( ki2=w->km.items; ki2->next!=NULL; ki2=ki2->next )
+		for ( ki2=w->u.km.items; ki2->next!=NULL; ki2=ki2->next )
 			;
 		ki2->next = ki;
 	}
-	ki->pos = w->km.nitems++;
+	ki->pos = w->u.km.nitems++;
 	return ki;
 }
 
@@ -811,14 +811,14 @@ void
 k_initmenu(Kwind *w)
 {
 	w->inscroll = 0;
-	w->km.items = NULL;
-	w->km.nitems = 0;
-	w->km.menusize = *Menusize;
-	w->km.made = 0;
-	w->km.top = 0;
-	w->km.choice = M_NOCHOICE;
-	w->km.width = 0;
-	w->km.header = 8;
+	w->u.km.items = NULL;
+	w->u.km.nitems = 0;
+	w->u.km.menusize = *Menusize;
+	w->u.km.made = 0;
+	w->u.km.top = 0;
+	w->u.km.choice = M_NOCHOICE;
+	w->u.km.width = 0;
+	w->u.km.header = 8;
 }
 
 Kitem *

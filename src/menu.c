@@ -12,24 +12,24 @@ static int Menuysize = 0;
 
 #define MSCROLLWIDTH ((int)(*Menuscrollwidth)*mdep_fontwidth()/4) /* width of menu scroll bar */
 #define mymin(a,b) ((a)>(b)?(b):(a))
-#define shown(w) mymin((w)->km.nitems,(w)->km.menusize)
-#define menuxarea(w) ((w)->km.width+5)
-#define menuyarea(w) ((w)->km.height+4)
-#define hasscrollbar(w) ((w)->km.offset!=0)
+#define shown(w) mymin((w)->u.km.nitems,(w)->u.km.menusize)
+#define menuxarea(w) ((w)->u.km.width+5)
+#define menuyarea(w) ((w)->u.km.height+4)
+#define hasscrollbar(w) ((w)->u.km.offset!=0)
 
 static void
 scrollbar(Kwind *w)
 {
-	int x0 = w->km.x;
-	int y0 = w->km.y + w->km.header;
-	int y1 = w->km.y+w->km.height;
-	int nitems = w->km.nitems;
-	int top = w->km.top;
+	int x0 = w->u.km.x;
+	int y0 = w->u.km.y + w->u.km.header;
+	int y1 = w->u.km.y+w->u.km.height;
+	int nitems = w->u.km.nitems;
+	int top = w->u.km.top;
 	int bary0, bary1;
 	int inset = MSCROLLWIDTH/7;
 
 	bary0 = y0 + ((y1-y0)*top)/nitems;
-	bary1 = y0 + ((y1-y0)*(top+w->km.menusize))/nitems;
+	bary1 = y0 + ((y1-y0)*(top+w->u.km.menusize))/nitems;
 	my_plotmode(P_STORE);
 	mdep_boxfill(x0+1+inset,bary0+1,x0+MSCROLLWIDTH-1-inset,bary1-1);
 }
@@ -38,7 +38,7 @@ static void
 erasescrollbar(Kwind *w)
 {
 	my_plotmode(P_CLEAR);
-	mdep_boxfill(w->km.x+1,w->km.y+w->km.header+1,w->km.x+MSCROLLWIDTH-1,w->km.y+w->km.height-1);
+	mdep_boxfill(w->u.km.x+1,w->u.km.y+w->u.km.header+1,w->u.km.x+MSCROLLWIDTH-1,w->u.km.y+w->u.km.height-1);
 }
 
 void
@@ -47,10 +47,10 @@ menustringat(Kwind *w,int itempos,int itemnum)
 	int n;
 	Kitem *ki;
 
-	for ( n=0,ki=w->km.items; ki!=NULL; ki=ki->next,n++ ) {
+	for ( n=0,ki=w->u.km.items; ki!=NULL; ki=ki->next,n++ ) {
 		if ( n == itemnum ) {
-			int y = w->km.y+w->km.header+itempos*Menuysize+1+(int)(*Menuymargin);
-			mdep_string(w->km.offset+w->km.x+mdep_fontwidth()/2+2, y, ki->name);
+			int y = w->u.km.y+w->u.km.header+itempos*Menuysize+1+(int)(*Menuymargin);
+			mdep_string(w->u.km.offset+w->u.km.x+mdep_fontwidth()/2+2, y, ki->name);
 			break;
 		}
 	}
@@ -64,16 +64,16 @@ menuconstruct(Kwind *w,int existing)
 {
 	int n, x1, y1, ny, xmid;
 	Kitem *ki;
-	int x0 = w->km.x;
-	int realy0 = w->km.y;
-	int y0 = w->km.y + w->km.header;
+	int x0 = w->u.km.x;
+	int realy0 = w->u.km.y;
+	int y0 = w->u.km.y + w->u.km.header;
 	int nshow = shown(w);
 
 	/* Let MIDI I/O happen, since redrawing menus can take some time */
 	mdep_sync(); chkinput(); chkoutput(); mdep_sync();
 
-	x1 = x0 + w->km.width;
-	y1 = realy0 + w->km.height;
+	x1 = x0 + w->u.km.width;
+	y1 = realy0 + w->u.km.height;
 
 	if ( ! existing ) {
 		my_plotmode(P_CLEAR);
@@ -92,30 +92,30 @@ menuconstruct(Kwind *w,int existing)
 		/* mdep_line(x0+1,ny-1,x1-1,ny-1); */
 		mdep_line(x0+1,ny,x1-1,ny);
 	}
-	for ( n=0,ki=w->km.items; ki!=NULL; ki=ki->next,n++ ) {
-		if ( n < w->km.top )
+	for ( n=0,ki=w->u.km.items; ki!=NULL; ki=ki->next,n++ ) {
+		if ( n < w->u.km.top )
 			continue;
-		if ( n >= (w->km.top + nshow) )
+		if ( n >= (w->u.km.top + nshow) )
 			break;
 		if ( existing ) {
 			mdep_sync(); chkinput(); chkoutput(); mdep_sync();
 			my_plotmode(P_CLEAR);
-			mdep_boxfill(w->km.offset+x0+1, ny+(int)(*Menuymargin),
-				w->km.x+menuxarea(w)-6, ny+Menuysize-1);
+			mdep_boxfill(w->u.km.offset+x0+1, ny+(int)(*Menuymargin),
+				w->u.km.x+menuxarea(w)-6, ny+Menuysize-1);
 			my_plotmode(P_STORE);
 		}
-		mdep_string(w->km.offset+x0+mdep_fontwidth()/2+2,
+		mdep_string(w->u.km.offset+x0+mdep_fontwidth()/2+2,
 				ny+1+(int)(*Menuymargin), ki->name);
 		ny += Menuysize;
 		if ( ! existing )
-			mdep_line(w->km.offset+x0+1,ny,x1-1,ny);
+			mdep_line(w->u.km.offset+x0+1,ny,x1-1,ny);
 	}
 	/* two sides */
 	if ( ! existing ) {
 		mdep_line(x0,realy0,x0,y1);
 		mdep_line(x1,realy0,x1,y1);
 		if ( hasscrollbar(w) ) {
-			int x0b = x0 + w->km.offset;
+			int x0b = x0 + w->u.km.offset;
 			mdep_line(x0b,y0,x0b,y1);
 			mdep_line(x0+1,y1,x0b-1,y1); /* bottom of scroll bar */
 		}
@@ -140,7 +140,7 @@ void
 m_menuitem(Kwind *w,Kitem *ki)
 {
 	dummyusage(ki);
-	w->km.made = 0;
+	w->u.km.made = 0;
 }
 
 void
@@ -157,36 +157,36 @@ menusetsize(Kwind *w, int x0, int y0, int x1, int y1)
 		sz = dy / Menuysize;
 	if ( sz < 2 )
 		sz = 2;
-	w->km.menusize = sz;
-	w->km.top = 0;
-	w->km.choice = M_NOCHOICE;
+	w->u.km.menusize = sz;
+	w->u.km.top = 0;
+	w->u.km.choice = M_NOCHOICE;
 	w->lasty = y0;
 }
 
 void
 menucalcxy(Kwind *w)
 {
-	int choice = w->km.choice;
+	int choice = w->u.km.choice;
 	int maxlen = 0;
 	int n, c;
 	Kitem *ki;
 
-	w->km.x = w->x0;
-	w->km.y = w->y0;
-	for ( n=0,ki=w->km.items; ki!=NULL; ki=ki->next,n++ ) {
+	w->u.km.x = w->x0;
+	w->u.km.y = w->y0;
+	for ( n=0,ki=w->u.km.items; ki!=NULL; ki=ki->next,n++ ) {
 		c = (int)strlen(ki->name);
 		if ( c > maxlen )
 			maxlen = c;
 	}
-	w->km.width = maxlen * mdep_fontwidth() + mdep_fontwidth() + 4;
-	if ( w->km.nitems <= w->km.menusize ) {
-		w->km.height = w->km.nitems * Menuysize + w->km.header;
-		w->km.offset = 0;
+	w->u.km.width = maxlen * mdep_fontwidth() + mdep_fontwidth() + 4;
+	if ( w->u.km.nitems <= w->u.km.menusize ) {
+		w->u.km.height = w->u.km.nitems * Menuysize + w->u.km.header;
+		w->u.km.offset = 0;
 	}
 	else {
-		w->km.height = w->km.menusize * Menuysize + w->km.header;
-		w->km.offset = MSCROLLWIDTH;
-		w->km.width += MSCROLLWIDTH;
+		w->u.km.height = w->u.km.menusize * Menuysize + w->u.km.header;
+		w->u.km.offset = MSCROLLWIDTH;
+		w->u.km.width += MSCROLLWIDTH;
 	}
 
 	/* adjust y to put mouse over choice */
@@ -194,28 +194,28 @@ menucalcxy(Kwind *w)
 		choice = 0;
 
 	/* the edges of the screen may require repositioning */
-	if ( w->km.x <= 0 ) {
-		w->km.x = 1;
-		w->x0 = w->km.x;
+	if ( w->u.km.x <= 0 ) {
+		w->u.km.x = 1;
+		w->x0 = w->u.km.x;
 	}
-	if ( w->km.y <= 0 ) {
-		w->km.y = 1;
-		w->y0 = w->km.y;
+	if ( w->u.km.y <= 0 ) {
+		w->u.km.y = 1;
+		w->y0 = w->u.km.y;
 	}
-	if ( (w->km.x+w->km.width+4) >= Wroot->x1 ) {
-		w->km.x = Wroot->x1 - w->km.width - 5;
-		w->x0 = w->km.x;
+	if ( (w->u.km.x+w->u.km.width+4) >= Wroot->x1 ) {
+		w->u.km.x = Wroot->x1 - w->u.km.width - 5;
+		w->x0 = w->u.km.x;
 	}
-	if ( (w->km.y+w->km.height+2) >= Wroot->y1 ) {
-		w->km.y = Wroot->y1 - w->km.height - 3;
-		w->y0 = w->km.y;
+	if ( (w->u.km.y+w->u.km.height+2) >= Wroot->y1 ) {
+		w->u.km.y = Wroot->y1 - w->u.km.height - 3;
+		w->y0 = w->u.km.y;
 	}
 
 	/* NEW STUFF */
-	w->x1 = w->x0 + w->km.width + 4;
-	w->y1 = w->y0 + w->km.height + 2;
+	w->x1 = w->x0 + w->u.km.width + 4;
+	w->y1 = w->y0 + w->u.km.height + 2;
 
-	if ( w->km.x <= 0 || w->km.y <= 0 ) {
+	if ( w->u.km.x <= 0 || w->u.km.y <= 0 ) {
 		wredraw1(Wroot);
 		execerror("Whoops, menu is too big to fit on the screen!");
 	}
@@ -226,15 +226,15 @@ drawchoice(Kwind *w,int unhigh)
 {
 	int x0, y0;
 
-	if ( w->km.choice < 0 )
+	if ( w->u.km.choice < 0 )
 		return;
-	x0 = w->km.x+1;
-	y0 = w->km.y + w->km.header + w->km.choice * Menuysize + 1;
+	x0 = w->u.km.x+1;
+	y0 = w->u.km.y + w->u.km.header + w->u.km.choice * Menuysize + 1;
 
 	my_plotmode(unhigh?P_CLEAR:P_STORE);
-	mdep_boxfill(w->km.offset+x0, y0, x0 + w->km.width-2, y0 + Menuysize - 2);
+	mdep_boxfill(w->u.km.offset+x0, y0, x0 + w->u.km.width-2, y0 + Menuysize - 2);
 	my_plotmode(unhigh?P_STORE:P_CLEAR);
-	menustringat(w,w->km.choice,w->km.choice+w->km.top);
+	menustringat(w,w->u.km.choice,w->u.km.choice+w->u.km.top);
 }
 
 void
@@ -265,14 +265,14 @@ updatemenu(Kwind *w,int mx,int my, int nodraw)
 {
 	int nchoice;
 
-	if ( my < w->km.y || my > (w->km.y + w->km.height) 
-		|| mx < w->km.x || mx > (w->km.x + w->km.width) ) {
+	if ( my < w->u.km.y || my > (w->u.km.y + w->u.km.height) 
+		|| mx < w->u.km.x || mx > (w->u.km.x + w->u.km.width) ) {
 
 		/* if we've got a current choice, unhighlight it */
-		if ( w->km.choice >= 0 ) {
+		if ( w->u.km.choice >= 0 ) {
 			unhighchoice(w);
 		}
-		w->km.choice = M_NOCHOICE;
+		w->u.km.choice = M_NOCHOICE;
 		return;
 	}
 
@@ -286,16 +286,16 @@ updatemenu(Kwind *w,int mx,int my, int nodraw)
 	}
 
 	/* if we've got a current choice, and we've changed it... */
-	if ( w->km.choice >= 0 && w->km.choice != nchoice ) {
+	if ( w->u.km.choice >= 0 && w->u.km.choice != nchoice ) {
 
 		/* Normally, unhighlight the item we've left */
 		unhighchoice(w);
-		w->km.choice = M_NOCHOICE;
+		w->u.km.choice = M_NOCHOICE;
 	}
 
 	/* highlight the new choice */
-	if ( w->km.choice != nchoice ) {
-		w->km.choice = nchoice;
+	if ( w->u.km.choice != nchoice ) {
+		w->u.km.choice = nchoice;
 		if ( nodraw == 0 ) {
 			highchoice(w);
 		}
@@ -308,7 +308,7 @@ scrollupdate(Kwind *w,int mx,int my)
 {
 	int newtop;
 
-	if ( ! (mx >= w->km.x && mx < w->km.x + w->km.offset) ) {
+	if ( ! (mx >= w->u.km.x && mx < w->u.km.x + w->u.km.offset) ) {
 		w->inscroll = 0;
 		return 0;
 	}
@@ -321,9 +321,9 @@ scrollupdate(Kwind *w,int mx,int my)
 #else
 	if ( ! w->inscroll ) {
 #endif
-		if ( w->km.choice >= 0 ) {
+		if ( w->u.km.choice >= 0 ) {
 			highchoice(w);
-			w->km.choice = M_NOCHOICE;
+			w->u.km.choice = M_NOCHOICE;
 		}
 		w->inscroll = 1;
 #ifdef BETTERSCROLLING
@@ -335,26 +335,26 @@ scrollupdate(Kwind *w,int mx,int my)
 			/* The first time you go into the scroll */
 			/* bar, it attempts to center the scroll bar */
 			/* on the current mouse position. */
-			barheight = (w->km.height*w->km.menusize)/w->km.nitems;
-			scrdy = (w->km.height - barheight)/(w->km.nitems-w->km.menusize);
+			barheight = (w->u.km.height*w->u.km.menusize)/w->u.km.nitems;
+			scrdy = (w->u.km.height - barheight)/(w->u.km.nitems-w->u.km.menusize);
 #ifdef BETTERSCROLLING
 			if ( scrdy <= 0 ) {
-				newtop = ( my - (w->km.y+w->km.header) - barheight/2);
-				scrdy = (w->km.height - barheight) - w->km.menusize;
+				newtop = ( my - (w->u.km.y+w->u.km.header) - barheight/2);
+				scrdy = (w->u.km.height - barheight) - w->u.km.menusize;
 				if (newtop < 0)
 					newtop = 0;
-				newtop = (newtop * (w->km.nitems-w->km.menusize)) / scrdy;
+				newtop = (newtop * (w->u.km.nitems-w->u.km.menusize)) / scrdy;
 			} else {
-				newtop = ( my - (w->km.y+w->km.header) - barheight/2) / scrdy;
+				newtop = ( my - (w->u.km.y+w->u.km.header) - barheight/2) / scrdy;
 			}
 #else
 			if ( scrdy <= 0 )
 				scrdy = 1;
-			newtop = ( my - (w->km.y+w->km.header) - barheight/2) / scrdy;
+			newtop = ( my - (w->u.km.y+w->u.km.header) - barheight/2) / scrdy;
 #endif
-			newtop = boundit(newtop,0,w->km.nitems-w->km.menusize);
-			if ( newtop != w->km.top ) {
-				w->km.top = newtop;
+			newtop = boundit(newtop,0,w->u.km.nitems-w->u.km.menusize);
+			if ( newtop != w->u.km.top ) {
+				w->u.km.top = newtop;
 				menuconstruct(w,1);
 			}
 		}
@@ -363,26 +363,26 @@ scrollupdate(Kwind *w,int mx,int my)
 	else {
 		int sz, dm, chgtop;
 
-		sz = (w->km.height/(3*w->km.nitems/2));
-		sz = (w->km.height/w->km.nitems);
+		sz = (w->u.km.height/(3*w->u.km.nitems/2));
+		sz = (w->u.km.height/w->u.km.nitems);
 		if ( sz <= 0 )
 			sz = 1;
-		if ( my < ((w->km.y+w->km.header)+(Menuysize/2)) ) {
+		if ( my < ((w->u.km.y+w->u.km.header)+(Menuysize/2)) ) {
 			newtop = 0;
 		}
-		else if ( my > ((w->km.y+w->km.header)+w->km.height-(Menuysize/2)) ) {
-			newtop = w->km.nitems-w->km.menusize;
+		else if ( my > ((w->u.km.y+w->u.km.header)+w->u.km.height-(Menuysize/2)) ) {
+			newtop = w->u.km.nitems-w->u.km.menusize;
 			if ( newtop < 0 )
 				newtop = 0;
 		}
 		else {
 			dm = (my - w->lasty);
 			chgtop = dm / sz;
-			newtop = w->km.top + chgtop;
-			newtop = boundit(newtop,0,w->km.nitems-w->km.menusize);
+			newtop = w->u.km.top + chgtop;
+			newtop = boundit(newtop,0,w->u.km.nitems-w->u.km.menusize);
 		}
-		if ( newtop != w->km.top ) {
-			w->km.top = newtop;
+		if ( newtop != w->u.km.top ) {
+			w->u.km.top = newtop;
 			menuconstruct(w,1);
 			w->lasty = my;
 		}
@@ -394,14 +394,14 @@ int
 menuchoice(Kwind *w,int x,int y)
 {
 	int n;
-	int ny = w->km.y + w->km.header;
+	int ny = w->u.km.y + w->u.km.header;
 	int nshow = shown(w);
 	int nchoice = M_NOCHOICE;
-	int x0 = w->km.x;
-	int x1 = x0 + w->km.width;
+	int x0 = w->u.km.x;
+	int x1 = x0 + w->u.km.width;
 
 	if ( x >= x0 && x <= x1 ) {
-		if ( y > w->km.y && y < ny ) {
+		if ( y > w->u.km.y && y < ny ) {
 			if ( x > ((x0+x1)/2+x1)/2 )
 				nchoice = M_DELETE;
 			else
