@@ -160,7 +160,7 @@ menusetsize(Kwind *w, int x0, int y0, int x1, int y1)
 	w->u.km.menusize = sz;
 	w->u.km.top = 0;
 	w->u.km.choice = M_NOCHOICE;
-	w->lasty = y0;
+	w->u.km.lasty = y0;
 }
 
 void
@@ -309,7 +309,7 @@ scrollupdate(Kwind *w,int mx,int my)
 	int newtop;
 
 	if ( ! (mx >= w->u.km.x && mx < w->u.km.x + w->u.km.offset) ) {
-		w->inscroll = 0;
+		w->u.km.inscroll = 0;
 		return 0;
 	}
 
@@ -325,7 +325,7 @@ scrollupdate(Kwind *w,int mx,int my)
 			highchoice(w);
 			w->u.km.choice = M_NOCHOICE;
 		}
-		w->inscroll = 1;
+		w->u.km.inscroll = 1;
 #ifdef BETTERSCROLLING
 		if ( 1 ) {
 #else
@@ -358,7 +358,7 @@ scrollupdate(Kwind *w,int mx,int my)
 				menuconstruct(w,1);
 			}
 		}
-		w->lasty = my;
+		w->u.km.lasty = my;
 	}
 	else {
 		int sz, dm, chgtop;
@@ -376,7 +376,7 @@ scrollupdate(Kwind *w,int mx,int my)
 				newtop = 0;
 		}
 		else {
-			dm = (my - w->lasty);
+			dm = (my - w->u.km.lasty);
 			chgtop = dm / sz;
 			newtop = w->u.km.top + chgtop;
 			newtop = boundit(newtop,0,w->u.km.nitems-w->u.km.menusize);
@@ -384,7 +384,7 @@ scrollupdate(Kwind *w,int mx,int my)
 		if ( newtop != w->u.km.top ) {
 			w->u.km.top = newtop;
 			menuconstruct(w,1);
-			w->lasty = my;
+			w->u.km.lasty = my;
 		}
 	}
 	return 1;

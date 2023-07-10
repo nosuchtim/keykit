@@ -439,14 +439,14 @@ textscrollupdate(Kwind *w,int mx,int my)
 	int newtop, wheight;
 
 	if ( ! (mx > w->x0 && mx < w->u.kt.tx0 ) ) {
-		w->inscroll = 0;
+		w->u.kt.inscroll = 0;
 		return 0;
 	}
 
 	wheight = w->y1 - w->y0;
 	/* if we just moved into the scroll bar... */
-	if ( ! w->inscroll ) {
-		w->inscroll = 1;
+	if ( ! w->u.kt.inscroll ) {
+		w->u.kt.inscroll = 1;
 		if ( *Menujump ) {
 			int barheight, scrdy;
 			/* The first time you go into the scroll */
@@ -463,7 +463,7 @@ textscrollupdate(Kwind *w,int mx,int my)
 				wredraw1(w);
 			}
 		}
-		w->lasty = my;
+		w->u.kt.lasty = my;
 	}
 	else {
 		int sz, dm, chgtop;
@@ -472,7 +472,7 @@ textscrollupdate(Kwind *w,int mx,int my)
 		sz = (wheight/(3*w->u.kt.numlines/2));
 		if ( sz <= 0 )
 			sz = 1;
-		dm = (my - w->lasty);
+		dm = (my - w->u.kt.lasty);
 		chgtop = -dm / sz;
 		if ( chgtop < 0 ) {
 			while ( chgtop++ < 0 && toplnum_decr(w) )
@@ -484,7 +484,7 @@ textscrollupdate(Kwind *w,int mx,int my)
 		}
 		if ( changed ) {
 			wredraw1(w);
-			w->lasty = my;
+			w->u.kt.lasty = my;
 		}
 	}
 	return 1;

@@ -48,6 +48,8 @@ struct Kmenu {
 			/* nothing is highlighted. */
 	int menusize;	/* Number of entries displayed - i.e. any number */
 			/* more than this enables a scrollbar. */
+	int inscroll;	/* whether mouse is in scrollbar */
+	int lasty;
 };
 
 struct Ktext {
@@ -69,6 +71,8 @@ struct Ktext {
 	int currlnum;		/* index of that line in bufflines */
 	int toplnum;		/* index (in bufflines) of top row in display*/
 	int lastused;		/* last used line (often equal to currlnum) */
+	int inscroll;		/* whether mouse is in scrollbar */
+	int lasty;
 };
 
 struct Kphrase {
@@ -91,11 +95,6 @@ struct Kwind {
 
 	/* Window area in physical coordinate space (0,0,mdep_maxx(),mdep_maxy()) */
 	int x0, y0, x1, y1;
-
-	/* These are shared by windows (MENU,TEXT) that have scrollbars */
-	int inscroll;		/* whether mouse is in scrollbar (only for */
-				/* WIND_TEXT, WIND_MENU) */
-	int lasty;
 
 	union {
 		struct Ktext kt;

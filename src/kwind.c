@@ -317,7 +317,7 @@ k_inittext(Kwind *w)
 	int n;
 	char **pp;
 
-	w->inscroll = 0;
+	w->u.kt.inscroll = 0;
 	w->u.kt.currcols = 0;
 	w->u.kt.disprows = 0;
 	w->u.kt.currx = 0;
@@ -810,7 +810,7 @@ waddtolist(Kwind *w, Kwind **wlist)
 void
 k_initmenu(Kwind *w)
 {
-	w->inscroll = 0;
+	w->u.km.inscroll = 0;
 	w->u.km.items = NULL;
 	w->u.km.nitems = 0;
 	w->u.km.menusize = *Menusize;
