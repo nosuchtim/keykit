@@ -165,14 +165,14 @@ xyquant(Kwind *w,long *amx,long *amy,long quant,long *aclk,long *apitch)
 
 	qnt = sanequant(w,quant);
 	xytogrid(w,*amx,*amy,&clk,&pitch,qnt);
-	if ( clk < w->showstart )
-		clk = w->showstart;
-	else if ( clk > (w->showstart+w->showleng) )
-		clk = (w->showstart+w->showleng);
-	if ( pitch < w->showlow )
-		pitch = w->showlow;
-	else if ( pitch > w->showhigh )
-		pitch = w->showhigh;
+	if ( clk < w->kp.showstart )
+		clk = w->kp.showstart;
+	else if ( clk > (w->kp.showstart+w->kp.showleng) )
+		clk = (w->kp.showstart+w->kp.showleng);
+	if ( pitch < w->kp.showlow )
+		pitch = w->kp.showlow;
+	else if ( pitch > w->kp.showhigh )
+		pitch = w->kp.showhigh;
 	*amx = clktox(clk);
 	*amy = pitchtoy(w,(int)pitch);
 	if ( aclk )
@@ -287,7 +287,7 @@ i_dosweepcont(void)
 		break;
 	case M_UPDOWN:
 		lx0 = 0;
-		lx1 = (w->type==WIND_PHRASE) ? ((*(w->pph))->p_leng) : w->x1;
+		lx1 = (w->type==WIND_PHRASE) ? ((*(w->kp.pph))->p_leng) : w->x1;
 		break;
 	}
 

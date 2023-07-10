@@ -304,11 +304,11 @@ newkwind(void)
 void
 k_initphrase(Kwind *w)
 {
-	w->showlow = 0;
-	w->showhigh = 127;
-	w->showstart = 0;
-	w->showbar = *Showbar;
-	w->showleng = 2 * w->showbar;
+	w->kp.showlow = 0;
+	w->kp.showhigh = 127;
+	w->kp.showstart = 0;
+	w->kp.showbar = *Showbar;
+	w->kp.showleng = 2 * w->kp.showbar;
 }
 
 void
@@ -664,10 +664,10 @@ scalephr2raw(Kwind *w,long *ax,long *ay)
 	long toy0 = w->y0+1;
 	long tox1 = w->x1-1;
 	long toy1 = w->y1-1;
-	long fromx0 = w->showstart;
-	long fromx1 = w->showstart + w->showleng;
-	long fromy0 = w->showhigh;
-	long fromy1 = w->showlow;
+	long fromx0 = w->kp.showstart;
+	long fromx1 = w->kp.showstart + w->kp.showleng;
+	long fromy0 = w->kp.showhigh;
+	long fromy1 = w->kp.showlow;
 	scalexy(ax,ay,fromx0,fromy0,fromx1,fromy1,tox0,toy0,tox1,toy1);
 }
 
@@ -677,8 +677,8 @@ scalegrid2wind(Kwind *w,long *ax,long *ay)
 	if ( w->type != WIND_PHRASE )
 		execerror("scalegrid2wind applied to a non-phrase window?!");
 	scalexy(ax,ay,
-		w->showstart, (long)(w->showhigh),
-		w->showstart + w->showleng, (long)(w->showlow),
+		w->kp.showstart, (long)(w->kp.showhigh),
+		w->kp.showstart + w->kp.showleng, (long)(w->kp.showlow),
 		(long)windxmin(w)+1,(long)windymin(w)+1,
 		(long)windxmax(w)-1,(long)windymax(w)-1);
 }
@@ -691,8 +691,8 @@ scalewind2grid(Kwind *w,long *ax,long *ay)
 	scalexy(ax,ay,
 		(long)windxmin(w)+1,(long)windymin(w)+1,
 		(long)windxmax(w)-1,(long)windymax(w)-1,
-		w->showstart, (long)(w->showhigh),
-		w->showstart + w->showleng, (long)(w->showlow));
+		w->kp.showstart, (long)(w->kp.showhigh),
+		w->kp.showstart + w->kp.showleng, (long)(w->kp.showlow));
 }
 
 void
@@ -709,7 +709,7 @@ k_setsize(Kwind *w,int x0,int y0,int x1,int y1)
 		w->y1 = y1;
 	}
 	if ( w->type == WIND_PHRASE ) {
-		w->showbar = *Showbar;
+		w->kp.showbar = *Showbar;
 	}
 	if ( *Resizefix ) {
 		if ( w->x0 < 0 ) {

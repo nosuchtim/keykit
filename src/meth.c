@@ -802,7 +802,7 @@ o_closestnote(int argc)
 	if ( n != 2 )
 		execerror(bad);
 	ph = newph(1);
-	nt = closestnt(w,*(w->pph),x0,y0);
+	nt = closestnt(w,*(w->kp.pph),x0,y0);
 	if ( nt )
 		ntinsert(ntcopy(nt),ph);
 	d = phrdatum(ph);
@@ -825,13 +825,13 @@ o_view(int argc)
 		n = getxy01(arr,&x0,&y0,&x1,&y1,1,bad);
 		if ( n != 4 )
 			execerror(bad);
-		w->showlow = y0;
-		w->showhigh = y1;
-		w->showstart = x0;
-		w->showleng = x1-x0;
+		w->kp.showlow = y0;
+		w->kp.showhigh = y1;
+		w->kp.showstart = x0;
+		w->kp.showleng = x1-x0;
 	}
-	retval = xy01arr(w->showstart,(long)(w->showlow),
-		w->showstart+w->showleng,(long)(w->showhigh));
+	retval = xy01arr(w->kp.showstart,(long)(w->kp.showlow),
+		w->kp.showstart+w->kp.showleng,(long)(w->kp.showhigh));
 	ret(retval);
 }
 
@@ -867,7 +867,7 @@ o_trackname(int argc)
 	if ( w->type != WIND_PHRASE )
 		execerror(".trackname() can only be used on phrase windows");
 	if ( argc == 0 ) {
-		retval=strdatum(w->type!=WIND_PHRASE ? Nullstr:w->trk);
+		retval=strdatum(w->type!=WIND_PHRASE ? Nullstr:w->kp.trk);
 	}
 	else if ( argc == 1 ) {
 		char *s;

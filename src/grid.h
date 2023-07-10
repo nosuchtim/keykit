@@ -70,6 +70,17 @@ struct Ktext {
 	int lastused;		/* last used line (often equal to currlnum) */
 };
 
+struct Kphrase {
+	/* following fields used for WIND_PHRASE */
+	Symstr trk;
+	Phrasepp pph;
+	int showlow;
+	int showhigh;
+	long showstart;
+	long showleng;
+	int showbar;
+};
+
 struct Kwind {
 	int wnum;
 	int type;	/* WIND_* */
@@ -87,14 +98,7 @@ struct Kwind {
 
 	struct Ktext kt;
 
-	/* following fields used for WIND_PHRASE */
-	Symstr trk;
-	Phrasepp pph;
-	int showlow;
-	int showhigh;
-	long showstart;
-	long showleng;
-	int showbar;
+	struct Kphrase kp;
 
 	/* following fields used for WIND_MENU */
 	/* NOTE: km SHOULD EVENTUALLY BE A POINTER, CAUSE KM TAKES A LOT OF */
@@ -104,6 +108,7 @@ struct Kwind {
 	struct Pbitmap saveunder;  /* used when WFLAG_SAVEDUNDER is set*/
 };
 
+typedef struct Kphrase Kphrase;
 typedef struct Kmenu Kmenu;
 typedef struct Kitem Kitem;
 typedef struct Kwind Kwind;
@@ -113,12 +118,12 @@ typedef struct Pbitmap Pbitmap;
 
 #define EMPTYBITMAP {0,0,0,0,0}
 
-/* avoid recomputing the x value of w->showstart unless it's changed */
-#define SHOWXSTART ((Lastst==w->showstart)?Lastxs:clktoxraw(w->showstart))
-/* avoid recomputing the y value of w->showhigh unless it's changed */
-#define SHOWYHIGH ((Lastsh==w->showhigh)?Lastys:pitchyraw(w,w->showhigh))
+/* avoid recomputing the x value of w->kp.showstart unless it's changed */
+#define SHOWXSTART ((Lastst==w->kp.showstart)?Lastxs:clktoxraw(w->kp.showstart))
+/* avoid recomputing the y value of w->kp.showhigh unless it's changed */
+#define SHOWYHIGH ((Lastsh==w->kp.showhigh)?Lastys:pitchyraw(w,w->kp.showhigh))
 
-#define clktoxraw(clicks) ((w->showleng==0) ? 0 : (int)(((clicks)*Dispdx + Dispdx/2)/w->showleng))
+#define clktoxraw(clicks) ((w->kp.showleng==0) ? 0 : (int)(((clicks)*Dispdx + Dispdx/2)/w->kp.showleng))
 #define clktox(clicks) (Disporigx+clktoxraw(clicks)-SHOWXSTART)
 
 #define Disporigy (w->y0+1)

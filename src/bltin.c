@@ -1953,8 +1953,8 @@ wsettrack(Kwind *w,char *trk)
 		clearsym(pe);
 		*dp = phrdatum(newph(1));
 	}
-	w->trk = trk;
-	w->pph = &(dp->u.phr);
+	w->kp.trk = trk;
+	w->kp.pph = &(dp->u.phr);
 }
 
 void
