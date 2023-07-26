@@ -307,86 +307,50 @@ int
 scrollupdate(Kwind *w,int mx,int my)
 {
 	int newtop;
+	int barheight, scrdy;
+	int sbah;
 
 	if ( ! (mx >= w->km.x && mx < w->km.x + w->km.offset) ) {
 		w->inscroll = 0;
 		return 0;
 	}
 
-#define BETTERSCROLLING 1
-
 	/* if we just moved into the scrol bar... */
-#ifdef BETTERSCROLLING
-	if ( 1 ) {
-#else
-	if ( ! w->inscroll ) {
-#endif
-		if ( w->km.choice >= 0 ) {
-			highchoice(w);
-			w->km.choice = M_NOCHOICE;
-		}
-		w->inscroll = 1;
-#ifdef BETTERSCROLLING
-		if ( 1 ) {
-#else
-		if ( *Menujump ) {
-#endif
-			int barheight, scrdy;
-			/* The first time you go into the scroll */
-			/* bar, it attempts to center the scroll bar */
-			/* on the current mouse position. */
-			barheight = (w->km.height*w->km.menusize)/w->km.nitems;
-			scrdy = (w->km.height - barheight)/(w->km.nitems-w->km.menusize);
-#ifdef BETTERSCROLLING
-			if ( scrdy <= 0 ) {
-				newtop = ( my - (w->km.y+w->km.header) - barheight/2);
-				scrdy = (w->km.height - barheight) - w->km.menusize;
-				if (newtop < 0)
-					newtop = 0;
-				newtop = (newtop * (w->km.nitems-w->km.menusize)) / scrdy;
-			} else {
-				newtop = ( my - (w->km.y+w->km.header) - barheight/2) / scrdy;
-			}
-#else
-			if ( scrdy <= 0 )
-				scrdy = 1;
-			newtop = ( my - (w->km.y+w->km.header) - barheight/2) / scrdy;
-#endif
-			newtop = boundit(newtop,0,w->km.nitems-w->km.menusize);
-			if ( newtop != w->km.top ) {
-				w->km.top = newtop;
-				menuconstruct(w,1);
-			}
-		}
-		w->lasty = my;
+	if ( w->km.choice >= 0 ) {
+		highchoice(w);
+		w->km.choice = M_NOCHOICE;
 	}
-	else {
-		int sz, dm, chgtop;
+	w->inscroll = 1;
 
-		sz = (w->km.height/(3*w->km.nitems/2));
-		sz = (w->km.height/w->km.nitems);
-		if ( sz <= 0 )
-			sz = 1;
-		if ( my < ((w->km.y+w->km.header)+(Menuysize/2)) ) {
+	/* scroll bar area height (vertical space scroll bar slides in) */
+	sbah = w->km.height - w->km.header;
+
+	/* The first time you go into the scroll */
+	/* bar, it attempts to center the scroll bar */
+	/* on the current mouse position. */
+	barheight = (sbah*w->km.menusize)/w->km.nitems;
+
+	int scrdy_num = sbah - barheight; /* numerator of scrdy */
+	int scrdy_denom = w->km.nitems-w->km.menusize; /* denomonator of scrdy */
+	scrdy = scrdy_num / scrdy_denom;
+	if ( scrdy <= 0 ) {
+		newtop = my - (w->km.y+w->km.header) - barheight/2;
+		scrdy = (w->km.height - barheight) - w->km.menusize;
+		if ( newtop < 0 ) {
 			newtop = 0;
 		}
-		else if ( my > ((w->km.y+w->km.header)+w->km.height-(Menuysize/2)) ) {
-			newtop = w->km.nitems-w->km.menusize;
-			if ( newtop < 0 )
-				newtop = 0;
-		}
-		else {
-			dm = (my - w->lasty);
-			chgtop = dm / sz;
-			newtop = w->km.top + chgtop;
-			newtop = boundit(newtop,0,w->km.nitems-w->km.menusize);
-		}
-		if ( newtop != w->km.top ) {
-			w->km.top = newtop;
-			menuconstruct(w,1);
-			w->lasty = my;
-		}
+		newtop = ((newtop * (w->km.nitems-w->km.menusize)) * scrdy_denom ) / scrdy_num;
 	}
+	else {
+		newtop = (( my - (w->km.y+w->km.header) - barheight/2) * scrdy_denom ) / scrdy_num;
+	}
+
+	newtop = boundit(newtop,0,w->km.nitems-w->km.menusize);
+	if ( newtop != w->km.top ) {
+		w->km.top = newtop;
+		menuconstruct(w,1);
+	}
+	w->lasty = my;
 	return 1;
 }
 
