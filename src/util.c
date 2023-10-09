@@ -1133,7 +1133,7 @@ newin(void)
 		used++;
 		i = lastin++;
 	}
-	i->inext = NULL;
+	i->iprev = i->inext = NULL;
 	i->code.type = 0;
 	return(i);
 }

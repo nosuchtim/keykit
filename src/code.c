@@ -287,7 +287,8 @@ void
 rminstnode(Instnodep prei,int adjust)
 {
 	Instnodep rmi = nextinode(prei);
-	nextinode(prei) = nextinode(rmi);
+	previnode(nextinode(rmi)) = previnode(rmi);
+	nextinode(previnode(rmi)) = nextinode(rmi);
 	freeinode(rmi);
 	if ( adjust )
 		instnodepatch(rmi,nextinode(prei));
@@ -797,10 +798,13 @@ void
 addinode(Instnodep in)
 {
 	Instnodep last = Lastin[Niseg];
-	if ( last == NULL )
+	if ( last == NULL ) {
 		Iseg[Niseg] = in;
-	else
+	}
+	else {
 		nextinode(last) = in;
+		previnode(in) = last;
+	}
 	nextinode(in) = NULL;
 	Lastin[Niseg] = in;
 }
@@ -888,21 +892,6 @@ bltininst(BLTINCODE f)
 	i.u.bltin = f;
 	i.type = IC_BLTIN;
 	return i;
-}
-
-Instnodep
-previnstnode(register Instnodep ilow,register Instnodep in)
-{
-	register Instnodep nxt;
-
-	while ( ilow != NULL ) {
-		nxt = nextinode(ilow);
-		if ( nxt == in )
-			return(ilow);
-		ilow = nxt;
-	}
-	execerror("Can't find previnstnode!!");
-	return (Instnodep)NULL; /* NOTREACHED*/
 }
 
 Instcode*

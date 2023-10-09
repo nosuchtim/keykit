@@ -34,6 +34,7 @@ bin/savefpp_starrynight
 bin/savefpp_google
 doc/electromusic2005
 bin/key
+bin/key.dbg
 bin/lowkey
 bin/keylib
 byacc/byacc
