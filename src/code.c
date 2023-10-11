@@ -761,6 +761,16 @@ optiseg(Instnodep t)
 				anyopt++;
 				continue;
 			}
+			if ( i2 && i3 && codeis(i3->code,I_NEGATE) ) {
+				if ( *Debuginst )
+					keyerrfile("Optimization F1 at i1=0x%" KEY_PRIxPTR "\n",(KEY_PRIxPTR_TYPE)i1);
+				/* Have "I_CONSTANT; IC_NUM <val>; I_NEGATE".
+				 * Replace with: "I_CONSTANT; IC_NUM <-val>" */
+				i2->code.u.val = -i2->code.u.val;
+				rminstnode(i2,1);
+				anyopt++;
+				continue;
+			}
 			break;
 
 		case I_VARASSIGN:
@@ -769,9 +779,10 @@ optiseg(Instnodep t)
 				if ( *Debuginst )
 					keyerrfile("Optimization C at i1=0x%" KEY_PRIxPTR "\n",(KEY_PRIxPTR_TYPE)i1);
 
-				/* It's a varassign whose result is being ignored, */
-				/* so we get rid of the popignore, and adjust */
-				/* the assign code so that the value isn't pushed. */
+				/* It's a varassign whose result is being
+				 * ignored; get rid of the popignore, and
+				 * adjust the assign code so the value
+				 * isn't pushed. */
 				rminstnode(i2,1);	/* gets rid of i3 */
 				i2->code.u.val |= DONTPUSH;
 				pi = i2;
@@ -789,6 +800,19 @@ optiseg(Instnodep t)
 			anyopt++;
 			continue;
 
+		case I_DBLPUSH:
+			if ( i2 && codeis(i3->code,I_NEGATE) ) {
+				if ( *Debuginst )
+					keyerrfile("Optimization F2 at i1=0x%" KEY_PRIxPTR "\n",(KEY_PRIxPTR_TYPE)i1);
+				/* Have "I_DBLPUSH; IC_DBL <val>; I_NEGATE".
+				 * Replace with: "I_DBLPUSH; IC_DBL <-val>" */
+				i2->code.u.dbl = -i2->code.u.dbl;
+				rminstnode(i2,1);
+				anyopt++;
+				continue;
+			}
+			break;
+			    
 		default:
 			break;
 		}
