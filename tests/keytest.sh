@@ -45,3 +45,6 @@ echo Running ptr test ...
 KEYPATH=../lib ../bin/lowkey ptr.k > ptr.out
 diff ptr.out ptr.sav
 
+echo Running logical test ...
+KEYPATH=../lib ../bin/lowkey logical.k > logical.out
+diff logical.out logical.sav
