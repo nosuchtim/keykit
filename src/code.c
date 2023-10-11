@@ -651,7 +651,8 @@ optiseg(Instnodep t)
 	Symbolp s;
 	int anyopt, pass;
 	int totalopt = 0;
-
+	intptr_t funcidx;
+	
 	if ( t == NULL )
 		return;
 
@@ -675,7 +676,7 @@ optiseg(Instnodep t)
 
 	/* Multiple optimization passes */
 	anyopt = 1;
-	for ( pass=1; pass<3 && anyopt; pass++ ) {
+	for ( pass=1; anyopt; pass++ ) {
 	    anyopt = 0;
 	    if ( *Debuginst )
 		keyerrfile("Pass %d of Optimization\n",pass);
@@ -686,93 +687,112 @@ optiseg(Instnodep t)
 		i4 = i3 ? nextinode(i3) : NULL;
 		i5 = i4 ? nextinode(i4) : NULL;
 
-		if ( codeis(i1->code,I_GVAREVAL)
-			&& i2 && i3 && i4 && i5
-			&& codeis(i3->code,I_LINENUM)
-			&& codeis(i5->code,I_POPIGNORE) ) {
-
-			if ( *Debuginst )
-				keyerrfile("Optimization X at i1=0x%" KEY_PRIxPTR "\n",(KEY_PRIxPTR_TYPE)i1);
-
-			/* A global var is being pushed and then ignored. */
-			/* It's probably a standalone function definition. */
-
-			oldi1 = i1;
-			rminstnode(pi,0);	/* I_GVAREVAL */
-			rminstnode(pi,0);	/* symbol */
-			rminstnode(pi,0);	/* I_LINENUM */
-			rminstnode(pi,0);	/* number */
-			rminstnode(pi,0);	/* I_POPIGNORE */
-			i1 = nextinode(pi);
-
-			instnodepatch(oldi1,i1);
-			anyopt++;
+		if ( i1->code.type != IC_FUNC ) {
+			/* All optimization patterns start with a IC_FUNC;
+			 * if insn not IC_FUNC, skip to next Instnode. */
+			pi = i1;
+			i1 = i2;
 			continue;
 		}
 
-		if ( codeis(i1->code,I_LINENUM)
-			&& i2 && i3 && codeis(i3->code,I_LINENUM) ) {
+		funcidx = (intptr_t)i1->code.u.func;
+		switch(funcidx) {
+		case I_GVAREVAL:
+			if (i2 && i3 && i4 && i5
+			    && codeis(i3->code,I_LINENUM)
+			    && codeis(i5->code,I_POPIGNORE) ) {
 
-			if ( *Debuginst )
-				keyerrfile("Optimization A at i1=0x%" KEY_PRIxPTR "\n",(KEY_PRIxPTR_TYPE)i1);
+				if ( *Debuginst )
+					keyerrfile("Optimization X at i1=0x%" KEY_PRIxPTR "\n",(KEY_PRIxPTR_TYPE)i1);
 
-			/* multiple consecutive I_LINENUMS, delete the first */
-			oldi1 = i1;
-			rminstnode(pi,0);	/* I_LINENUM */
-			rminstnode(pi,0);	/* constant value */
-			i1 = i3;
-			instnodepatch(oldi1,i1);
-			anyopt++;
-			continue;
-		}
+				/* A global var is being pushed and then ignored. */
+				/* It's probably a standalone function definition. */
 
-		if ( codeis(i1->code,I_CONSTANT)
-			&& i2 && i3 && codeis(i3->code,I_POPIGNORE) ) {
+				oldi1 = i1;
+				rminstnode(pi,0);	/* I_GVAREVAL */
+				rminstnode(pi,0);	/* symbol */
+				rminstnode(pi,0);	/* I_LINENUM */
+				rminstnode(pi,0);	/* number */
+				rminstnode(pi,0);	/* I_POPIGNORE */
+				i1 = nextinode(pi);
 
-			if ( *Debuginst )
-				keyerrfile("Optimization B at i1=0x%" KEY_PRIxPTR "\n",(KEY_PRIxPTR_TYPE)i1);
+				instnodepatch(oldi1,i1);
+				anyopt++;
+				continue;
+			}
+			break;
 
-			/* A constant is being pushed and then ignored. */
-			/* It's probably the fakeval/popignore that we */
-			/* insert for statement values. We get rid of all */
-			/* 3 inodes.  We need to save the old value of i1, */
-			/* so we can go back and patch any pointers to it. */
+		case I_LINENUM:
+			if (i2 && i3 && codeis(i3->code,I_LINENUM) ) {
 
-			oldi1 = i1;
-			rminstnode(pi,0);	/* I_CONSTANT */
-			rminstnode(pi,0);	/* constant value */
-			rminstnode(pi,0);	/* popignore */
-			i1 = nextinode(pi);
+				if ( *Debuginst )
+					keyerrfile("Optimization A at i1=0x%" KEY_PRIxPTR "\n",(KEY_PRIxPTR_TYPE)i1);
 
-			instnodepatch(oldi1,i1);
-			anyopt++;
-			continue;
-		}
+				/* multiple consecutive I_LINENUMS, delete the first */
+				oldi1 = i1;
+				rminstnode(pi,0);	/* I_LINENUM */
+				rminstnode(pi,0);	/* constant value */
+				i1 = i3;
+				instnodepatch(oldi1,i1);
+				anyopt++;
+				continue;
+			}
+			break;
 
-		if ( codeis(i1->code,I_VARASSIGN)
-			&& i2 && i3 && codeis(i3->code,I_POPIGNORE) ) {
+		case I_CONSTANT:
+			if (i2 && i3 && codeis(i3->code,I_POPIGNORE) ) {
 
-			if ( *Debuginst )
-				keyerrfile("Optimization C at i1=0x%" KEY_PRIxPTR "\n",(KEY_PRIxPTR_TYPE)i1);
+				if ( *Debuginst )
+					keyerrfile("Optimization B at i1=0x%" KEY_PRIxPTR "\n",(KEY_PRIxPTR_TYPE)i1);
 
-			/* It's a varassign whose result is being ignored, */
-			/* so we get rid of the popignore, and adjust */
-			/* the assign code so that the value isn't pushed. */
-			rminstnode(i2,1);	/* gets rid of i3 */
-			i2->code.u.val |= DONTPUSH;
-			pi = i2;
-			i1 = nextinode(pi);
-			anyopt++;
-			continue;
-		}
-		if ( codeis(i1->code,I_NOOP) ) {
+				/* A constant is being pushed and then ignored. */
+				/* It's probably the fakeval/popignore that we */
+				/* insert for statement values. We get rid of all */
+				/* 3 inodes.  We need to save the old value of i1, */
+				/* so we can go back and patch any pointers to it. */
+
+				oldi1 = i1;
+				rminstnode(pi,0);	/* I_CONSTANT */
+				rminstnode(pi,0);	/* constant value */
+				rminstnode(pi,0);	/* popignore */
+				i1 = nextinode(pi);
+
+				instnodepatch(oldi1,i1);
+				anyopt++;
+				continue;
+			}
+			break;
+
+		case I_VARASSIGN:
+			if (i2 && i3 && codeis(i3->code,I_POPIGNORE) ) {
+
+				if ( *Debuginst )
+					keyerrfile("Optimization C at i1=0x%" KEY_PRIxPTR "\n",(KEY_PRIxPTR_TYPE)i1);
+
+				/* It's a varassign whose result is being ignored, */
+				/* so we get rid of the popignore, and adjust */
+				/* the assign code so that the value isn't pushed. */
+				rminstnode(i2,1);	/* gets rid of i3 */
+				i2->code.u.val |= DONTPUSH;
+				pi = i2;
+				i1 = nextinode(pi);
+				anyopt++;
+				continue;
+			}
+			break;
+
+		case I_NOOP:
 			if ( *Debuginst )
 				keyerrfile("Optimization D at i1=0x%" KEY_PRIxPTR "\n",(KEY_PRIxPTR_TYPE)i1);
 			rminstnode(pi,1);
 			i1 = nextinode(pi);
 			anyopt++;
 			continue;
+
+		default:
+			break;
 		}
+
 		pi=i1;
 		i1=i2;
 	    }
