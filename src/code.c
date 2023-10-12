@@ -258,6 +258,20 @@ instnodebranchupdate(Instnodep insn, Instnodep newtarget)
 	execerror("%s: couldn't find insn 0x%" KEY_PRIxPTR "", __FUNCTION__, (KEY_PRIxPTR_TYPE)insn);
 }
 
+/* Return non-zero if insn is the target of a branch */
+int instnodeisbranchtarget(Instnodep insn)
+{
+	Instnodebranchp ib, ibend;
+
+	ibend = &iblist.arry[iblist.used];
+	for (ib=iblist.arry; ib<ibend; ++ib) {
+		if (ib->target == insn) {
+			return !0;
+		}
+	}
+	return 0;
+}
+
 Codep
 popiseg(void)
 {
@@ -397,6 +411,7 @@ multicodeiseg(Instnodep i)
 	    case I_OR1:
 	    case I_GOTO:
 	    case I_TCONDEVAL:
+	    case I_FCONDEVAL:
 		    /* Should have single IC_INST following */
 		    j = nextinode(i);
 		    if ( j->code.type != IC_INST ) {
@@ -648,6 +663,7 @@ void
 optiseg(Instnodep t)
 {
 	Instnodep i, pi, i1, i2, i3, i4, i5, oldi1;
+	Instnodep l1, l2;
 	Symbolp s;
 	int anyopt, pass;
 	int totalopt = 0;
@@ -813,6 +829,84 @@ optiseg(Instnodep t)
 			}
 			break;
 			    
+		case I_DOSWEEPCONT:
+		case I_SELECT2:
+		case I_SELECT3:
+		case I_TCONDEVAL:
+		case I_FCONDEVAL:
+		case I_GOTO:
+		case I_FORIN1:
+			if ( i2->code.type != IC_INST ) {
+				execerror("0x%" KEY_PRIxPTR ": is not an IC_INST!", (KEY_PRIxPTR_TYPE)i2);
+				Errors++;
+				return;
+			}
+			l1=i2->code.u.in;
+			if ( codeis(l1->code,I_GOTO) ) {
+				if ( *Debuginst )
+					keyerrfile("Optimization G1 at i1=0x%" KEY_PRIxPTR "\n",(KEY_PRIxPTR_TYPE)i1);
+				/* Have IC_INST that points to i_goto Instnode;
+				 * Optimize by having IC_INST point to the
+				 * target of the i_goto */
+				l2 = nextinode(l1)->code.u.in;
+				instnodebranchupdate(i1, l2);
+				i2->code.u.in = l2;
+				anyopt++;
+				continue;
+			}
+			if ( (funcidx == I_TCONDEVAL) || (funcidx == I_FCONDEVAL) ) {
+				/* Is next instruction a goto and instruction
+				 * following that the target of i1? Yes, then
+				 * flip condition and make target that of goto,
+				 * and remove the goto */
+				if ( i3 && codeis(i3->code,I_GOTO)
+				     && !instnodeisbranchtarget(i3) ) {
+					if (i4 && i5 && i5 == l1) {
+						if ( *Debuginst )
+							keyerrfile("Optimization I at i1=0x%" KEY_PRIxPTR "\n",(KEY_PRIxPTR_TYPE)i1);
+						/* Flip the conditional */
+						if ( funcidx == I_TCONDEVAL ) {
+							i1->code.u.func = (BYTEFUNC)I_FCONDEVAL;
+						}
+						else {
+							i1->code.u.func = (BYTEFUNC)I_TCONDEVAL;
+						}
+						/* Set condition target to that of goto */
+						i2->code.u.in = i4->code.u.in;
+						/* Remove goto(and its target) */
+						rminstnode(i2, 0); /* I_GOTO */
+						rminstnode(i2, 0); /* target */
+						continue;
+					}
+				}
+			}
+			break;
+
+		case I_NOT:
+			if ( !instnodeisbranchtarget(i2) ) {
+				/* The insn following i_not (i2) is
+				 * not the target of a branch; is
+				 * it a	conditional branch? If so
+				 * remove the i_not insn and flip
+				 * the conditional */
+				if ( codeis(i2->code,I_TCONDEVAL) ) {
+					if ( *Debuginst )
+						keyerrfile("Optimization H1 at i1=0x%" KEY_PRIxPTR "\n",(KEY_PRIxPTR_TYPE)i1);
+					rminstnode(pi,1);
+					i1 = nextinode(pi);
+					i2->code.u.func = (BYTEFUNC)I_FCONDEVAL;
+					continue;
+				} else if ( codeis(i2->code,I_TCONDEVAL) ) {
+					if ( *Debuginst )
+						keyerrfile("Optimization H2 at i1=0x%" KEY_PRIxPTR "\n",(KEY_PRIxPTR_TYPE)i1);
+					rminstnode(pi,1);
+					i1 = nextinode(pi);
+					i2->code.u.func = (BYTEFUNC)I_TCONDEVAL;
+					continue;
+				}
+			}
+			break;
+
 		default:
 			break;
 		}
