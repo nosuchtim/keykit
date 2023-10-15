@@ -3,29 +3,31 @@ False=0
 
 function test_logical()
 {
+	fail = False;
         if (True) {
 		print("test_logical: pass1");
 	}
 	else {
 		print("test_logical: fail1");
-		return (False);
+		fail = True;
 	}
 
         if (False) {
 		print("test_logical: fail2");
-		return (False);
+		fail = True;
 	}
 	else {
 		print("test_logical: pass2");
 	}
-	return (True);
+	return (fail);
 }
 
 function test_logical_not()
 {
+	fail = False;
         if (!True) {
 		print("test_logical_not: fail1");
-		return (False);
+		fail = True;
 	}
 	else {
 		print("test_logical_not: pass1");
@@ -36,16 +38,17 @@ function test_logical_not()
 	}
 	else {
 		print("test_logical_not: fail2");
-		return (False);
+		fail = True;
 	}
-	return (True);
+	return (fail);
 }
 	
 function test_logical_bin_or()
 {
+	fail = False;
         if (False || False) {
 		print("test_logical_bin_or: fail1");
-		return (False);
+		fail = True;
 	}
 	else {
 		print("test_logical_bin_or: pass1");
@@ -56,7 +59,7 @@ function test_logical_bin_or()
 	}
 	else {
 		print("test_logical_bin_or: fail2");
-		return (False);
+		fail = True;
 	}
 
         if (False || True) {
@@ -64,7 +67,7 @@ function test_logical_bin_or()
 	}
 	else {
 		print("test_logical_bin_or: fail3");
-		return (False);
+		fail = True;
 	}
 
         if (True || True) {
@@ -72,18 +75,19 @@ function test_logical_bin_or()
 	}
 	else {
 		print("test_logical_bin_or: fail4");
-		return (False);
+		fail = True;
 	}
 	
-	return (True);
+	return (fail);
 }
 
 function test_logical_value_bin_or()
 {
+	fail = False;
 	e = False || False;
         if (e) {
 		print("test_logical_value_bin_or: fail1");
-		return (False);
+		fail = True;
 	}
 	else {
 		print("test_logical_value_bin_or: pass1");
@@ -95,7 +99,7 @@ function test_logical_value_bin_or()
 	}
 	else {
 		print("test_logical_value_bin_or: fail2");
-		return (False);
+		fail = True;
 	}
 
 	e = False || True;
@@ -104,7 +108,7 @@ function test_logical_value_bin_or()
 	}
 	else {
 		print("test_logical_value_bin_or: fail3");
-		return (False);
+		fail = True;
 	}
 
 	e = True || True;
@@ -113,17 +117,18 @@ function test_logical_value_bin_or()
 	}
 	else {
 		print("test_logical_value_bin_or: fail4");
-		return (False);
+		fail = True;
 	}
 	
-	return (True);
+	return (fail);
 }
 
 function test_logical_bin_and()
 {
+	fail = False;
         if (False && False) {
 		print("test_logical_bin_and: fail1");
-		return (False);
+		fail = True;
 	}
 	else {
 		print("test_logical_bin_and: pass1");
@@ -131,7 +136,7 @@ function test_logical_bin_and()
 
         if (True && False) {
 		print("test_logical_bin_and: fail2");
-		return (False);
+		fail = True;
 	}
 	else {
 		print("test_logical_bin_and: pass2");
@@ -139,7 +144,7 @@ function test_logical_bin_and()
 
         if (False && True) {
 		print("test_logical_bin_and: fail3");
-		return (False);
+		fail = True;
 	}
 	else {
 		print("test_logical_bin_and: pass3");
@@ -150,18 +155,19 @@ function test_logical_bin_and()
 	}
 	else {
 		print("test_logical_bin_and: fail4");
-		return (False);
+		fail = True;
 	}
 	
-	return (True);
+	return (fail);
 }
 
 function test_logical_value_bin_and()
 {
+	fail = False;
 	e = False && False;
         if (e) {
 		print("test_logical_value_bin_and: fail1");
-		return (False);
+		fail = True;
 	}
 	else {
 		print("test_logical_value_bin_and: pass1");
@@ -170,7 +176,7 @@ function test_logical_value_bin_and()
 	e = True && False;
         if (e) {
 		print("test_logical_value_bin_and: fail2");
-		return (False);
+		fail = True;
 	}
 	else {
 		print("test_logical_value_bin_and: pass2");
@@ -179,7 +185,7 @@ function test_logical_value_bin_and()
 	e = False && True;
         if (e) {
 		print("test_logical_value_bin_and: fail3");
-		return (False);
+		fail = True;
 	}
 	else {
 		print("test_logical_value_bin_and: pass3");
@@ -191,17 +197,18 @@ function test_logical_value_bin_and()
 	}
 	else {
 		print("test_logical_value_bin_and: fail4");
-		return (False);
+		fail = True;
 	}
 	
-	return (True);
+	return (fail);
 }
 
 function test_logical_tri_or()
 {
+	fail = False;
         if (False || (False || False) ) {
 		print("test_logical_tri_or: fail1");
-		return (False);
+		fail = True;
 	}
 	else {
 		print("test_logical_tri_or: pass1");
@@ -212,7 +219,7 @@ function test_logical_tri_or()
 	}
 	else {
 		print("test_logical_tri_or: fail2");
-		return (False);
+		fail = True;
 	}
 
         if (False || (True || False) ) {
@@ -220,7 +227,7 @@ function test_logical_tri_or()
 	}
 	else {
 		print("test_logical_tri_or: fail3");
-		return (False);
+		fail = True;
 	}
 
         if (False || (True || True) ) {
@@ -228,7 +235,7 @@ function test_logical_tri_or()
 	}
 	else {
 		print("test_logical_tri_or: fail4");
-		return (False);
+		fail = True;
 	}
 
         if (True || (False || False) ) {
@@ -236,7 +243,7 @@ function test_logical_tri_or()
 	}
 	else {
 		print("test_logical_tri_or: fail5");
-		return (False);
+		fail = True;
 	}
 
         if (True || (False || True) ) {
@@ -244,7 +251,7 @@ function test_logical_tri_or()
 	}
 	else {
 		print("test_logical_tri_or: fail6");
-		return (False);
+		fail = True;
 	}
 
         if (True || (True || False) ) {
@@ -252,7 +259,7 @@ function test_logical_tri_or()
 	}
 	else {
 		print("test_logical_tri_or: fail7");
-		return (False);
+		fail = True;
 	}
 
         if (True || (True || True) ) {
@@ -260,17 +267,18 @@ function test_logical_tri_or()
 	}
 	else {
 		print("test_logical_tri_or: fail8");
-		return (False);
+		fail = True;
 	}
 
-	return (True);
+	return (fail);
 }
 
 function test_logical_tri_and_1()
 {
+	fail = False;
         if (False && (False && False) ) {
 		print("test_logical_tri_and_1: fail1");
-		return (False);
+		fail = True;
 	}
 	else {
 		print("test_logical_tri_and_1: pass1");
@@ -278,7 +286,7 @@ function test_logical_tri_and_1()
 
         if (False && (False && True) ) {
 		print("test_logical_tri_and_1: fail2");
-		return (False);
+		fail = True;
 	}
 	else {
 		print("test_logical_tri_and_1: pass2");
@@ -286,7 +294,7 @@ function test_logical_tri_and_1()
 
         if (False && (True && False) ) {
 		print("test_logical_tri_and_1: fail3");
-		return (False);
+		fail = True;
 	}
 	else {
 		print("test_logical_tri_and_1: pass3");
@@ -294,7 +302,7 @@ function test_logical_tri_and_1()
 
         if (False && (True && True) ) {
 		print("test_logical_tri_and_1: fail4");
-		return (False);
+		fail = True;
 	}
 	else {
 		print("test_logical_tri_and_1: pass4");
@@ -302,7 +310,7 @@ function test_logical_tri_and_1()
 
         if (True && (False && False) ) {
 		print("test_logical_tri_and_1: fail5");
-		return (False);
+		fail = True;
 	}
 	else {
 		print("test_logical_tri_and_1: pass5");
@@ -310,7 +318,7 @@ function test_logical_tri_and_1()
 
         if (True && (False && True) ) {
 		print("test_logical_tri_and_1: fail6");
-		return (False);
+		fail = True;
 	}
 	else {
 		print("test_logical_tri_and_1: pass6");
@@ -318,7 +326,7 @@ function test_logical_tri_and_1()
 
         if (True && (True && False) ) {
 		print("test_logical_tri_and_1: fail7");
-		return (False);
+		fail = True;
 	}
 	else {
 		print("test_logical_tri_and_1: pass7");
@@ -329,17 +337,18 @@ function test_logical_tri_and_1()
 	}
 	else {
 		print("test_logical_tri_and_1: fail8");
-		return (False);
+		fail = True;
 	}
 
-	return (True);
+	return (fail);
 }
 
 function test_logical_tri_and_2()
 {
+	fail = False;
         if ( (False && False) && False ) {
 		print("test_logical_tri_and_2: fail1");
-		return (False);
+		fail = True;
 	}
 	else {
 		print("test_logical_tri_and_2: pass1");
@@ -347,7 +356,7 @@ function test_logical_tri_and_2()
 
 	if ( (False && False) && True ) {
 		print("test_logical_tri_and_2: fail2");
-		return (False);
+		fail = True;
 	}
 	else {
 		print("test_logical_tri_and_2: pass2");
@@ -355,7 +364,7 @@ function test_logical_tri_and_2()
 
         if ( (False && True) && False ) {
 		print("test_logical_tri_and_2: fail3");
-		return (False);
+		fail = True;
 	}
 	else {
 		print("test_logical_tri_and_2: pass3");
@@ -363,7 +372,7 @@ function test_logical_tri_and_2()
 
         if ( (False && True) && True ) {
 		print("test_logical_tri_and_2: fail4");
-		return (False);
+		fail = True;
 	}
 	else {
 		print("test_logical_tri_and_2: pass4");
@@ -371,7 +380,7 @@ function test_logical_tri_and_2()
 
         if ( (True && False) && False ) {
 		print("test_logical_tri_and_2: fail5");
-		return (False);
+		fail = True;
 	}
 	else {
 		print("test_logical_tri_and_2: pass5");
@@ -379,7 +388,7 @@ function test_logical_tri_and_2()
 
         if ( (True && False) && True ) {
 		print("test_logical_tri_and_2: fail6");
-		return (False);
+		fail = True;
 	}
 	else {
 		print("test_logical_tri_and_2: pass6");
@@ -387,7 +396,7 @@ function test_logical_tri_and_2()
 
         if ( (True && True) && False ) {
 		print("test_logical_tri_and_2: fail7");
-		return (False);
+		fail = True;
 	}
 	else {
 		print("test_logical_tri_and_2: pass7");
@@ -398,25 +407,26 @@ function test_logical_tri_and_2()
 	}
 	else {
 		print("test_logical_tri_and_2: fail8");
-		return (False);
+		fail = True;
 	}
 
-	return (True);
+	return (fail);
 }
 
 function test_logical_bin_not_or()
 {
+	fail = False;
         if ( !(False || False) ) {
 		print("test_logical_bin_not_or: pass1");
 	}
 	else {
 		print("test_logical_bin_not_or: fail1");
-		return (False);
+		fail = True;
 	}
 
         if ( !(True || False) ) {
 		print("test_logical_bin_not_or: fail2");
-		return (False);
+		fail = True;
 	}
 	else {
 		print("test_logical_bin_not_or: pass2");
@@ -424,7 +434,7 @@ function test_logical_bin_not_or()
 
         if ( !(False || True) ) {
 		print("test_logical_bin_not_or: fail3");
-		return (False);
+		fail = True;
 	}
 	else {
 		print("test_logical_bin_not_or: pass3");
@@ -432,30 +442,31 @@ function test_logical_bin_not_or()
 
         if ( !(True || True) ) {
 		print("test_logical_bin_not_or: fail4");
-		return (False);
+		fail = True;
 	}
 	else {
 		print("test_logical_bin_not_or: pass4");
 	}
 	
-	return (True);
+	return (fail);
 }
 
 function test_logical_value_bin_not_or()
 {
+	fail = False;
 	e = !(False || False);
         if (e) {
 		print("test_logical_value_bin_not_or: pass1");
 	}
 	else {
 		print("test_logical_value_bin_not_or: fail1");
-		return (False);
+		fail = True;
 	}
 
 	e = !(True || False);
         if (e) {
 		print("test_logical_value_bin_not_or: fail2");
-		return (False);
+		fail = True;
 	}
 	else {
 		print("test_logical_value_bin_not_or: pass2");
@@ -464,7 +475,7 @@ function test_logical_value_bin_not_or()
 	e = !(False || True);
         if (e) {
 		print("test_logical_value_bin_not_or: fail3");
-		return (False);
+		fail = True;
 	}
 	else {
 		print("test_logical_value_bin_not_or: pass3");
@@ -473,23 +484,24 @@ function test_logical_value_bin_not_or()
 	e = !(True || True);
         if (e) {
 		print("test_logical_value_bin_not_or: fail4");
-		return (False);
+		fail = True;
 	}
 	else {
 		print("test_logical_value_bin_not_or: pass4");
 	}
 	
-	return (True);
+	return (fail);
 }
 
 function test_logical_bin_not_and()
 {
+	fail = False;
         if ( !(False && False) ) {
 		print("test_logical_bin_not_and: pass1");
 	}
 	else {
 		print("test_logical_bin_not_and: fail1");
-		return (False);
+		fail = True;
 	}
 
         if ( !(True && False) ) {
@@ -497,7 +509,7 @@ function test_logical_bin_not_and()
 	}
 	else {
 		print("test_logical_bin_not_and: fail2");
-		return (False);
+		fail = True;
 	}
 
         if ( !(False && True) ) {
@@ -505,29 +517,30 @@ function test_logical_bin_not_and()
 	}
 	else {
 		print("test_logical_bin_not_and: fail3");
-		return (False);
+		fail = True;
 	}
 
         if ( !(True && True) ) {
 		print("test_logical_bin_not_and: fail4");
-		return (False);
+		fail = True;
 	}
 	else {
 		print("test_logical_bin_not_and: pass4");
 	}
 	
-	return (True);
+	return (fail);
 }
 
 function test_logical_value_bin_not_and()
 {
+	fail = False;
 	e = !(False && False);
         if (e) {
 		print("test_logical_value_bin_not_and: pass1");
 	}
 	else {
 		print("test_logical_value_bin_not_and: fail1");
-		return (False);
+		fail = True;
 	}
 
 	e = !(True && False);
@@ -536,7 +549,7 @@ function test_logical_value_bin_not_and()
 	}
 	else {
 		print("test_logical_value_bin_not_and: fail2");
-		return (False);
+		fail = True;
 	}
 
 	e = !(False && True);
@@ -545,29 +558,30 @@ function test_logical_value_bin_not_and()
 	}
 	else {
 		print("test_logical_value_bin_not_and: fail3");
-		return (False);
+		fail = True;
 	}
 
 	e = !(True && True);
         if (e) {
 		print("test_logical_value_bin_not_and: fail4");
-		return (False);
+		fail = True;
 	}
 	else {
 		print("test_logical_value_bin_not_and: pass4");
 	}
 	
-	return (True);
+	return (fail);
 }
 
 function test_logical_bin_or_not_1()
 {
+	fail = False;
         if (False || !False) {
 		print("test_logical_bin_or_not_1: pass1");
 	}
 	else {
 		print("test_logical_bin_or_not_1: pass1");
-		return (False);
+		fail = True;
 	}
 
         if (True || !False) {
@@ -575,12 +589,12 @@ function test_logical_bin_or_not_1()
 	}
 	else {
 		print("test_logical_bin_or_not_1: pass2");
-		return (False);
+		fail = True;
 	}
 
         if (False || !True) {
 		print("test_logical_bin_or_not_1: pass3");
-		return (False);
+		fail = True;
 	}
 	else {
 		print("test_logical_bin_or_not_1: pass3");
@@ -591,21 +605,22 @@ function test_logical_bin_or_not_1()
 	}
 	else {
 		print("test_logical_bin_or_not_1: pass4");
-		return (False);
+		fail = True;
 	}
 	
-	return (True);
+	return (fail);
 }
 
 function test_logical_value_bin_or_not_1()
 {
+	fail = False;
 	e = False || !False;
         if (e) {
 		print("test_logical_value_bin_or_not_1: pass1");
 	}
 	else {
 		print("test_logical_value_bin_or_not_1: pass1");
-		return (False);
+		fail = True;
 	}
 
 	e = True || !False;
@@ -614,13 +629,13 @@ function test_logical_value_bin_or_not_1()
 	}
 	else {
 		print("test_logical_value_bin_or_not_1: pass2");
-		return (False);
+		fail = True;
 	}
 
 	e = False || !True;
         if (e) {
 		print("test_logical_value_bin_or_not_1: pass3");
-		return (False);
+		fail = True;
 	}
 	else {
 		print("test_logical_value_bin_or_not_1: pass3");
@@ -632,25 +647,26 @@ function test_logical_value_bin_or_not_1()
 	}
 	else {
 		print("test_logical_value_bin_or_not_1: pass4");
-		return (False);
+		fail = True;
 	}
 	
-	return (True);
+	return (fail);
 }
 
 function test_logical_bin_or_not_2()
 {
+	fail = False;
         if (!False || False) {
 		print("test_logical_bin_or_not_2: pass1");
 	}
 	else {
 		print("test_logical_bin_or_not_2: fail1");
-		return (False);
+		fail = True;
 	}
 
         if (!True || False) {
 		print("test_logical_bin_or_not_2: fail2");
-		return (False);
+		fail = True;
 	}
 	else {
 		print("test_logical_bin_or_not_2: pass2");
@@ -661,7 +677,7 @@ function test_logical_bin_or_not_2()
 	}
 	else {
 		print("test_logical_bin_or_not_2: fail3");
-		return (False);
+		fail = True;
 	}
 
         if (!True || True) {
@@ -669,27 +685,28 @@ function test_logical_bin_or_not_2()
 	}
 	else {
 		print("test_logical_bin_or_not_2: fail4");
-		return (False);
+		fail = True;
 	}
 	
-	return (True);
+	return (fail);
 }
 
 function test_logical_value_bin_or_not_2()
 {
+	fail = False;
 	e = !False || False;
         if (e) {
 		print("test_logical_value_bin_or_not_2: pass1");
 	}
 	else {
 		print("test_logical_value_bin_or_not_2: fail1");
-		return (False);
+		fail = True;
 	}
 
 	e = !True || False;
         if (e) {
 		print("test_logical_value_bin_or_not_2: fail2");
-		return (False);
+		fail = True;
 	}
 	else {
 		print("test_logical_value_bin_or_not_2: pass2");
@@ -701,7 +718,7 @@ function test_logical_value_bin_or_not_2()
 	}
 	else {
 		print("test_logical_value_bin_or_not_2: fail3");
-		return (False);
+		fail = True;
 	}
 
 	e = !True || True;
@@ -710,17 +727,18 @@ function test_logical_value_bin_or_not_2()
 	}
 	else {
 		print("test_logical_value_bin_or_not_2: fail4");
-		return (False);
+		fail = True;
 	}
 	
-	return (True);
+	return (fail);
 }
 
 function test_logical_bin_and_not_1()
 {
+	fail = False;
         if (False && !False) {
 		print("test_logical_bin_and_not_1: pass1");
-		return (False);
+		fail = True;
 	}
 	else {
 		print("test_logical_bin_and_not_1: pass1");
@@ -731,12 +749,12 @@ function test_logical_bin_and_not_1()
 	}
 	else {
 		print("test_logical_bin_and_not_1: pass2");
-		return (False);
+		fail = True;
 	}
 
         if (False && !True) {
 		print("test_logical_bin_and_not_1: pass3");
-		return (False);
+		fail = True;
 	}
 	else {
 		print("test_logical_bin_and_not_1: pass3");
@@ -744,21 +762,22 @@ function test_logical_bin_and_not_1()
 
         if (True && !True) {
 		print("test_logical_bin_and_not_1: pass4");
-		return (False);
+		fail = True;
 	}
 	else {
 		print("test_logical_bin_and_not_1: pass4");
 	}
 	
-	return (True);
+	return (fail);
 }
 
 function test_logical_value_bin_and_not_1()
 {
+	fail = False;
 	e = False && !False;
         if (e) {
 		print("test_logical_value_bin_and_not_1: pass1");
-		return (False);
+		fail = True;
 	}
 	else {
 		print("test_logical_value_bin_and_not_1: pass1");
@@ -770,13 +789,13 @@ function test_logical_value_bin_and_not_1()
 	}
 	else {
 		print("test_logical_value_bin_and_not_1: pass2");
-		return (False);
+		fail = True;
 	}
 
 	e = False && !True;
         if (e) {
 		print("test_logical_value_bin_and_not_1: pass3");
-		return (False);
+		fail = True;
 	}
 	else {
 		print("test_logical_value_bin_and_not_1: pass3");
@@ -785,20 +804,21 @@ function test_logical_value_bin_and_not_1()
 	e = True && !True;
         if (e) {
 		print("test_logical_value_bin_and_not_1: pass4");
-		return (False);
+		fail = True;
 	}
 	else {
 		print("test_logical_value_bin_and_not_1: pass4");
 	}
 	
-	return (True);
+	return (fail);
 }
 
 function test_logical_bin_and_not_2()
 {
+	fail = False;
         if (!False && False) {
 		print("test_logical_bin_and_not_2: fail1");
-		return (False);
+		fail = True;
 	}
 	else {
 		print("test_logical_bin_and_not_2: pass1");
@@ -806,7 +826,7 @@ function test_logical_bin_and_not_2()
 
         if (!True && False) {
 		print("test_logical_bin_and_not_2: fail2");
-		return (False);
+		fail = True;
 	}
 	else {
 		print("test_logical_bin_and_not_2: pass2");
@@ -817,26 +837,27 @@ function test_logical_bin_and_not_2()
 	}
 	else {
 		print("test_logical_bin_and_not_2: fail3");
-		return (False);
+		fail = True;
 	}
 
         if (!True && True) {
 		print("test_logical_bin_and_not_2: fail4");
-		return (False);
+		fail = True;
 	}
 	else {
 		print("test_logical_bin_and_not_2: pass4");
 	}
 	
-	return (True);
+	return (fail);
 }
 
 function test_logical_value_bin_and_not_2()
 {
+	fail = False;
 	e = !False && False;
         if (e) {
 		print("test_logical_value_bin_and_not_2: fail1");
-		return (False);
+		fail = True;
 	}
 	else {
 		print("test_logical_value_bin_and_not_2: pass1");
@@ -845,7 +866,7 @@ function test_logical_value_bin_and_not_2()
 	e = !True && False;
         if (e) {
 		print("test_logical_value_bin_and_not_2: fail2");
-		return (False);
+		fail = True;
 	}
 	else {
 		print("test_logical_value_bin_and_not_2: pass2");
@@ -857,19 +878,19 @@ function test_logical_value_bin_and_not_2()
 	}
 	else {
 		print("test_logical_value_bin_and_not_2: fail3");
-		return (False);
+		fail = True;
 	}
 
 	e = !True && True;
 	if (e) {
 		print("test_logical_value_bin_and_not_2: fail4");
-		return (False);
+		fail = True;
 	}
 	else {
 		print("test_logical_value_bin_and_not_2: pass4");
 	}
 	
-	return (True);
+	return (fail);
 }
 
 function test_logical_expr()
