@@ -308,6 +308,27 @@ rminstnode(Instnodep prei,int adjust)
 		instnodepatch(rmi,nextinode(prei));
 }
 
+/* Update the instruction at insn to reference newtarget */
+void
+patchinstnodetarget(Instnodep insn, Instnodep newtarget)
+{
+	Instnodebranchp ib, ibend;
+
+	ibend = &iblist.arry[iblist.used];
+	for (ib = iblist.arry; ib<ibend; ++ib) {
+		if ( ib->addr == insn ) {
+			if ( *Debuginst )
+				keyerrfile("Updating insn 0x%" KEY_PRIxPTR "; branch 0x%" KEY_PRIxPTR " => 0x%" KEY_PRIxPTR "\n", (KEY_PRIxPTR_TYPE)ib->addr, (KEY_PRIxPTR_TYPE)ib->target, (KEY_PRIxPTR_TYPE)newtarget);
+			/* Note the Instnodebranch list addr is the start
+			 * of the instruction which has IC_INSN as arg */
+			nextinode(insn)->code.u.in = newtarget;
+			ib->target = newtarget;
+			return;
+		}
+	}
+	keyerrfile("Huh? insn 0x%" KEY_PRIxPTR " isn't found in Instnodebranch list!\n", (KEY_PRIxPTR_TYPE)insn);
+}
+
 void
 instnodepatch(Instnodep oldtarget,Instnodep newtarget)
 {
@@ -841,7 +862,7 @@ optiseg(Instnodep t)
 				Errors++;
 				return;
 			}
-			l1=i2->code.u.in;
+			l1 = i2->code.u.in;
 			if ( codeis(l1->code,I_GOTO) ) {
 				if ( *Debuginst )
 					keyerrfile("Optimization G1 at i1=0x%" KEY_PRIxPTR "\n",(KEY_PRIxPTR_TYPE)i1);
@@ -876,6 +897,7 @@ optiseg(Instnodep t)
 						/* Remove goto(and its target) */
 						rminstnode(i2, 0); /* I_GOTO */
 						rminstnode(i2, 0); /* target */
+						anyopt++;
 						continue;
 					}
 				}
@@ -883,6 +905,10 @@ optiseg(Instnodep t)
 			break;
 
 		case I_NOT:
+			/* Have to be careful:
+			 * If see "L1: i_not; L2: i_[tf]condeval L3", can't invert
+			 * to "L1: L2: i_[ft]condeval L2" since the condiational
+			 * is branched to from another control point _after_ i_not. */
 			if ( !instnodeisbranchtarget(i2) ) {
 				/* The insn following i_not (i2) is
 				 * not the target of a branch; is
@@ -895,6 +921,7 @@ optiseg(Instnodep t)
 					rminstnode(pi,1);
 					i1 = nextinode(pi);
 					i2->code.u.func = (BYTEFUNC)I_FCONDEVAL;
+					anyopt++;
 					continue;
 				} else if ( codeis(i2->code,I_TCONDEVAL) ) {
 					if ( *Debuginst )
@@ -902,6 +929,67 @@ optiseg(Instnodep t)
 					rminstnode(pi,1);
 					i1 = nextinode(pi);
 					i2->code.u.func = (BYTEFUNC)I_TCONDEVAL;
+					anyopt++;
+					continue;
+				}
+			}
+			break;
+
+		case I_AND1:
+			if ( i2 ) {
+				/* If have "I_AND1 L1; ... L1: I_TCONDEVAL L2;"
+				 * can convert to "I_TCONDEVAL L2; ... L1: I_TCONDEVAL L2" */
+				l1 = i2->code.u.in; /* Target of i_and */
+				if ( codeis(l1->code, I_TCONDEVAL) ) {
+					if ( *Debuginst )
+						keyerrfile("Optimization J1 at i1=0x%" KEY_PRIxPTR "\n",(KEY_PRIxPTR_TYPE)i1);
+					l2 = nextinode(l1); /* skip over I_TCONDEVAL */
+					l2 = l2->code.u.in;
+					i1->code.u.func = (BYTEFUNC)I_TCONDEVAL;
+					patchinstnodetarget(i1, l2);
+					anyopt++;
+					continue;
+				}
+				/* If have "I_AND1 L1; ... L1: I_FCONDEVAL L2; L3"
+				 * can convert to "I_TCONDEVAL L3; ... L1: I_FCONDEVAL L2; L3" */
+				if ( codeis(l1->code, I_FCONDEVAL) ) {
+					if ( *Debuginst )
+						keyerrfile("Optimization J4 at i1=0x%" KEY_PRIxPTR "\n",(KEY_PRIxPTR_TYPE)i1);
+					l2 = nextinode(l1); /* skip over I_FCONDEVAL */
+					l2 = nextinode(l2); /* skip over L2 target */
+					i1->code.u.func = (BYTEFUNC)I_TCONDEVAL;
+					patchinstnodetarget(i1, l2);
+					anyopt++;
+					continue;
+				}
+			}
+			break;
+
+		case I_OR1:
+			if ( i2 ) {
+				/* If have "I_OR1 L1; ... L1: I_TCONDEVAL L2; L3"
+				 * can convert to "I_FCONDEVAL L3; ... L1: I_TCONDEVAL L2; L3" */
+				l1 = i2->code.u.in; /* Target of i_or */
+				if ( codeis(l1->code, I_TCONDEVAL) ) {
+					if ( *Debuginst )
+						keyerrfile("Optimization J2 at i1=0x%" KEY_PRIxPTR "\n",(KEY_PRIxPTR_TYPE)i1);
+					l2 = nextinode(l1); /* skip over I_TCONDEVAL */
+					l2 = nextinode(l2); /* skip over L2 target */
+					i1->code.u.func = (BYTEFUNC)I_FCONDEVAL;
+					patchinstnodetarget(i1, l2);
+					anyopt++;
+					continue;
+				}
+				/* If have "I_OR1 L1; ... L1: I_FCONDEVAL L2; L3"
+				 * can convert to "I_FCONDEVAL L2; ... L1: I_FCONDEVAL L2" */
+				if ( codeis(l1->code, I_FCONDEVAL) ) {
+					if ( *Debuginst )
+						keyerrfile("Optimization J3 at i1=0x%" KEY_PRIxPTR "\n",(KEY_PRIxPTR_TYPE)i1);
+					l2 = nextinode(l1); /* skip over I_FCONDEVAL */
+					l2 = l2->code.u.in; /* skip over L2 target */
+					i1->code.u.func = (BYTEFUNC)I_FCONDEVAL;
+					patchinstnodetarget(i1, l2);
+					anyopt++;
 					continue;
 				}
 			}
