@@ -513,7 +513,7 @@ evaluated once.  For example, <font face="Courier">x='c,d,e'; x.pitch += rand(4)
 add the same random value to the pitch of each note.
 An attribute of a single note within
 a phrase can be obtained and set by using the <font face="Courier">%</font> operator.  For
-example, <font face="Courier">x='c,ed12'; x itch=x  itch; print(x)</font> would
+example, <font face="Courier">x='c,ed12'; x%1.pitch=x%2.pitch; print(x)</font> would
 produce <font face="Courier">'e,ed12'</font>.
 <header1 name="Type Conversions" key="types"/>
 <keyword name="conversions"/>
