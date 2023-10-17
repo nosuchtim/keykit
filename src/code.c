@@ -258,6 +258,20 @@ instnodebranchupdate(Instnodep insn, Instnodep newtarget)
 	execerror("%s: couldn't find insn 0x%" KEY_PRIxPTR "", __FUNCTION__, (KEY_PRIxPTR_TYPE)insn);
 }
 
+/* Return non-zero if insn is the target of a branch */
+int instnodeisbranchtarget(Instnodep insn)
+{
+	Instnodebranchp ib, ibend;
+
+	ibend = &iblist.arry[iblist.used];
+	for (ib=iblist.arry; ib<ibend; ++ib) {
+		if (ib->target == insn) {
+			return !0;
+		}
+	}
+	return 0;
+}
+
 Codep
 popiseg(void)
 {
@@ -287,10 +301,32 @@ void
 rminstnode(Instnodep prei,int adjust)
 {
 	Instnodep rmi = nextinode(prei);
-	nextinode(prei) = nextinode(rmi);
+	previnode(nextinode(rmi)) = previnode(rmi);
+	nextinode(previnode(rmi)) = nextinode(rmi);
 	freeinode(rmi);
 	if ( adjust )
 		instnodepatch(rmi,nextinode(prei));
+}
+
+/* Update the instruction at insn to reference newtarget */
+void
+patchinstnodetarget(Instnodep insn, Instnodep newtarget)
+{
+	Instnodebranchp ib, ibend;
+
+	ibend = &iblist.arry[iblist.used];
+	for (ib = iblist.arry; ib<ibend; ++ib) {
+		if ( ib->addr == insn ) {
+			if ( *Debuginst )
+				keyerrfile("Updating insn 0x%" KEY_PRIxPTR "; branch 0x%" KEY_PRIxPTR " => 0x%" KEY_PRIxPTR "\n", (KEY_PRIxPTR_TYPE)ib->addr, (KEY_PRIxPTR_TYPE)ib->target, (KEY_PRIxPTR_TYPE)newtarget);
+			/* Note the Instnodebranch list addr is the start
+			 * of the instruction which has IC_INSN as arg */
+			nextinode(insn)->code.u.in = newtarget;
+			ib->target = newtarget;
+			return;
+		}
+	}
+	keyerrfile("Huh? insn 0x%" KEY_PRIxPTR " isn't found in Instnodebranch list!\n", (KEY_PRIxPTR_TYPE)insn);
 }
 
 void
@@ -396,6 +432,7 @@ multicodeiseg(Instnodep i)
 	    case I_OR1:
 	    case I_GOTO:
 	    case I_TCONDEVAL:
+	    case I_FCONDEVAL:
 		    /* Should have single IC_INST following */
 		    j = nextinode(i);
 		    if ( j->code.type != IC_INST ) {
@@ -647,10 +684,12 @@ void
 optiseg(Instnodep t)
 {
 	Instnodep i, pi, i1, i2, i3, i4, i5, oldi1;
+	Instnodep l1, l2;
 	Symbolp s;
 	int anyopt, pass;
 	int totalopt = 0;
-
+	intptr_t funcidx;
+	
 	if ( t == NULL )
 		return;
 
@@ -674,7 +713,7 @@ optiseg(Instnodep t)
 
 	/* Multiple optimization passes */
 	anyopt = 1;
-	for ( pass=1; pass<3 && anyopt; pass++ ) {
+	for ( pass=1; anyopt; pass++ ) {
 	    anyopt = 0;
 	    if ( *Debuginst )
 		keyerrfile("Pass %d of Optimization\n",pass);
@@ -685,93 +724,281 @@ optiseg(Instnodep t)
 		i4 = i3 ? nextinode(i3) : NULL;
 		i5 = i4 ? nextinode(i4) : NULL;
 
-		if ( codeis(i1->code,I_GVAREVAL)
-			&& i2 && i3 && i4 && i5
-			&& codeis(i3->code,I_LINENUM)
-			&& codeis(i5->code,I_POPIGNORE) ) {
-
-			if ( *Debuginst )
-				keyerrfile("Optimization X at i1=0x%" KEY_PRIxPTR "\n",(KEY_PRIxPTR_TYPE)i1);
-
-			/* A global var is being pushed and then ignored. */
-			/* It's probably a standalone function definition. */
-
-			oldi1 = i1;
-			rminstnode(pi,0);	/* I_GVAREVAL */
-			rminstnode(pi,0);	/* symbol */
-			rminstnode(pi,0);	/* I_LINENUM */
-			rminstnode(pi,0);	/* number */
-			rminstnode(pi,0);	/* I_POPIGNORE */
-			i1 = nextinode(pi);
-
-			instnodepatch(oldi1,i1);
-			anyopt++;
+		if ( i1->code.type != IC_FUNC ) {
+			/* All optimization patterns start with a IC_FUNC;
+			 * if insn not IC_FUNC, skip to next Instnode. */
+			pi = i1;
+			i1 = i2;
 			continue;
 		}
 
-		if ( codeis(i1->code,I_LINENUM)
-			&& i2 && i3 && codeis(i3->code,I_LINENUM) ) {
+		funcidx = (intptr_t)i1->code.u.func;
+		switch(funcidx) {
+		case I_GVAREVAL:
+			if (i2 && i3 && i4 && i5
+			    && codeis(i3->code,I_LINENUM)
+			    && codeis(i5->code,I_POPIGNORE) ) {
 
-			if ( *Debuginst )
-				keyerrfile("Optimization A at i1=0x%" KEY_PRIxPTR "\n",(KEY_PRIxPTR_TYPE)i1);
+				if ( *Debuginst )
+					keyerrfile("Optimization X at i1=0x%" KEY_PRIxPTR "\n",(KEY_PRIxPTR_TYPE)i1);
 
-			/* multiple consecutive I_LINENUMS, delete the first */
-			oldi1 = i1;
-			rminstnode(pi,0);	/* I_LINENUM */
-			rminstnode(pi,0);	/* constant value */
-			i1 = i3;
-			instnodepatch(oldi1,i1);
-			anyopt++;
-			continue;
-		}
+				/* A global var is being pushed and then ignored. */
+				/* It's probably a standalone function definition. */
 
-		if ( codeis(i1->code,I_CONSTANT)
-			&& i2 && i3 && codeis(i3->code,I_POPIGNORE) ) {
+				oldi1 = i1;
+				rminstnode(pi,0);	/* I_GVAREVAL */
+				rminstnode(pi,0);	/* symbol */
+				rminstnode(pi,0);	/* I_LINENUM */
+				rminstnode(pi,0);	/* number */
+				rminstnode(pi,0);	/* I_POPIGNORE */
+				i1 = nextinode(pi);
 
-			if ( *Debuginst )
-				keyerrfile("Optimization B at i1=0x%" KEY_PRIxPTR "\n",(KEY_PRIxPTR_TYPE)i1);
+				instnodepatch(oldi1,i1);
+				anyopt++;
+				continue;
+			}
+			break;
 
-			/* A constant is being pushed and then ignored. */
-			/* It's probably the fakeval/popignore that we */
-			/* insert for statement values. We get rid of all */
-			/* 3 inodes.  We need to save the old value of i1, */
-			/* so we can go back and patch any pointers to it. */
+		case I_LINENUM:
+			if (i2 && i3 && codeis(i3->code,I_LINENUM) ) {
 
-			oldi1 = i1;
-			rminstnode(pi,0);	/* I_CONSTANT */
-			rminstnode(pi,0);	/* constant value */
-			rminstnode(pi,0);	/* popignore */
-			i1 = nextinode(pi);
+				if ( *Debuginst )
+					keyerrfile("Optimization A at i1=0x%" KEY_PRIxPTR "\n",(KEY_PRIxPTR_TYPE)i1);
 
-			instnodepatch(oldi1,i1);
-			anyopt++;
-			continue;
-		}
+				/* multiple consecutive I_LINENUMS, delete the first */
+				oldi1 = i1;
+				rminstnode(pi,0);	/* I_LINENUM */
+				rminstnode(pi,0);	/* constant value */
+				i1 = i3;
+				instnodepatch(oldi1,i1);
+				anyopt++;
+				continue;
+			}
+			break;
 
-		if ( codeis(i1->code,I_VARASSIGN)
-			&& i2 && i3 && codeis(i3->code,I_POPIGNORE) ) {
+		case I_CONSTANT:
+			if (i2 && i3 && codeis(i3->code,I_POPIGNORE) ) {
 
-			if ( *Debuginst )
-				keyerrfile("Optimization C at i1=0x%" KEY_PRIxPTR "\n",(KEY_PRIxPTR_TYPE)i1);
+				if ( *Debuginst )
+					keyerrfile("Optimization B at i1=0x%" KEY_PRIxPTR "\n",(KEY_PRIxPTR_TYPE)i1);
 
-			/* It's a varassign whose result is being ignored, */
-			/* so we get rid of the popignore, and adjust */
-			/* the assign code so that the value isn't pushed. */
-			rminstnode(i2,1);	/* gets rid of i3 */
-			i2->code.u.val |= DONTPUSH;
-			pi = i2;
-			i1 = nextinode(pi);
-			anyopt++;
-			continue;
-		}
-		if ( codeis(i1->code,I_NOOP) ) {
+				/* A constant is being pushed and then ignored. */
+				/* It's probably the fakeval/popignore that we */
+				/* insert for statement values. We get rid of all */
+				/* 3 inodes.  We need to save the old value of i1, */
+				/* so we can go back and patch any pointers to it. */
+
+				oldi1 = i1;
+				rminstnode(pi,0);	/* I_CONSTANT */
+				rminstnode(pi,0);	/* constant value */
+				rminstnode(pi,0);	/* popignore */
+				i1 = nextinode(pi);
+
+				instnodepatch(oldi1,i1);
+				anyopt++;
+				continue;
+			}
+			if ( i2 && i3 && codeis(i3->code,I_NEGATE) ) {
+				if ( *Debuginst )
+					keyerrfile("Optimization F1 at i1=0x%" KEY_PRIxPTR "\n",(KEY_PRIxPTR_TYPE)i1);
+				/* Have "I_CONSTANT; IC_NUM <val>; I_NEGATE".
+				 * Replace with: "I_CONSTANT; IC_NUM <-val>" */
+				i2->code.u.val = -i2->code.u.val;
+				rminstnode(i2,1);
+				anyopt++;
+				continue;
+			}
+			break;
+
+		case I_VARASSIGN:
+			if (i2 && i3 && codeis(i3->code,I_POPIGNORE) ) {
+
+				if ( *Debuginst )
+					keyerrfile("Optimization C at i1=0x%" KEY_PRIxPTR "\n",(KEY_PRIxPTR_TYPE)i1);
+
+				/* It's a varassign whose result is being
+				 * ignored; get rid of the popignore, and
+				 * adjust the assign code so the value
+				 * isn't pushed. */
+				rminstnode(i2,1);	/* gets rid of i3 */
+				i2->code.u.val |= DONTPUSH;
+				pi = i2;
+				i1 = nextinode(pi);
+				anyopt++;
+				continue;
+			}
+			break;
+
+		case I_NOOP:
 			if ( *Debuginst )
 				keyerrfile("Optimization D at i1=0x%" KEY_PRIxPTR "\n",(KEY_PRIxPTR_TYPE)i1);
 			rminstnode(pi,1);
 			i1 = nextinode(pi);
 			anyopt++;
 			continue;
+
+		case I_DBLPUSH:
+			if ( i2 && codeis(i3->code,I_NEGATE) ) {
+				if ( *Debuginst )
+					keyerrfile("Optimization F2 at i1=0x%" KEY_PRIxPTR "\n",(KEY_PRIxPTR_TYPE)i1);
+				/* Have "I_DBLPUSH; IC_DBL <val>; I_NEGATE".
+				 * Replace with: "I_DBLPUSH; IC_DBL <-val>" */
+				i2->code.u.dbl = -i2->code.u.dbl;
+				rminstnode(i2,1);
+				anyopt++;
+				continue;
+			}
+			break;
+			    
+		case I_DOSWEEPCONT:
+		case I_SELECT2:
+		case I_SELECT3:
+		case I_TCONDEVAL:
+		case I_FCONDEVAL:
+		case I_GOTO:
+		case I_FORIN1:
+			if ( i2->code.type != IC_INST ) {
+				execerror("0x%" KEY_PRIxPTR ": is not an IC_INST!", (KEY_PRIxPTR_TYPE)i2);
+				Errors++;
+				return;
+			}
+			l1 = i2->code.u.in;
+			if ( codeis(l1->code,I_GOTO) ) {
+				if ( *Debuginst )
+					keyerrfile("Optimization G1 at i1=0x%" KEY_PRIxPTR "\n",(KEY_PRIxPTR_TYPE)i1);
+				/* Have IC_INST that points to i_goto Instnode;
+				 * Optimize by having IC_INST point to the
+				 * target of the i_goto */
+				l2 = nextinode(l1)->code.u.in;
+				instnodebranchupdate(i1, l2);
+				i2->code.u.in = l2;
+				anyopt++;
+				continue;
+			}
+			if ( (funcidx == I_TCONDEVAL) || (funcidx == I_FCONDEVAL) ) {
+				/* Is next instruction a goto and instruction
+				 * following that the target of i1? Yes, then
+				 * flip condition and make target that of goto,
+				 * and remove the goto */
+				if ( i3 && codeis(i3->code,I_GOTO)
+				     && !instnodeisbranchtarget(i3) ) {
+					if (i4 && i5 && i5 == l1) {
+						if ( *Debuginst )
+							keyerrfile("Optimization I at i1=0x%" KEY_PRIxPTR "\n",(KEY_PRIxPTR_TYPE)i1);
+						/* Flip the conditional */
+						if ( funcidx == I_TCONDEVAL ) {
+							i1->code.u.func = (BYTEFUNC)I_FCONDEVAL;
+						}
+						else {
+							i1->code.u.func = (BYTEFUNC)I_TCONDEVAL;
+						}
+						/* Set condition target to that of goto */
+						i2->code.u.in = i4->code.u.in;
+						/* Remove goto(and its target) */
+						rminstnode(i2, 0); /* I_GOTO */
+						rminstnode(i2, 0); /* target */
+						anyopt++;
+						continue;
+					}
+				}
+			}
+			break;
+
+		case I_NOT:
+			/* Have to be careful:
+			 * If see "L1: i_not; L2: i_[tf]condeval L3", can't invert
+			 * to "L1: L2: i_[ft]condeval L2" since the condiational
+			 * is branched to from another control point _after_ i_not. */
+			if ( !instnodeisbranchtarget(i2) ) {
+				/* The insn following i_not (i2) is
+				 * not the target of a branch; is
+				 * it a	conditional branch? If so
+				 * remove the i_not insn and flip
+				 * the conditional */
+				if ( codeis(i2->code,I_TCONDEVAL) ) {
+					if ( *Debuginst )
+						keyerrfile("Optimization H1 at i1=0x%" KEY_PRIxPTR "\n",(KEY_PRIxPTR_TYPE)i1);
+					rminstnode(pi,1);
+					i1 = nextinode(pi);
+					i2->code.u.func = (BYTEFUNC)I_FCONDEVAL;
+					anyopt++;
+					continue;
+				} else if ( codeis(i2->code,I_TCONDEVAL) ) {
+					if ( *Debuginst )
+						keyerrfile("Optimization H2 at i1=0x%" KEY_PRIxPTR "\n",(KEY_PRIxPTR_TYPE)i1);
+					rminstnode(pi,1);
+					i1 = nextinode(pi);
+					i2->code.u.func = (BYTEFUNC)I_TCONDEVAL;
+					anyopt++;
+					continue;
+				}
+			}
+			break;
+
+		case I_AND1:
+			if ( i2 ) {
+				/* If have "I_AND1 L1; ... L1: I_TCONDEVAL L2;"
+				 * can convert to "I_TCONDEVAL L2; ... L1: I_TCONDEVAL L2" */
+				l1 = i2->code.u.in; /* Target of i_and */
+				if ( codeis(l1->code, I_TCONDEVAL) ) {
+					if ( *Debuginst )
+						keyerrfile("Optimization J1 at i1=0x%" KEY_PRIxPTR "\n",(KEY_PRIxPTR_TYPE)i1);
+					l2 = nextinode(l1); /* skip over I_TCONDEVAL */
+					l2 = l2->code.u.in;
+					i1->code.u.func = (BYTEFUNC)I_TCONDEVAL;
+					patchinstnodetarget(i1, l2);
+					anyopt++;
+					continue;
+				}
+				/* If have "I_AND1 L1; ... L1: I_FCONDEVAL L2; L3"
+				 * can convert to "I_TCONDEVAL L3; ... L1: I_FCONDEVAL L2; L3" */
+				if ( codeis(l1->code, I_FCONDEVAL) ) {
+					if ( *Debuginst )
+						keyerrfile("Optimization J4 at i1=0x%" KEY_PRIxPTR "\n",(KEY_PRIxPTR_TYPE)i1);
+					l2 = nextinode(l1); /* skip over I_FCONDEVAL */
+					l2 = nextinode(l2); /* skip over L2 target */
+					i1->code.u.func = (BYTEFUNC)I_TCONDEVAL;
+					patchinstnodetarget(i1, l2);
+					anyopt++;
+					continue;
+				}
+			}
+			break;
+
+		case I_OR1:
+			if ( i2 ) {
+				/* If have "I_OR1 L1; ... L1: I_TCONDEVAL L2; L3"
+				 * can convert to "I_FCONDEVAL L3; ... L1: I_TCONDEVAL L2; L3" */
+				l1 = i2->code.u.in; /* Target of i_or */
+				if ( codeis(l1->code, I_TCONDEVAL) ) {
+					if ( *Debuginst )
+						keyerrfile("Optimization J2 at i1=0x%" KEY_PRIxPTR "\n",(KEY_PRIxPTR_TYPE)i1);
+					l2 = nextinode(l1); /* skip over I_TCONDEVAL */
+					l2 = nextinode(l2); /* skip over L2 target */
+					i1->code.u.func = (BYTEFUNC)I_FCONDEVAL;
+					patchinstnodetarget(i1, l2);
+					anyopt++;
+					continue;
+				}
+				/* If have "I_OR1 L1; ... L1: I_FCONDEVAL L2; L3"
+				 * can convert to "I_FCONDEVAL L2; ... L1: I_FCONDEVAL L2" */
+				if ( codeis(l1->code, I_FCONDEVAL) ) {
+					if ( *Debuginst )
+						keyerrfile("Optimization J3 at i1=0x%" KEY_PRIxPTR "\n",(KEY_PRIxPTR_TYPE)i1);
+					l2 = nextinode(l1); /* skip over I_FCONDEVAL */
+					l2 = l2->code.u.in; /* skip over L2 target */
+					i1->code.u.func = (BYTEFUNC)I_FCONDEVAL;
+					patchinstnodetarget(i1, l2);
+					anyopt++;
+					continue;
+				}
+			}
+			break;
+
+		default:
+			break;
 		}
+
 		pi=i1;
 		i1=i2;
 	    }
@@ -797,10 +1024,13 @@ void
 addinode(Instnodep in)
 {
 	Instnodep last = Lastin[Niseg];
-	if ( last == NULL )
+	if ( last == NULL ) {
 		Iseg[Niseg] = in;
-	else
+	}
+	else {
 		nextinode(last) = in;
+		previnode(in) = last;
+	}
 	nextinode(in) = NULL;
 	Lastin[Niseg] = in;
 }
@@ -888,21 +1118,6 @@ bltininst(BLTINCODE f)
 	i.u.bltin = f;
 	i.type = IC_BLTIN;
 	return i;
-}
-
-Instnodep
-previnstnode(register Instnodep ilow,register Instnodep in)
-{
-	register Instnodep nxt;
-
-	while ( ilow != NULL ) {
-		nxt = nextinode(ilow);
-		if ( nxt == in )
-			return(ilow);
-		ilow = nxt;
-	}
-	execerror("Can't find previnstnode!!");
-	return (Instnodep)NULL; /* NOTREACHED*/
 }
 
 Instcode*

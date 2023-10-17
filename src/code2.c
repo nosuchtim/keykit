@@ -988,13 +988,13 @@ recodeassign(Instnodep varinode,Instnodep eqinode)
 	Instcode cd;
 
 	eqtype = (int) (eqinode->code.u.val);
-	in = previnstnode(varinode,eqinode);
+	in = previnode(eqinode);
 
 	/* Look backwards from the 'eqcode' for a 'dot' instruction, */
 	/* indicating that the assignment is to a ".vol", ".length", or */
 	/* other 'dot' expression. */
 
-	prein = previnstnode(varinode,in);
+	prein = previnode(in);
 
 	/* For object variable assignments... */
 	if ( in != varinode && codeis(in->code,I_OBJVAREVAL) ) {
@@ -1011,15 +1011,15 @@ recodeassign(Instnodep varinode,Instnodep eqinode)
 		/* wipe out the code for original dot type */
 		/* and the original 'dot' code */
 		in->code = funcinst(I_NOOP);
-		in = previnstnode(varinode,in);
+		in = previnode(in);
 		in->code = funcinst(I_NOOP);
-		in = previnstnode(varinode,in);
+		in = previnode(in);
 	}
 	if ( codeis(in->code,I_MODULO) ) {
 		ismod++;
 		/* wipe out original modulo code */
 		in->code = funcinst(I_NOOP);
-		in = previnstnode(varinode,in);
+		in = previnode(in);
 	}
 
 	cd = varinode->code;
@@ -1060,7 +1060,7 @@ recodeassign(Instnodep varinode,Instnodep eqinode)
 		}
 	}
 
-	for ( tin=eqinode; tin!=varinode; tin=previnstnode(varinode,tin) ) {
+	for ( tin=eqinode; tin!=varinode; tin=previnode(tin) ) {
 		if ( codeis(tin->code,I_ARREND) ) {
 			tin->code = funcinst(I_ARRAYPUSH);
 			isarr++;
@@ -1119,7 +1119,7 @@ recodedelete(Instnodep exprinode,Instnodep lastinode)
 {
 	Instnodep in;
 
-	for ( in=lastinode; in!=exprinode; in=previnstnode(exprinode,in) ) {
+	for ( in=lastinode; in!=exprinode; in=previnode(in) ) {
 		if ( codeis(in->code,I_ARREND) ) {
 			in->code = funcinst(I_NOOP);
 			lastinode->code = funcinst(I_DELETEARRITEM);

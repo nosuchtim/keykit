@@ -1127,6 +1127,7 @@
 #library players.k loopplayer
 #library players.k looprequestplayer
 #library players.k plexplayer
+#library print.k print
 #library procs.k mkmenu_ornament1
 #library procs.k mkmenu_ptool_ornament
 #library procs.k proc_list
@@ -1522,7 +1523,6 @@
 #library util1.k numquant
 #library util1.k oneovrf
 #library util1.k prevquant
-#library util1.k print
 #library util1.k querycontrol
 #library util1.k queryprogram
 #library util1.k readedit
