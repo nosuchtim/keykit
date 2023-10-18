@@ -429,6 +429,14 @@ mdep_mdep(int argc)
 		}
 		
 	}
+	else if ( strcmp(args[0], "clipboard") == 0 ) {
+		if (strcmp(args[1], "support") == 0 ) {
+			d = Noval;
+		}
+		else {
+			eprint("Error: unrecognized mdep clipboard argument - %s\n", args[1]);
+		}
+	}
 	else {
 		/* unrecognized command */
 	}

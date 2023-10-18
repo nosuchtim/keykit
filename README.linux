@@ -7,6 +7,7 @@ To compile, make sure you have these packages installed:
 	sudo apt install libghc-x11-dev
 	sudo apt install make
 	sudo apt install zip
+        sudo apt install xclip # to access X clipboard for copy/paste
 
 then:
 

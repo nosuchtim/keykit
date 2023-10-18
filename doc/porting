@@ -364,6 +364,14 @@ Datum mdep_mdep(int argc)
 	mdep("midi","output","close")	# closes the current MIDI output device
 	mdep("midi","output","open",N)	# opens MIDI output device #N
 
+	For Linux, the implementaiton of mdep_mdep() allows
+        you to use the following statements within KeyKit code:
+
+        mdep("clipboard","support")     # returns "yes" if clipboard supported
+        mdep("cliboard","get")		# snaps current OS selection content and causes it to appear as if from keyboard
+        mdep("cliboard","set",<str>)    # sets OS selection content to content of <str>
+        mdep("clipboard","inject",<str>) # injects <str> into console buffer
+
 	If you don't want any machine-dependent capabilies, just
 	have mdep_mdep() return the value Noval.
 

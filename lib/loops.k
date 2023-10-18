@@ -54,7 +54,7 @@ function interploop(interpfifoin,cons) {
 			prompt = "!"+string(Histindex)+pm+"> "
 		else
 			prompt = "key"+pm+"> "
-		if ( Inputistty ) {
+		if ( Inputistty && !Inputisclipboard ) {
 			cons.printf("%s",prompt)
 		}
 

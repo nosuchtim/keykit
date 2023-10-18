@@ -961,7 +961,24 @@ yylex()
 		goto getout;
 	}
 	switch(c) {
-	case '\n': retval = '\n'; break;
+	case '\r':
+		/* Convert '\r\n' to '\n' */
+		c = yyinput();
+		if ( c != '\n' ) {
+			yyunget(c);
+			/* Fall through to convert naked '\r' to '\n' */
+		}
+		retval = '\n';
+		break;
+
+	case '\n':
+		/* Convert '\n\r' to '\n' */
+		c = yyinput();
+		if ( c != '\r' ) {
+			yyunget(c);
+		}
+		retval = '\n'; break;
+		
 	case '?':  retval = follow('?', QMARK2, '?'); break;
 	case '=':  retval = follow('=', EQ, '='); break;
 	case '+':  retval = follo2('=', PLUSEQ, '+', INC, '+'); break;

@@ -93,6 +93,13 @@ static fd_set ExceptFdsInit;
 
 Symlongp Cursereverse, Privatemap, Sharedmap, Forkoff, Nobrowsefiles;
 
+struct Clipboard {
+	long size;	/* size of buf buffer */
+	long used;	/* how much of buf holds data */
+	long offset;	/* where next character to read is in buf */
+	char *buf;
+};
+
 typedef struct Point {
 	short	x;
 	short	y;
@@ -113,6 +120,8 @@ typedef const char *Bitstype;
 #else
 typedef unsigned char *Bitstype;
 #endif
+
+static struct Clipboard clipboard;
 
 /*
  * Function Codes
@@ -240,18 +249,183 @@ millisleep(int n)
 }
 #endif
 
+static void
+empty_clipboard(void)
+{
+	clipboard.used = clipboard.offset = 0;
+}
+
+int
+clipboardisempty(void)
+{
+	return ( clipboard.offset >= clipboard.used );
+}
+
+int
+clipboardgetchar(void)
+{
+	int ch;
+	if ( clipboard.offset >= clipboard.size ) {
+		empty_clipboard();
+		return -1;
+	}
+	ch = clipboard.buf[clipboard.offset++];
+	if ( clipboard.offset == clipboard.size ) {
+		/* This character is last from clipboard; clear
+		 * Inputisclipboard so loops.k can display the prompt
+		 * (assuming last character of clipboard is a newline) */
+		*Inputisclipboard = 0;
+	}
+	return ch;
+}
+
 static int
 kbdchar(void)
 {
 	int i;
 
-	if(!kbdbuf.cnt)
+	if ( !clipboardisempty() ) {
+		/* Get character from non-empty clipboard */
+		i = clipboardgetchar();
+	}
+	else if ( kbdbuf.cnt ) {
+		/* Get character from non-empty console */
+		i = *kbdbuf.out++;
+		if(kbdbuf.out == &kbdbuf.buf[kbdbuf.size])
+			kbdbuf.out = kbdbuf.buf;
+		kbdbuf.cnt--;
+	}
+	else {
+		/* No key or character in clipboard */
 		return -1;
-	i = *kbdbuf.out++;
-	if(kbdbuf.out == &kbdbuf.buf[kbdbuf.size])
-		kbdbuf.out = kbdbuf.buf;
-	kbdbuf.cnt--;
+	}
 	return(i);
+}
+
+static int
+mdep_injectconsole(char *str)
+{
+	unsigned int len;
+
+	empty_clipboard();
+	len = strlen(str);
+
+	if ( clipboard.size < len )
+	{
+		char *p = realloc(clipboard.buf, len);
+		if ( p == NULL ) {
+			eprint("Failed to allocate %d bytes for clipboard\n", len);
+			return -1;
+		}
+		clipboard.buf = p;
+		clipboard.size = len;
+	}
+	memcpy(clipboard.buf, str, len);
+	clipboard.used = len;
+	clipboard.offset = 0;
+	if ( clipboard.used != 0 ) {
+		/* Start of reading from clipboard; set Inputisclipboard
+		 * to non-zero so loops.k will suppress printing prompt
+		 * while consuming the clipboard */
+		*Inputisclipboard = 1;
+	}
+	return 0;
+}
+
+static char *
+mdep_getclipboard(void)
+{
+	char command[] = "xclip -o";
+	const int chunk_size = 64;
+	FILE *fp;
+	int cnt;
+	char *buf = NULL;
+	int buf_size = 0;
+	int buf_offset = 0;
+	
+	/* Open xclip pipe and slurp in content of clipboard */
+	fp = popen(command, "r");
+	if ( fp == NULL ) {
+		eprint("Failed to open xclip pipe; %s", strerror(errno));
+		return NULL;
+	}
+
+	buf_offset = 0; /* Use offset to track data added to clipboard */
+	while ( feof(fp) == 0 ) {
+		if ( (buf_size - buf_offset) < chunk_size ) {
+			void *new_buf;
+			buf_size += chunk_size;
+			new_buf = realloc(buf, buf_size+1);
+			if ( new_buf == NULL ) {
+				eprint("Failed to increase clipboard size to %d bytes", buf_size);
+				if ( buf != NULL ) {
+					free(buf);
+				}
+				pclose(fp);
+				return NULL;
+			}
+			buf = new_buf;
+		}
+		cnt = fread(&buf[buf_offset], 1, buf_size - buf_offset - 1, fp);
+		if ( cnt < 0 ) {
+			eprint("Failed to read from xclip; %s", strerror(errno));
+			pclose(fp);
+			free(buf);
+			return NULL;
+		}
+		buf_offset += cnt;
+	}
+	pclose(fp);
+	
+	/* Reset size to what was actually read, clean offset
+	 * for kbdchar() to slurp out content */
+	if ( buf_size == 0 ) {
+		return NULL;
+	}
+	else {
+		buf[buf_offset] = '\0';
+		return buf;
+	}
+	return 0;
+}
+
+static int
+mdep_setclipboard(char *text)
+{
+	char command[] = "xclip -i";
+	FILE *fp;
+	int offset, size, nwrite;
+	int cnt;
+
+	size = strlen(text);
+	if ( size == 0 ) {
+		return -1;
+	}
+
+	/* Open xclip pipe and pump the content of clipboard to it */
+	fp = popen(command, "w");
+	if (fp == NULL) {
+		eprint("Failed to open xclip pipe; %s", strerror(errno));
+		return -1;
+	}
+
+	offset = 0;
+	while ( offset < size ) {
+		nwrite = size - offset;
+		if ( nwrite > BUFSIZ ) {
+			nwrite = BUFSIZ;
+		}
+		cnt = fwrite(&text[offset], 1, nwrite, fp);
+		if (cnt < 0) {
+			eprint("Failed to write to xclip; %s", strerror(errno));
+			pclose(fp);
+			return -1;
+		}
+		offset += cnt;
+	}
+	pclose(fp);
+
+	return 0;
 }
 
 static int
@@ -448,6 +622,11 @@ mdep_statconsole(void)
 	int n;
 
 	if ( Nextchar!=NOCHAR ) {
+		return 1;
+	}
+
+	if ( !clipboardisempty() ) {
+		/* data is on the clipboard */
 		return 1;
 	}
 
@@ -823,6 +1002,11 @@ mdep_waitfor(int tmout)
 	ReadFds = ReadFdsInit;
 	ExceptFds = ExceptFdsInit;
 
+	/* If data on the clipboard to read, don't wait */
+	if ( clipboard.offset != clipboard.size ) {
+		return K_CONSOLE;
+	}
+	
 	if(Midifd > MaxFdUsed) {
 		MaxFdUsed = Midifd;
 	}
@@ -1293,6 +1477,8 @@ mdep_startgraphics(int argc,char **argv)
 			*p = *p - 'A' + 'a';
 	}
 	installstr("Hostname",myname);
+
+	empty_clipboard();
 
 	initfds();
 
@@ -2101,17 +2287,49 @@ mdep_mdep(int argc)
 	for ( ; n<3; n++ )
 		args[n] = "";
 
-	/* Only handle mdep("env"...) commands (for now) */
 	if ( strcmp(args[0],"env") == 0 ) {
 		if ( strcmp(args[1], "get")==0 ) {
 			char *s = getenv(args[2]);
 			if ( s != NULL ) {
 				d = strdatum(uniqstr(s));
-			} else {
+			}
+			else {
 				d = strdatum(Nullstr);
 			}
 		} else {
 			execerror("mdep(\"env\",... ) doesn't recognize %s\n",args[1]);
+		}
+	}
+	else if ( strcmp(args[0], "clipboard") == 0 ) {
+		if (strcmp(args[1], "get") == 0 ) {
+			char *s = mdep_getclipboard();
+			if ( s != NULL ) {
+				/* Return clipboard content as a string */
+				d = strdatum(uniqstr(s));
+				free(s);
+			}
+			else {
+				/* No content, return emptystring */
+				d = strdatum(Nullstr);
+			}
+		}
+		else if ( strcmp(args[1], "inject" ) == 0 ) {
+			/* Inject string into console buffer */
+			mdep_injectconsole(args[2]);
+			d = numdatum(0);
+		}
+		else if ( strcmp(args[1], "set" ) == 0 ) {
+			if ( mdep_setclipboard(args[2]) != 0 ) {
+				d = numdatum(0);
+			}
+		}
+		else if ( strcmp(args[1], "support" ) == 0 ) {
+			/* Return "yes" indicating support for clipboard. Other
+			 * ports that don't will return Noval */
+			d = strdatum(uniqstr("yes"));
+		}
+		else {
+			eprint("Error: unrecognized clipboard argument - %s\n",args[1]);
 		}
 	}
 	else {

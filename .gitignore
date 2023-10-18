@@ -12,6 +12,7 @@ src/.vs
 mdep/nt/.vs
 bin/keylocal.k
 lib/keylib.k
+lib/..doclib*
 src/makefile
 go.zip
 fingerworks

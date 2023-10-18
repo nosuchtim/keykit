@@ -35,6 +35,7 @@ Symlongp Deftimeout;
 Symlongp Minbardx, Kobjectoffset, Midi_out_fnum, Mousemoveevents;
 Symlongp Numinst1, Numinst2, Offsetpitch, Offsetfilter, DoDirectinput;
 Symlongp Offsetportfilter;
+Symlongp Inputisclipboard;
 Datum *Rebootfuncd, *Nullfuncd, *Errorfuncd;
 Datum *Intrfuncd, *Nullvald;
 Datum Zeroval, Noval, Nullval, _Dnumtmp_;
@@ -836,6 +837,7 @@ static struct binum {
 	{ "Midifilenoteoff", 1L, &Midifilenoteoff },
 	{ "Isofuncwarn", 1L, &Isofuncwarn },
 	{ "Inputistty", 0L, &Inputistty },
+	{ "Inputisclipboard", 0L, &Inputisclipboard },
 	{ "Arraysort", 0, &Arraysort },
 	{ "Taskaddr", 0, &Taskaddr },
 	{ "Tempotrack", 0, &Tempotrack },

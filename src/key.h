@@ -1110,6 +1110,7 @@ extern Symlongp Deftimeout;
 extern Symlongp Debuggesture, Debugstrsave;
 extern Symlongp Chancolors;
 extern Symlongp Debugkeylib, Debugmemscribble;
+extern Symlongp Inputisclipboard;
 extern Phrasepp Currphr, Recphr;
 extern Symstrp Keypath, Musicpath, Keyroot, Initconfig, Keypagepersistent;
 extern Symstrp Printsep, Printend, Pathsep, Dirseparator, Devmidi, Machine;
