@@ -11,10 +11,10 @@ Pbitmap Tmap = EMPTYBITMAP;
 
 char Curschar = '_' /* 0x7f would be a small square */;
 
-#define v_rowsize() (mdep_fontheight()+2)
-#define v_colsize() (mdep_fontwidth())
-#define columnx(w,c) ((w)->tx0+v_colsize()/2+1+(c)*v_colsize())
-#define rowy(w,r) (w->y1-v_rowsize()/4-v_rowsize()*(w->disprows-(r)))
+#define v_rowsize(w) ((w)->fheight+2)
+#define v_colsize(w) ((w)->fwidth)
+#define columnx(w,c) ((w)->tx0+v_colsize(w)/2+1+(c)*v_colsize(w))
+#define rowy(w,r) (w->y1-v_rowsize(w)/4-v_rowsize(w)*(w->disprows-(r)))
 
 Pbitmap
 v_reallocbitmap(int x,int y,Pbitmap p)
@@ -45,9 +45,9 @@ v_settextsize(Kwind *w)
 	if ( w->type != WIND_TEXT )
 		return;
 
-	w->tx0 = w->x0 + v_colsize()*3;
-	xsize = v_colsize();
-	ysize = v_rowsize();
+	w->tx0 = w->x0 + v_colsize(w)*3;
+	xsize = v_colsize(w);
+	ysize = v_rowsize(w);
 	/* The computation below for Trows parallels what's done in rowtoy() */
 	new_trows = (w->y1 - w->y0 - ysize/4 - 2) / ysize;
 	if ( new_trows < 1 )
@@ -388,7 +388,7 @@ void
 v_echar(Kwind *w)
 {
 	my_plotmode(P_CLEAR);
-	mdep_boxfill(w->currx,w->curry,w->currx+v_colsize(),w->curry+v_rowsize()-1);
+	mdep_boxfill(w->currx,w->curry,w->currx+v_colsize(w),w->curry+v_rowsize(w)-1);
 	my_plotmode(P_STORE);
 }
 
@@ -493,7 +493,7 @@ textscrollupdate(Kwind *w,int mx,int my)
 void
 v_scrolldisplay(Kwind *w)
 {
-	int ysize = v_rowsize();
+	int ysize = v_rowsize(w);
 	int wid, hgt, x, y;
 
 	my_plotmode(P_STORE);
@@ -583,7 +583,7 @@ redrawtext(Kwind *w)
 		}
 		if ( --i < 0 )
 			i = w->numlines-1;
-		y += v_rowsize();
+		y += v_rowsize(w);
 	}
 	/* draw text cursor (typically an underline) */
 	v_setxy(w);

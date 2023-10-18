@@ -65,6 +65,7 @@ struct Kwind {
 	int lasty;
 
 	/* following fields used for WIND_TEXT */
+	int fwidth, fheight;    /* Font width/height when window created */
 	int tx0;		/* This is where text starts (taking into */
 				/* account scroll bar)*/
 	int currrow, currcol;	/* Current row and column within display area*/
