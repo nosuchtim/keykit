@@ -1550,7 +1550,7 @@ callfuncd(Symbolp s)
 	}
 
 	if ( bi != 0 ) {
-		if (bi > 127) {
+		if (bi >= Bltinfuncssize) {
 			eprint("Internal error: bi=%d\n", bi);
 		}
 		/* it's a built-in function - execute it right away */

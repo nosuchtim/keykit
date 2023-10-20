@@ -2977,3 +2977,5 @@ BLTINFUNC Bltinfuncs[] = {
 	bi_objectinfo,
 	o_fillpolygon
 };
+
+unsigned int Bltinfuncssize = ARRAY_SIZE(Bltinfuncs);

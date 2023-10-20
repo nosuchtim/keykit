@@ -646,6 +646,7 @@ extern struct bltinfo builtins[];
 extern BYTEFUNC Bytefuncs[];
 extern char *Bytenames[];
 extern BLTINFUNC Bltinfuncs[];
+extern unsigned int Bltinfuncssize;
 
 typedef struct Ktask *Ktaskp;
 
