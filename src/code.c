@@ -1389,7 +1389,8 @@ enddef(register Symbolp sp)
 void
 callfuncd(Symbolp s)
 {
-	int npassed, nlocals, varsize, bi, needed;
+	int npassed, nlocals, varsize, needed;
+	unsigned int bi;
 	Datum d, funcd, dnpassed;
 	Datum *objdp, *realobjdp, *methdp, *dp;
 	Codep cp;
