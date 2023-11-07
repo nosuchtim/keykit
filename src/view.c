@@ -41,6 +41,8 @@ void
 v_settextsize(Kwind *w)
 {
 	int xsize, ysize, new_tcols, new_trows;
+	char *oldcurrline;
+	int n;
 
 	if ( w->type != WIND_TEXT )
 		return;
@@ -61,6 +63,21 @@ v_settextsize(Kwind *w)
 		w->disprows = new_trows;
 		w->toplnum = v_linenorm(w,w->lastused + w->disprows - 1);
 		w->currrow = w->disprows - 1;
+		if ( new_tcols > w->currlinelen ) {
+			/* need to realloc currline larger; then find
+			 * currline in bufflines and point to realloced buffer */
+			oldcurrline = w->currline;
+			w->currline = krealloc(w->currline, new_tcols + 1, "v_settextsize");
+			for (n=0; n<w->numlines; ++n) {
+				if ( w->bufflines[n] == oldcurrline ) {
+					w->bufflines[n] = w->currline;
+					break;
+				}
+			}
+			if ( n == w->numlines ) {
+				eprint("%s: did not find currline in bufflines!?\n");
+			}
+		}
 	}
 }
 
@@ -522,16 +539,26 @@ v_scrolldisplay(Kwind *w)
 void
 v_scrollbuff(Kwind *w)
 {
-	char *p;
+	char *p, *q;
+	int len;
 
 	w->toplnum = v_linenorm(w,w->toplnum-1);
 	p = w->bufflines[w->currlnum];
-	if ( p != w->currline )
+	if ( p != w->currline ) {
 		eprint("Hey, p!=w->currline!?\n");
+	}
 	
-	w->bufflines[w->currlnum] = uniqstr(p);
+	/* Save off a copy of currline */
+	len = strlen(p);
+	q = kmalloc(len+1, "v_scrollbuf");
+	strcpy(q, p);
+	w->bufflines[w->currlnum] = q;
 	w->currlnum = v_linenorm(w,w->currlnum-1);
 	w->lastused = w->currlnum;
+	if ( w->bufflines[w->currlnum] != NULL ) {
+		/* Free content of console line to be overwritten */
+		kfree(w->bufflines[w->currlnum]);
+	}
 	w->bufflines[w->currlnum] = w->currline;
 	*(w->currline) = '\0';
 }
