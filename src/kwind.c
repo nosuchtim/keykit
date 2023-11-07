@@ -325,17 +325,14 @@ k_inittext(Kwind *w)
 	w->currcol = 0;
 	w->currrow = 0;
 
-/* Hmmm, if the screen gets resized, the MAXCOLS may not be enough. */
-/* This might be the reason for resize problems?  I'll add a 4* to make */
-/* sure it's not a problem.  Small waste of memory, but not that much.  */
-
-#define MAXCOLS (2+4*(Wroot->x1/mdep_fontwidth()))
+#define MAXCOLS (2+(Wroot->x1/mdep_fontwidth()))
 
 	w->numlines = *Textscrollsize;
 	w->bufflines = (char **) kmalloc(w->numlines*sizeof(char *),"inittext");
 	for ( pp=w->bufflines,n=w->numlines-1; n>=0 ; n-- )
 		*pp++ = NULL;
-	w->currline = kmalloc((unsigned)MAXCOLS,"inittext");
+	w->currlinelen = MAXCOLS;
+	w->currline = kmalloc(w->currlinelen,"inittext");
 	w->currline[0] = '\0';
 	w->lastused = 0;
 	w->currlnum = 0;

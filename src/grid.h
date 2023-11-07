@@ -79,6 +79,7 @@ struct Kwind {
 				/* then the 2nd display line is bufflines[49]*/
 	int numlines;		/* Total number of lines in bufflines */
 	char *currline;		/* active line */
+	int currlinelen;        /* size of currline */
 	int currlnum;		/* index of that line in bufflines */
 	int toplnum;		/* index (in bufflines) of top row in display*/
 	int lastused;		/* last used line (often equal to currlnum) */
