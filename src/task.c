@@ -277,15 +277,20 @@ checkports(void)
 	}
 }
 
-static long lastexpose = 0;
-static long lastresize = 0;
+struct DeferredEvent {
+	long milliseconds;	/* last time event happened */
+	int deferred;		/* non-zero if event deferred */
+};
+
+static struct DeferredEvent lastexpose = { 0 };
+static struct DeferredEvent lastresize = { 0 };
 
 void
 handlewaitfor(int wn)
 {
-	long t;
-	long dt;
-	long dt2;
+	long t, oldt;
+	long delta_lastexpose;
+	long delta_lastresize;
 
 	switch(wn){
 	case K_CONSOLE:
@@ -304,26 +309,34 @@ handlewaitfor(int wn)
 
 	case K_WINDEXPOSE:
 		t = MILLICLOCK;
-		dt = t-lastexpose;
-		if ( dt<0 ) dt = -dt;
-		if ( dt >= *Redrawignoretime )
-			lastexpose = t;
-		if ( dt >= *Redrawignoretime ) {
+		delta_lastexpose = t-lastexpose.milliseconds;
+		if ( delta_lastexpose<0 ) delta_lastexpose = -delta_lastexpose;
+		if ( delta_lastexpose >= *Redrawignoretime )
+			lastexpose.milliseconds = t;
+		if ( delta_lastexpose >= *Redrawignoretime ) {
 			makesuredefined(&Redrawfuncd,"Redrawfunc");
 			taskfunc0(Redrawfuncd->u.codep);
+			lastexpose.deferred = 0;
+		}
+		else {
+			lastexpose.deferred = 1;
 		}
 		break;
 
 	case K_WINDRESIZE:
 		t = MILLICLOCK;
-		dt = t-lastresize;
-		if ( dt<0 ) dt = -dt;
+		delta_lastexpose = t-lastresize.milliseconds;
+		if ( delta_lastexpose<0 ) delta_lastexpose = -delta_lastexpose;
 		setwrootsize();
-		if ( dt >= *Resizeignoretime )
-			lastresize = t;
-		if ( dt >= *Resizeignoretime ) {
+		if ( delta_lastexpose >= *Resizeignoretime )
+			lastresize.milliseconds = t;
+		if ( delta_lastexpose >= *Resizeignoretime ) {
 			makesuredefined(&Resizefuncd,"Resizefunc");
 			taskfunc0(Resizefuncd->u.codep);
+			lastresize.deferred = 0;
+		}
+		else {
+			lastresize.deferred = 1;
 		}
 		break;
 
@@ -331,28 +344,41 @@ handlewaitfor(int wn)
 	/* but it does on Linux. */
 	case K_WINDEXPOSE | K_WINDRESIZE:
 		t = MILLICLOCK;
-		dt = t-lastexpose;
-		dt2 = t-lastresize;
-		if ( dt<0 ) dt = -dt;
-		if ( dt2<0 ) dt2 = -dt2;
+		delta_lastexpose = t-lastexpose.milliseconds;
+		delta_lastresize = t-lastresize.milliseconds;
+		if ( delta_lastexpose<0 ) delta_lastexpose = -delta_lastexpose;
+		if ( delta_lastresize<0 ) delta_lastresize = -delta_lastresize;
 		/*
 		 * I think there's a bug on linux (perhaps on all systems)
 		 * that causes the value of t to change after taskfunc0
 		 * is called, so we make use of t before doing anything else.
 		 * BOGUS!
 		 */
-		if ( dt >= *Redrawignoretime )
-			lastexpose = t;
-		if ( dt2 >= *Resizeignoretime )
-			lastresize = t;
+		oldt = t;
+		if ( delta_lastexpose >= *Redrawignoretime )
+			lastexpose.milliseconds = t;
+		if ( delta_lastresize >= *Resizeignoretime )
+			lastresize.milliseconds = t;
 		setwrootsize();
-		if ( dt2 >= *Resizeignoretime ) {
+		if ( delta_lastresize >= *Resizeignoretime ) {
 			makesuredefined(&Resizefuncd,"Resizefunc");
 			taskfunc0(Resizefuncd->u.codep);
+			lastresize.deferred = 0;
 		}
-		if ( dt >= *Redrawignoretime ) {
+		else {
+			lastresize.deferred = 1;
+		}
+		if ( delta_lastexpose >= *Redrawignoretime ) {
 			makesuredefined(&Redrawfuncd,"Redrawfunc");
 			taskfunc0(Redrawfuncd->u.codep);
+			lastexpose.deferred = 0;
+		}
+		else {
+			lastexpose.deferred = 1;
+		}
+		/* Test (unlikely) assertion t changes across taskfunc0 call */
+		if ( oldt != t ) {
+			keyerrfile("%s:%d Say what?! t changed across taskfunc0 from %ld to %ld\n", __FUNCTION__, __LINE__, oldt, t);
 		}
 		break;
 
@@ -640,6 +666,30 @@ exectasks(int nosetjmp)
 		default:
 			handlewaitfor(wn);
 			break;
+		}
+
+		/* Handle deferred expose/resize events */
+		if ( (lastexpose.deferred != 0) || (lastresize.deferred != 0) ) {
+			long t;
+			t = MILLICLOCK;
+			if ( lastexpose.deferred != 0 ) {
+				long delta_lastexpose;
+				delta_lastexpose = t - lastexpose.milliseconds;
+				if ( delta_lastexpose >= *Redrawignoretime ) {
+					makesuredefined(&Redrawfuncd,"Redrawfunc");
+					taskfunc0(Redrawfuncd->u.codep);
+					lastexpose.deferred = 0;
+				}
+			}
+			if ( lastresize.deferred != 0 ) {
+				long delta_lastresize;
+				delta_lastresize = t - lastresize.milliseconds;
+				if ( delta_lastresize >= *Resizeignoretime ) {
+					makesuredefined(&Resizefuncd,"Resizefunc");
+					taskfunc0(Resizefuncd->u.codep);
+					lastresize.deferred = 0;
+				}
+			}
 		}
 
 	runit:
