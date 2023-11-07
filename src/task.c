@@ -1435,7 +1435,7 @@ keyprintf(char *fmt,int arg0,int nargs, STRFUNC outfunc)
 		*w++ = '%';
 		while ( (c=(*p++)) != '\0' ) {
 			*w++ = c;
-			if ( strchr("dfpsx$",c) != NULL )
+			if ( strchr("cdfpsx$",c) != NULL )
 				break;
 		}
 		*w++ = '\0';
@@ -1448,6 +1448,7 @@ keyprintf(char *fmt,int arg0,int nargs, STRFUNC outfunc)
 			sprintf(Msg1, "$%ld", id);
 			(*outfunc)(Msg1);
 			break;
+		case 'c':
 		case 'd':
 		case 'x':
 		case 'o':
