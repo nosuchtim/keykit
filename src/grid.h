@@ -78,6 +78,7 @@ struct Kwind {
 				/* line on the display is bufflines[50]), */
 				/* then the 2nd display line is bufflines[49]*/
 	int numlines;		/* Total number of lines in bufflines */
+	int nactive;		/* Number active lines in bufflines */
 	char *currline;		/* active line */
 	int currlinelen;        /* size of currline */
 	int currlnum;		/* index of that line in bufflines */
@@ -202,7 +203,7 @@ extern Symlongp Bendrange, Bendoffset, Showtext, Showbar;
 extern Symlongp Volstem, Volstemsize, Panraster, Colors;
 extern Symlongp Colornotes, Inverse, Menujump, Menuscrollwidth, Menusize;
 extern Symlongp Graphmode, Graphdriver, Menuymargin;
-extern Symlongp Textscrollsize;
+extern Symlongp Textscrollsize, Textscrollgutter;
 extern Symlongp Keyinverse, Cursereverse, Usewindfifos;
 extern int Backcolor, Forecolor, Pickcolor, Lightcolor, Darkcolor, ButtonBGcolor;
 extern Phrasepp Pickphr, Gridphr;

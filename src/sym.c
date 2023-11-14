@@ -885,6 +885,7 @@ static struct binum {
 	{ "Dragquant", 1, &Dragquant },
 	{ "Menuscrollwidth", 15, &Menuscrollwidth },
 	{ "Textscrollsize", 200, &Textscrollsize },
+	{ "Textscrollgutter", 1, &Textscrollgutter },
 	{ "Menujump", 0, &Menujump },
 	{ "Panraster", 1, &Panraster },
 	{ "Bendrange", 1024*16, &Bendrange },

@@ -2221,3 +2221,22 @@ osc_array(char *buff, int buffsize, int used)
 	return d;
 }
 #endif
+
+/*
+ * Interpolate x such that input range ir1..ir2 maps to
+ * output range or1..or2
+ * Note: caller must clamp result as needed
+ */
+
+int
+interpolate(int x, int ir1, int ir2, int or1, int or2)
+{
+	if ( (ir2-ir1) == 0 ) {
+		eprint("Fatal error: interpolating %d in range %d..%d to range %d..%d fails!\n", x, ir1, ir2, or1, or2);
+#ifdef MDEBUG
+		keyerrfile("Fatal error: interpolating %d in range %d..%d to range %d..%d fails!\n", x, ir1, ir2, or1, or2);
+#endif
+		return 0;
+	}
+	return ((x - ir1) * (or2 - or1)) / (ir2 - ir1) + or1;
+}
