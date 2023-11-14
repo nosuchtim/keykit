@@ -361,8 +361,12 @@ k_reinittext(Kwind *w)
 	w->currrow = 0;
 #endif
 
-	for ( pp=w->bufflines,n=w->numlines-1; n>=0 ; n-- )
+	for ( pp=w->bufflines,n=w->numlines-1; n>=0 ; n-- ) {
+		if ( *pp != w->currline ) {
+			kfree(*pp);
+		}
 		*pp++ = NULL;
+	}
 	w->currline[0] = '\0';
 	w->lastused = 0;
 	w->currlnum = 0;
