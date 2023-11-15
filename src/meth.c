@@ -445,18 +445,18 @@ o_style(int argc)
 		w->flags &= (~allflags);
 		b = (int)neednum(".style",ARG(0));
 		switch (b) {
-		case 0:	/* no border */
+		case MSTYLE_NOBORDER:	/* no border */
 			w->flags |= WFLAG_NOBORDER;
 			break;
-		case 1: /* simple outline */
+		case MSTYLE_BORDER: /* simple outline */
 			break;
-		case 2:	/* shadow border */
+		case MSTYLE_BUTTON:	/* shadow border */
 			w->flags |= WFLAG_BUTTON;
 			break;
-		case 3:	/* menu button */
+		case MSTYLE_MENUBUTTON:	/* menu button */
 			w->flags |= ( WFLAG_BUTTON | WFLAG_MENUBUTTON);
 			break;
-		case 4:	/* depressed menu button */
+		case MSTYLE_PRESSEDBUTTON:	/* depressed menu button */
 			w->flags |= ( WFLAG_BUTTON |
 				WFLAG_MENUBUTTON | WFLAG_PRESSED);
 			break;

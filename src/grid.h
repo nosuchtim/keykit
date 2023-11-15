@@ -147,6 +147,13 @@ typedef struct Pbitmap Pbitmap;
 #define M_MOVE -4
 #define M_DELETE -5
 
+/* style() method values */
+#define MSTYLE_NOBORDER		0
+#define MSTYLE_BORDER		1
+#define MSTYLE_BUTTON		2
+#define MSTYLE_MENUBUTTON	3
+#define MSTYLE_PRESSEDBUTTON	4
+
 /* The default is for windows to have borders */
 #define WFLAG_NOBORDER 1
 /* This bit only has meaning if the WFLAG_NOBORDER bit is 0 */
