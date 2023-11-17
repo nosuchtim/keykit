@@ -169,8 +169,12 @@ method mousedown(m,nomove) {
 	if ( nargs()<2 )
 		nomove = 0
 
-	if ( m["button"] > 1 )
+	button = m["button"]
+	if ( !(button == M_BUTTON_LEFT
+	       || button == M_WHEEL_UP
+	       || button == M_WHEEL_DOWN) ) {
 		return()
+	}
 	grabmouse($)
 	$.grabbed = 1
 	if ( "xy" in m )
@@ -271,8 +275,12 @@ method setchoice(newchoice,m) {
 
 method mousedrag(m) {
 
-	if ( m["button"] > 1 )
+	button = m["button"]
+	if ( !(button == M_BUTTON_LEFT
+	       || button == M_WHEEL_UP
+	       || button = M_WHEEL_DOWN) ) {
 		return()
+	}
 
 	if ( ! ($.grabbed) ) {
 		$.mousedown(m,1)
@@ -332,7 +340,7 @@ method mousedrag(m) {
 
 			# Send a mouseup to ourselves, to terminate menu
 			m["type"] = "mouseup"
-			m["button"] = 0
+			m["button"] = M_BUTTON_NONE
 			$.mouseup(m)
 			if ( Activemenu != $0 && Activemenu != $-1 ) {
 				Activemenu.youarefreetogo()

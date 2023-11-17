@@ -1547,7 +1547,11 @@ checkmouse(void)
 		return;
 
 	b = mdep_mouse(&x,&y,&mod);
+#ifdef MDEP_HANDLE_SCROLL_WHEEL
+	m = b & 0x1f;	/* Handle buttons 1-5 */
+#else
 	m = b & 3;	/* We only want to acknowledge button 1&2 */
+#endif
 
 	moved = (x!=oldx || y!=oldy);
 

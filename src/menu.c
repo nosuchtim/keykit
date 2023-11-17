@@ -261,9 +261,12 @@ boundit(int val,int mn,int mx)
 }
 
 static void
-updatemenu(Kwind *w,int mx,int my, int nodraw)
+updatemenu(Kwind *w,int mx,int my, int nodraw, int button)
 {
 	int nchoice;
+
+	keyerrfile("%s:%d mx %d my %d nodraw %d button %d\n", __FUNCTION__, __LINE__, 
+		   mx, my, nodraw, button);
 
 	if ( my < w->km.y || my > (w->km.y + w->km.height) 
 		|| mx < w->km.x || mx > (w->km.x + w->km.width) ) {
@@ -277,12 +280,18 @@ updatemenu(Kwind *w,int mx,int my, int nodraw)
 	}
 
 	/* see if we're in a menu item */
-	nchoice = menuchoice(w,mx,my);
+	nchoice = menuchoice(w,mx,my,button);
 
 	if ( nchoice != M_MOVE && nchoice != M_DELETE ) {
 		/* see if we're in the scroll bar */
-		if ( scrollupdate(w,mx,my) )
+		if ( scrollupdate(w,mx,my,button) )
 			return;
+	}
+
+	/* scroll wheel events in menu itself don't have an effect */
+	if ( button == M_WHEEL_UP || button == M_WHEEL_DOWN ) {
+		keyerrfile("%s:%d ignore button %d\n", __FUNCTION__, __LINE__, button);
+		return;
 	}
 
 	/* if we've got a current choice, and we've changed it... */
@@ -304,15 +313,22 @@ updatemenu(Kwind *w,int mx,int my, int nodraw)
 }
 
 int
-scrollupdate(Kwind *w,int mx,int my)
+scrollupdate(Kwind *w,int mx,int my,int button)
 {
 	int newtop;
 	int barheight, scrdy;
 	int sbah;
+	int chgtop = 0;
 
 	if ( ! (mx >= w->km.x && mx < w->km.x + w->km.offset) ) {
 		w->inscroll = 0;
 		return 0;
+	}
+
+	if ( button == M_BUTTON_NONE ) {
+		/* Ignore button up events (which can arrive as back half
+		 * of a scroll wheel button event) */
+		return 1;
 	}
 
 	/* if we just moved into the scrol bar... */
@@ -345,6 +361,18 @@ scrollupdate(Kwind *w,int mx,int my)
 		newtop = (( my - (w->km.y+w->km.header) - barheight/2) * scrdy_denom ) / scrdy_num;
 	}
 
+	chgtop = 0;
+	if (button == M_WHEEL_UP) {
+		/* Wheel rotate up */
+		chgtop = -1;
+	}
+	else if (button == M_WHEEL_DOWN) {
+		/* Wheel rotate down */
+		chgtop = +1;
+	}
+	if (chgtop) {
+		newtop = w->km.top + chgtop;
+	}
 	newtop = boundit(newtop,0,w->km.nitems-w->km.menusize);
 	if ( newtop != w->km.top ) {
 		w->km.top = newtop;
@@ -355,7 +383,7 @@ scrollupdate(Kwind *w,int mx,int my)
 }
 
 int
-menuchoice(Kwind *w,int x,int y)
+menuchoice(Kwind *w,int x,int y,int button)
 {
 	int n;
 	int ny = w->km.y + w->km.header;
@@ -363,6 +391,11 @@ menuchoice(Kwind *w,int x,int y)
 	int nchoice = M_NOCHOICE;
 	int x0 = w->km.x;
 	int x1 = x0 + w->km.width;
+
+	if ( (button == M_WHEEL_UP) || (button == M_WHEEL_DOWN) ) {
+		/* scroll wheel button does not make a choice */
+		return nchoice;
+	}
 
 	if ( x >= x0 && x <= x1 ) {
 		if ( y > w->km.y && y < ny ) {
@@ -400,6 +433,5 @@ m_init(void)
 void
 m_menudo(Kwind *w,int b,int x,int y,int nodraw)
 {
-	dummyusage(b);
-	updatemenu(w,x,y,nodraw);
+	updatemenu(w,x,y,nodraw,b);
 }

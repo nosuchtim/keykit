@@ -1098,6 +1098,13 @@ static struct Macrointeger Stdintegermacros[] = {
 	/* Internal constants */
 	{ "MAXCLICKS",		MAXCLICKS },
 	{ "MAXPRIORITY",	MAXPRIORITY },
+
+	/* mouse button values for mdep_mouse() */
+	{ "M_BUTTON_LEFT",	1 },
+	{ "M_BUTTON_RIGHT",	2 },
+	{ "M_BUTTON_CENTER",	3 },
+	{ "M_WHEEL_UP",		4 },
+	{ "M_WHEEL_DOWN",	5 },
 };
 
 /* initsyms() - install constants and built-ins in table */

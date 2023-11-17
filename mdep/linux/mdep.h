@@ -24,6 +24,9 @@
 
 #define MACHINE "linux"	/* default value of keykit's Machine variable */
 
+/* Enable Scroll Wheel handling */
+#define MDEP_HANDLE_SCROLL_WHEEL
+
 /* GCC function attribute indicating a function does not return */
 #define NO_RETURN_ATTRIBUTE __attribute__((__noreturn__))
 

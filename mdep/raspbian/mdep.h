@@ -19,6 +19,9 @@
 
 #define MACHINE "raspbian"	/* default value of keykit's Machine variable */
 
+/* Enable Scroll Wheel handling */
+#define MDEP_HANDLE_SCROLL_WHEEL
+
 #define _unlink unlink
 
 #define MDEP_MIDI_PROVIDED

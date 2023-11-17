@@ -168,6 +168,14 @@ typedef struct Pbitmap Pbitmap;
 /* This bit is for depressed menu buttons */
 #define WFLAG_PRESSED 32
 
+/* Mouse button values returned from mdep_mouse */
+#define M_BUTTON_NONE	0
+#define M_BUTTON_LEFT	1
+#define M_BUTTON_RIGHT	2
+#define M_BUTTON_CENTER	3
+#define M_WHEEL_UP	4
+#define M_WHEEL_DOWN	5
+
 #define DISP_TEXT 0
 #define DISP_LINE 1
 #define DISP_RECT 2

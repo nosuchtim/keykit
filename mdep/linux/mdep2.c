@@ -122,10 +122,20 @@ typedef unsigned char *Bitstype;
 #define	F_CLR	(GXandInverted)		/* target &= ~source */
 #define	F_XOR	(GXxor)			/* target ^= source */
 
-#define button1()		((Msb&4)!=0)
-#define button2()		((Msb&2)!=0)
-#define button3()		((Msb&1)!=0)
-#define button123()		((Msb&7)!=0)
+#define button1()		((Msb&0x01)!=0)
+#define button2()		((Msb&0x02)!=0)
+#define button3()		((Msb&0x04)!=0)
+#ifdef MDEP_HANDLE_SCROLL_WHEEL
+#define button4()		((Msb&0x08)!=0)
+#define button5()		((Msb&0x10)!=0)
+#define button45()		((Msb&0x18)!=0)
+#define button123()		((Msb&0x1f)!=0)
+#else
+#define button4()		(0)
+#define button5()		(0)
+#define button45()		(0)
+#define button123()		((Msb&0x07)!=0)
+#endif
 
 /* list of Fonts, in the order they are searched for */
 static char *Fntlist[] = {
@@ -286,9 +296,9 @@ state2modifier(int s)
 {
 	int m;
 	if ( s & ShiftMask )
-		m = 2;
+		m = 2; /* SHIFT key down */
 	else if ( s & ControlMask )
-		m = 1;
+		m = 1; /* CTRL key down */
 	else
 		m = 0;
 	return(m);
@@ -309,14 +319,14 @@ handle1input(void)
 	switch (ev.type) {
 	case ButtonPress:
 		XSetInputFocus(dpy,Disp.dr,RevertToPointerRoot,CurrentTime);
-		Msb |= (8 >> ev.xbutton.button);
+		Msb |= (1 << (ev.xbutton.button - 1));
 		Msm = state2modifier(ev.xbutton.state);
 		Msx = ev.xbutton.x;
 		Msy = ev.xbutton.y;
 		return K_MOUSE;
 
 	case ButtonRelease:
-		Msb &= ~(8 >> ev.xbutton.button);
+		Msb &= ~(1 << (ev.xbutton.button - 1));
 		Msm = state2modifier(ev.xbutton.state);
 		Msx = ev.xbutton.x;
 		Msy = ev.xbutton.y;
@@ -431,6 +441,16 @@ static void
 handleinput(void)
 {
 	int k;
+
+	if ( button45() ) {
+		/* X generates ButtonPress for scroll wheel
+		 * immediately followed by ButtonRelease. Unless return
+		 * here will not see the ButtonPress since handle1input()
+		 * will clear the ButtonPress bit in Msb as it processes
+		 * the ButtonRelease already in the queue */
+		return;
+	}
+
 	while(XPending(dpy)) {
 		k = handle1input();
 		if ( k == K_WINDEXPOSE || k == K_WINDRESIZE )
@@ -886,7 +906,7 @@ mdep_waitfor(int tmout)
             }
             sprintf(Msg1,"poll/select failed in mdep_waitfor() errno=%d Readfds= 0x%x MaxFdUsed=%d\n",errno,maskReadFds,MaxFdUsed);
             execerror(Msg1);
-        }
+	}
 	}
 
 	for ( m=Topport; m!=NULL; m=m->next ) {
@@ -1345,14 +1365,23 @@ mdep_mouse(int *ax,int *ay,int *am)
 		*am = Msm;
 
 	if ( button1() && ( button2() || button3() ) )
-		but = 3;
+		but = M_BUTTON_CENTER;
 	else if ( button2() || button3() )
-		but = 2;
+		but = M_BUTTON_RIGHT;
 	else if ( button1() )
-		but = 1;
+		but = M_BUTTON_LEFT;
+	else if ( button4() )
+		but = M_WHEEL_UP;
+	else if ( button5() )
+		but = M_WHEEL_DOWN;
 	else
-		but = 0;
+		but = M_BUTTON_NONE;
 
+#if 0
+	keyerrfile("%s:%d Msx %d Msy %d Msm %#x Msb 0x%x but %d\n",
+		   __FUNCTION__, __LINE__,
+		   Msx, Msy, Msm, Msb, but);
+#endif
 	return but;
 }
 
@@ -1832,7 +1861,7 @@ tcpip_listen(char *hostname, char *servname)
 
 	if ( hostname != NULL ) {
 		strncpy(myname,hostname,sizeof(myname)-1);
-        myname[sizeof(myname)-1] = '\0';
+		myname[sizeof(myname)-1] = '\0';
 	} else {
 		if ( gethostname(myname,sizeof(myname)) < 0 ) {
 			sockerror(sock,"gethostname() failed, errno=%d",errno);

@@ -430,7 +430,7 @@ void
 v_textdo(Kwind *w,int butt,int x,int y)
 {
 	dummyusage(butt);
-	(void) textscrollupdate(w,x,y);
+	(void) textscrollupdate(w,x,y,butt);
 }
 
 void
@@ -468,9 +468,9 @@ toplnum_incr(Kwind *w)
 }
 
 int
-textscrollupdate(Kwind *w,int mx,int my)
+textscrollupdate(Kwind *w,int mx,int my, int button)
 {
-	int newtop, barheight, numofftop, dy, y0;
+	int newtop, barheight, numofftop, numoffbottom, dy, y0;
 	int gutter = *Textscrollgutter;
 
 	if ( ! (mx > w->x0 && mx < w->tx0 ) ) {
@@ -504,15 +504,32 @@ textscrollupdate(Kwind *w,int mx,int my)
 	numofftop = interpolate(my, y0+barheight/2, y0+dy-barheight/2, 0, w->nactive-w->disprows + 1);
 	numofftop = boundit(numofftop, 0, w->nactive-w->disprows);
 
-	/* Top of buffer is currlnum + (nactive-1). */
-	newtop = w->currlnum + (w->nactive - 1);
-	newtop -= numofftop;
-	while (newtop >= w->numlines) {
-		newtop -= w->numlines;
+	numoffbottom = v_linenorm(w, w->toplnum - w->currlnum);
+	numoffbottom -= (w->disprows - 1);
+	if ( button == M_WHEEL_DOWN ) {
+		if ( numoffbottom > 0 ) {
+			newtop = w->toplnum - 1;
+		}
+		else {
+			newtop = w->toplnum;
+		};
 	}
-	while (newtop < 0) {
-		newtop += w->numlines;
+	else if ( button == M_WHEEL_UP ) {
+		numofftop = (w->nactive -1) - (w->toplnum - w->currlnum);
+		numofftop = v_linenorm(w, numofftop);
+		if (numofftop > 0) {
+			newtop = w->toplnum + 1;
+		}
+		else {
+			newtop = w->toplnum;
+		};
+	} else {
+		/* Top of buffer is currlnum + (nactive-1). */
+		newtop = w->currlnum + (w->nactive - 1);
+		newtop -= numofftop;
 	}
+		
+	newtop = v_linenorm(w, newtop);
 
 	if (newtop != w->toplnum) {
 		w->toplnum = newtop;
