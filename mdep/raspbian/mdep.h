@@ -15,9 +15,17 @@
 #endif
 #include <setjmp.h>
 #include <errno.h>
+#include <inttypes.h>
 
+#define KEY_PRIdPTR PRIdPTR
+#define KEY_PRIxPTR PRIxPTR
+#define KEY_PRIdPTR_TYPE uintptr_t
+#define KEY_PRIxPTR_TYPE uintptr_t
 
 #define MACHINE "raspbian"	/* default value of keykit's Machine variable */
+
+/* GCC function attribute indicating a function does not return */
+#define NO_RETURN_ATTRIBUTE __attribute__((__noreturn__))
 
 #define _unlink unlink
 

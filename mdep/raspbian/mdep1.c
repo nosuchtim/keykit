@@ -40,8 +40,10 @@ mdep_hello(int argc,char **argv)
 
 	if ( Isatty )
 		ttysetraw();
+#else
+	dummyusage(argc);
+	dummyusage(argv);
 #endif
-
 }
 
 /* bye -   This function does any cleanup, before final exit. */
@@ -114,7 +116,7 @@ mdep_lsdir(char *dir, char *exp, void (*callback)(char*,int))
 	FILE *f;
 	struct stat sb;
 	int dleng = strlen(dir);
-	char *sep = "/";
+	char *sep = SEPARATOR;
 
 	/* If dir ends in "/", don't add an additional "/" */
 	if ( dleng > 0 && dir[dleng-1] == '/' )
@@ -126,12 +128,24 @@ mdep_lsdir(char *dir, char *exp, void (*callback)(char*,int))
 		return 1;
 	}
 	while ( fgets(buff,BUFSIZ,f) != NULL ) {
+		unsigned int len;
 		char *p = strchr(buff,'\n');
 		if ( p )
 			*p = '\0';
 		if ( stat(buff,&sb) < 0 )
 			continue;
-		callback(buff,S_ISDIR(sb.st_mode)?1:0);
+
+		/* Strip off original directory and separator(if there) */
+		len = strlen(dir);
+		p = buff;
+		if ( strncmp(p, dir, len) == 0 ) {
+			p += len;
+			len = strlen(sep);
+			if ( strncmp(p, sep, len) == 0 ) {
+				p += len;
+			}
+		}
+		callback(p,S_ISDIR(sb.st_mode)?1:0);
 	}
 	pclose(f);
 	return 0;
