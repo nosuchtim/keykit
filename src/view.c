@@ -9,7 +9,10 @@
 Pbitmap Tmap = EMPTYBITMAP;
 #endif
 
-char Curschar = '_' /* 0x7f would be a small square */;
+Symlongp Textscrollgutter;
+
+#define Curschar '_' /* 0x7f would be a small square */
+char cursor_str[2] = { Curschar, '\0' };
 
 #define v_rowsize() (mdep_fontheight()+2)
 #define v_colsize() (mdep_fontwidth())
@@ -358,7 +361,7 @@ v_stringwind(char *s,Kwind *w)
 
 	str[1]='\0';
 
-	v_echar(w); 	/* erase the cursor (assumes Tx,Ty is in right place) */
+	v_textcursor(w, 0); 	/* erase the cursor (assumes Tx,Ty is in right place) */
 	while ( (c=(*s++)) != '\0' ) {
 
 		if ( c == '\b' || c == Erasechar) {
@@ -366,7 +369,7 @@ v_stringwind(char *s,Kwind *w)
 				w->currcol--;
 				v_setxy(w);
 				*ptbuffer(w,w->currcol) = '\0';
-				v_echar(w);
+				v_textcursor(w, 0);
 				
 			}
 		}
@@ -390,23 +393,37 @@ v_stringwind(char *s,Kwind *w)
 				if ( c != '\r' ) {
 					v_scrolldisplay(w);
 					v_scrollbuff(w);
+					/* v_scrolldisplay drew the text,
+					 * draw the text scrollbar */
+					drawtextbar(w);
 				}
 			}
 		}
 		v_setxy(w);
 	}
-	/* print the cursor after the last character */
-	str[0] = Curschar;
-	my_plotmode(P_STORE);
-	mdep_string(w->currx,w->curry,str);
+	/* show the cursor after the last character */
+	v_textcursor(w, 1);
 }
 
+/* Draw (or erase) text cursor - if its visible */
 void
-v_echar(Kwind *w)
+v_textcursor(Kwind *w, int drawit)
 {
-	my_plotmode(P_CLEAR);
-	mdep_boxfill(w->currx,w->curry,w->currx+v_colsize(),w->curry+v_rowsize()-1);
-	my_plotmode(P_STORE);
+	if ( drawit != 0 ) {
+		int dl;
+		dl = w->toplnum - w->currlnum;
+		if (dl < 0) {
+			dl += w->numlines;
+		}
+		if (dl < w->disprows) {
+			my_plotmode(P_STORE);
+			mdep_string(w->currx,w->curry,cursor_str);
+		}
+	}
+	else {
+		my_plotmode(P_CLEAR);
+		mdep_boxfill(w->currx,w->curry,w->currx+v_colsize(),w->curry+v_rowsize()-1);
+	}
 }
 
 void
@@ -453,56 +470,53 @@ toplnum_incr(Kwind *w)
 int
 textscrollupdate(Kwind *w,int mx,int my)
 {
-	int newtop, wheight;
+	int newtop, barheight, numofftop, dy, y0;
+	int gutter = *Textscrollgutter;
 
 	if ( ! (mx > w->x0 && mx < w->tx0 ) ) {
 		w->inscroll = 0;
 		return 0;
 	}
 
-	wheight = w->y1 - w->y0;
-	/* if we just moved into the scroll bar... */
-	if ( ! w->inscroll ) {
-		w->inscroll = 1;
-		if ( *Menujump ) {
-			int barheight, scrdy;
-			/* The first time you go into the scroll */
-			/* bar, it attempts to center the scroll bar */
-			/* on the current mouse position. */
-			barheight = (wheight*w->disprows)/w->numlines;
-			scrdy = (wheight-barheight)/(w->numlines-w->disprows);
-			if ( scrdy <= 0 )
-				scrdy = 1;
-			newtop = ( my - w->y0 - barheight/2) / scrdy;
-			newtop = boundit(newtop,0,w->numlines-w->disprows);
-			if ( newtop != w->toplnum ) {
-				w->toplnum = newtop;
-				wredraw1(w);
-			}
-		}
-		w->lasty = my;
+	/* Cap scrollgutter to leave at least one pixel for scrollbar */
+	dy = w->y1 - w->y0 - 2; /* Max vertical extent of scrollbar w/o gutter */
+	if ( dy < (2 * gutter + 1) ) {
+		gutter = (dy - 1) / 2;
 	}
-	else {
-		int sz, dm, chgtop;
-		int changed = 0;
+	y0 = w->y0 + (2 * gutter);
+	dy = (w->y1 - (2 * gutter)) - y0;
 
-		sz = (wheight/(3*w->numlines/2));
-		if ( sz <= 0 )
-			sz = 1;
-		dm = (my - w->lasty);
-		chgtop = -dm / sz;
-		if ( chgtop < 0 ) {
-			while ( chgtop++ < 0 && toplnum_decr(w) )
-				changed = 1;
-		}
-		else if ( chgtop > 0 ) {
-			while ( chgtop-- > 0 && toplnum_incr(w) )
-				changed = 1;
-		}
-		if ( changed ) {
-			wredraw1(w);
-			w->lasty = my;
-		}
+	if (w->disprows >= w->nactive ) {
+		/* Display holds all of content; can't scroll... */
+		return 1;
+	}
+
+	/* Display holds a portion of the text, ratio of disprows/nactive;
+	 * calculate barheight as that ratio of dy. */
+	barheight = (dy * w->disprows) / w->nactive;
+
+	/* bar bumps into top/bottom of scrollbar; range of bar
+	 * placement is w->y0+barheight/2 to w->y1-barheight/2.
+	 * numofftop can range from 0 to nactive - disprows.
+	 * Note: when interpolating, output range goes to
+	 *       nactive+disprows+1 to make number of steps
+	 *       match number of non-visible rows. */
+	numofftop = interpolate(my, y0+barheight/2, y0+dy-barheight/2, 0, w->nactive-w->disprows + 1);
+	numofftop = boundit(numofftop, 0, w->nactive-w->disprows);
+
+	/* Top of buffer is currlnum + (nactive-1). */
+	newtop = w->currlnum + (w->nactive - 1);
+	newtop -= numofftop;
+	while (newtop >= w->numlines) {
+		newtop -= w->numlines;
+	}
+	while (newtop < 0) {
+		newtop += w->numlines;
+	}
+
+	if (newtop != w->toplnum) {
+		w->toplnum = newtop;
+		wredraw1(w);
 	}
 	return 1;
 }
@@ -559,6 +573,9 @@ v_scrollbuff(Kwind *w)
 		/* Free content of console line to be overwritten */
 		kfree(w->bufflines[w->currlnum]);
 	}
+	else {
+		w->nactive++;
+	}
 	w->bufflines[w->currlnum] = w->currline;
 	*(w->currline) = '\0';
 }
@@ -566,24 +583,62 @@ v_scrollbuff(Kwind *w)
 void
 drawtextbar(Kwind *w)
 {
-	int y0, y1, by0, by1, dy, realtop, realbottom;
+	int y0, dy, barheight, result;
+	int numofftop = -1;
+	int by0, by1;
+	int gutter = *Textscrollgutter;
 
-	y0 = w->y0 + 1;
-	y1 = w->y1 - 1;
-	dy = y1 - y0;
-	realtop = w->toplnum - w->lastused;
-	if ( realtop < 0 )
-		realtop += w->numlines;
-	realbottom = realtop - w->disprows + 1;
-	by0 = y1 - (dy*realtop)/(w->numlines-1);
-	by1 = y1 - (dy*realbottom)/(w->numlines-1);
-	mdep_boxfill(w->x0+4,by0,w->tx0-6,by1);
+	/* Cap scrollgutter to leave at least one pixel for scrollbar */
+	dy = w->y1 - w->y0 - 2; /* Max vertical extent of scrollbar w/o gutter */
+	if ( dy < (2 * gutter + 1) ) {
+		gutter = (dy - 1) / 2;
+	}
+	y0 = w->y0 + (2 * gutter);
+	dy = (w->y1 - (2 * gutter)) - y0;
+		
+
+	/* Erase where scrollbar could be */
+	my_plotmode(P_CLEAR);
+	mdep_boxfill(w->x0+4,w->y0+1,w->tx0-6,w->y1-1);	
+	
+	
+	/* Ratio of scrollbar height is number of displayed lines divided
+	 * by number of lines in bufflines */
+	if (w->disprows >= w->nactive) {
+		barheight = dy;
+		result = 0;
+	}
+	else {
+		barheight = (dy * w->disprows) / w->nactive;
+		/* Given:
+		 * toplnum => bufflines index of top visible row
+		 * disprows => number of visible rows
+		 * nactive => number of active lines
+		 * currlnum => buffline index of active line(bottom):
+		 * 1) Number of rows off top is number of active lines
+		 * minus the difference between toplnum and currlnum.
+		 * 2) Number of rows off top is in range
+		 *    of 0 .. (number of active rows - disprows)
+		 */
+
+		numofftop = (w->nactive -1) - (w->toplnum - w->currlnum);
+		numofftop = v_linenorm(w, numofftop);
+
+		/* scale numofftop into range of 0 .. dy - barheight */
+		result = interpolate(numofftop, 0, w->nactive - w->disprows, 0, dy - barheight);
+
+		/* Clamp result to possible range */
+		result = boundit(result, 0, dy - barheight);
+	}
+	by0 = result + y0;
+	by1 = by0 + barheight;
+	mdep_plotmode(P_STORE);
+	mdep_boxfill(w->x0+4,by0,w->tx0-6,by1);	
 }
 
 void
 redrawtext(Kwind *w)
 {
-	char str[2];
 	int x, y, i, n;
 
 	my_plotmode(P_STORE);
@@ -612,9 +667,7 @@ redrawtext(Kwind *w)
 			i = w->numlines-1;
 		y += v_rowsize();
 	}
-	/* draw text cursor (typically an underline) */
+	/* show text cursor (typically an underline) */
 	v_setxy(w);
-	str[0] = Curschar;
-	str[1] = '\0';
-	mdep_string(w->currx,w->curry,str);
+	v_textcursor(w, 1);
 }

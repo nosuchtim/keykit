@@ -885,6 +885,7 @@ static struct binum {
 	{ "Dragquant", 1, &Dragquant },
 	{ "Menuscrollwidth", 15, &Menuscrollwidth },
 	{ "Textscrollsize", 200, &Textscrollsize },
+	{ "Textscrollgutter", 1, &Textscrollgutter },
 	{ "Menujump", 0, &Menujump },
 	{ "Panraster", 1, &Panraster },
 	{ "Bendrange", 1024*16, &Bendrange },
@@ -996,52 +997,107 @@ funcdp(Symbolp s, BLTINCODE f)
 	return d;
 }
 
+struct Macrointeger {
+	char *name;
+	int value;
+};
+
 /* Pre-defined macros.  It is REQUIRED that these values match the */
 /* corresponding values in phrase.h and grid.h.  For example, the value */
 /* of P_STORE must match STORE, NT_NOTE must match NOTE, etc.  */
+static struct Macrointeger Stdintegermacros[] = {
+	/* These are values for nt.type, also used as bit-vals for
+	 * the value of Filter. */
+	{ "MIDIBYTES",		NT_BYTES }, /* NT_LE3BYTES not here - not user-visible */
+	{ "NOTE",		NT_NOTE },
+	{ "NOTEON",		NT_ON },
+	{ "NOTEOFF",		NT_OFF },
+	{ "CHANPRESSURE",	M_CHANPRESSURE },
+	{ "CONTROLLER",		M_CONTROLLER },
+	{ "PROGRAM",		M_PROGRAM },
+	{ "PRESSURE",		M_PRESSURE },
+	{ "PITCHBEND",		M_PITCHBEND },
+	{ "SYSEX",		M_SYSEX },
+	{ "POSITION",		M_POSITION },
+	{ "CLOCK",		M_CLOCK },
+	{ "SONG",		M_SONG },
+	{ "STARTSTOPCONT",	M_STARTSTOPCONT },
+	{ "SYSEXTEXT",		M_SYSEXTEXT },
 
-static char *Stdmacros[] = {
+	/* Values for setmouse() and sweep() */
+	{ "NOTHING",		M_NOTHING },
+	{ "ARROW",		M_ARROW },
+	{ "SWEEP",		M_SWEEP },
+	{ "CROSS",		M_CROSS },
+	{ "LEFTRIGHT",		M_LEFTRIGHT },
+	{ "UPDOWN",		M_UPDOWN },
+	{ "ANYWHERE",		M_ANYWHERE },
+	{ "BUSY",		M_BUSY },
 
-	/* These are values for nt.type, also used as bit-vals for  */
-	/* the value of Filter. */
-	"MIDIBYTES 1", /* NT_LE3BYTES is not here - not user-visible */
-	"NOTE 2",
-	"NOTEON 4",
-	"NOTEOFF 8",
-	"CHANPRESSURE 16", "CONTROLLER 32", "PROGRAM 64", "PRESSURE 128",
-		"PITCHBEND 256", "SYSEX 512", "POSITION 1024", "CLOCK 2048",
-		"SONG 4096", "STARTSTOPCONT 8192", "SYSEXTEXT 16384",
+	/* Used in wgroup.k; must start higher than M_BUSY... */
+	{ "DRAG",		8 },
+	{ "BRUSH",		9 },
+	{ "INVOKE",		10 },
+	{ "POINT",		11 },
+	{ "CLOSEST",		12 },
+	{ "DRAW",		13 },
 
-	"Nullstr \"\"",
-
-	/* Values for action() types.  The values are intended to not */
-	/* overlap the values for interrupt(), to avoid misuse and */
-	/* also to leave open the possibility of merging the two. */
-	"BUTTON1DOWN 1024", "BUTTON2DOWN 2048", "BUTTON12DOWN 4096",
-	"BUTTON1UP 8192", "BUTTON2UP 16384", "BUTTON12UP 32768",
-	"BUTTON1DRAG 65536", "BUTTON2DRAG 131072", "BUTTON12DRAG 262144",
-	"MOVING 524288",
-	/* values for setmouse() and sweep() */
-	"NOTHING 0", "ARROW 1", "SWEEP 2", "CROSS 3",
-		"LEFTRIGHT 4", "UPDOWN 5", "ANYWHERE 6", "BUSY 7",
-		"DRAG 8", "BRUSH 9", "INVOKE 10", "POINT 11", "CLOSEST 12",
-		"DRAW 13",
 	/* values for cut() */
-	"NORMAL 0", "TRUNCATE 1", "INCLUSIVE 2",
-	"CUT_TIME 3", "CUT_FLAGS 4", "CUT_TYPE 5",
-	"CUT_CHANNEL 6", "CUT_NOTTYPE 7",
+	{ "NORMAL",		CUT_NORMAL },
+	{ "TRUNCATE",		CUT_TRUNCATE },
+	{ "INCLUSIVE",		CUT_INCLUSIVE },
+	{ "CUT_TIME",		CUT_TIME },
+	{ "CUT_FLAGS",		CUT_FLAGS },
+	{ "CUT_TYPE",		CUT_TYPE },
+	{ "CUT_CHANNEL",	CUT_CHANNEL },
+	{ "CUT_NOTTYPE",	CUT_NOTTYPE },
+	/* { "CUT_PITCH",	CUT_PITCH }, - add for completeness??? */
+
 	/* values for menudo() */
-	"MENU_NOCHOICE -1", "MENU_BACKUP -2", "MENU_UNDEFINED -3",
-	"MENU_MOVE -4", "MENU_DELETE -5",
-	/* values for draw() */
-	"CLEAR 0", "STORE 1", "XOR 2",
-	/* values for window() */
-	"TEXT 1", "PHRASE 2",
+	{ "MENU_NOCHOICE",	M_NOCHOICE },
+	{ "MENU_BACKUP",	M_BACKUP },
+	{ "MENU_UNDEFINED",	M_UNDEFINED },
+	{ "MENU_MOVE",		M_MOVE },
+	{ "MENU_DELETE",	M_DELETE },
+	
+	/* values for draw() methods */
+	{ "CLEAR",		P_CLEAR },
+	{ "STORE",		P_STORE },
+	{ "XOR",		P_XOR },
+
+	/* values for window().
+	 * (Where are these constants used???) */
+	{ "TEXT",		1 },
+	{ "PHRASE",		2 },
+	
 	/* values for style() */
-	"NOBORDER 0", "BORDER 1", "BUTTON 2", "MENUBUTTON 3", "PRESSEDBUTTON 4",
+	{ "NOBORDER",		MSTYLE_NOBORDER },
+	{ "BORDER",		MSTYLE_BORDER },
+	{ "BUTTON",		MSTYLE_BUTTON },
+	{ "MENUBUTTON",		MSTYLE_MENUBUTTON },
+	{ "PRESSEDBUTTON",	MSTYLE_PRESSEDBUTTON },
+
 	/* values for kill() signals */
-	"KILL 1",
-	NULL
+	{ "KILL",		1 },
+
+	/* Values for action() types.  The values are intended to not 
+	 * overlap the values for interrupt(), to avoid misuse and
+	 * also to leave open the possibility of merging the two.
+	 * (Where are these constants used???) */
+	{ "BUTTON1DOWN",	1024 },
+	{ "BUTTON2DOWN",	2048 },
+	{ "BUTTON12DOWN",	4096 },
+	{ "BUTTON1UP",		8192 },
+	{ "BUTTON2UP",		16384 },
+	{ "BUTTON12UP",		32768 },
+	{ "BUTTON1DRAG",	65536 },
+	{ "BUTTON2DRAG",	131072 },
+	{ "BUTTON12DRAG",	262144 },
+	{ "MOVING",		524288 },
+
+	/* Internal constants */
+	{ "MAXCLICKS",		MAXCLICKS },
+	{ "MAXPRIORITY",	MAXPRIORITY },
 };
 
 /* initsyms() - install constants and built-ins in table */
@@ -1111,16 +1167,14 @@ initsyms(void)
 
 	Macros = newht(113);	/* no good reason for 113 */
 
-	for ( i=0; (p=Stdmacros[i]) != NULL;  i++ ) {
-		/* Some compilers make strings read-only */
-		p = strsave(p);
-		macrodefine(p,0);
-		free(p);
+	/* Define initial integer constant macros */
+	for (i=0; i<ARRAY_SIZE(Stdintegermacros); ++i) {
+		struct Macrointeger *p = &Stdintegermacros[i];
+		macrointegerdefine(p->name, p->value, 1);
 	}
-	sprintf(Msg1,"MAXCLICKS=%ld",(long)(MAXCLICKS));
-	macrodefine(Msg1,0);
-	sprintf(Msg1,"MAXPRIORITY=%ld",(long)(MAXPRIORITY));
-	macrodefine(Msg1,0);
+
+	/* Define Nullstr as empty string (e.g. "") */
+	macrogenericdefine("Nullstr", "\"\"", 0, NULL, 1);
 
 	*Inputistty = mdep_fisatty(Fin) ? 1 : 0;
 	if ( *Inputistty == 0 )

@@ -1207,14 +1207,57 @@ typedef struct Macro {
 
 static Macro *Topmac = NULL;
 
+void
+macrogenericdefine(char *name, char *value, int nparams, char *params[], int checkkeyword)
+{
+	Macro *m;
+	char *nm = uniqstr(name);
+	Symbolp sym;
+
+	if ( checkkeyword ) {
+		Symbolp sym;
+		sym = findsym(nm,Keywords);
+		if ( sym ) {
+			eprint("Can't #define an existing symbol: %s\n",nm);
+			return;
+		}
+	}
+	sym = findsym(nm,Macros);
+	if ( sym == NULL ) {
+                (void) syminstall(nm,Macros,MACRO);
+	}
+	else if ( sym->stype == UNDEF ) {
+		sym->stype = MACRO;
+	}
+	m = (Macro *) kmalloc(sizeof(Macro),"macrodefine");
+	m->name = nm;
+	m->value = uniqstr(value);
+	m->nparams = nparams;
+	m->params = params; /* Caller must allocate params array */
+	m->next = Topmac;
+	Topmac = m;
+}
+
+/* Define macro 'name' to have integer value 'value'
+ * Used at startup to define compilation constant usable in keykit code */
+void
+macrointegerdefine(char *name, int value, int checkkeyword)
+{
+	char valstr[32];
+	snprintf(valstr, sizeof(valstr), "%d", value);
+	macrogenericdefine(name, valstr, 0, NULL, checkkeyword);
+}
+
 /* Scan the macro definition in s, creating a new Macro structure. */
 void
 macrodefine(char *s,int checkkeyword)
 {
-	char *p, *nm;
-	Macro *m;
+	char *p, *name, *value;
 	int n, echar;
-	Symbolp sym;
+	int nparams;
+	char *params[NPARAMS];
+	char **paramsptr, *param;
+
 #ifdef __GNUC__
 	/* This is because in GNU C, constant strings (e.g. those */
 	/* passed to macrodefine()) are not writable by default. */
@@ -1229,34 +1272,16 @@ macrodefine(char *s,int checkkeyword)
 	echar = *p;
 	if ( echar != '\0' )
 		*p++ = '\0';
-	nm = uniqstr(s);
-
-	if ( checkkeyword ) {
-		sym = findsym(nm,Keywords);
-		if ( sym ) {
-			eprint("Can't #define an existing symbol: %s\n",nm);
-			return;
-		}
-	}
-	sym = findsym(nm,Macros);
-	if ( sym == 0 )
-                (void) syminstall(nm,Macros,MACRO);
-	else if ( sym->stype == UNDEF )
-		sym->stype = MACRO;
-	else if ( sym->stype != MACRO ) {
-	}
-	m = (Macro *) kmalloc(sizeof(Macro),"macrodefine");
-	m->name = nm;
+	name = s;
 	skipspace(p);
 	if ( echar != '(' ) {
-		/* Macro has no parameters */
-		m->nparams = 0;
-		m->value = uniqstr(p);
+		nparams = 0;
+		paramsptr = NULL;
+		value = p;
 	}
 	else {
-		char **pp, *param, *params[NPARAMS];
-		int nparams = 0;
-
+		nparams = 0;
+		paramsptr = NULL;
 		/* Gather parameter names */
 		do {
 			if ( nparams >= NPARAMS )
@@ -1271,18 +1296,15 @@ macrodefine(char *s,int checkkeyword)
 			execerror("Improper #define format");
 
 		skipspace(p);
-		m->value = uniqstr(p);
-
-		m->nparams = nparams;
+		value = p;
 		if ( nparams > 0 ) {
-			pp=(char **)kmalloc(nparams*sizeof(char *),"macrodefine2");
-			for ( n=0; n<nparams; n++ )
-				pp[n] = params[n];
-			m->params = pp;
+			paramsptr=(char **)kmalloc(nparams*sizeof(char *),"macrodefine2");
+			for ( n=0; n<nparams; n++ ) {
+				paramsptr[n] = params[n];
+			}
 		}
 	}
-	m->next = Topmac;
-	Topmac = m;
+	macrogenericdefine(name, value, nparams, paramsptr, checkkeyword);
 }
 
 int

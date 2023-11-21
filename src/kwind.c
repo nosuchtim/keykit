@@ -333,45 +333,37 @@ k_inittext(Kwind *w)
 		*pp++ = NULL;
 	w->currlinelen = MAXCOLS;
 	w->currline = kmalloc(w->currlinelen,"inittext");
+
 	w->currline[0] = '\0';
 	w->lastused = 0;
 	w->currlnum = 0;
 	w->bufflines[w->currlnum] = w->currline;
 	w->toplnum = 0;
+	w->nactive = 1;
 }
 
 void
 k_reinittext(Kwind *w)
 {
-	int n;
-	char **pp;
+	int idx;
 
-#if 0
-	w->inscroll = 0;
-	w->currcols = 0;
-	w->disprows = 0;
-	w->currx = 0;
-	w->curry = 0;
-
-#define MAXCOLS (2+Wroot->x1/mdep_fontwidth())
-	w->numlines = *Textscrollsize;
-	/* Don't realloc bufflines */
-
-	w->currcol = 0;
-	w->currrow = 0;
-#endif
-
-	for ( pp=w->bufflines,n=w->numlines-1; n>=0 ; n-- ) {
-		if ( *pp != w->currline ) {
-			kfree(*pp);
+	/* Free all entries in bufflines - except if its currline.
+	 * Set all entries in bufflines to NULL. */
+	for ( idx=0; idx<w->numlines; ++idx ) {
+		if ( w->bufflines[idx] != NULL ) {
+			if ( w->bufflines[idx] != w->currline ) {
+				kfree(w->bufflines[idx]);
+			}
+			w->bufflines[idx] = NULL;
 		}
-		*pp++ = NULL;
 	}
+
 	w->currline[0] = '\0';
 	w->lastused = 0;
 	w->currlnum = 0;
 	w->bufflines[w->currlnum] = w->currline;
 	w->toplnum = 0;
+	w->nactive = 1;
 }
 
 void

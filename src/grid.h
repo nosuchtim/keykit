@@ -78,6 +78,7 @@ struct Kwind {
 				/* line on the display is bufflines[50]), */
 				/* then the 2nd display line is bufflines[49]*/
 	int numlines;		/* Total number of lines in bufflines */
+	int nactive;		/* Number active lines in bufflines */
 	char *currline;		/* active line */
 	int currlinelen;        /* size of currline */
 	int currlnum;		/* index of that line in bufflines */
@@ -146,6 +147,13 @@ typedef struct Pbitmap Pbitmap;
 #define M_MOVE -4
 #define M_DELETE -5
 
+/* style() method values */
+#define MSTYLE_NOBORDER		0
+#define MSTYLE_BORDER		1
+#define MSTYLE_BUTTON		2
+#define MSTYLE_MENUBUTTON	3
+#define MSTYLE_PRESSEDBUTTON	4
+
 /* The default is for windows to have borders */
 #define WFLAG_NOBORDER 1
 /* This bit only has meaning if the WFLAG_NOBORDER bit is 0 */
@@ -202,7 +210,7 @@ extern Symlongp Bendrange, Bendoffset, Showtext, Showbar;
 extern Symlongp Volstem, Volstemsize, Panraster, Colors;
 extern Symlongp Colornotes, Inverse, Menujump, Menuscrollwidth, Menusize;
 extern Symlongp Graphmode, Graphdriver, Menuymargin;
-extern Symlongp Textscrollsize;
+extern Symlongp Textscrollsize, Textscrollgutter;
 extern Symlongp Keyinverse, Cursereverse, Usewindfifos;
 extern int Backcolor, Forecolor, Pickcolor, Lightcolor, Darkcolor, ButtonBGcolor;
 extern Phrasepp Pickphr, Gridphr;
