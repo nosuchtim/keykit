@@ -1743,8 +1743,8 @@ Changes the current directory to <i>dir</i>.
 <funcitem name="close ( fifo )"/>
 <keyword name="close()"/>
 Closes the specified fifo.
-<funcitem name="color ( colorindex )"/>
-<keyword name="color()"/>
+<funcitem name="colorset ( colorindex )"/>
+<keyword name="colorset()"/>
 Sets the current color index for drawing things.
 <funcitem name="colormix ( colorindex, red, green, blue )"/>
 <keyword name="colormix()"/>
