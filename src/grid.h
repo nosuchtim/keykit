@@ -203,6 +203,18 @@ typedef struct Pbitmap Pbitmap;
 #define M_ANYWHERE 6
 #define M_BUSY 7
 
+/* Values returned from mdep_mouse() */
+#define MOUSE_BTN_NONE		0
+#define MOUSE_BTN_LEFT		1
+#define MOUSE_BTN_RIGHT		2
+#define MOUSE_BTN_MIDDLE	3
+
+/* Mouse modifier values returned through mdep_mouse */
+#define MOUSE_MOD_NONE		0
+#define MOUSE_MOD_CTRL		1
+#define MOUSE_MOD_SHIFT		2
+#define MOUSE_MOD_CTRL_SHIFT	3
+
 extern Symlongp Sweepquant;
 extern Symlongp Dragquant;
 extern Symlongp Bendrange, Bendoffset, Showtext, Showbar;

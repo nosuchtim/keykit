@@ -930,21 +930,29 @@ keyerrfile("KEYUP lParam=0x%lx wParam=0x%lx\n",(long)lParam,(long)wParam);
 	case WM_RBUTTONDOWN:
 		if ( Ignoretillup )
 			return 0;
-		m = mod = 0;
+		m = MOUSE_BTN_NONE;
 		if ( wParam & MK_LBUTTON )
-			m |= 1;
+			m = MOUSE_BTN_LEFT;
 		else if ( (wParam & MK_RBUTTON) || (wParam & MK_MBUTTON) )
-			m |= 2;
-		if ( wParam & MK_CONTROL )
-			mod |= 1;
-		if ( wParam & MK_SHIFT )
-			mod |= 2;
+			m = MOUSE_BTN_RIGHT;
+		mod = MOUSE_MOD_NONE;
+		if ( wParam & MK_CONTROL ) {
+			if ( wParam & MK_SHIFT ) {
+				mod = MOUSE_MOD_CTRL_SHIFT;
+			} else {
+				mod = MOUSE_MOD_CTRL;
+			}
+		}
+		else if ( wParam & MK_SHIFT ) {
+			mod = MOUSE_MOD_SHIFT;
+		}
 		goto gotmouse;
 
 	case WM_LBUTTONUP:
 	case WM_MBUTTONUP:
 	case WM_RBUTTONUP:
-		m = mod = 0;
+		m = MOUSE_BTN_NONE;
+		mod = MOUSE_MOD_NONE;
 		if ( Ignoretillup ) {
 			Ignoretillup = 0;
 			return 0;
@@ -959,12 +967,14 @@ keyerrfile("KEYUP lParam=0x%lx wParam=0x%lx\n",(long)lParam,(long)wParam);
 			return 0;
 		SetCursor(Kcursor);
 		saveevent(K_MOUSE);
-		m = 0;
-		if ( wParam & MK_LBUTTON )
-			m |= 1;
-		else if ( (wParam & MK_RBUTTON) || (wParam & MK_MBUTTON) )
-			m |= 2;
-		savemouse(LOWORD(lParam),HIWORD(lParam),m,0);
+		m = MOUSE_BTN_NONE;
+		if ( wParam & MK_LBUTTON ) {
+			m = MOUSE_BTN_LEFT;
+		}
+		else if ( (wParam & MK_RBUTTON) || (wParam & MK_MBUTTON) ) {
+			m = MOUSE_BTN_RIGHT;
+		}
+		savemouse(LOWORD(lParam),HIWORD(lParam),m,MOUSE_MOD_NONE);
 		return 0;
 
 	case WM_ACTIVATE:

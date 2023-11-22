@@ -284,13 +284,18 @@ updatedrect(XEvent ev)
 static int
 state2modifier(int s)
 {
-	int m;
-	if ( s & ShiftMask )
-		m = 2;
-	else if ( s & ControlMask )
-		m = 1;
-	else
-		m = 0;
+	int m = MOUSE_MOD_NONE;
+
+	if ( s & ControlMask ) {
+		if ( s & ShiftMask ) {
+			m = MOUSE_MOD_CTRL_SHIFT;
+		} else {
+			m = MOUSE_MOD_CTRL;
+		}
+	}
+	else if ( s & ShiftMask ) {
+		m = MOUSE_MOD_SHIFT;
+	}
 	return(m);
 }
 
