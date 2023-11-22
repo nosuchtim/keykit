@@ -259,7 +259,17 @@ int mdep_mouse(int *ax,int *ay, int *am);
 
 	Get the current status of the mouse, putting the position into
 	*ax,*ay, and putting the current status of modifiers into *am.
-	Modifier values are: 1 for the control key, 2 for the shift key.
+	Modifier values are:
+		MOUSE_MOD_NONE: no modifier
+		MOUSE_MOD_CTRL: control key
+		MOUSE_MOD_SHIFT: shift key
+		MOUSE_MOD_CTRL_SHIFT: both control and shift key
+        Return values are:
+		MOUSE_BTN_NONE: no mouse button pushed
+                MOUSE_BTN_LEFT: left mouse button pushed
+                MOUSE_BTN_RIGHT: right mouse button pushed
+                MOUSE_BTN_MIDDLE: middle mouse button pushed
+	Note: Not all machines support middle mouse button...
 
 int mdep_mousewarp(int x, int y);
 

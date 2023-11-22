@@ -232,11 +232,13 @@ mdep_ignoreinterrupt(void)
 	(void) signal(SIGBUS, SIG_IGN);
 }
 
+#if OLDSTUFF
 static void
 millisleep(int n)
 {
 	usleep(1000*n);
 }
+#endif
 
 static int
 kbdchar(void)
@@ -282,13 +284,18 @@ updatedrect(XEvent ev)
 static int
 state2modifier(int s)
 {
-	int m;
-	if ( s & ShiftMask )
-		m = 2;
-	else if ( s & ControlMask )
-		m = 1;
-	else
-		m = 0;
+	int m = MOUSE_MOD_NONE;
+
+	if ( s & ControlMask ) {
+		if ( s & ShiftMask ) {
+			m = MOUSE_MOD_CTRL_SHIFT;
+		} else {
+			m = MOUSE_MOD_CTRL;
+		}
+	}
+	else if ( s & ShiftMask ) {
+		m = MOUSE_MOD_SHIFT;
+	}
 	return(m);
 }
 
@@ -590,7 +597,6 @@ void
 mdep_prerc(void)
 {
 	extern Symlongp Merge;
-	char *p;
 
 	*Merge = 1;
 	*Panraster = 0;
@@ -656,7 +662,7 @@ mdep_musicpath(void)
 		p = (char *) malloc((unsigned)(3*strlen(keyroot())+64));
 		sprintf(p,".%s%s/music",*Pathsep,keyroot());
 		str = uniqstr(p);
-		kfree(p);
+		free(p);
 	}
         return str;
 }
@@ -675,7 +681,7 @@ mdep_keypath(void)
                 sprintf(p,".%s%s/liblocal%s%s/lib",
                         *Pathsep,keyroot(),*Pathsep,keyroot());
                 path = uniqstr(p);
-                kfree(p);
+                free(p);
         }
         return path;
 }
@@ -683,8 +689,6 @@ mdep_keypath(void)
 int
 mdep_makepath(char *dirname, char *filename, char *result, int resultsize)
 {
-	char *p, *q;
-
 	if ( resultsize < (int)(strlen(dirname)+strlen(filename)+5) )
 		return 1;
 
@@ -721,6 +725,10 @@ mdep_browse(char *lbl, char *expr, int mustexist)
 {
 	/* NOTE: this isn't really used if NOBROWSESUPPORT is set in mdep.h. */
 	/* fill in someday, when there's a standard file selection dialog */
+
+	dummyusage(lbl);
+	dummyusage(expr);
+	dummyusage(mustexist);
 	return NULL;
 }
 
@@ -747,15 +755,6 @@ mdep_putconsole(char *s)
 {
 	fputs(s,stdout);
 	(void) fflush(stdout);
-}
-
-static void
-clearrect(int x0,int y0,int x1,int y1)
-{
- 	XSetFunction(dpy,gc,F_STORE);
- 	XSetForeground(dpy,gc,bgpix);
-	resetmode();
-	XFillRectangle(dpy, Disp.dr, gc, x0,y0, x1-x0,y1-y0);
 }
 
 static void
@@ -791,7 +790,6 @@ int
 mdep_waitfor(int tmout)
 {
 	int ret;
-	int iii;
 	fd_set readfds;
 	fd_set exceptfds;
 	struct timeval t;
@@ -883,8 +881,17 @@ mdep_waitfor(int tmout)
 			(*Intrfunc)();
 			return K_CONSOLE;
 		}
-		sprintf(Msg1,"poll/select failed in mdep_waitfor() errno=%d Readfds=0x%x MaxFdUsed=%d\n",errno,ReadFds,MaxFdUsed);
-		execerror(Msg1);
+        {
+            int fd;
+            unsigned int maskReadFds = 0;
+            for (fd = 0; fd < MaxFdUsed; fd++)
+            {
+                if (FD_ISSET(fd, &readfds))
+                    maskReadFds |= (1 << fd);
+            }
+            sprintf(Msg1,"poll/select failed in mdep_waitfor() errno=%d Readfds= 0x%x MaxFdUsed=%d\n",errno,maskReadFds,MaxFdUsed);
+            execerror(Msg1);
+        }
 	}
 
 	for ( m=Topport; m!=NULL; m=m->next ) {
@@ -1098,7 +1105,9 @@ initdisplay(int argc,char **argv)
 	XSizeHints sizehints;
 	XWMHints wmhints;
 	char *geom = 0;
+#if OLDSTUFF
 	long et;
+#endif
 	int flags;
 	unsigned int width, height;
 	int x, y;
@@ -1418,6 +1427,9 @@ mdep_fillellipse(int x0,int y0,int x1,int y1)
 void
 mdep_fillpolygon(int *xarr, int *yarr, int arrsize)
 {
+	dummyusage(xarr);
+	dummyusage(yarr);
+	dummyusage(arrsize);
 	tprint("fillpolygon not supported on linux.\n");
 }
 
@@ -1438,7 +1450,7 @@ bfree(Bitmap *b)
 {
 	if(b){
 		XFreePixmap(dpy, b->dr);
-		free((char *)b);
+		free(b);
 	}
 }
 
@@ -1603,15 +1615,15 @@ static struct cinfo {
 	int hotx, hoty;
 	Cursor curs;
 } Clist[] = {
-	M_ARROW, (char*)myarrow_bits, (char*)myarrow_mask_bits, 1,1, NOCURSOR,
-	M_CROSS, (char*)cross_bits, (char*)cross_bits, 8,8, NOCURSOR,
-	M_SWEEP, (char*)sweep_bits, (char*)sweep_bits, 0,0, NOCURSOR,
-	M_LEFTRIGHT,(char*)leftright_bits, (char*)leftright_bits, 0,0,NOCURSOR,
-	M_UPDOWN, (char*)updown_bits, (char*)updown_bits, 0,0, NOCURSOR,
-	M_ANYWHERE, (char*)anywhere_bits, (char*)anywhere_bits, 8,8, NOCURSOR,
-	M_BUSY, (char*)coffee_bits, (char*)coffee_bits, 0,0, NOCURSOR,
-	M_NOTHING, (char*)no_bits, (char*)no_bits, 0,0, NOCURSOR,
-	-1, (char*)NULL, (char*)NULL, 0,0, NOCURSOR
+	{ M_ARROW, (char*)myarrow_bits, (char*)myarrow_mask_bits, 1,1, NOCURSOR },
+	{ M_CROSS, (char*)cross_bits, (char*)cross_bits, 8,8, NOCURSOR },
+	{ M_SWEEP, (char*)sweep_bits, (char*)sweep_bits, 0,0, NOCURSOR },
+	{ M_LEFTRIGHT,(char*)leftright_bits, (char*)leftright_bits, 0,0,NOCURSOR },
+	{ M_UPDOWN, (char*)updown_bits, (char*)updown_bits, 0,0, NOCURSOR },
+	{ M_ANYWHERE, (char*)anywhere_bits, (char*)anywhere_bits, 8,8, NOCURSOR },
+	{ M_BUSY, (char*)coffee_bits, (char*)coffee_bits, 0,0, NOCURSOR },
+	{ M_NOTHING, (char*)no_bits, (char*)no_bits, 0,0, NOCURSOR },
+	{ -1, (char*)NULL, (char*)NULL, 0,0, NOCURSOR }
 };
 
 void
@@ -1798,7 +1810,6 @@ tcpip_listen(char *hostname, char *servname)
 	SOCKET sock;
 	char myname[80];
 	unsigned short port;
-	int r;
 
 	sock = socket( AF_INET, SOCK_STREAM, 0);
 	if (sock == INVALID_SOCKET) {
@@ -1825,7 +1836,8 @@ tcpip_listen(char *hostname, char *servname)
 	local_sin.sin_port = port;
 
 	if ( hostname != NULL ) {
-		strncpy(myname,hostname,sizeof(myname));
+		strncpy(myname,hostname,sizeof(myname)-1);
+        myname[sizeof(myname)-1] = '\0';
 	} else {
 		if ( gethostname(myname,sizeof(myname)) < 0 ) {
 			sockerror(sock,"gethostname() failed, errno=%d",errno);
@@ -1930,21 +1942,6 @@ tcpip_write(SOCKET sock,char *msg,int msgsize)
 		nwritten += r;
 	}
 	return nwritten;
-}
-
-static int
-tcpip_recv(SOCKET sock,char *buff, int buffsize)
-{
-	int r = recv(sock,buff,buffsize,0);
-	if ( r==0 )
-		return 0;	/* socket has closed, perhaps we should eof? */
-	if ( r == SOCKET_ERROR && errno == EWOULDBLOCK )
-		return 0;
-	if ( r == SOCKET_ERROR ) {
-		sockerror(sock,"tcpip_recv() failed");
-		return 0;
-	}
-	return r;
 }
 
 static int
@@ -2081,13 +2078,53 @@ mdep_openport(char *name, char *mode, char *type)
 Datum
 mdep_ctlport(PORTHANDLE m, char *cmd, char *arg)
 {
+	dummyusage(m);
+	dummyusage(cmd);
+	dummyusage(arg);
 	return(Noval);
 }
 
 Datum
 mdep_mdep(int argc)
 {
-	return(Noval);
+	char *args[3];
+	int n;
+	Datum d;
+
+	d = Nullval;
+	/*
+	 * Things past the first 3 args might be integers
+	 */
+	for ( n=0; n<3 && n<argc; n++ ) {
+		Datum dd = ARG(n);
+		if ( dd.type == D_STR ) {
+			args[n] = needstr("mdep",dd);
+		} else {
+			args[n] = "";
+		}
+	}
+	for ( ; n<3; n++ )
+		args[n] = "";
+
+	/* Only handle mdep("env"...) commands (for now) */
+	if ( strcmp(args[0],"env") == 0 ) {
+		if ( strcmp(args[1], "get")==0 ) {
+			char *s = getenv(args[2]);
+			if ( s != NULL ) {
+				d = strdatum(uniqstr(s));
+			} else {
+				d = strdatum(Nullstr);
+			}
+		} else {
+			execerror("mdep(\"env\",... ) doesn't recognize %s\n",args[1]);
+		}
+	}
+	else {
+		/* unrecognized command */
+		eprint("Error: unrecognized mdep argument - %s\n",args[0]);
+	}
+	
+	return d;
 }
 
 static void
@@ -2111,7 +2148,7 @@ static void
 doaccept(SOCKET sock)
 {
 	SOCKET newsock;
-	int acc_sin_len;
+	socklen_t acc_sin_len;
 	SOCKADDR_IN acc_sin;
 	PORTHANDLE m0, m1, mp;
 	char *name;
@@ -2160,14 +2197,10 @@ static void
 tcpip_checksock_accept(Myport *m)
 {
 	int soerr = 0;
-	int soleng = sizeof(int);
+	socklen_t soleng = sizeof(int);
 	Myport *m2;
 
 	if ( m->sockstate == SOCK_LISTENING ) {
-		SOCKADDR_IN sin;  /* accepted socket */
-		SOCKET s2;
-		int addrlen;
-
 		getsockopt(m->sock,SOL_SOCKET,SO_ERROR,&soerr,&soleng);
 		if ( soerr == ECONNREFUSED ) {
 			m->isopen = 0;
@@ -2191,7 +2224,7 @@ static void
 tcpip_checksock_connect(Myport *m)
 {
 	int soerr = 0;
-	int soleng = sizeof(int);
+	socklen_t soleng = sizeof(int);
 	Myport *m2;
 
 	if ( m->sockstate == SOCK_UNCONNECTED ) {
@@ -2241,10 +2274,9 @@ mdep_getportdata(PORTHANDLE *handle, char *buff, int buffsize, Datum *pd)
 {
 	Myport *m;
 	Myport *m2;
-	int r;
-	int soerr = 0;
-	int soleng = sizeof(int);
+	int r = 0;
 
+	dummyusage(pd);
 	for ( m=Topport; m!=NULL; m=m->next ) {
 
 		if ( m->rw != TYPE_READ && m->rw != TYPE_LISTEN )
@@ -2357,5 +2389,7 @@ mdep_closeport(PORTHANDLE m)
 int
 mdep_help(char *fname, char *keyword)
 {
+	dummyusage(fname);
+	dummyusage(keyword);
 	return(1);
 }

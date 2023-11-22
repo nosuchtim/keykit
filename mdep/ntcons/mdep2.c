@@ -270,8 +270,8 @@ mdep_mouse(int *ax,int *ay,int *am)
 {
 	*ax = 0;
 	*ay = 0;
-	*am = 0;
-	return 0;
+	*am = MOUSE_MOD_NONE;
+	return MOUSE_BTN_NONE;
 }
 
 int

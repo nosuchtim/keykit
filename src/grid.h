@@ -140,12 +140,11 @@ typedef struct Pbitmap Pbitmap;
 #define WIND_TEXT 3
 #define WIND_MENU 4
 
-/* These must match the macro values MENU_* in sym.c */
-#define M_NOCHOICE -1
-#define M_BACKUP -2
-#define M_UNDEFINED -3
-#define M_MOVE -4
-#define M_DELETE -5
+#define MENU_NOCHOICE -1
+#define MENU_BACKUP -2
+#define MENU_UNDEFINED -3
+#define MENU_MOVE -4
+#define MENU_DELETE -5
 
 /* style() method values */
 #define MSTYLE_NOBORDER		0
@@ -203,6 +202,18 @@ typedef struct Pbitmap Pbitmap;
 #define M_UPDOWN 5
 #define M_ANYWHERE 6
 #define M_BUSY 7
+
+/* Values returned from mdep_mouse() */
+#define MOUSE_BTN_NONE		0
+#define MOUSE_BTN_LEFT		1
+#define MOUSE_BTN_RIGHT		2
+#define MOUSE_BTN_MIDDLE	3
+
+/* Mouse modifier values returned through mdep_mouse */
+#define MOUSE_MOD_NONE		0
+#define MOUSE_MOD_CTRL		1
+#define MOUSE_MOD_SHIFT		2
+#define MOUSE_MOD_CTRL_SHIFT	3
 
 extern Symlongp Sweepquant;
 extern Symlongp Dragquant;
