@@ -1054,11 +1054,11 @@ static struct Macrointeger Stdintegermacros[] = {
 	/* { "CUT_PITCH",	CUT_PITCH }, - add for completeness??? */
 
 	/* values for menudo() */
-	{ "MENU_NOCHOICE",	M_NOCHOICE },
-	{ "MENU_BACKUP",	M_BACKUP },
-	{ "MENU_UNDEFINED",	M_UNDEFINED },
-	{ "MENU_MOVE",		M_MOVE },
-	{ "MENU_DELETE",	M_DELETE },
+	{ "MENU_NOCHOICE",	MENU_NOCHOICE },
+	{ "MENU_BACKUP",	MENU_BACKUP },
+	{ "MENU_UNDEFINED",	MENU_UNDEFINED },
+	{ "MENU_MOVE",		MENU_MOVE },
+	{ "MENU_DELETE",	MENU_DELETE },
 	
 	/* values for draw() methods */
 	{ "CLEAR",		P_CLEAR },

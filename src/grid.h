@@ -140,12 +140,11 @@ typedef struct Pbitmap Pbitmap;
 #define WIND_TEXT 3
 #define WIND_MENU 4
 
-/* These must match the macro values MENU_* in sym.c */
-#define M_NOCHOICE -1
-#define M_BACKUP -2
-#define M_UNDEFINED -3
-#define M_MOVE -4
-#define M_DELETE -5
+#define MENU_NOCHOICE -1
+#define MENU_BACKUP -2
+#define MENU_UNDEFINED -3
+#define MENU_MOVE -4
+#define MENU_DELETE -5
 
 /* style() method values */
 #define MSTYLE_NOBORDER		0

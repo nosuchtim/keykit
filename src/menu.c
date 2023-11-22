@@ -159,7 +159,7 @@ menusetsize(Kwind *w, int x0, int y0, int x1, int y1)
 		sz = 2;
 	w->km.menusize = sz;
 	w->km.top = 0;
-	w->km.choice = M_NOCHOICE;
+	w->km.choice = MENU_NOCHOICE;
 	w->lasty = y0;
 }
 
@@ -272,14 +272,14 @@ updatemenu(Kwind *w,int mx,int my, int nodraw)
 		if ( w->km.choice >= 0 ) {
 			unhighchoice(w);
 		}
-		w->km.choice = M_NOCHOICE;
+		w->km.choice = MENU_NOCHOICE;
 		return;
 	}
 
 	/* see if we're in a menu item */
 	nchoice = menuchoice(w,mx,my);
 
-	if ( nchoice != M_MOVE && nchoice != M_DELETE ) {
+	if ( nchoice != MENU_MOVE && nchoice != MENU_DELETE ) {
 		/* see if we're in the scroll bar */
 		if ( scrollupdate(w,mx,my) )
 			return;
@@ -290,7 +290,7 @@ updatemenu(Kwind *w,int mx,int my, int nodraw)
 
 		/* Normally, unhighlight the item we've left */
 		unhighchoice(w);
-		w->km.choice = M_NOCHOICE;
+		w->km.choice = MENU_NOCHOICE;
 	}
 
 	/* highlight the new choice */
@@ -318,7 +318,7 @@ scrollupdate(Kwind *w,int mx,int my)
 	/* if we just moved into the scrol bar... */
 	if ( w->km.choice >= 0 ) {
 		highchoice(w);
-		w->km.choice = M_NOCHOICE;
+		w->km.choice = MENU_NOCHOICE;
 	}
 	w->inscroll = 1;
 
@@ -360,16 +360,16 @@ menuchoice(Kwind *w,int x,int y)
 	int n;
 	int ny = w->km.y + w->km.header;
 	int nshow = shown(w);
-	int nchoice = M_NOCHOICE;
+	int nchoice = MENU_NOCHOICE;
 	int x0 = w->km.x;
 	int x1 = x0 + w->km.width;
 
 	if ( x >= x0 && x <= x1 ) {
 		if ( y > w->km.y && y < ny ) {
 			if ( x > ((x0+x1)/2+x1)/2 )
-				nchoice = M_DELETE;
+				nchoice = MENU_DELETE;
 			else
-				nchoice = M_MOVE;
+				nchoice = MENU_MOVE;
 		}
 		else for ( n=0; n<nshow; ny+=Menuysize,n++ ) {
 			if ( y > ny && y <= (ny+Menuysize) ) {

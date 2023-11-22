@@ -809,7 +809,7 @@ k_initmenu(Kwind *w)
 	w->km.menusize = *Menusize;
 	w->km.made = 0;
 	w->km.top = 0;
-	w->km.choice = M_NOCHOICE;
+	w->km.choice = MENU_NOCHOICE;
 	w->km.width = 0;
 	w->km.header = 8;
 }
