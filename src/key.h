@@ -1024,6 +1024,7 @@ extern long Msg1size, Msg2size, Msg3size;
 extern unsigned int Buffsize;
 extern int yydebug;
 extern FILE *Fin, *Fout;
+extern int sContextIdx;
 extern Datum Zeroval, Noval, Nullval;
 extern Datum Str_x0, Str_y0, Str_x1, Str_y1, Str_x, Str_y, Str_button;
 extern Datum Str_type, Str_mouse, Str_down, Str_up, Str_drag, Str_move;
