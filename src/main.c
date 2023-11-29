@@ -50,14 +50,14 @@ char Tty[] = "tty";
 char *Infile = Tty;		/* current input file name */
 char Autopop = 0;
 
-static FILE *Fstack[FSTACKSIZE];	/* Nested FILEs being read */
-static char *Fnstack[FSTACKSIZE];	/* The names of those files */
-static int Lnstack[FSTACKSIZE];		/* Current line # in those files */
-static int Popstack[FSTACKSIZE];	/* Whether to auto-pop on EOF */
-static FILE **Fstackp = Fstack;
-static char **Fnstackp = Fnstack;
-static int *Lnstackp = Lnstack;
-static int *Popstackp = Popstack;
+struct SourceContext {
+	FILE *fin;
+	char *infile;
+	int lineno;
+	int autopop;
+} sContext[FSTACKSIZE];
+int sContextIdx = 0;
+
 static long Ungoti;
 static int Maxpathleng = 0;
 static Htablep Keylibtable = NULL;
@@ -807,22 +807,25 @@ restart:
 void
 pushfin(FILE *f,char *fn,int autopop)
 {
-	if ( Fstackp >= (&Fstack[FSTACKSIZE]) ) {
+	struct SourceContext *sc;
+	if (sContextIdx == FSTACKSIZE) {
 		int n;
-		char **pp;
-		for ( n=0,pp=Fnstack; pp < &Fnstack[FSTACKSIZE]; n++,pp++ ) {
-			char *fname = *pp;
-			if ( fname )
-				eprint("Fnstack=%s\n",fname);
+		for (n = 0; n<FSTACKSIZE; ++n) {
+			sc = &sContext[n];
+			if ( sc->infile )
+				eprint("Fnstack=%s\n",sc->infile);
 		}
+		/* execerror recovery will take care
+		 * of unwinding source contexts */
 		execerror("Too many files are being sourced!  Increase FSTACKSIZE!");
 	}
-
+	
 	/* Save current file pointer and name */
-	*Fstackp++ = Fin;
-	*Fnstackp++ = Infile;
-	*Lnstackp++ = Lineno;
-	*Popstackp++ = Autopop;
+	sc = &sContext[sContextIdx++];
+	sc->fin = Fin;
+	sc->infile = Infile;
+	sc->lineno = Lineno;
+	sc->autopop = Autopop;
 
 	if ( f!=NULL && mdep_fisatty(f) ) {
 		Infile = Tty;
@@ -852,15 +855,27 @@ pushfin(FILE *f,char *fn,int autopop)
 	}
 }
 
+/* If execerror is called, pop nested source context */
+void
+popscontextuntil(int level)
+{
+	while (level < sContextIdx) {
+		popfin();
+	}
+}
+
 /* skip the rest of the current input file and go to the previous one */
 void
 popfin(void)
 {
+	struct SourceContext *sc;
 	if ( ! Autopop )
 		yyreset();
 
 	/* Restore file we were reading before this one */
-	if ( Fstackp <= Fstack ) {
+	if (
+		sContextIdx == 0
+	    ) {
 		eprint("Hey, popfin called too often?\n");
 		Fin = NULL;
 		Infile = "";
@@ -870,10 +885,11 @@ popfin(void)
 		if ( Infile && (Infile != Tty) ) {
 			kfree(Infile);
 		}
-		Fin = *--Fstackp;
-		Infile = *--Fnstackp;
-		Lineno = *--Lnstackp;
-		Autopop = *--Popstackp;
+		sc = &sContext[--sContextIdx];
+		Fin = sc->fin;
+		Infile = sc->infile;
+		Lineno = sc->lineno;
+		Autopop = sc->autopop;
 	}
 #ifdef TRYWITHOUT
 	keyerrfile("Linetrace B may be adding I_FILENAME!\n");

@@ -613,8 +613,15 @@ exectasks(int nosetjmp)
 	// KeyPyState = PyEval_SaveThread();
 #endif
 
-	if ( (!nosetjmp) )
-		setjmp(Begin);
+	if ( (!nosetjmp) ) {
+		int saveContextLevel = sContextIdx;
+		int ret;
+		ret = setjmp(Begin);
+		if ( ret != 0 ) {
+			popscontextuntil(saveContextLevel);
+		}
+	}
+		
 
 	setintcatch();
 

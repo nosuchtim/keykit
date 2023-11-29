@@ -38,9 +38,11 @@ i_pop(void)
 	decruse(d);
 }
 
-Instnodep *Iseg = NULL;
-Instnodep *Lastin = NULL;
-Instnodep *Future = NULL;
+struct InstSegment {
+	Instnodep iseg;
+	Instnodep lastin;
+	Instnodep future;
+} *instSegment;
 
 /* This is purposely low, just to exercise newly added code. */
 #define ISEGINC 2
@@ -52,9 +54,10 @@ Instcode Stopcode;
 void
 clriseg(void)
 {
-	Iseg[Niseg] = NULL;
-	Lastin[Niseg] = NULL;
-	Future[Niseg] = newin();
+	struct InstSegment *is = &instSegment[Niseg];
+	is->iseg = NULL;
+	is->lastin = NULL;
+	is->future = newin();
 }
 
 void
@@ -62,11 +65,8 @@ pushiseg(void)
 {
 	if ( ++Niseg >= Maxiseg ) {
 		int newmax = Maxiseg + ISEGINC;
-		unsigned int newsize = newmax * sizeof(Instnodep);
-
-		Iseg = krealloc(Iseg, newsize, "pushiseg");
-		Lastin = krealloc(Lastin, newsize, "pushiseg");
-		Future = krealloc(Future, newsize, "pushiseg");
+		unsigned int newsize = newmax * sizeof(struct InstSegment);
+		instSegment = krealloc(instSegment, newsize, "pushiseg");
 		Maxiseg  = newmax;
 	}
 	clriseg();
@@ -277,15 +277,17 @@ popiseg(void)
 {
 	Codep ip;
 	Instnodep poppedin;
+	struct InstSegment *is;
 
 	if ( Niseg < 0 )
 		execerror("popiseg called too many times?");
 
 	/* add final Stopcode instruction */
-	Future[Niseg]->code = Stopcode;
-	addinode(Future[Niseg]);
+	is = &instSegment[Niseg];
+	is->future->code = Stopcode;
+	addinode(is->future);
 
-	poppedin = Iseg[Niseg--];
+	poppedin = instSegment[Niseg--].iseg;
 	if ( Errors == 0 ) {
 		buildinstnodebranchlist(poppedin);
 		optiseg(poppedin);
@@ -1017,31 +1019,33 @@ optiseg(Instnodep t)
 Instnodep
 futureinstnode(void)
 {
-	return(Future[Niseg]);
+	return(instSegment[Niseg].future);
 }
 
 void
 addinode(Instnodep in)
 {
-	Instnodep last = Lastin[Niseg];
+	struct InstSegment *is = &instSegment[Niseg];
+	Instnodep last = is->lastin;
 	if ( last == NULL ) {
-		Iseg[Niseg] = in;
+		is->iseg = in;
 	}
 	else {
 		nextinode(last) = in;
 		previnode(in) = last;
 	}
 	nextinode(in) = NULL;
-	Lastin[Niseg] = in;
+	is->lastin = in;
 }
 
 Instnodep
 code(Instcode ic)
 {
+	struct InstSegment *is = &instSegment[Niseg];
 	register Instnodep in;
 
-	in = Future[Niseg];
-	Future[Niseg] = newin();
+	in = is->future;
+	is->future = newin();
 	in->code = ic;
 
 	addinode(in);
