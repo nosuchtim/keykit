@@ -1,6 +1,7 @@
 PROGRAM	      = byacc.exe
+SKELETON      = btyaccpar
 
-DEBUGCC = /D "_DEBUG" /D "_CRT_SECURE_NO_WARNINGS" /nologo
+DEBUGCC = /D "_DEBUG" /D "_CRT_SECURE_NO_WARNINGS" /nologo /D "YYBTYACC"
 
 CC=cl.exe
 LINK=link.exe
@@ -10,13 +11,15 @@ LINK=link.exe
 
 OBJS	      = closure.obj \
 		error.obj \
+		graph.obj \
 		lalr.obj \
 		lr0.obj \
 		main.obj \
 		mkpar.obj \
+		mstring.obj \
 		output.obj \
 		reader.obj \
-		skeleton.obj \
+		$(SKELETON).obj \
 		symtab.obj \
 		verbose.obj \
 		warshall.obj
@@ -43,7 +46,7 @@ main.obj: defs.h
 mkpar.obj: defs.h
 output.obj: defs.h
 reader.obj: defs.h
-skeleton.obj: defs.h
+$(SKELETON).obj: defs.h
 symtab.obj: defs.h
 verbose.obj: defs.h
 warshall.obj: defs.h

@@ -41,9 +41,10 @@ keylib : keylib.o mdep1.o misc.o
 	$(CC) $(CFLAGS) -c $*.c
 
 yacc.c : gram.y
-	../byacc/byacc -d gram.y
-	mv y_tab.c yacc.c
-	mv y_tab.h yacc.h
+	../byacc/byacc -dv gram.y
+	mv y.tab.c yacc.c
+	mv y.tab.h yacc.h
+	mv y.output yacc.output
 
 procfont : procfont.c
 	$(WINCC) procfont.c

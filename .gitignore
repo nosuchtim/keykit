@@ -43,6 +43,7 @@ src/keykit.ico
 src/tjt.ico
 src/d_*.h
 src/yacc.[hc]
+src/yacc.output
 src/clock.c
 src/key
 src/lowkey

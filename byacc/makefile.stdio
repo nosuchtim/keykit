@@ -1,8 +1,9 @@
 DEST	      = .
+SKELETON      = btyaccpar
 
 HDRS	      = defs.h
 
-CFLAGS	      = -O -Wno-implicit-int -Wno-builtin-declaration-mismatch -Wno-implicit-function-declaration
+CFLAGS	      = -O -Wno-implicit-int -Wno-builtin-declaration-mismatch -Wno-implicit-function-declaration -DYYBTYACC
 
 LDFLAGS	      =
 
@@ -15,13 +16,15 @@ MAKEFILE      = Makefile
 
 OBJS	      = closure.o \
 		error.o \
+                graph.o \
 		lalr.o \
 		lr0.o \
 		main.o \
 		mkpar.o \
+                mstring.o \
 		output.o \
 		reader.o \
-		skeleton.o \
+		$(SKELETON).o \
 		symtab.o \
 		verbose.o \
 		warshall.o
@@ -29,16 +32,17 @@ OBJS	      = closure.o \
 PRINT	      = pr -f -l88
 
 PROGRAM	      = byacc
-
 SRCS	      = closure.c \
 		error.c \
+                graph.c \
 		lalr.c \
 		lr0.c \
 		main.c \
 		mkpar.c \
+                mstring.c \
 		output.c \
 		reader.c \
-		skeleton.c \
+                $(SKELETON).c \
 		symtab.c \
 		verbose.c \
 		warshall.c
@@ -46,7 +50,7 @@ SRCS	      = closure.c \
 all:		$(PROGRAM)
 
 $(PROGRAM):     $(OBJS) $(LIBS)
-		@$(LINKER) $(LDFLAGS) -o $(PROGRAM) $(OBJS) $(LIBS)
+		$(LINKER) $(LDFLAGS) -o $(PROGRAM) $(OBJS) $(LIBS)
 		@echo "done"
 
 clean:;		@rm -f $(OBJS)
@@ -78,7 +82,7 @@ main.o: defs.h
 mkpar.o: defs.h
 output.o: defs.h
 reader.o: defs.h
-skeleton.o: defs.h
+$(SKELETON).o: defs.h
 symtab.o: defs.h
 verbose.o: defs.h
 warshall.o: defs.h
