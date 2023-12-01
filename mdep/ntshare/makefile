@@ -118,11 +118,14 @@ ptest3.exe : ptest3.obj $(PSTUFF)
 # 	mv y_tab.h yacc.h
 
 yacc.c : gram.y
-	..\byacc\byacc -d gram.y
+	..\byacc\byacc -vd gram.y
 	deltree /y yacc.c
-	rename y_tab.c yacc.c
+	rename y.tab.c yacc.c
 	deltree /y yacc.h
-	rename y_tab.h yacc.h
+	rename y.tab.h yacc.h
+	deltree /y yacc.output
+	rename y.output yacc.output
+
 
 procfont.exe : procfont.c
 	$(WINCC) procfont.c

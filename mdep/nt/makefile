@@ -117,11 +117,13 @@ ptest3.exe : ptest3.obj $(PSTUFF)
 	$(LINK) $(DEBUGLINK) $(guiflags) -out:ptest3.exe ptest3.obj $(PSTUFF) $(libs)
 
 yacc.c : gram.y
-	..\byacc\byacc -d gram.y
+	..\byacc\byacc -vd gram.y
 	rm -f yacc.c
-	mv y_tab.c yacc.c
+	mv y.tab.c yacc.c
 	rm -f yacc.h
-	mv y_tab.h yacc.h
+	mv y.tab.h yacc.h
+	rm -f yacc.output
+	mv y.output yacc.output
 
 procfont.exe : procfont.c
 	$(WINCC) procfont.c
