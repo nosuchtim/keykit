@@ -667,321 +667,520 @@ installvar(Symstr up)
 	return s;
 }
 
+/* last character lexed */
+int yylexLastCh = MYYYEMPTY; /* Have no input */
+
+#define NEXT nextChar()
+int nextChar(void)
+{
+	yylexLastCh = yyrawin();
+	return yylexLastCh;
+}
+
+#define FOLLOW1(EXPECT1, IFYES1, IFNO)		\
+	NEXT;					\
+	if (yylexLastCh == EXPECT1) {		\
+		NEXT;				\
+		retval = IFYES1;		\
+	}					\
+	else {					\
+		retval = IFNO;			\
+	}
+
+#define FOLLOW2(EXPECT1, IFYES1, EXPECT2, IFYES2, IFNO)	\
+	NEXT;						\
+	if (yylexLastCh == EXPECT1) {			\
+		NEXT;					\
+		retval = IFYES1;			\
+	}						\
+	else if (yylexLastCh == EXPECT2) {		\
+		NEXT;					\
+		retval = IFYES2;			\
+	}						\
+	else {						\
+		retval = IFNO;				\
+	}
+
+// FOLLOW3('>', '=', RSHIFTEQ, RSHIFT, '=', GE, '>');
+
+#define FOLLOW3(EXPECT1, EXPECT2, IFYES3, IFYES2, EXPECT2A, IFYES2A, IFNO) \
+	NEXT;								\
+	if (yylexLastCh == EXPECT1) {					\
+		NEXT;							\
+		if (yylexLastCh == EXPECT2) {				\
+			NEXT;						\
+			retval = IFYES3;				\
+		}							\
+		else {							\
+			retval = IFYES2;				\
+		}							\
+	}								\
+	else if (yylexLastCh == EXPECT2A) {				\
+		NEXT;							\
+		retval = IFYES2A;					\
+	}								\
+	else {								\
+		retval = IFNO;						\
+	}
+
+/* Read a symbol from input(via yyrawin).
+ * NOTE: If reading characters to terminate a symbol and input ends on EOF
+ *       the EOF is not stored in Yytext(with Pyytext pointing after it).
+ */
 int
 yylex()
 {
-	register int c;
-	int retval;
-	int lastc = 0;
-	int isdouble, nextc;
-	long bmult = 1;
-	long tot;
+	int retval = 0;
+	long lval;
+	char *q;
+	Symstr up;
+	Symbolp s;
+	long bmult;
 
 	Macrosused = 0;
 
     restart:
-	/* Skip initial white space */
-	do {
-		c = yyinput();
-	} while ( c == ' ' || c == '\t' || c == '\n' );
-
-	if ( c == EOF ) {
-#ifdef MYYYDEBUG
-		if ( yydebug )
-			printf("yylex returns 0, EOF\n");
-#endif
-		return(0);
+	while (yylexLastCh == MYYYEMPTY) {
+		NEXT;
 	}
-
 	Pyytext = Yytext;
-	*Pyytext++ = c;
+	switch(yylexLastCh) {
+	case EOF:
+		/* Stop at end of file */
+		retval = 0;
+		break;
 
-	if ( isname1char(c) ) {
-		Symstr up;
-		Symbolp s;
+	case '\n':
+		NEXT;
+#if 0
+		Lineno++;
+		column = 0;
+#endif
+		goto restart;
 
-		while ((c=yyinput()) != EOF && isnamechar(c) )
-			;
-		yyunget(c);
-		*Pyytext = '\0';
+	case ' ':
+	case '\t':
+		NEXT;
+		goto restart;
+
+        case 'a': case 'b': case 'c': case 'd': case 'e':
+        case 'f': case 'g': case 'h': case 'i': case 'j':
+        case 'k': case 'l': case 'm': case 'n': case 'o':
+        case 'p': case 'q': case 'r': case 's': case 't':
+        case 'u': case 'v': case 'w': case 'x': case 'y':
+        case 'z': case 'A': case 'B': case 'C': case 'D':
+        case 'E': case 'F': case 'G': case 'H': case 'I':
+        case 'J': case 'K': case 'L': case 'M': case 'N':
+        case 'O': case 'P': case 'Q': case 'R': case 'S':
+        case 'T': case 'U': case 'V': case 'W': case 'X':
+        case 'Y': case 'Z': case '_':
+		*Pyytext++ = yylexLastCh;
+		do {
+			NEXT;
+		} while (isalnum(yylexLastCh) || yylexLastCh == '_');
+		Pyytext[-1] = '\0'; /* prune off character after identifier */
 
 		up = uniqstr(Yytext);
 		if ( (s=findsym(up,Keywords)) != NULL ) {
 			retval = s->stype;
 			yylval.sym = s;
-			goto getout;
+			break;
 		}
 		if ( (s=findsym(up,Macros)) != NULL ) {
+			yyunget(yylexLastCh);
 			macroeval(up);
+			yylexLastCh = MYYYEMPTY; /* force yylex to read */
 			goto restart;
 		}
 		yylval.str = up;
 		retval = NAME;
-		goto getout;
-	}
-	if ( c == '#' ) {
+		break;
+
+	case '#':
+		*Pyytext++ = yylexLastCh;
 		if ( eatpound() == 0 ) {
 #ifdef MYYYDEBUG
 			if ( yydebug )
 				printf("yylex eatpound returns 0, EOF\n");
 #endif
-			return(0);
+			retval = YYEOF;
+			break;
 		}
+		NEXT;
 		goto restart;
-	}
-	isdouble = 0;
-	if ( c == '.' ) {
-		c = yyinput();
-		/* allow numbers to start with . */
-		if ( isdigit(c) ) {
-			isdouble = 1;
-			goto dblread;
-		}
-		if ( c == '.' ) {
-			c = yyinput();
-			if ( c == '.' ) {
-				retval = DOTDOTDOT;
-				goto getout;
-			}
-			execerror(".. is not valid - perhaps you meant ... ?");
-		}
-		yyunget(c);
-		retval = '.';
-		goto getout;
-	}
-	if ( c == '0' ) {	/* octal or hex numbers */
-		tot = 0;
-		if ( (c=yyinput()) == 'x' ) {			/* hex */
-			while ( (c=yyinput()) != EOF ) {
-				int h = hexchar(c);
-				if ( h<0 )
-					break;
-				tot = 16 * tot + h;
-			}
-		}
-		else if ( isdigit(c) ) {			/* octal */
-			int e = 0;
-			do {
-				if ( c < '0' || c > '9' )
-					break;
-				if ( (c=='8'||c=='9') && e++ == 0 )
-					eprint("Invalid octal number!\n");
-				tot = 8 * tot + (c-'0');
-			} while ( (c=yyinput()) != EOF );
-		}
-		else if ( c == '.' )
-			goto foundadot;
-
-		if ( c=='b' || c=='q' )
-			bmult = ((Clicks==NULL)?(DEFCLICKS):(*Clicks));
-		else
-			yyunget(c);
-			
-		yylval.val = tot * bmult;
-		retval = INTEGER;
-		goto getout;
-	}
-	if ( isdigit(c) ) {			/* integers and floats */
-	    dblread:
-		for ( ; (c=yyinput()) != EOF; lastc=c ) {
-			if ( isdigit(c) )
-				continue;
-			if ( c == '.' ) {
-			    foundadot:
-				/* look ahead to see if it's a float */
-				nextc = yyinput();
-				yyunget(nextc);
-				if ( isdigit(nextc) || nextc=='e' ) {
-					isdouble = 1;
-					continue;
+		
+        case '.': case '0': case '1': case '2': case '3': case '4':
+        case '5': case '6': case '7': case '8': case '9':
+		/* Save yylexLastCh into start of Yytext */
+#if 0
+		Pyytext = Yytext;
+#endif
+		*Pyytext++ = yylexLastCh;
+		do {
+			NEXT;
+		} while (isdigit(yylexLastCh));
+		/* Yytext can hold\.*[0-9]* */
+		/* Note: Pyytext points to one past where yylexLastCh
+		 * is stored; hence the test for '2' */
+		if ( (Yytext[0] == '.') && ((Pyytext - Yytext) == 2) ) {
+			/* only have '.' followed by a non digit.
+			 * Is it an ellipsis? */
+			if (yylexLastCh == '.') {
+				/* Have '..' */
+				NEXT;
+				if (yylexLastCh == '.')
+				{
+					NEXT;
+					return DOTDOTDOT;
 				}
-				yyunget('.');
+				else
+				{
+					/* Hmm, have '..' followed by not-a-period.
+					 * Need to  force to return at 
+					 * least one '.' and then restart lex */
+					fprintf(stderr, "%s:%d found .. + not-a-dot\n", __FUNCTION__, __LINE__);
+					return '.';
+				}
+			}
+			return '.';
+		}
+		if ((Yytext[0] == '.') && ((Pyytext - Yytext) > 1) && (toupper(yylexLastCh) != 'E') ) {
+			/* Number is '.' followed by at least one digit, but
+			 * not followed by an exponent */
+			*Pyytext = '\0';
+			yylval.dbl = strtod(Yytext, NULL);
+			return DOUBLE;
+		}
+		else if ( yylexLastCh == '.' ) {
+			/* Number is [0-9]+ '.', get optional
+			 * fraction and optional exponent */
+			NEXT;
+			if (!isdigit(yylexLastCh) ) {
+				int n;
 				/* a number followed by a '.' *and* then */
 				/* followed by a non-digit is probably */
 				/* an expression like ph%2.pitch, so we */
-				/* just return the integer. */
-				break;
-			}
-			if ( c == 'e' ) {
-				isdouble = 1;
-				continue;
-			}
-			/* An integer with a 'b' or 'q' suffix is multiplied by */
-			/* the number of clicks in a quarter note. */
-			if ( ! isdouble && (c=='q' || c=='b') ) {
-				bmult = ((Clicks==NULL)?(DEFCLICKS):(*Clicks));
-				/* and we're done */
-				break;
-			}
-			if ( (c=='+'||c=='-') && lastc=='e' ) {
-				isdouble = 1;
-				continue;
-			}
-			yyunget(c);
-			break;
-		}
-		*Pyytext = '\0';
+				/* just return the integer (after ungetting
+				 * the non-digit _and_ '.'. */
+				yyunget(yylexLastCh);
+				yyunget('.');
 
-		if ( isdouble ) {
-			yylval.dbl = (DBLTYPE) atof(Yytext);
-			retval = DOUBLE;
+				*Pyytext = '\0';
+				lval = 0;
+				for (n=0; Yytext[n] != '\0'; ++n) {
+					lval = 10 * lval + Yytext[n] - '0';
+				}
+				yylval.val = lval;
+				yylexLastCh = MYYYEMPTY;  /* force yylex to read */
+				return INTEGER;
+			}
+			while (isdigit(yylexLastCh)) {
+				NEXT;
+			}
+			if (toupper(yylexLastCh) == 'E') {
+				/* Have [0-9]+ '.' [0-9]* and 'e' */
+				NEXT;
+				if (yylexLastCh == '+' || yylexLastCh == '-') {
+					/* Absorb exponent sign */
+					NEXT;
+				}
+				while (isdigit(yylexLastCh)) {
+					NEXT;
+				}
+			}
+			*Pyytext = 0;
+			yylval.dbl = strtod(Yytext, NULL);
+			return DOUBLE;
+		}
+		else if (toupper(yylexLastCh) == 'E') {
+			/* Have [0-9]+ 'e'; collect rest */
+			NEXT;
+			if (yylexLastCh == '+' || yylexLastCh == '-') {
+				/* Absorb exponent sign */
+				NEXT;
+			}
+			while (isdigit(yylexLastCh)) {
+				NEXT;
+			}
+			*Pyytext = '\0';
+			yylval.dbl = strtod(Yytext, NULL);
+			return DOUBLE;
+		}
+		else if (toupper(yylexLastCh) == 'X') {
+			/* If prefix is not just '0', not hex */
+			Pyytext[-1] = '\0';
+			if (strcmp(Yytext, "0") != 0) {
+				/* Hmm, what to do with [0-9]+ 'x' ? */
+				fprintf(stderr, "%s:%d What to do with [0-9]+ 'x' ?\n", __FUNCTION__, __LINE__);
+				lval = 0;
+			}
+			else {
+				/* skip the '0x', then build hex number */
+				NEXT;
+				lval = 0;
+				while (isxdigit(yylexLastCh) != 0) {
+					int ch;
+					ch = toupper(yylexLastCh);
+					lval *= 16;
+					if (ch > '9') {
+						lval += (ch - 'A' + 10);
+					} else {
+						lval += (ch - '0');
+					}
+					NEXT;
+				}
+			}
 		}
 		else {
-			yylval.val = atol(Yytext) * bmult;
-			retval = INTEGER;
+			int base;
+			if (yylexLastCh != EOF) {
+				Pyytext--; /* back up to last digit */
+			}
+			base = (Yytext[0] == '0') ? 8 : 10;
+			lval = 0;
+			q = Yytext;
+			do {
+				int ch;
+				ch = *q++;
+				if (ch >= '0' + base) {
+					eprint("Invalid octal number!\n");
+				}
+				lval = lval * base + ch - '0';
+			} while (q < Pyytext);
 		}
-		goto getout;
-	}
-	if ( c == '\'' ) {
-		yyunget(c);
-		yylval.phr = yyphrase(yyinput);
+		yylval.val = lval;
+		if ( yylexLastCh=='b' || yylexLastCh=='q' ) {
+			/* Beat/CLick numerical suffix */
+			NEXT;
+			bmult = ((Clicks==NULL)?(DEFCLICKS):(*Clicks));
+			yylval.val = bmult * lval;
+		}
+		return INTEGER;
+
+	case '\'':
+		yyunget(yylexLastCh);
+		yylval.phr = yyphrase(nextChar);
 		phincruse(yylval.phr);
 		retval = PHRASE;
-		goto getout;
-	}
-	/* strings ) */
-	if ( c == '"' ) {
+		NEXT;
+		break;
+
+	case '"':
 		int si = 0;
 		int ch, n, i;
 
-		while ( (ch=yyinput()) != '"' ) {
-
-		    rechar:
-			if ( ch == EOF )
-				execerror("missing ending-quote on string");
-			if ( ch == '\n' )
-				execerror("Newline inside string?!");
-			/* interpret \-characters */
-			if ( ch == '\\' ) {
-				switch ( ch=yyinput() ) {
-				case '\n':
-					/* escaped newlines are ignored */
-					ch = yyinput();
+		while ((NEXT) != '"') {
+		  rechar:
+			if (yylexLastCh == '\\') {
+				NEXT;
+				if (yylexLastCh == '\n') {
+					fprintf(stderr, "%s:%d What to do bout \n in a string?", __FUNCTION__, __LINE__);
+					NEXT;
 					goto rechar;
-					/* break; */
+				}
+				switch(yylexLastCh) {
 				case '0':
-					/* Handle \0ddd numbers */
+					/* Handle '\0ddd' numbers */
 					for ( n=0,i=0; i<3; i++ ) {
-						ch = yyinput();
-						if ( ! isdigit(ch) )
+						NEXT;
+						if ( ! isdigit(yylexLastCh) )
 							break;
-						n = n*8 + ch - '0';
+						n = n*8 + yylexLastCh - '0';
 					}
-					yyunget(ch);
-					ch = n;
+					yylexLastCh = n;
 					break;
 				case 'x':
 					/* Handle \xfff numbers */
 					for ( n=0,i=0; i<3; i++ ) {
-						ch = hexchar(yyinput());
+						NEXT;
+						ch = hexchar(yylexLastCh);
 						if ( ch < 0 )
 							break;
 						n = n*16 + ch;
 					}
-					yyunget(ch);
 					ch = n;
 					break;
-#ifdef OLDSTUFF
-				/* use this if \xFF has only 2 chars */
-				case 'x':
-					{ int h1, h2;
-					/* Handle \xFF numbers */
-					h1 = hexchar(yyinput());
-					h2 = hexchar(yyinput());
-					if ( h1<0 || h2<0 ) {
-						eprint("Invalid hex number!\n");
-						ch = 0;
-					}
-					else
-						ch = h1*16 + h2;
-					}
+				case 'a':
+					yylexLastCh = '\a';
 					break;
-#endif
-				case 'b': ch ='\b'; break;
-				case 'f': ch ='\f'; break;
-				case 'n': ch ='\n'; break;
-				case 'r': ch ='\r'; break;
-				case 't': ch ='\t'; break;
-				case 'v': ch ='\v'; break;
-				case '"': ch ='"'; break;
-				case '\'': ch ='\''; break;
-				case '\\': ch = '\\'; break;
+				case 'b':
+					yylexLastCh = '\b';
+					break;
+				case 'f':
+					yylexLastCh = '\f';
+					break;
+				case 'n':
+					yylexLastCh = '\n';
+					break;
+				case 'r':
+					yylexLastCh = '\r';
+					break;
+				case 't':
+					yylexLastCh = '\t';
+					break;
+				case 'v':
+					yylexLastCh = '\v';
+					break;
+				case '"':
+				case '\'':
+				case '\\':
+					break; /* Leave these alone */
+				case EOF:
+					break;
 				default:
 					if ( Slashcheck != NULL && *Slashcheck != 0 ) {
-						eprint("Unrecognized backslashed character (%c) is ignored\n",ch);
-						ch = yyinput();
+						eprint("Unrecognized backslashed character (%c) is ignored\n",yylexLastCh);
+						NEXT;
 						goto rechar;
-					} else {
-						yyunget(ch);
-						ch = '\\';
 					}
+					yylexLastCh = '\\'; /* keep the '\' if its there */
 					break;
 				}
 			}
-			makeroom((long)(si+2),&Msg1,&Msg1size); /* +1 for final '\0' */
-			Msg1[si++] = ch;
+			else {
+				if (yylexLastCh == EOF) {
+					execerror("missing ending-quote on string");
+					break; /* on EOF */
+				}
+			}
+			makeroom((long)(si+1),&Msg1,&Msg1size); /* +1 for final '\0' */
+			Msg1[si++]=yylexLastCh;
 		}
-		Msg1[si] = '\0';
+		NEXT;
+		Msg1[si]='\0';
 		yylval.str = uniqstr(Msg1);
 		retval = STRING;
-		goto getout;
-	}
-	if ( c == '$' ) {
-		c = yyinput();
-		if ( c == '$' ) {
+		break;
+
+	case '$':
+		NEXT;
+		if ( yylexLastCh == '$' ) {
+			NEXT;
 			retval = DOLLAR2;
-			goto getout;
+			break;
 		}
-		if ( isdigit(c) || c == '-' ) {
+		if ( isdigit(yylexLastCh) || yylexLastCh == '-' ) {
 			long n;
 			int sgn;
-			if ( c == '-' ) {
+			if ( yylexLastCh == '-' ) {
 				n = 0;
 				sgn = -1;
 			}
 			else {
-				n = c - '0';
+				n = yylexLastCh - '0';
 				sgn = 1;
 			}
-			while ( (c=yyinput()) != EOF ) {
-				if ( ! isdigit(c) ) {
-					yyunget(c);
+			while ( NEXT != EOF ) {
+				if ( ! isdigit(yylexLastCh) ) {
 					break;
 				}
-				n = n*10 + c - '0';
+				n = n*10 + yylexLastCh - '0';
 			}
 			yylval.val = n*sgn + *Kobjectoffset;
 			if ( yylval.val >= Nextobjid )
 				Nextobjid = yylval.val + 1;
 			retval = OBJECT;
-			goto getout;
+			break;
 		}
-		yyunget(c);
 		retval = '$';
-		goto getout;
+		break;
+
+	case '?':
+		FOLLOW1('?', QMARK2, '?');
+		break;
+
+	case '=':
+		FOLLOW1('=', EQ, '=');
+		break;
+
+	case '+':
+		FOLLOW2('=', PLUSEQ, '+', INC, '+');
+		break;
+
+	case '-':
+		FOLLOW2('=', MINUSEQ, '-', DEC, '-');
+		break;
+
+	case '*':
+		FOLLOW1('=', MULEQ, '*');
+		break;
+
+	case '>':
+		FOLLOW3('>', '=', RSHIFTEQ, RSHIFT, '=', GE, GT);
+		break;
+
+	case '<':
+		FOLLOW3('<', '=', LSHIFTEQ, LSHIFT, '=', LE, LT);
+		break;
+		
+	case '!':
+		FOLLOW1('=', NE, BANG);
+		break;
+
+	case '&':
+		FOLLOW2('=', AMPEQ, '&', AND, '&');
+		break;
+
+	case '|':
+		FOLLOW2('=', OREQ, '|', OR, '|');
+		break;
+
+	case '/':
+		FOLLOW1('=', DIVEQ, '/');
+		break;
+
+	case '^':
+		FOLLOW1('=', XOREQ, '^');
+		break;
+
+	case '~':
+		FOLLOW1('~', REGEXEQ, '~');
+		break;
+
+	default:
+		{
+			int ch = yylexLastCh;
+			NEXT;
+			retval = ch;
+		}
+		break;
 	}
-	switch(c) {
-	case '\n': retval = '\n'; break;
-	case '?':  retval = follow('?', QMARK2, '?'); break;
-	case '=':  retval = follow('=', EQ, '='); break;
-	case '+':  retval = follo2('=', PLUSEQ, '+', INC, '+'); break;
-	case '-':  retval = follo2('=', MINUSEQ, '-', DEC, '-'); break;
-	case '*':  retval = follow('=', MULEQ, '*'); break;
-	case '>':  retval = follo3('=', GE, '>', '=',RSHIFT,RSHIFTEQ,GT);break;
-	case '<':  retval = follo3('=', LE, '<', '=',LSHIFT,LSHIFTEQ,LT);break;
-	case '!':  retval = follow('=', NE, BANG); break;
-	case '&':  retval = follo2('=', AMPEQ, '&', AND, '&'); break;
-	case '|':  retval = follo2('=', OREQ, '|', OR, '|'); break;
-	case '/':  retval = follow('=', DIVEQ, '/'); break;
-	case '^':  retval = follow('=', XOREQ, '^'); break;
-	case '~':  retval = follow('~', REGEXEQ, '~'); break;
-	default:   retval = c; break;
-	}
-    getout:
+
 	*Pyytext = '\0';
-#ifdef MYYYDEBUG
-	if ( yydebug )
-		printf("yylex returns %d, Yytext=(%s)\n",retval,Yytext);
-#endif
-	return(retval);
+	return retval;
+}
+
+const char *yystype_tostring(int yychar, void *loc)
+{
+	static char yysvalstr[128];
+	YYSTYPE *yystyp = (YYSTYPE *)loc;
+	const char *yys;
+
+	switch(yychar) {
+	case DOUBLE:
+		snprintf(yysvalstr, sizeof(yysvalstr), "%g", yystyp->dbl);
+		break;
+		    
+	case OBJECT:
+		snprintf(yysvalstr, sizeof(yysvalstr), "$%d", (int)yystyp->val);
+		break;
+
+	case INTEGER:
+		snprintf(yysvalstr, sizeof(yysvalstr), "%d", (int)yystyp->val);
+		break;
+
+	case STRING:
+	case NAME:
+		snprintf(yysvalstr, sizeof(yysvalstr), "%s", yystyp->str);
+		break;
+
+	default:
+		yys = yyname[yychar];
+		if ( yys == NULL ) {
+			yys = yyname[YYUNDFTOKEN];
+		}
+		snprintf(yysvalstr, sizeof(yysvalstr), "%s", yys);
+		break;
+	}
+	return yysvalstr;
 }

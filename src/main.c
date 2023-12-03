@@ -905,6 +905,7 @@ popfin(void)
 void
 yyreset(void)
 {
+	yylexLastCh = MYYYEMPTY; /* Signalling have no input... */
 	*Yytext = '\0';
 	Ungoti = 0;
 	Ungot[Ungoti] = 0;
@@ -1041,50 +1042,6 @@ checkfunckey(int c)
 	}
 	return 0;
 }
-
-/* follow() - look ahead for >=, etc. */
-int
-follow(int expect,int ifyes,int ifno)
-{
-	register int ch = yyinput();
-
-	if ( ch == expect)
-		return ifyes;
-	yyunget(ch);
-	return ifno;
-}
-
-int
-follo2(int expect1,int ifyes1,int expect2,int ifyes2,int ifno)
-{
-	register int ch = yyinput();
-
-	if ( ch == expect1)
-		return ifyes1;
-	if ( ch == expect2)
-		return ifyes2;
-	yyunget(ch);
-	return ifno;
-}
-
-int
-follo3(int expect1,int ifyes1,int expect2,int expect3,int ifyes2,int ifyes3,int ifno)
-{
-	register int ch = yyinput();
-
-	if ( ch == expect1)
-		return ifyes1;
-	if ( ch == expect2) {
-		int ch3 = yyinput();
-		if ( ch3 == expect3 )
-			return ifyes3;
-		yyunget(ch3);
-		return ifyes2;
-	}
-	yyunget(ch);
-	return ifno;
-}
-
 
 int
 eatpound(void)
@@ -1748,6 +1705,8 @@ MAIN(int argc,char **argv)
 	realConsolefd = Consolefd;
 	Consolefd = -1;
 
+	/* TODO: parse Default and yydebug args before keystart since
+	 *       keystart parses... */
 	keystart();
 
 	if ((p = getenv("KEYPAGEPERSISTENT")) != NULL) {

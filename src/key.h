@@ -1018,6 +1018,7 @@ extern int Niseg;
 extern char *Pyytext;
 extern char *Progname;
 extern char *Yytext;
+extern int yylexLastCh;
 extern char *Buffer;
 extern char *Msg1, *Msg2, *Msg3;
 extern long Msg1size, Msg2size, Msg3size;
@@ -1205,6 +1206,13 @@ Hey, mdep_statmidi is no longer used!
 
 #define KEYNCOLORS 64
 
+/* Code indicating yylexLastCh is 'empty'.
+ * Note: This matches YYEMPTY but that's only defined in yacc.c */
+#define MYYYEMPTY (-2)
+
+#define YYSTYPE_TOSTRING(yychar, yylval) yystype_tostring(yychar, &(yylval))
+extern const char *yystype_tostring(int yychar, void *loc);
+	
 #include "grid.h"
 #include "d_grid.h"
 #include "d_kwind.h"
