@@ -391,6 +391,7 @@ typedef void (*PATHFUNC)();
 #define BI_BITMAP	125
 #define BI_OBJECTINFO	126
 #define O_FILLPOLYGON	127
+#define BI_KEYERRFILE	128
 
 #define IO_STD 1
 #define IO_REDIR 2
@@ -646,6 +647,7 @@ extern struct bltinfo builtins[];
 extern BYTEFUNC Bytefuncs[];
 extern char *Bytenames[];
 extern BLTINFUNC Bltinfuncs[];
+extern unsigned int Bltinfuncssize;
 
 typedef struct Ktask *Ktaskp;
 
