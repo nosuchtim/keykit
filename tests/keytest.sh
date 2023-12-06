@@ -48,3 +48,7 @@ diff ptr.out ptr.sav
 echo Running logical test ...
 KEYPATH=../lib ../bin/lowkey ${ARGS} logical.k > logical.out
 diff logical.out logical.sav
+
+echo Running optimize test ...
+KEYPATH=../lib ../bin/lowkey ${ARGS} optimize.k > optimize.out
+diff optimize.out optimize.sav

@@ -188,6 +188,29 @@ addinstnodebranch(Instnodep addr, Instnodep target)
 	ib->target = target;
 }
 
+/* Remove branch insn from instnode list */
+void
+rminstnodebranch(Instnodep insn)
+{
+	Instnodebranchp ib, ibend;
+
+	ibend = &iblist.arry[iblist.used];
+	for (ib=iblist.arry; ib<ibend; ++ib) {
+		if (ib->addr == insn) {
+			if ( *Debuginst )
+				keyerrfile("rm nodebranch 0x%" KEY_PRIxPTR "\n", (KEY_PRIxPTR_TYPE)ib->addr);
+			/* Slice bi out of the array */
+			ibend--;
+			while(ib < ibend) {
+				*ib = ib[1];
+				ib++;
+			}
+			return;
+		}
+	}
+	execerror("%s: couldn't find insn 0x%" KEY_PRIxPTR "", __FUNCTION__, (KEY_PRIxPTR_TYPE)insn);
+}
+
 /* Initially build list of branch instructions before optimization */
 void
 buildinstnodebranchlist(Instnodep t)
@@ -346,7 +369,7 @@ instnodepatch(Instnodep oldtarget,Instnodep newtarget)
 			/* ib->insn banches to i1 - make it branch to i2 */
 			ib->target = newtarget;
 			/* Note: nextnode(ib->addr) is IC_INST of i1 branch
-			 * insn(since all brnach insns have IC_INST follow */
+			 * insn(since all branch insns have IC_INST follow */
 			nextinode(ib->addr)->code.u.in = newtarget;
 		}
 	}
@@ -895,8 +918,10 @@ optiseg(Instnodep t)
 							i1->code.u.func = (BYTEFUNC)I_TCONDEVAL;
 						}
 						/* Set condition target to that of goto */
+						instnodebranchupdate(i1, i4->code.u.in);
 						i2->code.u.in = i4->code.u.in;
 						/* Remove goto(and its target) */
+						rminstnodebranch(i3);
 						rminstnode(i2, 0); /* I_GOTO */
 						rminstnode(i2, 0); /* target */
 						anyopt++;
@@ -1393,7 +1418,8 @@ enddef(register Symbolp sp)
 void
 callfuncd(Symbolp s)
 {
-	int npassed, nlocals, varsize, bi, needed;
+	int npassed, nlocals, varsize, needed;
+	unsigned int bi;
 	Datum d, funcd, dnpassed;
 	Datum *objdp, *realobjdp, *methdp, *dp;
 	Codep cp;
@@ -1554,7 +1580,7 @@ callfuncd(Symbolp s)
 	}
 
 	if ( bi != 0 ) {
-		if (bi > 127) {
+		if (bi >= Bltinfuncssize) {
 			eprint("Internal error: bi=%d\n", bi);
 		}
 		/* it's a built-in function - execute it right away */
