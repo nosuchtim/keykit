@@ -1,0 +1,5 @@
+print(1)
+realtime('a')
+print(2)
+sleeptill(Now+4b)
+print(3)

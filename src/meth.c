@@ -206,6 +206,9 @@ o_inherited(int argc)
 Kwind*
 windid(Kobjectp o)
 {
+#ifndef KEY_GRAPHICS
+	execerror("No KEY_GRAPHICS!");
+#else
 	Datum d;
 	Symbolp s;
 
@@ -219,11 +222,15 @@ windid(Kobjectp o)
 		execerror("In windid(), .w isn't a window object, it's %s!? (id=%ld)",atypestr(d.type),o->id);
 	}
 	return(d.u.wind);
+#endif
 }
 
 void
 o_size(int argc)
 {
+#ifndef KEY_GRAPHICS
+	execerror("No KEY_GRAPHICS!");
+#else
 	Datum retval;
 	long x0, y0, x1, y1;
 	int n;
@@ -247,11 +254,15 @@ o_size(int argc)
 		retval = Nullval;
 	}
 	ret(retval);
+#endif
 }
 
 void
 o_contains(int argc)
 {
+#ifndef KEY_GRAPHICS
+	execerror("No KEY_GRAPHICS!");
+#else
 	long x0, y0, x1, y1;
 	int n;
 	Kwind *w;
@@ -265,11 +276,15 @@ o_contains(int argc)
 	else
 		r = windoverlaps(w,x0,y0,x1,y1);
 	ret(numdatum(r));
+#endif
 }
 
 void
 o_mousedo(int argc)
 {
+#ifndef KEY_GRAPHICS
+	execerror("No KEY_GRAPHICS!");
+#else
 	long x0, y0, x1, y1, butt;
 	Htablep arr;
 	int n;
@@ -303,6 +318,7 @@ o_mousedo(int argc)
 	else
 		execerror(".mousedo only works on menu and text windows!?");
 	ret(numdatum(r));
+#endif
 }
 
 int
@@ -325,6 +341,9 @@ needplotmode(char *meth,Datum d)
 void
 o_lineboxfill(int argc,char *meth,KWFUNC f,int norm)
 {
+#ifndef KEY_GRAPHICS
+	execerror("No KEY_GRAPHICS!");
+#else
 	long x0, y0, x1, y1;
 	int n, omode;
 	Kwind *w;
@@ -339,11 +358,15 @@ o_lineboxfill(int argc,char *meth,KWFUNC f,int norm)
 	(*f)(w,(int)x0,(int)y0,(int)x1,(int)y1);
 	if ( Pmode != omode )
 		my_plotmode(omode);
+#endif
 }
 
 void
 o_fillpolygon(int argc)
 {
+#ifndef KEY_GRAPHICS
+	execerror("No KEY_GRAPHICS!");
+#else
 	long x0, y0, x1, y1;
 	int n, omode, nxy;
 	Kwind *w;
@@ -392,50 +415,74 @@ o_fillpolygon(int argc)
 	if ( Pmode != omode )
 		my_plotmode(omode);
 	ret(Nullval);
+#endif
 }
 
 void
 o_line(int argc)
 {
+#ifndef KEY_GRAPHICS
+	execerror("No KEY_GRAPHICS!");
+#else
 	o_lineboxfill(argc,".line",kwindline,0);
 	ret(Nullval);
+#endif
 }
 
 void
 o_box(int argc)
 {
+#ifndef KEY_GRAPHICS
+	execerror("No KEY_GRAPHICS!");
+#else
 	o_lineboxfill(argc,".rectangle",kwindrect,1);
 	ret(Nullval);
+#endif
 }
 
 void
 o_fill(int argc)
 {
+#ifndef KEY_GRAPHICS
+	execerror("No KEY_GRAPHICS!");
+#else
 	o_lineboxfill(argc,".fillrectangle",kwindfill,1);
 	ret(Nullval);
+#endif
 }
 
 void
 o_ellipse(int argc)
 {
+#ifndef KEY_GRAPHICS
+	execerror("No KEY_GRAPHICS!");
+#else
 	if ( argc > 1 && (int)needplotmode(".ellipse",ARG(1))==P_XOR )
 		execerror("Sorry, ellipse drawing doesn't support XOR mode!");
 	o_lineboxfill(argc,".ellipse",kwindellipse,1);
 	ret(Nullval);
+#endif
 }
 
 void
 o_fillellipse(int argc)
 {
+#ifndef KEY_GRAPHICS
+	execerror("No KEY_GRAPHICS!");
+#else
 	if ( argc > 1 && (int)needplotmode(".fillellipse",ARG(1))==P_XOR )
 		execerror("Sorry, ellipse drawing doesn't support XOR mode!");
 	o_lineboxfill(argc,".fillellipse",kwindfillellipse,1);
 	ret(Nullval);
+#endif
 }
 
 void
 o_style(int argc)
 {
+#ifndef KEY_GRAPHICS
+	execerror("No KEY_GRAPHICS!");
+#else
 	Kwind *w = windid(T->obj);
 	int b;
 	int allflags = WFLAG_NOBORDER | WFLAG_BUTTON
@@ -476,11 +523,15 @@ o_style(int argc)
 			b = 4;
 	}
 	ret(numdatum(b));
+#endif
 }
 
 void
 o_saveunder(int argc)
 {
+#ifndef KEY_GRAPHICS
+	execerror("No KEY_GRAPHICS!");
+#else
 	int wid, hgt;
 	Kwind *w = windid(T->obj);
 
@@ -495,11 +546,15 @@ o_saveunder(int argc)
 	w->flags |= WFLAG_SAVEDUNDER;
 
 	ret(Nullval);
+#endif
 }
 
 void
 o_restoreunder(int argc)
 {
+#ifndef KEY_GRAPHICS
+	execerror("No KEY_GRAPHICS!");
+#else
 	Kwind *w = windid(T->obj);
 	if ( (w->flags & WFLAG_SAVEDUNDER) != 0 ) {
 		int keepit = 0;
@@ -516,25 +571,37 @@ o_restoreunder(int argc)
 	else
 		execerror(".restoreunder used without a previous saveunder!?");
 	ret(Nullval);
+#endif
 }
 
 void
 o_textheight(int argc)
 {
+#ifndef KEY_GRAPHICS
+	execerror("No KEY_GRAPHICS!");
+#else
 	dummyusage(argc);
 	ret(numdatum(mdep_fontheight()));
+#endif
 }
 
 void
 o_textwidth(int argc)
 {
+#ifndef KEY_GRAPHICS
+	execerror("No KEY_GRAPHICS!");
+#else
 	dummyusage(argc);
 	ret(numdatum(mdep_fontwidth()));
+#endif
 }
 
 void
 o_text(int argc,int just)
 {
+#ifndef KEY_GRAPHICS
+	execerror("No KEY_GRAPHICS!");
+#else
 	long x0, y0, x1, y1;
 	char *str;
 	int n, omode;
@@ -559,42 +626,62 @@ o_text(int argc,int just)
 	kwindtext(str,(int)x0,(int)y0,(int)x1,(int)y1,just);
 	if ( Pmode != omode )
 		my_plotmode(omode);
+#endif
 }
 
 void
 o_printf(int argc)
 {
+#ifndef KEY_GRAPHICS
+	execerror("No KEY_GRAPHICS!");
+#else
 	char *fmt = needstr(".printf",ARG(0));
 
 	Wprintf = windid(T->obj);
 	keyprintf(fmt,1,argc-1,wprint);
 	ret(Nullval);
+#endif
 }
 
 void
 o_textcenter(int argc)
 {
+#ifndef KEY_GRAPHICS
+	execerror("No KEY_GRAPHICS!");
+#else
 	o_text(argc,TEXT_CENTER);
 	ret(Nullval);
+#endif
 }
 
 void
 o_textleft(int argc)
 {
+#ifndef KEY_GRAPHICS
+	execerror("No KEY_GRAPHICS!");
+#else
 	o_text(argc,TEXT_LEFT);
 	ret(Nullval);
+#endif
 }
 
 void
 o_textright(int argc)
 {
+#ifndef KEY_GRAPHICS
+	execerror("No KEY_GRAPHICS!");
+#else
 	o_text(argc,TEXT_RIGHT);
 	ret(Nullval);
+#endif
 }
 
 void
 o_type(int argc)
 {
+#ifndef KEY_GRAPHICS
+	execerror("No KEY_GRAPHICS!");
+#else
 	char *t;
 	Kwind *w = windid(T->obj);
 
@@ -607,57 +694,81 @@ o_type(int argc)
 	default: 		t = "unknown"; break;
 	}
 	ret(strdatum(uniqstr(t)));
+#endif
 }
 
 void
 o_xmin(int argc)
 {
+#ifndef KEY_GRAPHICS
+	execerror("No KEY_GRAPHICS!");
+#else
 	Kwind *w = windid(T->obj);
 
 	dummyusage(argc);
 	ret(numdatum(windxmin(w)));
+#endif
 }
 
 void
 o_ymin(int argc)
 {
+#ifndef KEY_GRAPHICS
+	execerror("No KEY_GRAPHICS!");
+#else
 	Kwind *w = windid(T->obj);
 
 	dummyusage(argc);
 	ret(numdatum(windymin(w)));
+#endif
 }
 
 void
 o_xmax(int argc)
 {
+#ifndef KEY_GRAPHICS
+	execerror("No KEY_GRAPHICS!");
+#else
 	Kwind *w = windid(T->obj);
 
 	dummyusage(argc);
 	ret(numdatum(windxmax(w)));
+#endif
 }
 
 void
 o_ymax(int argc)
 {
+#ifndef KEY_GRAPHICS
+	execerror("No KEY_GRAPHICS!");
+#else
 	Kwind *w = windid(T->obj);
 
 	dummyusage(argc);
 	ret(numdatum(windymax(w)));
+#endif
 }
 
 void
 o_redraw(int argc)
 {
+#ifndef KEY_GRAPHICS
+	execerror("No KEY_GRAPHICS!");
+#else
 	Kwind *w = windid(T->obj);
 
 	dummyusage(argc);
 	wredraw1(w);
 	ret(Nullval);
+#endif
 }
 
 void
 o_childunder(int argc)
 {
+#ifndef KEY_GRAPHICS
+	execerror("No KEY_GRAPHICS!");
+#else
 	Kobjectp o, topo, fo;
 	Kwind *w, *topw, *w2;
 	int n;
@@ -702,11 +813,15 @@ o_childunder(int argc)
 		}
 	}
 	ret(objdatum(topo));
+#endif
 }
 
 void
 o_drawphrase(int argc)
 {
+#ifndef KEY_GRAPHICS
+	execerror("No KEY_GRAPHICS!");
+#else
 	Phrasep ph;
 	char *s = ".drawphrase";
 	Kwind *w = windid(T->obj);
@@ -721,11 +836,15 @@ o_drawphrase(int argc)
 	if ( Pmode != omode )
 		my_plotmode(omode);
 	ret(Nullval);
+#endif
 }
 
 void
 o_scaletogrid(int argc)
 {
+#ifndef KEY_GRAPHICS
+	execerror("No KEY_GRAPHICS!");
+#else
 	long x0, y0, x1, y1;
 	int n;
 	Htablep arr;
@@ -750,11 +869,15 @@ o_scaletogrid(int argc)
 		execerror(bad);
 	addnonxy(retval.u.arr,arr);
 	ret(retval);
+#endif
 }
 
 void
 o_scaletowind(int argc)
 {
+#ifndef KEY_GRAPHICS
+	execerror("No KEY_GRAPHICS!");
+#else
 	long x0, y0, x1, y1;
 	int n;
 	Htablep arr;
@@ -779,11 +902,15 @@ o_scaletowind(int argc)
 		execerror(bad);
 	addnonxy(retval.u.arr,arr);
 	ret(retval);
+#endif
 }
 
 void
 o_closestnote(int argc)
 {
+#ifndef KEY_GRAPHICS
+	execerror("No KEY_GRAPHICS!");
+#else
 	long x0, y0, x1, y1;
 	int n;
 	Htablep arr;
@@ -807,11 +934,15 @@ o_closestnote(int argc)
 		ntinsert(ntcopy(nt),ph);
 	d = phrdatum(ph);
 	ret(d);
+#endif
 }
 
 void
 o_view(int argc)
 {
+#ifndef KEY_GRAPHICS
+	execerror("No KEY_GRAPHICS!");
+#else
 	long x0, y0, x1, y1;
 	int n;
 	Htablep arr;
@@ -833,11 +964,15 @@ o_view(int argc)
 	retval = xy01arr(w->showstart,(long)(w->showlow),
 		w->showstart+w->showleng,(long)(w->showhigh));
 	ret(retval);
+#endif
 }
 
 void
 o_sweep(int argc)
 {
+#ifndef KEY_GRAPHICS
+	execerror("No KEY_GRAPHICS!");
+#else
 	Fifo *f;
 	long x, y;
 	int n;
@@ -855,11 +990,15 @@ o_sweep(int argc)
 	dosweepstart(w,n,x,y,f);
 	/* Don't return a value, since dosweepstart() starts */
 	/* an instruction sequence that will eventually return a value. */
+#endif
 }
 
 void
 o_trackname(int argc)
 {
+#ifndef KEY_GRAPHICS
+	execerror("No KEY_GRAPHICS!");
+#else
 	Kwind *w = windid(T->obj);
 	Datum retval;
 
@@ -877,11 +1016,15 @@ o_trackname(int argc)
 	else
 		execerror("usage: window(\"phrase\" [,trackname])");
 	ret(retval);
+#endif
 }
 
 void
 o_menuitem(int argc)
 {
+#ifndef KEY_GRAPHICS
+	execerror("No KEY_GRAPHICS!");
+#else
 	Kwind *w = windid(T->obj);
 	char *label;
 	char *s = ".menuitem";
@@ -900,11 +1043,15 @@ o_menuitem(int argc)
 	menucalcxy(w);
 	r = ki->pos;
 	ret(numdatum(r));
+#endif
 }
 
 void
 o_menuitems(int argc)
 {
+#ifndef KEY_GRAPHICS
+	execerror("No KEY_GRAPHICS!");
+#else
 	Kwind *w = windid(T->obj);
 	Kitem *ki;
 	Datum d;
@@ -918,11 +1065,15 @@ o_menuitems(int argc)
 		setarraydata(d.u.arr,strdatum(ki->name),numdatum(0));
 	}
 	ret(d);
+#endif
 }
 
 Kobjectp
 windobject(long id,int complain,char *type)
 {
+#ifndef KEY_GRAPHICS
+	execerror("No KEY_GRAPHICS!");
+#else
 #ifdef OLDSTUFF
 	static int first = 1;
 #endif
@@ -1027,4 +1178,5 @@ windobject(long id,int complain,char *type)
 	setmethod(o,"menuitems",O_MENUITEMS);
 
 	return o;
+#endif
 }

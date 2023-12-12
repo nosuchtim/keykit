@@ -17,6 +17,13 @@ static int Menuysize = 0;
 #define menuyarea(w) ((w)->km.height+4)
 #define hasscrollbar(w) ((w)->km.offset!=0)
 
+void
+m_reset(void)
+{
+}
+
+#ifdef KEY_GRAPHICS
+
 static void
 scrollbar(Kwind *w)
 {
@@ -418,11 +425,6 @@ menuchoice(Kwind *w,int x,int y)
 }
 
 void
-m_reset(void)
-{
-}
-
-void
 m_init(void)
 {
 	static int first = 1;
@@ -439,3 +441,5 @@ m_menudo(Kwind *w,int b,int x,int y,int nodraw)
 	dummyusage(b);
 	updatemenu(w,x,y,nodraw);
 }
+
+#endif

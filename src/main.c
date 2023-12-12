@@ -1773,12 +1773,14 @@ MAIN(int argc,char **argv)
 		argv++;
 	}
 
+#ifdef KEY_GRAPHICS
 	/* I can't recall why we play this game with the Consolefd, but it */
 	/* probably has something to do with end-of-file, or something.    */
 	/* For startgraphics(), we restore the real Consolefd for linux.   */
 	Consolefd = realConsolefd;
 	startgraphics();
 	Consolefd = -1;
+#endif
 
 	startrealtime();
 	startreboot();

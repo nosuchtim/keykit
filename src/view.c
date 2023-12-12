@@ -16,6 +16,14 @@ char Curschar = '_' /* 0x7f would be a small square */;
 #define columnx(w,c) ((w)->tx0+v_colsize()/2+1+(c)*v_colsize())
 #define rowy(w,r) (w->y1-v_rowsize()/4-v_rowsize()*(w->disprows-(r)))
 
+#ifndef KEY_GRAPHICS
+
+void
+i_dosweepcont(void)
+{}
+
+#else
+
 Pbitmap
 v_reallocbitmap(int x,int y,Pbitmap p)
 {
@@ -591,3 +599,5 @@ redrawtext(Kwind *w)
 	str[1] = '\0';
 	mdep_string(w->currx,w->curry,str);
 }
+
+#endif

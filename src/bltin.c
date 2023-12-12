@@ -907,7 +907,12 @@ bi_printf(int argc)
 
 	reinitmsg3();
 	keyprintf(fmt,1,argc-1,ptomsg3);
+#ifdef KEY_GRAPHICS
 	mdep_popup(Msg3);
+#else
+	printf("%s", Msg3);
+#endif
+
 	ret(Nullval);
 }
 

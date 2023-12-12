@@ -169,6 +169,22 @@ install_ntcons :
 	cd src && $(MK) clean
 	cd src && $(MK) install
 
+copy_ntrepl :
+	cp mdep/ntrepl/mdep1.c src/mdep1.c
+	cp mdep/ntrepl/mdep2.c src/mdep2.c
+	cp mdep/ntrepl/mdep.h src/mdep.h
+	cp mdep/ntrepl/makefile src/makefile
+	cp mdep/ntrepl/clock.c src/clock.c
+	cp mdep/ntrepl/midi.c src/midi.c
+	cp mdep/ntrepl/*.cur src
+	cp mdep/ntrepl/*.ico src
+	cp mdep/nt/resetkeylib.bat bin
+
+install_ntrepl :
+	$(MK) copy_ntrepl
+	cd src && $(MK) clean
+	cd src && $(MK) install
+
 # clean for NT (and 95)
 clean_nt :
 	$(MK) copy_nt

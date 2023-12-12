@@ -298,6 +298,7 @@ handlewaitfor(int wn)
 		}
 		break;
 
+#ifdef KEY_GRAPHICS
 	case K_MOUSE:
 		checkmouse();
 		break;
@@ -355,6 +356,7 @@ handlewaitfor(int wn)
 			taskfunc0(Redrawfuncd->u.codep);
 		}
 		break;
+#endif
 
 	case K_PORT:
 		checkports();
@@ -1788,9 +1790,11 @@ startreboot(void)
 
 	Mousef = specialfifo();
 	*Mousefnum = fifonum(Mousef);
-	reinitwinds();
 
+#ifdef KEY_GRAPHICS
+	reinitwinds();
 	wredraw1(Wroot);
+#endif
 }
 
 void

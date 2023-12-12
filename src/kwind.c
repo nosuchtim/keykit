@@ -7,6 +7,8 @@
 #include "key.h"
 #include "gram.h"
 
+#ifdef KEY_GRAPHICS
+
 Kwind *Topwind = NULL;
 Kwind *Freewind = NULL;
 Htablep Windhash = NULL;
@@ -845,3 +847,5 @@ makerect(long x0, long y0, long x1, long y1)
 	r.y1 = y1;
 	return r;
 }
+
+#endif

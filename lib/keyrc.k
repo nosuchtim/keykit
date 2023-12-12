@@ -75,6 +75,12 @@ function dokeylocal() {
 		}
 	}
 
+	# KEYIN environment variable is default input port
+	inportname = mdep("env","get","KEYIN")
+	if ( defined(inportname) && (inportname != "") ) {
+		inp = inport(inportname)
+	}
+
 	if ( defined(Keylocal) ) {
 		eval "#include "+Keylocal
 		keylocal()

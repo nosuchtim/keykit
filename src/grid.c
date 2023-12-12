@@ -36,6 +36,96 @@ int Lastxs;
 long Lastsh = -1;
 int Lastys;
 
+/*
+ * The values here are the heights of the vertical
+ * lines that are drawn when controller and sysex notes are seen.
+ */
+#define OFFVAL 10
+#define ONVAL 20
+#define SYSEXVAL 30
+
+void
+nonnotesize(Noteptr n,int *apitch1,int *apitch2)
+{
+	static char str[32];
+	Unchar* bp = ptrtobyte(n,0);
+	int b1, b2, b3;
+	int type1;
+	char *s = NULL;
+	int p1, p2;
+
+	b1 = *bp++;
+	b2 = *bp++;
+	b3 = *bp;
+	type1 = b1 & 0xf0;
+
+	p1 = 0;
+	p2 = 127;
+	switch ( type1 ) {
+	case BEGINSYSEX:
+		p1 = 64;
+		p2 = 65;
+		break;
+	case PRESSURE:
+		p2 = b3;
+		break;
+	case CONTROLLER:
+		switch ( b2 ) {
+		case 0x40:	/* sustain switch */
+			if ( b3 > 0 )
+				p2 = ONVAL;
+			else
+				p2 = OFFVAL;
+			s = "sust";
+			break;
+		case 0x41:	/* portamento switch */
+			if ( b3 > 0 )
+				p2 = ONVAL;
+			else
+				p2 = OFFVAL;
+			s = "port";
+			break;
+#ifdef OLDSTUFF
+		case 0x1:	/* modulation wheel */
+		case 0x2:	/* breath control */
+		case 0x4:	/* foot control */
+		case 0x5:	/* portamento time */
+		case 0x7:	/* volume */
+			p2 = b3;
+			break;
+#endif
+		default:
+			p2 = b3;
+			break;
+		}
+		break;
+	case PROGRAM:
+		sprintf(s=str,"prog=%d",b2);
+		p2 = ONVAL;
+		break;
+	case CHANPRESSURE:
+		p2 = b2;
+		break;
+	case PITCHBEND:
+		p2 = ((b3<<7) | b2) - 0x2000;
+		p2 /= (*Bendrange)/128;
+		p1 = *Bendoffset;
+		p2 = *Bendoffset + p2;
+		if ( p1 > p2 ) {
+			int t = p1;
+			p1 = p2;
+			p2 = t;
+		}
+		break;
+	default:
+		break;
+	}
+	*apitch1 = p1;
+	*apitch2 = p2;
+}
+
+#ifdef KEY_GRAPHICS
+
 void
 startgraphics(void)
 {
@@ -472,14 +562,6 @@ drawnonnt(Kwind *w,Noteptr n,Krect *r)
 	}
 }
 
-/*
- * The values here are the heights of the vertical
- * lines that are drawn when controller and sysex notes are seen.
- */
-#define OFFVAL 10
-#define ONVAL 20
-#define SYSEXVAL 30
-
 char *
 nonnoteinfo(Kwind *w,Noteptr n,int *ay1,int *ay2)
 {
@@ -617,86 +699,6 @@ textnoteinfo(Kwind *w,Noteptr n,int *ax1, int *ay1, int *ax2, int *ay2)
 	*ay2 = boundit(*ay2,Disporigy,Dispcorny);
 
 	return pp;
-}
-
-void
-nonnotesize(Noteptr n,int *apitch1,int *apitch2)
-{
-	static char str[32];
-	Unchar* bp = ptrtobyte(n,0);
-	int b1, b2, b3;
-	int type1;
-	char *s = NULL;
-	int p1, p2;
-
-	b1 = *bp++;
-	b2 = *bp++;
-	b3 = *bp;
-	type1 = b1 & 0xf0;
-
-	p1 = 0;
-	p2 = 127;
-	switch ( type1 ) {
-	case BEGINSYSEX:
-		p1 = 64;
-		p2 = 65;
-		break;
-	case PRESSURE:
-		p2 = b3;
-		break;
-	case CONTROLLER:
-		switch ( b2 ) {
-		case 0x40:	/* sustain switch */
-			if ( b3 > 0 )
-				p2 = ONVAL;
-			else
-				p2 = OFFVAL;
-			s = "sust";
-			break;
-		case 0x41:	/* portamento switch */
-			if ( b3 > 0 )
-				p2 = ONVAL;
-			else
-				p2 = OFFVAL;
-			s = "port";
-			break;
-#ifdef OLDSTUFF
-		case 0x1:	/* modulation wheel */
-		case 0x2:	/* breath control */
-		case 0x4:	/* foot control */
-		case 0x5:	/* portamento time */
-		case 0x7:	/* volume */
-			p2 = b3;
-			break;
-#endif
-		default:
-			p2 = b3;
-			break;
-		}
-		break;
-	case PROGRAM:
-		sprintf(s=str,"prog=%d",b2);
-		p2 = ONVAL;
-		break;
-	case CHANPRESSURE:
-		p2 = b2;
-		break;
-	case PITCHBEND:
-		p2 = ((b3<<7) | b2) - 0x2000;
-		p2 /= (*Bendrange)/128;
-		p1 = *Bendoffset;
-		p2 = *Bendoffset + p2;
-		if ( p1 > p2 ) {
-			int t = p1;
-			p1 = p2;
-			p2 = t;
-		}
-		break;
-	default:
-		break;
-	}
-	*apitch1 = p1;
-	*apitch2 = p2;
 }
 
 /* returns NT_VISIBLE, NT_INVISIBLE, NT_CLIPPED */
@@ -927,6 +929,7 @@ dispclip(Kwind *w,int *ax,int *ay,Krect *kr)
 	}
 	return(r);
 }
+#endif
 
 /* quantize a value according to q */
 long
@@ -952,6 +955,9 @@ longquant(long v,long q)
 	}
 	return v;
 }
+
+
+#ifdef KEY_GRAPHICS
 
 int
 pitchyraw(Kwind *w,int pitch)
@@ -1162,6 +1168,8 @@ gridpan(Kwind *w,long cshift,int pshift)
 		drawbars(w,clrx2a,clry,clrx2b,clry+yshift);
 	}
 }
+
+#endif
 
 #ifdef OLDKEYBOARDSTUFF
 		     /*   c c+  d d+  e  f f+  g g+  a a+  b    */
