@@ -71,8 +71,14 @@ function dokeylocal() {
 	if ( outportname != "" ) {
 		out = outport(outportname)
 		if ( out >= 0 ) {
-			mapport(0,out)
+			mapport(0,out) # specifies default output
 		}
+	}
+
+	# KEYIN environment variable is default input port
+	inportname = getenv("KEYIN")
+	if ( inportname != "" ) {
+		inport(inportname)
 	}
 
 	if ( defined(Keylocal) ) {
