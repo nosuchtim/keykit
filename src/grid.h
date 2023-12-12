@@ -49,6 +49,12 @@ struct Kmenu {
 			/* more than this enables a scrollbar. */
 };
 
+struct TextColor {
+	char *text;
+	ubyte *color;
+};
+typedef struct TextColor TextColor;
+
 struct Kwind {
 	int wnum;
 	int type;	/* WIND_* */
@@ -72,14 +78,14 @@ struct Kwind {
 	int currx, curry;	/* Coordinates of currrow,currcol */
 	int currcols;		/* Number of cols shown */
 	int disprows;		/* Number of rows shown */
-	char **bufflines;	/* Circular buffer of saved lines.  The */
+	TextColor *bufflines;	/* Circular buffer of saved lines.  The */
 				/* direction is reversed from what you might */
 				/* think.  If toplnum is 50 (i.e. the 1st */
 				/* line on the display is bufflines[50]), */
 				/* then the 2nd display line is bufflines[49]*/
 	int numlines;		/* Total number of lines in bufflines */
 	int nactive;		/* Number active lines in bufflines */
-	char *currline;		/* active line */
+	TextColor currline;	/* active line */
 	int currlinelen;        /* size of currline */
 	int currlnum;		/* index of that line in bufflines */
 	int toplnum;		/* index (in bufflines) of top row in display*/

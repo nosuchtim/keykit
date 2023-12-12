@@ -42,6 +42,8 @@
 #include "Python.h"
 #endif
 
+typedef unsigned char ubyte; /* Unsigned byte */
+
 #ifndef INT16
 #define INT16 short
 #endif

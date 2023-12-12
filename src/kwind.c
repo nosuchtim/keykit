@@ -315,7 +315,6 @@ void
 k_inittext(Kwind *w)
 {
 	int n;
-	char **pp;
 
 	w->inscroll = 0;
 	w->currcols = 0;
@@ -328,13 +327,17 @@ k_inittext(Kwind *w)
 #define MAXCOLS (2+(Wroot->x1/mdep_fontwidth()))
 
 	w->numlines = *Textscrollsize;
-	w->bufflines = (char **) kmalloc(w->numlines*sizeof(char *),"inittext");
-	for ( pp=w->bufflines,n=w->numlines-1; n>=0 ; n-- )
-		*pp++ = NULL;
+	w->bufflines = (TextColor *)kmalloc(w->numlines*sizeof(TextColor),"inittext");
+	for ( n=0;n<w->numlines;++n ) {
+		TextColor *pp = &w->bufflines[n];
+		pp->text = NULL;
+		pp->color = NULL;
+	}
 	w->currlinelen = MAXCOLS;
-	w->currline = kmalloc(w->currlinelen,"inittext");
+	w->currline.text = kmalloc(w->currlinelen*sizeof(char),"inittext");
+	w->currline.color = kmalloc(w->currlinelen*sizeof(ubyte),"inittext");
 
-	w->currline[0] = '\0';
+	w->currline.text[0] = '\0';
 	w->lastused = 0;
 	w->currlnum = 0;
 	w->bufflines[w->currlnum] = w->currline;
@@ -350,15 +353,22 @@ k_reinittext(Kwind *w)
 	/* Free all entries in bufflines - except if its currline.
 	 * Set all entries in bufflines to NULL. */
 	for ( idx=0; idx<w->numlines; ++idx ) {
-		if ( w->bufflines[idx] != NULL ) {
-			if ( w->bufflines[idx] != w->currline ) {
-				kfree(w->bufflines[idx]);
+		TextColor *pp = &w->bufflines[idx];
+		if ( pp->text != NULL ) {
+			if ( pp->text != w->currline.text ) {
+				kfree(pp->text);
 			}
-			w->bufflines[idx] = NULL;
+			pp->text = NULL;
+		}
+		if ( pp->color != NULL ) {
+			if ( pp->color != w->currline.color ) {
+				kfree(pp->color);
+			}
+			pp->color = NULL;
 		}
 	}
 
-	w->currline[0] = '\0';
+	w->currline.text[0] = '\0';
 	w->lastused = 0;
 	w->currlnum = 0;
 	w->bufflines[w->currlnum] = w->currline;

@@ -44,7 +44,6 @@ void
 v_settextsize(Kwind *w)
 {
 	int xsize, ysize, new_tcols, new_trows;
-	char *oldcurrline;
 	int n;
 
 	if ( w->type != WIND_TEXT )
@@ -67,12 +66,15 @@ v_settextsize(Kwind *w)
 		w->toplnum = v_linenorm(w,w->lastused + w->disprows - 1);
 		w->currrow = w->disprows - 1;
 		if ( new_tcols > w->currlinelen ) {
+			TextColor oldcurrline;
 			/* need to realloc currline larger; then find
 			 * currline in bufflines and point to realloced buffer */
 			oldcurrline = w->currline;
-			w->currline = krealloc(w->currline, new_tcols + 1, "v_settextsize");
+			w->currline.text = krealloc(w->currline.text, new_tcols + 1, "v_settextsize");
+			w->currline.color = krealloc(w->currline.color, new_tcols + 1, "v_settextsize");
 			for (n=0; n<w->numlines; ++n) {
-				if ( w->bufflines[n] == oldcurrline ) {
+				if ( w->bufflines[n].text == oldcurrline.text
+				     && w->bufflines[n].color == oldcurrline.color ) {
 					w->bufflines[n] = w->currline;
 					break;
 				}
@@ -325,7 +327,14 @@ i_dosweepcont(void)
 char *
 ptbuffer(Kwind *w,int c)
 {
-	char *p = &(w->currline[c]);
+	char *p = &(w->currline.text[c]);
+	return p;
+}
+
+ubyte *
+ptcolorbuffer(Kwind *w,int c)
+{
+	ubyte *p = &(w->currline.color[c]);
 	return p;
 }
 
@@ -369,6 +378,7 @@ v_stringwind(char *s,Kwind *w)
 				w->currcol--;
 				v_setxy(w);
 				*ptbuffer(w,w->currcol) = '\0';
+				*ptcolorbuffer(w,w->currcol) = Forecolor;
 				v_textcursor(w, 0);
 				
 			}
@@ -382,6 +392,12 @@ v_stringwind(char *s,Kwind *w)
 					return;
 				}
 				*pt = c;
+				ubyte *cpt = ptcolorbuffer(w,w->currcol);
+				if ( cpt == NULL ) {
+					eprint("WARNING!! pt==NULL in v_string()\n");
+					return;
+				}
+				*cpt = Forecolor;
 				str[0] = c;
 				my_plotmode(P_STORE);
 				mdep_string(w->currx,w->curry,str);
@@ -554,30 +570,43 @@ void
 v_scrollbuff(Kwind *w)
 {
 	char *p, *q;
+	ubyte *c;
 	int len;
 
 	w->toplnum = v_linenorm(w,w->toplnum-1);
-	p = w->bufflines[w->currlnum];
-	if ( p != w->currline ) {
+	p = w->bufflines[w->currlnum].text;
+	if ( p != w->currline.text ) {
 		eprint("Hey, p!=w->currline!?\n");
+	}
+	c = w->bufflines[w->currlnum].color;
+	if ( c != w->currline.color ) {
+		eprint("Hey, c!=w->currcolorline!?\n");
 	}
 	
 	/* Save off a copy of currline */
 	len = strlen(p);
 	q = kmalloc(len+1, "v_scrollbuf");
 	strcpy(q, p);
-	w->bufflines[w->currlnum] = q;
+	w->bufflines[w->currlnum].text = q;
+	/* Save off a copy of currcolorline */
+	c = kmalloc(len+1, "v_scrollbuf");
+	memcpy(c, w->bufflines[w->currlnum].color, len);
+	w->bufflines[w->currlnum].color = c;
 	w->currlnum = v_linenorm(w,w->currlnum-1);
 	w->lastused = w->currlnum;
-	if ( w->bufflines[w->currlnum] != NULL ) {
+	if ( w->bufflines[w->currlnum].text != NULL ) {
 		/* Free content of console line to be overwritten */
-		kfree(w->bufflines[w->currlnum]);
+		kfree(w->bufflines[w->currlnum].text);
+		if (w->bufflines[w->currlnum].color)
+			kfree(w->bufflines[w->currlnum].color);
+		else
+			eprint("Hey, bufflines[%d] is not null while colorlines[%d] is!?\n", w->currlnum, w->currlnum);
 	}
 	else {
 		w->nactive++;
 	}
 	w->bufflines[w->currlnum] = w->currline;
-	*(w->currline) = '\0';
+	w->currline.text[0] = '\0';
 }
 
 void
@@ -600,7 +629,6 @@ drawtextbar(Kwind *w)
 	/* Erase where scrollbar could be */
 	my_plotmode(P_CLEAR);
 	mdep_boxfill(w->x0+4,w->y0+1,w->tx0-6,w->y1-1);	
-	
 	
 	/* Ratio of scrollbar height is number of displayed lines divided
 	 * by number of lines in bufflines */
@@ -633,13 +661,19 @@ drawtextbar(Kwind *w)
 	by0 = result + y0;
 	by1 = by0 + barheight;
 	mdep_plotmode(P_STORE);
+	mdep_color(1); /* Want text scrollbar to come out black */
 	mdep_boxfill(w->x0+4,by0,w->tx0-6,by1);	
 }
 
+/* Define number of chars accumulated in a line that have
+ * all the same color before displayed */
+#define CHARS_PER_CHUNK 8
 void
 redrawtext(Kwind *w)
 {
 	int x, y, i, n;
+	char chrbuf[CHARS_PER_CHUNK];
+	int lastx, color, idx;
 
 	my_plotmode(P_STORE);
 	drawtextbar(w);
@@ -651,16 +685,38 @@ redrawtext(Kwind *w)
 	y = rowy(w,0);
 	i = w->toplnum;
 	for ( n=0; n<w->disprows; n++ ) {
-		char *p = w->bufflines[i];
+		char *p = w->bufflines[i].text;
 		if ( p ) {
-			int lng;
+		        int lng;
 			lng = (int)strlen(p);
-			if ( lng <= w->currcols )
-				mdep_string(x,y,p);
-			else {
-				strncpy(Msg1,p,w->currcols);
-				Msg1[w->currcols] = '\0';
-				mdep_string(x,y,Msg1);
+			if (lng > w->currcols) {
+				/* clip horizontally */
+				lng = w->currcols;
+			}
+			ubyte *cp = w->bufflines[i].color;
+			lastx = 0;
+			color = cp[0];
+			chrbuf[0] = p[0];
+			/* Loop through line collecting characters
+			 * that have all the same color in chrbuf[] */
+			for (idx = 0; idx < lng; ++idx) {
+				if ( (cp[idx] != color) || ((idx-lastx) >= (CHARS_PER_CHUNK - 1))) {
+					/* Text from p[lastx] to p[idx]
+					 * has same color 'color' */
+					chrbuf[idx-lastx] = '\0';
+					mdep_color(color);
+					mdep_string(lastx*v_colsize()+x,y,chrbuf)
+;
+					color = cp[idx];
+					lastx = idx;
+				}
+				chrbuf[idx-lastx] = p[idx];
+			}
+			/* Draw any remaining text in line */
+			if (lastx != lng) {
+				chrbuf[idx-lastx] = '\0';
+				mdep_color(color);
+				mdep_string(lastx*v_colsize()+x,y,chrbuf);
 			}
 		}
 		if ( --i < 0 )
@@ -668,6 +724,7 @@ redrawtext(Kwind *w)
 		y += v_rowsize();
 	}
 	/* show text cursor (typically an underline) */
+	mdep_color(Forecolor);
 	v_setxy(w);
 	v_textcursor(w, 1);
 }
