@@ -1,5 +1,6 @@
 *~
 .vs
+src/yacc.output
 last.kp
 src/keygo/x64
 bin/keylib.exe
