@@ -33,7 +33,7 @@ Other than for the distributions mentioned above, much of the machine-dependent 
 in the mdep directory is probably obsolete and will no longer work without modification,
 but is being retained for future use.
 
-BTW, when you see "nt" in names - e.g. the key_nt.zip file, mdep/nt directory, or the install_nt target
+BTW, when you see "nt" in names - e.g. the mdep/nt directory, or the install_nt target
 in the makefile - it refers to the Windows version.  The fact that it refers to Windows NT
 indicates just how ancient KeyKit is.  :-)
 
