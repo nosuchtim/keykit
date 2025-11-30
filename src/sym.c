@@ -736,7 +736,7 @@ static struct binum {
 	{ "Noval", MAXLONG, &Novalval },
 	{ "Eof", MAXLONG-1, &Eofval },
 	{ "Interrupt", MAXLONG-2, &Intrval },
-	{ "Merge", 1L, &Merge },
+	{ "Merge", 0L, &Merge },
 	{ "Mergeport1", 0L, &Mergeport1 },    // default output
 	{ "Mergeport2", -1L, &Mergeport2 },   //
 	{ "Mergefilter", 0L, &Mergefilter },
