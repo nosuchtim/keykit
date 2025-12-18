@@ -1133,7 +1133,8 @@ int yyparse(NOARG);
 #endif
 
 #ifndef MINTEMPO
-#define MINTEMPO 10000
+/* MINTEMPO is in microseconds per beat. 100000 = 600 BPM max, to prevent lockups in Chrome */
+#define MINTEMPO 100000
 #endif
 
 #ifdef STATMIDI
