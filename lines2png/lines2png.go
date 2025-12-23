@@ -12,6 +12,8 @@ import (
 	"strings"
 )
 
+var verbose = false
+
 func main() {
 	if len(os.Args) < 2 {
 		fmt.Println("Usage: lines2png <input.lines> [output.png]")
@@ -60,7 +62,9 @@ func main() {
 		os.Exit(1)
 	}
 
-	fmt.Printf("Creating image: %dx%d\n", width, height)
+	if verbose {
+		fmt.Printf("Creating image: %dx%d\n", width, height)
+	}
 
 	// Create image with white background
 	img := image.NewRGBA(image.Rect(0, 0, width, height))
@@ -103,7 +107,9 @@ func main() {
 		os.Exit(1)
 	}
 
-	fmt.Printf("Drew %d lines\n", lineCount)
+	if verbose {
+		fmt.Printf("Drew %d lines\n", lineCount)
+	}
 
 	// Save to PNG
 	outFile, err := os.Create(outputFile)
@@ -118,7 +124,9 @@ func main() {
 		os.Exit(1)
 	}
 
-	fmt.Printf("Saved to %s\n", outputFile)
+	if verbose {
+		fmt.Printf("Saved to %s\n", outputFile)
+	}
 }
 
 // drawLine draws an anti-aliased line using Xiaolin Wu's algorithm
