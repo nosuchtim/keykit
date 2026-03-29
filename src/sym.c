@@ -1482,69 +1482,210 @@ htlists(void)
 	eprint("\n");
 }
 
-Htablep Stringtable = NULL;
+/*
+ * String interning table — uses dedicated Strnode instead of Hnode.
+ * Supports incremental tri-color mark-and-sweep garbage collection.
+ */
 
-/* uniqstr uses the same Hnode definition as is used for array element */
-/* hash tables, even though the only type of value stored is a string. */
+static Strtable *Strtab = NULL;
+
+/* Strnode pool allocator, following the newhn/freehn pattern */
+#define ALLOCSN 128
+static Strnodep Free_sn = NULL;
+
+static Strnodep
+newsn(void)
+{
+	static Strnodep lastsn;
+	static int used = ALLOCSN;
+	Strnodep sn;
+
+	if ( Free_sn != NULL ) {
+		sn = Free_sn;
+		Free_sn = Free_sn->next;
+		goto getout;
+	}
+	if ( used == ALLOCSN ) {
+		used = 0;
+		lastsn = (Strnodep) kmalloc(ALLOCSN*sizeof(Strnode),"newsn");
+	}
+	used++;
+	sn = lastsn++;
+
+    getout:
+	sn->next = NULL;
+	sn->str = NULL;
+	sn->gc_color = GC_WHITE;
+	return sn;
+}
+
+static void
+freesn(Strnodep sn)
+{
+	sn->next = Free_sn;
+	Free_sn = sn;
+}
+
+static Strtable *
+new_strtable(int size)
+{
+	Strtable *st = (Strtable *) kmalloc(sizeof(Strtable),"new_strtable");
+	st->size = size;
+	st->count = 0;
+	st->buckets = (Strnodep *) kmalloc(size*sizeof(Strnodep),"strtable_buckets");
+	memset(st->buckets, 0, size*sizeof(Strnodep));
+	return st;
+}
+
+/* Compute hash value of a string (same algorithm as the old uniqstr) */
+static int
+strhash(char *s, int tablesize)
+{
+	register unsigned int t = 0;
+	register int c;
+	register char *p = s;
+
+	while ( (c=(*p++)) != '\0' ) {
+		t += c;
+		t <<= 3;
+	}
+	return t % tablesize;
+}
+
+/* Look up a Symstr pointer in the string table by pointer identity */
+static Strnodep
+strtable_find_ptr(Symstr s)
+{
+	int v;
+	Strnodep sn;
+
+	if ( Strtab == NULL || s == NULL )
+		return NULL;
+	v = strhash(s, Strtab->size);
+	for ( sn = Strtab->buckets[v]; sn != NULL; sn = sn->next ) {
+		if ( sn->str == s )
+			return sn;
+	}
+	return NULL;
+}
+
+/* ---- String GC state ---- */
+
+int Strgc_state = STRGC_IDLE;
+static int Strgc_allocs = 0;
+static int Strgc_threshold = 5000;
+static int Strgc_work = 100;
+
+/* Mark phase cursor */
+static int Strgc_mark_group = 0;	/* which root group we're scanning */
+static int Strgc_mark_pos = 0;		/* position within current root group */
+
+/* For scanning hash tables incrementally */
+static Htablep Strgc_mark_ht = NULL;	/* current hash table being scanned */
+static int Strgc_mark_bucket = 0;	/* current bucket in that table */
+static Hnodep Strgc_mark_hn = NULL;	/* current hnode in that bucket */
+
+/* For scanning task stacks incrementally */
+static Ktaskp Strgc_mark_task = NULL;
+static int Strgc_mark_stackpos = 0;
+
+/* Sweep phase cursor */
+static int Strgc_sweep_bucket = 0;
+
+/* Gray list for nested arrays discovered during marking */
+typedef struct GrayEntry {
+	Htablep ht;
+	int bucket;
+	Hnodep hn;
+	struct GrayEntry *next;
+} GrayEntry;
+
+static GrayEntry *Gray_list = NULL;
+static GrayEntry *Free_gray = NULL;
+
+static GrayEntry *
+new_gray(void)
+{
+	GrayEntry *g;
+	if ( Free_gray != NULL ) {
+		g = Free_gray;
+		Free_gray = Free_gray->next;
+	} else {
+		g = (GrayEntry *) kmalloc(sizeof(GrayEntry),"new_gray");
+	}
+	g->next = NULL;
+	return g;
+}
+
+static void
+free_gray(GrayEntry *g)
+{
+	g->next = Free_gray;
+	Free_gray = g;
+}
+
+/* Forward declarations for GC mark helpers */
+static void strgc_mark_str(Symstr s);
+static void strgc_mark_datum(Datum d);
+static void strgc_push_ht(Htablep ht);
+static int strgc_drain_gray(int budget);
+static int strgc_mark_ht_partial(Htablep ht, int *bucket, Hnodep *hn, int budget);
+static void strgc_mark_phrase_notes(Phrasep ph);
 
 Symstr
 uniqstr(char *s)
 {
-	Hnodepp table;
-	Hnodep h, toph;
+	Strnodep *table;
+	Strnodep h, toph;
 	int v;
 
-	if ( Stringtable == NULL ) {
+	if ( Strtab == NULL ) {
 		char *p = getenv("STRHASHSIZE");
-		Stringtable = newht( p ? atoi(p) : 1009 );
+		char *g = getenv("STRGCTHRESHOLD");
+		char *w = getenv("STRGCWORK");
+		Strtab = new_strtable( p ? atoi(p) : 1009 );
+		if (g) Strgc_threshold = atoi(g);
+		if (w) Strgc_work = atoi(w);
 	}
 
-	{
-		register unsigned int t = 0;
-		register int c;
-		register char *p = s;
+	v = strhash(s, Strtab->size);
 
-		/* compute hash value of string */
-		while ( (c=(*p++)) != '\0' ) {
-			t += c;
-			t <<= 3;
-		}
-		v = t % (Stringtable->size);
-	}
-
-	table = Stringtable->nodetable;
+	table = Strtab->buckets;
 	toph = table[v];
 	if ( toph == NULL ) {
 		/* no collision */
-		h = newhn();
-		h->key.u.str = kmalloc((unsigned)strlen(s)+1,"uniqstr");
-
-		strcpy((char*)(h->key.u.str),s);
-		/* h->sym is unused, key and value are the same */
+		h = newsn();
+		h->str = kmalloc((unsigned)strlen(s)+1,"uniqstr");
+		strcpy((char*)(h->str),s);
+		Strtab->count++;
+		Strgc_allocs++;
 	}
 	else {
-		Hnodep prev;
+		Strnodep prev;
 
 		/* quick test for first node in list, most common case */
-		if ( strcmp(toph->key.u.str,s) == 0  )
-			return(toph->key.u.str);
+		if ( strcmp(toph->str,s) == 0  ) {
+			if ( Strgc_state != STRGC_IDLE )
+				toph->gc_color = GC_BLACK;
+			return(toph->str);
+		}
 
 		/* Look through entire list */
 		h = toph;
 		for ( prev=h; (h=h->next) != NULL; prev=h ) {
-			if ( strcmp(h->key.u.str,s) == 0 )
+			if ( strcmp(h->str,s) == 0 )
 				break;
 		}
 		if ( h == NULL ) {
 			/* string wasn't found, add it */
-			h = newhn();
-			h->key.u.str = kmalloc((unsigned)strlen(s)+1,"uniqstr");
-
-			strcpy((char*)(h->key.u.str),s);
-			/* h->sym is unused, key and value are the same */
+			h = newsn();
+			h->str = kmalloc((unsigned)strlen(s)+1,"uniqstr");
+			strcpy((char*)(h->str),s);
+			Strtab->count++;
+			Strgc_allocs++;
 		}
 		else {
-			/* Symstr found.  Delete it from it's current */
+			/* Symstr found.  Delete it from its current */
 			/* position so we can move it to the top. */
 			prev->next = h->next;
 		}
@@ -1555,7 +1696,560 @@ uniqstr(char *s)
 	/* themselves to put the most recently seen entries on top. */
 	h->next = toph;
 	table[v] = h;
-	return(h->key.u.str);
+	/* Write barrier: mark any string touched during active GC as live */
+	if ( Strgc_state != STRGC_IDLE )
+		h->gc_color = GC_BLACK;
+	return(h->str);
+}
+
+/* ---- String GC: mark helpers ---- */
+
+static void
+strgc_mark_str(Symstr s)
+{
+	Strnodep sn;
+
+	if ( s == NULL )
+		return;
+	sn = strtable_find_ptr(s);
+	if ( sn != NULL && sn->gc_color == GC_WHITE )
+		sn->gc_color = GC_BLACK;
+}
+
+static void
+strgc_mark_datum(Datum d)
+{
+	switch ( d.type ) {
+	case D_STR:
+		strgc_mark_str(d.u.str);
+		break;
+	case D_ARR:
+		if ( d.u.arr != NULL )
+			strgc_push_ht(d.u.arr);
+		break;
+	case D_PHR:
+		if ( d.u.phr != NULL )
+			strgc_mark_phrase_notes(d.u.phr);
+		break;
+	case D_SYM:
+		/* Follow symbol to mark its name and value */
+		if ( d.u.sym != NULL ) {
+			strgc_mark_datum(d.u.sym->name);
+			strgc_mark_datum(d.u.sym->sd);
+		}
+		break;
+	case D_OBJ:
+		/* Object has a symbol table */
+		if ( d.u.obj != NULL && d.u.obj->symbols != NULL )
+			strgc_push_ht(d.u.obj->symbols);
+		break;
+	}
+}
+
+static void
+strgc_mark_phrase_notes(Phrasep ph)
+{
+#ifdef NTATTRIB
+	Noteptr n;
+	for ( n = ph->p_notes; n != NULL; n = n->next ) {
+		if ( n->attrib != NULL )
+			strgc_mark_str(n->attrib);
+	}
+#endif
+}
+
+static void
+strgc_push_ht(Htablep ht)
+{
+	GrayEntry *g;
+
+	if ( ht == NULL )
+		return;
+	/* Avoid duplicates by checking if this ht is already in the gray list */
+	for ( g = Gray_list; g != NULL; g = g->next ) {
+		if ( g->ht == ht )
+			return;
+	}
+	g = new_gray();
+	g->ht = ht;
+	g->bucket = 0;
+	g->hn = NULL;
+	g->next = Gray_list;
+	Gray_list = g;
+}
+
+/* Scan part of a hash table, marking string Datums in key and val.
+ * Returns the number of work units consumed. */
+static int
+strgc_mark_ht_partial(Htablep ht, int *bucket, Hnodep *hn, int budget)
+{
+	int work = 0;
+
+	while ( work < budget && *bucket < ht->size ) {
+		if ( *hn == NULL )
+			*hn = ht->nodetable[*bucket];
+		while ( *hn != NULL && work < budget ) {
+			strgc_mark_datum((*hn)->key);
+			strgc_mark_datum((*hn)->val);
+			*hn = (*hn)->next;
+			work++;
+		}
+		if ( *hn == NULL )
+			(*bucket)++;
+	}
+	return work;
+}
+
+/* Drain gray list entries, return work consumed */
+static int
+strgc_drain_gray(int budget)
+{
+	int work = 0;
+
+	while ( Gray_list != NULL && work < budget ) {
+		GrayEntry *g = Gray_list;
+		int remaining = budget - work;
+
+		work += strgc_mark_ht_partial(g->ht, &g->bucket, &g->hn, remaining);
+
+		if ( g->bucket >= g->ht->size ) {
+			/* Done with this table */
+			Gray_list = g->next;
+			free_gray(g);
+		}
+	}
+	return work;
+}
+
+/* ---- String GC: mark step (incremental root walk) ---- */
+
+/* Externs needed for root scanning that are not in key.h */
+extern Fifo *Topfifo;
+extern Htablep Fifotable;
+extern Lknode *Toplk;
+
+static void
+strgc_mark_step(void)
+{
+	int budget = Strgc_work;
+	int work;
+
+	/* Always drain gray list first */
+	work = strgc_drain_gray(budget);
+	if ( work >= budget )
+		return;
+	budget -= work;
+
+	while ( budget > 0 ) {
+		switch ( Strgc_mark_group ) {
+
+		case 0: {
+			/* Built-in Str_* Datums and Nullstr */
+			extern Datum Str_x0, Str_y0, Str_x1, Str_y1;
+			extern Datum Str_x, Str_y, Str_button;
+			extern Datum Str_type, Str_mouse, Str_drag;
+			extern Datum Str_move, Str_up, Str_down;
+			extern Datum Str_highest, Str_lowest;
+			extern Datum Str_earliest, Str_latest, Str_modifier;
+			extern Datum Str_default, Str_w, Str_r, Str_init;
+			extern Datum Str_get, Str_set, Str_newline;
+			extern Datum Str_red, Str_green, Str_blue;
+			extern Datum Str_grey, Str_surface;
+			extern Datum Str_finger, Str_hand;
+			extern Datum Str_xvel, Str_yvel;
+			extern Datum Str_proximity, Str_orientation;
+			extern Datum Str_eccentricity;
+			extern Datum Str_width, Str_height;
+			extern char *Nullstr;
+			extern char *Defatt;
+
+			Datum *builtins[] = {
+				&Str_x0, &Str_y0, &Str_x1, &Str_y1,
+				&Str_x, &Str_y, &Str_button,
+				&Str_type, &Str_mouse, &Str_drag,
+				&Str_move, &Str_up, &Str_down,
+				&Str_highest, &Str_lowest,
+				&Str_earliest, &Str_latest, &Str_modifier,
+				&Str_default, &Str_w, &Str_r, &Str_init,
+				&Str_get, &Str_set, &Str_newline,
+				&Str_red, &Str_green, &Str_blue,
+				&Str_grey, &Str_surface,
+				&Str_finger, &Str_hand,
+				&Str_xvel, &Str_yvel,
+				&Str_proximity, &Str_orientation,
+				&Str_eccentricity,
+				&Str_width, &Str_height
+			};
+			int nbuiltins = sizeof(builtins)/sizeof(builtins[0]);
+			int i;
+
+			for ( i = 0; i < nbuiltins; i++ )
+				strgc_mark_datum(*builtins[i]);
+#ifdef MDEP_OSC_SUPPORT
+			{
+				extern Datum Str_elements, Str_seconds, Str_fraction;
+				strgc_mark_datum(Str_elements);
+				strgc_mark_datum(Str_seconds);
+				strgc_mark_datum(Str_fraction);
+			}
+#endif
+			strgc_mark_str(Nullstr);
+			strgc_mark_str(Defatt);
+			budget--;
+			Strgc_mark_group++;
+			Strgc_mark_pos = 0;
+			break;
+		}
+
+		case 1:
+			/* Keywords hash table */
+			if ( Keywords != NULL ) {
+				Strgc_mark_ht = Keywords;
+				Strgc_mark_bucket = 0;
+				Strgc_mark_hn = NULL;
+				work = strgc_mark_ht_partial(Strgc_mark_ht,
+					&Strgc_mark_bucket, &Strgc_mark_hn, budget);
+				budget -= work;
+				if ( Strgc_mark_bucket < Keywords->size )
+					return; /* not done yet */
+			}
+			Strgc_mark_group++;
+			break;
+
+		case 2:
+			/* Macros hash table */
+			if ( Macros != NULL ) {
+				Strgc_mark_ht = Macros;
+				Strgc_mark_bucket = 0;
+				Strgc_mark_hn = NULL;
+				work = strgc_mark_ht_partial(Strgc_mark_ht,
+					&Strgc_mark_bucket, &Strgc_mark_hn, budget);
+				budget -= work;
+				if ( Strgc_mark_bucket < Macros->size )
+					return;
+			}
+			Strgc_mark_group++;
+			Strgc_mark_ht = Topht;
+			Strgc_mark_bucket = 0;
+			Strgc_mark_hn = NULL;
+			break;
+
+		case 3:
+			/* All active hash tables via Topht linked list */
+			while ( Strgc_mark_ht != NULL && budget > 0 ) {
+				work = strgc_mark_ht_partial(Strgc_mark_ht,
+					&Strgc_mark_bucket, &Strgc_mark_hn, budget);
+				budget -= work;
+				if ( Strgc_mark_bucket >= Strgc_mark_ht->size ) {
+					Strgc_mark_ht = Strgc_mark_ht->h_next;
+					Strgc_mark_bucket = 0;
+					Strgc_mark_hn = NULL;
+				} else {
+					return; /* not done with this table */
+				}
+			}
+			if ( Strgc_mark_ht == NULL ) {
+				Strgc_mark_group++;
+				/* Set up for task scanning */
+				{
+					extern Ktaskp strgc_get_toptp(void);
+					Strgc_mark_task = strgc_get_toptp();
+				}
+				Strgc_mark_stackpos = 0;
+			}
+			break;
+
+		case 4: {
+			/* All tasks: scan stacks, filename, method, etc. */
+			while ( Strgc_mark_task != NULL && budget > 0 ) {
+				Ktaskp t = Strgc_mark_task;
+				int stksize;
+				int i;
+
+				strgc_mark_str(t->filename);
+				strgc_mark_str(t->method);
+				strgc_mark_str(t->ontaskerrormsg);
+				budget--;
+
+				/* Scan task stack */
+				stksize = (int)(t->stackp - t->stack);
+				for ( i = Strgc_mark_stackpos; i < stksize && budget > 0; i++ ) {
+					strgc_mark_datum(t->stack[i]);
+					budget--;
+				}
+				if ( i < stksize ) {
+					Strgc_mark_stackpos = i;
+					return; /* not done with this task's stack */
+				}
+
+				/* Scan onexitargs and ontaskerrorargs */
+				{
+					Dnode *dn;
+					for ( dn = t->onexitargs; dn != NULL; dn = dn->next ) {
+						strgc_mark_datum(dn->d);
+						budget--;
+					}
+					for ( dn = t->ontaskerrorargs; dn != NULL; dn = dn->next ) {
+						strgc_mark_datum(dn->d);
+						budget--;
+					}
+				}
+
+				Strgc_mark_task = t->nxt;
+				Strgc_mark_stackpos = 0;
+			}
+			if ( Strgc_mark_task == NULL )
+				Strgc_mark_group++;
+			break;
+		}
+
+		case 5: {
+			/* Phrases: walk Topph and Tobechecked for NTATTRIB strings */
+			extern Phrasep Topph;
+			extern Phrasep Tobechecked;
+			/* We do all phrases in one go since attrib scanning is fast */
+			Phrasep p;
+			for ( p = Topph; p != NULL; p = p->p_next ) {
+				strgc_mark_phrase_notes(p);
+				budget--;
+			}
+			for ( p = Tobechecked; p != NULL; p = p->p_next ) {
+				strgc_mark_phrase_notes(p);
+				budget--;
+			}
+			Strgc_mark_group++;
+			break;
+		}
+
+		case 6: {
+			/* Objects: each object's symbol table */
+			extern Kobjectp Topobj;
+			Kobjectp o;
+			for ( o = Topobj; o != NULL; o = o->onext ) {
+				if ( o->symbols != NULL )
+					strgc_push_ht(o->symbols);
+				budget--;
+			}
+			Strgc_mark_group++;
+			break;
+		}
+
+		case 7: {
+			/* Locks: mark name strings */
+			Lknode *lk;
+			for ( lk = Toplk; lk != NULL; lk = lk->next ) {
+				strgc_mark_str(lk->name);
+				budget--;
+			}
+			Strgc_mark_group++;
+			break;
+		}
+
+		case 8: {
+			/* FIFOs: walk Fifodata chains */
+			Fifo *f;
+			for ( f = Topfifo; f != NULL; f = f->next ) {
+				Fifodata *fd;
+				for ( fd = f->head; fd != NULL; fd = fd->next ) {
+					strgc_mark_datum(fd->d);
+					budget--;
+				}
+			}
+			Strgc_mark_group++;
+			break;
+		}
+
+		case 9: {
+			/* Context chain */
+			Context *ct;
+			for ( ct = Topct; ct != NULL; ct = ct->next ) {
+				if ( ct->symbols != NULL )
+					strgc_push_ht(ct->symbols);
+				budget--;
+			}
+			Strgc_mark_group++;
+			break;
+		}
+
+		case 10:
+			/* Special tables: Tasktable, Fifotable, Windhash */
+			{
+				extern Htablep Windhash;
+				if ( Tasktable != NULL )
+					strgc_push_ht(Tasktable);
+				if ( Fifotable != NULL )
+					strgc_push_ht(Fifotable);
+				if ( Windhash != NULL )
+					strgc_push_ht(Windhash);
+			}
+			/* Keylibtable is static in main.c; provide accessor */
+			{
+				extern Htablep strgc_get_keylibtable(void);
+				Htablep klt = strgc_get_keylibtable();
+				if ( klt != NULL )
+					strgc_push_ht(klt);
+			}
+			budget--;
+			Strgc_mark_group++;
+			break;
+
+		case 11: {
+			/* MIDI port names */
+			int i;
+			for ( i = 0; i < MIDI_IN_DEVICES; i++ )
+				strgc_mark_str(Midiinputs[i].name);
+			for ( i = 0; i < MIDI_OUT_DEVICES; i++ )
+				strgc_mark_str(Midioutputs[i].name);
+			budget--;
+			Strgc_mark_group++;
+			break;
+		}
+
+		case 12: {
+			/* Htobechecked list */
+			extern Htablep Htobechecked;
+			Htablep h;
+			for ( h = Htobechecked; h != NULL; h = h->h_next ) {
+				strgc_push_ht(h);
+				budget--;
+			}
+			Strgc_mark_group++;
+			break;
+		}
+
+		case 13:
+			/* Final drain of gray list */
+			work = strgc_drain_gray(budget);
+			budget -= work;
+			if ( Gray_list != NULL )
+				return; /* still draining */
+			/* All roots scanned, transition to sweep */
+			Strgc_state = STRGC_SWEEP;
+			Strgc_sweep_bucket = 0;
+			return;
+
+		default:
+			/* Should not reach here */
+			Strgc_state = STRGC_SWEEP;
+			Strgc_sweep_bucket = 0;
+			return;
+		}
+
+		/* After completing a group, drain any gray entries that were added */
+		work = strgc_drain_gray(budget);
+		budget -= work;
+	}
+}
+
+/* ---- String GC: MARK_INIT phase (reset colors) ---- */
+
+static void
+strgc_reset_colors(void)
+{
+	int budget = Strgc_work;
+	int i;
+
+	for ( i = Strgc_sweep_bucket; i < Strtab->size && budget > 0; i++ ) {
+		Strnodep sn;
+		for ( sn = Strtab->buckets[i]; sn != NULL; sn = sn->next )
+			sn->gc_color = GC_WHITE;
+		budget--;
+	}
+	Strgc_sweep_bucket = i;
+	if ( i >= Strtab->size ) {
+		Strgc_state = STRGC_MARK;
+		Strgc_mark_group = 0;
+		Strgc_mark_pos = 0;
+		Strgc_mark_ht = NULL;
+		Strgc_mark_bucket = 0;
+		Strgc_mark_hn = NULL;
+		Strgc_mark_task = NULL;
+		Strgc_mark_stackpos = 0;
+	}
+}
+
+/* ---- String GC: sweep phase ---- */
+
+static int Strgc_freed = 0;	/* count of strings freed in current sweep */
+
+static void
+strgc_sweep_step(void)
+{
+	int budget = Strgc_work;
+
+	while ( Strgc_sweep_bucket < Strtab->size && budget > 0 ) {
+		Strnodep sn, prev, next;
+
+		prev = NULL;
+		for ( sn = Strtab->buckets[Strgc_sweep_bucket]; sn != NULL; sn = next ) {
+			next = sn->next;
+			if ( sn->gc_color == GC_WHITE ) {
+				/* Unreachable — free it */
+				if ( prev != NULL )
+					prev->next = next;
+				else
+					Strtab->buckets[Strgc_sweep_bucket] = next;
+				kfree(sn->str);
+				freesn(sn);
+				Strtab->count--;
+				Strgc_freed++;
+			} else {
+				/* Reset for next cycle */
+				sn->gc_color = GC_WHITE;
+				prev = sn;
+			}
+		}
+		Strgc_sweep_bucket++;
+		budget--;
+	}
+
+	if ( Strgc_sweep_bucket >= Strtab->size ) {
+		/* Sweep complete */
+		Strgc_state = STRGC_IDLE;
+		Strgc_allocs = 0;
+if(*Debug>1){eprint("STRGC: sweep complete, freed %d strings\n",Strgc_freed);}
+		Strgc_freed = 0;
+	}
+}
+
+/* ---- String GC: public interface ---- */
+
+void
+strgc_step(void)
+{
+	switch ( Strgc_state ) {
+	case STRGC_IDLE:
+		if ( Strgc_allocs >= Strgc_threshold ) {
+			Strgc_state = STRGC_MARK_INIT;
+			Strgc_sweep_bucket = 0; /* reused as reset cursor */
+			Strgc_freed = 0;
+if(*Debug>1){eprint("STRGC: starting GC cycle, %d allocs\n",Strgc_allocs);}
+		}
+		break;
+	case STRGC_MARK_INIT:
+		strgc_reset_colors();
+		break;
+	case STRGC_MARK:
+		strgc_mark_step();
+		break;
+	case STRGC_SWEEP:
+		strgc_sweep_step();
+		break;
+	}
+}
+
+void
+strgc_full(void)
+{
+	/* Force a full GC cycle if not already in progress */
+	if ( Strtab == NULL )
+		return;
+	if ( Strgc_state == STRGC_IDLE ) {
+		Strgc_state = STRGC_MARK_INIT;
+		Strgc_sweep_bucket = 0;
+	}
+	while ( Strgc_state != STRGC_IDLE )
+		strgc_step();
 }
 
 int

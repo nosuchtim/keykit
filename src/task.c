@@ -670,6 +670,10 @@ exectasks(int nosetjmp)
 			ccnt = (int)*Checkcount;
 		}
 
+		/* Incremental string GC: run a step each iteration.
+		 * Cheap when idle (single comparison), bounded work otherwise. */
+		strgc_step();
+
 	}
 	T = NULL;
 
@@ -680,6 +684,13 @@ exectasks(int nosetjmp)
 
 	// PyEval_RestoreThread(KeyPyState);
 #endif
+}
+
+/* Accessor for string GC to reach the static task list */
+Ktaskp
+strgc_get_toptp(void)
+{
+	return Toptp;
 }
 
 void
