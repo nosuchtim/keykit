@@ -48,3 +48,7 @@ echo Running ptr test ...
 ..\bin\lowkey ptr.k > ptr.out
 diff -b ptr.out ptr.sav
 
+echo Running str test ...
+..\bin\lowkey str.k > str.out
+diff -b str.out str.sav
+

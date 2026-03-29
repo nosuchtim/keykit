@@ -16,7 +16,7 @@ RMCR = mdep/stdio/rmcr
 # WINRMCR = flip -u
 WINRMCR = dos2unix
 
-VERSION=8.2
+VERSION=8.3
 
 OTHERDIRS = 
 
@@ -231,7 +231,7 @@ bindir :
 ###################
 
 	
-distribution_nt :
+distribution_nt : updateversion
 	$(MK) install_nt
 	$(MK) clean_nt
 	rm -fr dist/nt dist/key_nt.zip
@@ -248,6 +248,7 @@ distribution_nt :
 	cp music/* dist/nt/key/music
 	cd dist/nt && powershell "$$global:ProgressPreference = 'SilentlyContinue' ; compress-archive -literalpath key -destinationpath ../key_nt.zip"
 	rm -fr dist/nt
+	rm -fr dist/key
 
 updateversion :
 	sed -e "/KEYKITVERSION/s/Version ..../Version $(VERSION)/" < index.html > tmp.html
@@ -385,7 +386,7 @@ clobber_raspbian : clean_raspbian
 	cd byacc ; $(MK) -f makefile.stdio clobber
 	rm -f src/makefile
 
-distribution_raspbian :
+distribution_raspbian : updateversion
 	$(MK) install_raspbian
 	rm -fr dist/raspbian dist/key_raspbian.zip
 	mkdir dist/raspbian
@@ -409,7 +410,7 @@ install_linux: bindir
 	cd src ; $(MK) clean
 	cd src ; $(MK) install
 
-distribution_linux :
+distribution_linux : updateversion
 	rm -fr dist/linux dist/key_linux.zip
 	mkdir dist/linux
 	mkdir dist/linux/key
