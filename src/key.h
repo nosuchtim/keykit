@@ -56,6 +56,8 @@ typedef struct Hnode *Hnodep;
 typedef struct Hnode **Hnodepp;
 typedef struct Htable *Htablep;
 typedef struct Kobject *Kobjectp;
+typedef struct Strnode *Strnodep;
+typedef struct Strtable *Strtablep;
 
 /* These macros can be overridden in mdep.h for systems that require */
 /* special ways of opening text vs. binary files. */
@@ -590,6 +592,30 @@ typedef struct Htable {
 
 typedef Htablep *Htablepp;
 
+/* String table node — used only by the interned string table */
+typedef struct Strnode {
+	Strnodep next;		/* collision chain */
+	Symstr str;		/* the interned string */
+	char gc_color;		/* GC_WHITE, GC_GRAY, GC_BLACK */
+} Strnode;
+
+typedef struct Strtable {
+	int size;		/* number of buckets */
+	int count;		/* number of strings stored */
+	Strnodep *buckets;	/* array of Strnode chains */
+} Strtable;
+
+/* String GC tri-color values */
+#define GC_WHITE 0
+#define GC_GRAY  1
+#define GC_BLACK 2
+
+/* String GC states */
+#define STRGC_IDLE      0
+#define STRGC_MARK_INIT 1
+#define STRGC_MARK      2
+#define STRGC_SWEEP     3
+
 /* Symbol entries are created during the parsing of a keykit program, */
 /* and are typically pointed-to by Inst entries.  To make array elements */
 /* work like normal variables (ie. avoiding lots of special cases in the */
@@ -1035,6 +1061,9 @@ extern Codep _Icin;
 extern Phrasep Tobechecked;
 extern Htablep Htobechecked;
 extern int Chkstuff;
+extern int Strgc_state;
+extern void strgc_step(void);
+extern void strgc_full(void);
 extern int Keycnt;
 extern int Argc;
 extern char **Argv;
