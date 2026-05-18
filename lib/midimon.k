@@ -37,6 +37,7 @@ function print_cs32_msg(m) {
 
 function task_midimon(verbose,notesonly) {
 
+	print("NEW MIDIMON")
 	k = korgcontrol(0)
 	if ( k == -1 ) {
 		Midiin[$] = f = open()
@@ -49,25 +50,29 @@ function task_midimon(verbose,notesonly) {
 
 	while ( (m=get(f)) != Eof ) {
 		if ( verbose ) {
-			if ( notesonly==0 && m.type == CONTROLLER ) {
+			if ( m.type == NOTEON || m.type == NOTEOFF || m.type == NOTE ) {
+				print("port=",m.port," chan=",m.chan," pitch=",m.pitch," vol=",m.vol)
+			}
+			if ( notesonly != 0 ) {
+				continue
+			}
+			if ( m.type == CONTROLLER ) {
 				ch = (integer(subbytes(m,1,1)) & 0xf) + 1
 				ct = integer(subbytes(m,2,1))
 				v = integer(subbytes(m,3,1))
 				print("port=",m.port," chan=",ch," controller=",ct," vol=",v)
-			} else if ( notesonly==0 && m.type == CHANPRESSURE ) {
+			} else if ( m.type == CHANPRESSURE ) {
 				ch = (integer(subbytes(m,1,1)) & 0xf) + 1
 				p = integer(subbytes(m,2,1))
 				print("port=",m.port," chan=",ch," chanpressure=",p)
-			} else if ( notesonly==0 && m.type == PITCHBEND ) {
+			} else if ( m.type == PITCHBEND ) {
 				ch = (integer(subbytes(m,1,1)) & 0xf) + 1
 				v1 = integer(subbytes(m,2,1))
 				v2 = integer(subbytes(m,3,1))
                                 v = v1 + v2*128
 				print("port=",m.port," chan=",ch," pitchbend=",v)
-			} else if ( m.type == NOTEON || m.type == NOTEOFF || m.type == NOTE ) {
-				print("port=",m.port," chan=",m.chan," pitch=",m.pitch," vol=",m.vol)
 			} else {
-				print("port=",m.port," p=",m)
+				print("port=",m.port," p=",m," type=",m.type)
 			}
 		} else {
 			if ( notesonly==0 || m.type==NOTEON || m.type==NOTEOFF ) {
