@@ -50,8 +50,11 @@ function task_midimon(verbose,notesonly) {
 
 	while ( (m=get(f)) != Eof ) {
 		if ( verbose ) {
-			if ( m.type == NOTEON || m.type == NOTEOFF || m.type == NOTE ) {
-				print("port=",m.port," chan=",m.chan," pitch=",m.pitch," vol=",m.vol)
+			if ( m.type == NOTEON || m.type == NOTE ) {
+				print("port=",m.port," chan=",m.chan," pitch=",m.pitch," vol=",m.vol," noteon")
+			}
+			if ( m.type == NOTEOFF ) {
+				print("port=",m.port," chan=",m.chan," pitch=",m.pitch," vol=",m.vol," noteoff")
 			}
 			if ( notesonly != 0 ) {
 				continue
