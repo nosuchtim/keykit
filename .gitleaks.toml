@@ -1,0 +1,7 @@
+[extend]
+useDefault = true
+
+[[allowlists]]
+description = "Historical Visual Studio solution GUID in mdep/nt/key64.sln (false positive, not a secret)"
+paths = ['''mdep/nt/key64\.sln''']
+regexes = ['''Project\("\{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942\}"\) = "key64", "key64\.vcxproj", "\{B7E485A7-56E5-4851-9E0F-738CC2335268\}"''']
