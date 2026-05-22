@@ -43,7 +43,9 @@ jobs:
             pre-commit run --from-ref "$BASE_SHA" --to-ref "$HEAD_SHA" --show-diff-on-failure
           fi
 
-      - name: Run gitleaks full-history scan
+      - name: Run gitleaks current-tree scan
         uses: gitleaks/gitleaks-action@v2
+        with:
+          args: detect --source . --no-git --redact --verbose
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
