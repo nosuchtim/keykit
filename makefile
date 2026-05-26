@@ -252,7 +252,7 @@ distribution_nt : updateversion
 	rm -f lib/last.kp
 	cp lib/* dist/nt/key/lib
 	cp music/* dist/nt/key/music
-	cd dist/nt && powershell "$$global:ProgressPreference = 'SilentlyContinue' ; compress-archive -literalpath key -destinationpath ../key_nt.zip"
+	cd dist/nt && powershell "$$global:ProgressPreference = 'SilentlyContinue' ; $$v = (Get-Content ../../VERSION).Trim() -replace '\.', '' ; compress-archive -literalpath key -destinationpath ../key$${v}_win.zip -Force"
 	rm -fr dist/nt
 	rm -fr dist/key
 
