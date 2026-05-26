@@ -16,7 +16,7 @@ RMCR = mdep/stdio/rmcr
 # WINRMCR = flip -u
 WINRMCR = dos2unix
 
-VERSION=8.3
+# The release version is read from VERSION by updateversion.py.
 
 OTHERDIRS = 
 
@@ -52,6 +52,7 @@ test_nt : regress_nt
 test_stdio : regress_stdio
 
 install_nt :
+	$(MK) updateversion
 	$(MK) install_nt_1
 	$(MK) copy_nt
 	$(MK) install_nt_2
@@ -81,6 +82,7 @@ install_final_python :
 	copy bin\keykit.ico $(FINALDIR)\keykit
 
 install_nt_python :
+	$(MK) updateversion
 	-mkdir bin >nul 2>&1
 	$(MK) clean
 	cd byacc && $(MK) -f makefile.$(MSTYPE) all
@@ -89,6 +91,7 @@ install_nt_python :
 	cd src && $(MK) install
 	
 install_nt_1 :
+	$(MK) updateversion
 	-mkdir bin >nul 2>&1
 	$(MK) clean_nt
 	cd byacc && $(MK) -f makefile.$(MSTYPE) all
@@ -97,6 +100,7 @@ install_nt_1 :
 	cd src && $(MK) install
 
 install_nt_2 :
+	$(MK) updateversion
 	cd src && $(MK) clean && rm -f d_*.h
 	cd src && $(MK) install
 	cd doc && $(MK) all
@@ -165,6 +169,7 @@ copy_ntcons :
 	cp mdep/nt/resetkeylib.bat bin
 
 install_ntcons :
+	$(MK) updateversion
 	$(MK) copy_ntcons
 	cd src && $(MK) clean
 	cd src && $(MK) install
@@ -206,6 +211,7 @@ clobber_bin :
 
 # complete compile/regression test (for NT and 95)
 regress_nt :
+	$(MK) updateversion
 	$(MK) copy_ntcons
 	cd src && $(MK) clean && $(MK) install
 	cd tests && $(MK)
@@ -251,23 +257,7 @@ distribution_nt : updateversion
 	rm -fr dist/key
 
 updateversion :
-	sed -e "/KEYKITVERSION/s/Version ..../Version $(VERSION)/" < index.html > tmp.html
-	mv tmp.html index.html
-	cd src
-	sed -e /define.KEYVERSION/s/'"'.*'"'/'"'$(VERSION)'"'/ < key.h > key2.h
-	mv key2.h key.h
-	sed -e /Copyright/s/KeyKit.*' - '/KeyKit' '$(VERSION)' - '/ < main.c > main2.c
-	mv main2.c main.c
-	cd ..
-	cd mdep/nt
-	sed -e /VERSION/s/'"'KeyKit.*'"'/'"'KeyKit' '($(VERSION))'"'/ < key.rc > key2.rc
-	mv key2.rc key.rc
-	cd ../..
-	cd doc
-	sed -e "/ds.KV/s/KV.*/KV $(VERSION)/" < macros > nmacros
-	mv nmacros macros
-	cd ..
-	echo $(VERSION) > VERSION
+	python updateversion.py
 
 flip_all:
 	$(RMCR) src/*.c src/*.h src/makefile
@@ -296,6 +286,7 @@ copy_stdio : bindir
 	-$(RMCR) tests/*
 
 install_stdio :
+	$(MK) updateversion
 	$(MK) copy_stdio
 	cd byacc ; $(MK) -f makefile.stdio clobber ; $(MK) -f makefile.stdio
 	cd src ; $(MK) clean ; $(MK) install

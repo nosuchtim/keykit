@@ -10,7 +10,7 @@ FILE *FF = NULL;
 #endif
 
 #ifndef lint
-char *Copyright = "KeyKit 8.3 - Copyright 1996 AT&T Corp.  All rights reserved.";
+char *Copyright = "KeyKit 8.4 - Copyright 1996 AT&T Corp.  All rights reserved.";
 #endif
 
 Midiport Midiinputs[MIDI_IN_DEVICES];
@@ -62,13 +62,6 @@ static int *Popstackp = Popstack;
 static long Ungoti;
 static int Maxpathleng = 0;
 static Htablep Keylibtable = NULL;
-
-/* Accessor for string GC to reach the static Keylibtable */
-Htablep
-strgc_get_keylibtable(void)
-{
-	return Keylibtable;
-}
 
 char *Progname = "key";
 int Macrosused = 0;

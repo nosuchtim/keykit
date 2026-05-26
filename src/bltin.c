@@ -1597,7 +1597,6 @@ bi_garbcollect(int argc)
 		execerror("usage: garbcollect()");
 	phcheck();
 	htcheck();
-	strgc_full();
 	ret(Nullval);
 }
 
