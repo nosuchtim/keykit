@@ -18,7 +18,7 @@ WINRMCR = dos2unix
 
 # The release version is read from VERSION by updateversion.py.
 
-OTHERDIRS = 
+OTHERDIRS =
 
 ### This determines what type of makefile gets used on windows.
 ### msvs is for Visual Studio
@@ -41,7 +41,7 @@ clobber :
 	@echo "No default for 'make clobber'."
 	@echo "Use 'make clobber_nt' or 'make clobber_linux'."
 
-clean_linux : 
+clean_linux :
 	$(MK) -C src clean
 	$(MK) -C doc clean
 	$(MK) -C tests clean
@@ -56,12 +56,12 @@ install_nt :
 	$(MK) install_nt_1
 	$(MK) copy_nt
 	$(MK) install_nt_2
-	
+
 install_tjt :
 	$(MK) install_nt_1
 	$(MK) copy_tjt
 	$(MK) install_nt_2
-	
+
 install_python :
 	$(MK) install_nt_python
 	$(MK) install_final_python
@@ -89,7 +89,7 @@ install_nt_python :
 	$(MK) copy_nt_python
 	cd src && $(MK) clean && rm -f d_*.h
 	cd src && $(MK) install
-	
+
 install_nt_1 :
 	$(MK) updateversion
 	-mkdir bin >nul 2>&1
@@ -236,7 +236,7 @@ bindir :
 # The stuff here is specific to constructing the distribution.
 ###################
 
-	
+
 distribution_nt : updateversion
 	$(MK) install_nt
 	$(MK) clean_nt
@@ -434,4 +434,3 @@ svr4 :
 	cp mdep/svr4/midi.c src/midi.c
 	$(RMCR) src/*.c src/*.h src/*.ico src/makefile
 	$(RMCR) `echo lib/* | grep -v .ppm`
-
