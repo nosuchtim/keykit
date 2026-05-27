@@ -28,7 +28,11 @@ jobs:
 
       - name: Run pre-commit hooks on changed files
         env:
-          SKIP: gitleaks-protect
+          # This workflow is a non-mutating security gate. The repository has
+          # historical whitespace/line-ending drift, so fixer-style hooks are
+          # useful locally but create noisy CI failures whenever an old file is
+          # touched. Keep them in local pre-commit, but do not run them here.
+          SKIP: gitleaks-protect,end-of-file-fixer,mixed-line-ending,trailing-whitespace
         run: |
           set -euo pipefail
           HEAD_SHA="${{ github.sha }}"
