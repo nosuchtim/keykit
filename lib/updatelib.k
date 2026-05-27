@@ -137,3 +137,7 @@ function readeveryfile(path) {
 function rereadlib() {
 	updatelib(0,0,Keypath,1)
 }
+
+function synclocal() {
+	return(0)
+}

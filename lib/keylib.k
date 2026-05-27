@@ -1472,6 +1472,7 @@
 #library updatelib.k updatelib
 #library updatelib.k readeveryfile
 #library updatelib.k rereadlib
+#library updatelib.k synclocal
 #library util1.k argvlist
 #library util1.k arraycopy
 #library util1.k arraysortonindex
