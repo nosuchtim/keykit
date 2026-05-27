@@ -56,6 +56,7 @@ typedef struct Hnode *Hnodep;
 typedef struct Hnode **Hnodepp;
 typedef struct Htable *Htablep;
 typedef struct Kobject *Kobjectp;
+typedef struct Strhdr *Strhdrp;
 typedef struct Strnode *Strnodep;
 typedef struct Strtable *Strtablep;
 
@@ -595,6 +596,7 @@ typedef Htablep *Htablepp;
 /* String table node - used only by the interned string table */
 typedef struct Strnode {
 	Strnodep next;		/* collision chain */
+	Strhdrp hdr;		/* metadata stored immediately before str */
 	Symstr str;		/* the interned string */
 } Strnode;
 

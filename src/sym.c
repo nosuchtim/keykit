@@ -1499,10 +1499,33 @@ htlists(void)
 
 /*
  * String interning table - uses dedicated Strnode instead of Hnode.
- * Interned strings are process-lifetime objects.
+ *
+ * Interned strings are still process-lifetime objects.  The allocation now
+ * carries a small header immediately before the returned char * so future
+ * owned-string or tracing work can find per-string metadata without changing
+ * the large existing Symstr ABI.
  */
 
+#define STR_MAGIC 0x4b535452U	/* "KSTR" */
+#define STRF_INTERNED 0x0001
+#define STRF_IMMORTAL 0x0002
+
+typedef struct Strhdr {
+	unsigned int magic;
+	unsigned short flags;
+	unsigned short mark;
+	unsigned long len;
+	Strnodep owner;
+	char bytes[1];
+} Strhdr;
+
 static Strtable *Strtab = NULL;
+static unsigned long Str_payload_bytes = 0;
+static unsigned long Str_alloc_bytes = 0;
+static unsigned long Str_lookups = 0;
+static unsigned long Str_hits = 0;
+static unsigned long Str_misses = 0;
+static unsigned long Str_moves = 0;
 
 /* Strnode pool allocator */
 #define ALLOCSN 128
@@ -1522,6 +1545,7 @@ newsn(void)
 	sn = lastsn++;
 
 	sn->next = NULL;
+	sn->hdr = NULL;
 	sn->str = NULL;
 	return sn;
 }
@@ -1535,6 +1559,38 @@ new_strtable(int size)
 	st->buckets = (Strnodep *) kmalloc(size*sizeof(Strnodep),"strtable_buckets");
 	memset(st->buckets, 0, size*sizeof(Strnodep));
 	return st;
+}
+
+static void
+strtab_init(void)
+{
+	if ( Strtab == NULL ) {
+		char *p = getenv("STRHASHSIZE");
+		Strtab = new_strtable( p ? atoi(p) : 1009 );
+	}
+}
+
+static void
+strnode_setstr(Strnodep h,char *s)
+{
+	unsigned int len;
+	unsigned int alloclen;
+	Strhdr *hdr;
+
+	len = (unsigned int) strlen(s);
+	alloclen = (unsigned int) sizeof(Strhdr) + len;
+	hdr = (Strhdr *) kmalloc(alloclen,"uniqstr");
+	hdr->magic = STR_MAGIC;
+	hdr->flags = STRF_INTERNED | STRF_IMMORTAL;
+	hdr->mark = 0;
+	hdr->len = (unsigned long) len;
+	hdr->owner = h;
+	strcpy(hdr->bytes,s);
+
+	h->hdr = hdr;
+	h->str = hdr->bytes;
+	Str_payload_bytes += (unsigned long) len + 1;
+	Str_alloc_bytes += (unsigned long) alloclen;
 }
 
 /* Compute hash value of a string (same algorithm as the old uniqstr) */
@@ -1559,10 +1615,8 @@ uniqstr(char *s)
 	Strnodep h, toph;
 	int v;
 
-	if ( Strtab == NULL ) {
-		char *p = getenv("STRHASHSIZE");
-		Strtab = new_strtable( p ? atoi(p) : 1009 );
-	}
+	strtab_init();
+	Str_lookups++;
 
 	v = strhash(s, Strtab->size);
 
@@ -1571,16 +1625,18 @@ uniqstr(char *s)
 	if ( toph == NULL ) {
 		/* no collision */
 		h = newsn();
-		h->str = kmalloc((unsigned)strlen(s)+1,"uniqstr");
-		strcpy((char*)(h->str),s);
+		strnode_setstr(h,s);
 		Strtab->count++;
+		Str_misses++;
 	}
 	else {
 		Strnodep prev;
 
 		/* quick test for first node in list, most common case */
-		if ( strcmp(toph->str,s) == 0  )
+		if ( strcmp(toph->str,s) == 0  ) {
+			Str_hits++;
 			return(toph->str);
+		}
 
 		/* Look through entire list */
 		h = toph;
@@ -1591,14 +1647,16 @@ uniqstr(char *s)
 		if ( h == NULL ) {
 			/* string wasn't found, add it */
 			h = newsn();
-			h->str = kmalloc((unsigned)strlen(s)+1,"uniqstr");
-			strcpy((char*)(h->str),s);
+			strnode_setstr(h,s);
 			Strtab->count++;
+			Str_misses++;
 		}
 		else {
 			/* Symstr found.  Delete it from its current */
 			/* position so we can move it to the top. */
 			prev->next = h->next;
+			Str_hits++;
+			Str_moves++;
 		}
 	}
 	/* Whether we've just allocated a new node, or whether we've */
@@ -1608,6 +1666,132 @@ uniqstr(char *s)
 	h->next = toph;
 	table[v] = h;
 	return(h->str);
+}
+
+static void
+strtab_summarize(int *usedp,int *maxchainp,unsigned long *chainsp)
+{
+	int i, n;
+	Strnodep h;
+
+	*usedp = 0;
+	*maxchainp = 0;
+	*chainsp = 0;
+	if ( Strtab == NULL )
+		return;
+	for ( i=0; i<Strtab->size; i++ ) {
+		n = 0;
+		for ( h=Strtab->buckets[i]; h!=NULL; h=h->next )
+			n++;
+		if ( n != 0 ) {
+			(*usedp)++;
+			*chainsp += (unsigned long) n;
+			if ( n > *maxchainp )
+				*maxchainp = n;
+		}
+	}
+}
+
+void
+strstatsprint(void)
+{
+	int used, maxchain;
+	unsigned long chains;
+
+	if ( Strtab == NULL ) {
+		eprint("string table: empty\n");
+		return;
+	}
+	strtab_summarize(&used,&maxchain,&chains);
+	eprint("string table: strings=%d buckets=%d used_buckets=%d max_chain=%d\n",
+		Strtab->count,Strtab->size,used,maxchain);
+	eprint("string table: payload_bytes=%lu allocated_bytes=%lu lookups=%lu hits=%lu misses=%lu moves=%lu\n",
+		Str_payload_bytes,Str_alloc_bytes,Str_lookups,Str_hits,Str_misses,Str_moves);
+	dummyusage(chains);
+}
+
+int
+strtabcheck(void)
+{
+	int i, errors, steps;
+	unsigned long seen;
+	Strnodep h;
+
+	if ( Strtab == NULL )
+		return 1;
+
+	errors = 0;
+	seen = 0;
+	for ( i=0; i<Strtab->size; i++ ) {
+		steps = 0;
+		for ( h=Strtab->buckets[i]; h!=NULL; h=h->next ) {
+			seen++;
+			steps++;
+			if ( steps > Strtab->count ) {
+				eprint("string table check: cycle suspected in bucket %d\n",i);
+				errors++;
+				break;
+			}
+			if ( h->hdr == NULL || h->str == NULL ) {
+				eprint("string table check: missing header/string in bucket %d\n",i);
+				errors++;
+				continue;
+			}
+			if ( h->hdr->magic != STR_MAGIC ) {
+				eprint("string table check: bad magic for string '%s'\n",h->str);
+				errors++;
+			}
+			if ( h->hdr->owner != h ) {
+				eprint("string table check: wrong owner for string '%s'\n",h->str);
+				errors++;
+			}
+			if ( h->hdr->bytes != h->str ) {
+				eprint("string table check: header/string mismatch for '%s'\n",h->str);
+				errors++;
+			}
+			if ( strlen(h->str) != h->hdr->len ) {
+				eprint("string table check: length mismatch for string '%s'\n",h->str);
+				errors++;
+			}
+		}
+	}
+	if ( seen != (unsigned long) Strtab->count ) {
+		eprint("string table check: counted %lu nodes, table says %d\n",
+			seen,Strtab->count);
+		errors++;
+	}
+	return errors == 0;
+}
+
+int
+strgcdryrun(int verbose)
+{
+	int i;
+	unsigned long wouldfree, wouldbytes;
+	Strnodep h;
+	int ok;
+
+	wouldfree = 0;
+	wouldbytes = 0;
+	if ( Strtab != NULL ) {
+		for ( i=0; i<Strtab->size; i++ ) {
+			for ( h=Strtab->buckets[i]; h!=NULL; h=h->next ) {
+				if ( h->hdr != NULL
+				  && (h->hdr->flags & STRF_IMMORTAL) == 0 ) {
+					wouldfree++;
+					wouldbytes += h->hdr->len + 1;
+				}
+			}
+		}
+	}
+	ok = strtabcheck();
+	if ( ! ok || verbose ) {
+		eprint("string gc dry run: would_free=%lu payload_bytes=%lu actual_free=0\n",
+			wouldfree,wouldbytes);
+		if ( verbose )
+			strstatsprint();
+	}
+	return ok;
 }
 
 int

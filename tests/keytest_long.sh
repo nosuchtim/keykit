@@ -1,0 +1,3 @@
+echo Running stringsoak test ...
+../bin/lowkey stringsoak.k > stringsoak.out
+diff stringsoak.out stringsoak.sav

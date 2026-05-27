@@ -38,3 +38,11 @@ echo Running ptr test ...
 ../bin/lowkey ptr.k > ptr.out
 diff ptr.out ptr.sav
 
+echo Running str test ...
+../bin/lowkey str.k > str.out
+diff str.out str.sav
+
+echo Running stringstress test ...
+../bin/lowkey stringstress.k > stringstress.out
+diff stringstress.out stringstress.sav
+

@@ -52,3 +52,6 @@ echo Running str test ...
 ..\bin\lowkey str.k > str.out
 diff -b str.out str.sav
 
+echo Running stringstress test ...
+..\bin\lowkey stringstress.k > stringstress.out
+diff -b stringstress.out stringstress.sav
