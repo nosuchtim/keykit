@@ -47,6 +47,41 @@ function shadow_reuse_value(n) {
 		substr("abcdefghijklmnopqrstuvwxyz",(n%12)+1,8))
 }
 
+class stringstress_object_holder {
+method init {
+	$.bag = []
+	$.label = ""
+	$.value = ""
+}
+method put(k,v) {
+	$.label = k
+	$.value = v
+	$.bag[$.label] = $.value
+}
+method get(k) {
+	kk = substr("[" + k + "]",2,sizeof(k))
+	return($.bag[kk] + ":" + $.label + ":" + $.value)
+}
+}
+
+function stringstress_object_check() {
+	failures = 0
+	o = new stringstress_object_holder()
+	for ( n=0; n<24; n++ ) {
+		k = "object-key:" + sprintf("%04d",n) + ":" + literal_root(4)
+		v = "object-value:" + sprintf("%04d",23-n) + ":" + make_value(n)
+		o.put(k,v)
+		garbcollect()
+		got = o.get(k)
+		want = v + ":" + k + ":" + v
+		if ( got != want )
+			failures++
+	}
+	delete o
+	garbcollect()
+	return(failures)
+}
+
 entries = 1600
 table = []
 expected_total = 0
@@ -163,3 +198,4 @@ for ( n=0; n<220; n=n+17 ) {
 		reuse_failures++
 }
 check("quarantine-reuse",reuse_failures,0)
+check("object-gc-values",stringstress_object_check(),0)

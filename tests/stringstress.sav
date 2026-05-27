@@ -12,3 +12,4 @@ ok post-gc-literal-root
 ok task-stack-root
 ok fifo-shadow-values
 ok quarantine-reuse
+ok object-gc-values

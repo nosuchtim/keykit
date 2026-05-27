@@ -2095,10 +2095,10 @@ strmark_inststream(Unchar *p,Unchar *end)
 		case I_UNDEFINE:
 		case I_READONLYIT:
 		case I_ONCHANGEIT:
+		case I_VAREVAL:
 		case I_LVAREVAL:
 		case I_GVAREVAL:
 		case I_VARPUSH:
-		case I_OBJVARPUSH:
 		case I_CALLFUNC:
 		case I_OBJCALLFUNC:
 			if ( ! strgc_read_sym(&p,end,&sym) )
@@ -2302,15 +2302,25 @@ strmark_window(Kwind *w)
 
 	if ( w == NULL )
 		return;
-	markstr(w->trk);
-	if ( w->pph != NULL )
-		strmark_phrase(*(w->pph));
-	if ( w->bufflines != NULL ) {
-		for ( n=0; n<w->numlines; n++ )
-			markstr(w->bufflines[n]);
+	if ( Windhash != NULL && windptr(windnum(w)) != w )
+		return;
+	switch ( w->type ) {
+	case WIND_PHRASE:
+		markstr(w->trk);
+		if ( w->pph != NULL )
+			strmark_phrase(*(w->pph));
+		break;
+	case WIND_TEXT:
+		if ( w->bufflines != NULL ) {
+			for ( n=0; n<w->numlines; n++ )
+				markstr(w->bufflines[n]);
+		}
+		markstr(w->currline);
+		break;
+	case WIND_MENU:
+		strmark_menu(&(w->km));
+		break;
 	}
-	markstr(w->currline);
-	strmark_menu(&(w->km));
 }
 
 static void

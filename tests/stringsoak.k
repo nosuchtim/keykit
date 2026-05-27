@@ -48,6 +48,39 @@ function soak_task(c) {
 	Soak_task_result = local_table[soak_task_value(c,17)]
 }
 
+class stringsoak_object_holder {
+method init {
+	$.bag = []
+	$.label = ""
+	$.value = ""
+}
+method put(k,v) {
+	$.label = k
+	$.value = v
+	$.bag[$.label] = $.value
+}
+method get(k) {
+	kk = substr("[" + k + "]",2,sizeof(k))
+	return($.bag[kk] + ":" + $.label + ":" + $.value)
+}
+}
+
+function soak_object_check(c) {
+	failures = 0
+	o = new stringsoak_object_holder()
+	for ( n=0; n<8; n++ ) {
+		k = "soak-object:" + sprintf("%04d",c%10000) + ":" + sprintf("%03d",n)
+		v = soak_value(c,n) + ":object"
+		o.put(k,v)
+		garbcollect()
+		if ( o.get(k) != (v + ":" + k + ":" + v) )
+			failures++
+	}
+	delete o
+	garbcollect()
+	return(failures)
+}
+
 function check_parts(k,c,n) {
 	parts = split(k,":")
 	if ( sizeof(parts) != 4 )
@@ -153,6 +186,8 @@ function run_cycle(c) {
 			failures++
 		garbcollect()
 	}
+
+	failures += soak_object_check(c)
 
 	return(failures)
 }

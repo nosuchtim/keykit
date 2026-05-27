@@ -1436,10 +1436,12 @@
 #library stringtest.k stringtest_value
 #library stringtest.k stringtest_literal
 #library stringtest.k stringtest_padded_literal
+#library stringtest.k stringtest_object_holder
 #library stringtest.k stringtest_check_parts
 #library stringtest.k stringtest_long_string
 #library stringtest.k stringtest_attr_phrase
 #library stringtest.k stringtest_edge_cases
+#library stringtest.k stringtest_object_cases
 #library stringtest.k stringtest_cycle
 #library stringtest.k stringtest
 #library tjtalg.k tjtalg

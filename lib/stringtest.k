@@ -44,6 +44,23 @@ function stringtest_padded_literal(n) {
 	return(s)
 }
 
+class stringtest_object_holder {
+method init {
+	$.bag = []
+	$.label = ""
+	$.value = ""
+}
+method put(k,v) {
+	$.label = stringtest_copy(k)
+	$.value = stringtest_copy(v)
+	$.bag[$.label] = $.value
+}
+method get(k) {
+	kk = stringtest_copy(k)
+	return($.bag[kk] + ":" + $.label + ":" + $.value)
+}
+}
+
 function stringtest_check_parts(k,c,n) {
 	parts = split(k,":")
 	if ( sizeof(parts) != 4 )
@@ -122,6 +139,23 @@ function stringtest_edge_cases(c) {
 	return(failures)
 }
 
+function stringtest_object_cases(c) {
+	o = new stringtest_object_holder()
+	failures = 0
+	for ( n=0; n<12; n++ ) {
+		k = "obj:" + sprintf("%04d",c%10000) + ":" + sprintf("%03d",n)
+		v = stringtest_value(c,n) + ":object"
+		o.put(k,v)
+		garbcollect()
+		want = v + ":" + k + ":" + v
+		got = o.get(stringtest_copy(k))
+		failures += stringtest_note("object-string-value",got==want,got,want)
+	}
+	delete o
+	garbcollect()
+	return(failures)
+}
+
 function stringtest_cycle(c,batch) {
 	failures = 0
 	table = []
@@ -173,6 +207,7 @@ function stringtest_cycle(c,batch) {
 	failures += stringtest_attr_phrase(c,72)
 	failures += stringtest_long_string(c)
 	failures += stringtest_edge_cases(c)
+	failures += stringtest_object_cases(c)
 
 	garbcollect()
 

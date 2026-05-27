@@ -277,6 +277,7 @@ newkwind(void)
 		w = (Kwind * ) kmalloc(sizeof(Kwind),"newkwind");
 	}
 
+	memset(w,0,sizeof(Kwind));
 	waddtolist(w,&Topwind);
 
 	w->type = WIND_GENERIC;
