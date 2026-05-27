@@ -579,6 +579,7 @@ typedef struct Hnode {
 } Hnode;
 
 #define HT_TOBECHECKED 1
+#define HT_STRGC_MARKED 2
 
 typedef struct Htable {
 	int size;	/* size of nodetable */
@@ -605,6 +606,9 @@ typedef struct Strtable {
 	int count;		/* number of strings stored */
 	Strnodep *buckets;	/* array of Strnode chains */
 } Strtable;
+
+#define STRCODE_STREAM 0
+#define STRCODE_FUNCTION 1
 
 /* Symbol entries are created during the parsing of a keykit program, */
 /* and are typically pointed-to by Inst entries.  To make array elements */
@@ -749,6 +753,7 @@ typedef struct Lknode {
 	struct Lknode *next;	/* Only used in Toplk list. */
 	struct Lknode *notify;	/* List of pending locks with same name */
 } Lknode;
+extern Lknode *Toplk;
 
 typedef struct Kobject {
 	long id;
@@ -848,7 +853,7 @@ extern Ktaskp T;
 extern Ktaskp Tboot;
 extern Ktaskp Running;
 extern int Currpriority;
-extern Codep Ipop;
+extern Codep Ipop, Ireboot;
 extern Fifo *Midi_in_f, *Midi_out_f;
 extern Fifo *Consinf, *Consoutf, *Mousef;
 extern int Consolefd, Midifd, Displayfd;
@@ -1119,6 +1124,11 @@ extern void (*Fatalfunc)(char *);
 extern void (*Diagfunc)(char *);
 extern void checkdebug();
 
+void strregistercode(Codep cp,unsigned long len,int kind);
+void strunregistercode(Codep cp);
+void markstr(Symstr s);
+int strgcdryrun(int verbose);
+
 int yyparse(NOARG);
 
 #ifndef KEYKITRC
@@ -1183,7 +1193,7 @@ Hey, mdep_statmidi is no longer used!
 
 #define NONAMEPREFIX "__"
 
-#define KEYVERSION "8.5"
+#define KEYVERSION "8.6"
 
 /* These values might, e.g., be set to 'p' and 'P', if that's what the */
 /* real function keys put out.  Depends on what mdep_getconsole() in mdep.c does. */

@@ -94,6 +94,7 @@ inodes2code(Instnodep inlist)
 	Instnodep in;
 	int offset = 0;
 	int codetype;
+	int codekind;
 
 	/* First go through and figure out how big the code will be, */
 	/* so we know the exact byte position of each instruction, and also */
@@ -130,6 +131,9 @@ fprintf(FF,"INODES2CODE start\n");
 
 	ip = (Unchar *) kmalloc(offset,"inodes2code");
 	*Numinst1 += offset;	/* keep track of how much memory consumed */
+	codekind = (inlist != NULL && inlist->code.type == IC_BLTIN)
+		? STRCODE_FUNCTION : STRCODE_STREAM;
+	strregistercode(ip,(unsigned long)offset,codekind);
 
 	for ( ip2=ip,in=inlist; in!=NULL; in=nextinode(in) ) {
 		i = in->code;

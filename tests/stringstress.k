@@ -25,6 +25,28 @@ function literal_root(n) {
 	return(s)
 }
 
+function shadow_task_value(seed,n) {
+	return("task-shadow:" + seed + ":" + sprintf("%04d",n))
+}
+
+function shadow_task(seed) {
+	local_table = []
+	local_keep = shadow_task_value(seed,77)
+	for ( n=0; n<140; n++ )
+		local_table[shadow_task_value(seed,n)] = shadow_task_value(seed,139-n)
+	garbcollect()
+	Shadow_task_result = local_keep + ":" + local_table[shadow_task_value(seed,11)]
+}
+
+function shadow_fifo_value(n) {
+	return("fifo-shadow:" + sprintf("%04d",n) + ":" + literal_root(6))
+}
+
+function shadow_reuse_value(n) {
+	return("quarantine-shadow:" + sprintf("%04d",n) + ":" +
+		substr("abcdefghijklmnopqrstuvwxyz",(n%12)+1,8))
+}
+
 entries = 1600
 table = []
 expected_total = 0
@@ -103,3 +125,41 @@ check("attrib-mismatch",badattrs,0)
 check("literal-root",literal_root(75),"literal:alpha:beta:gamma")
 garbcollect()
 check("post-gc-literal-root",literal_root(75),"literal:alpha:beta:gamma")
+
+Shadow_task_result = ""
+tid = task shadow_task("alpha")
+wait(tid)
+check("task-stack-root",Shadow_task_result,
+	shadow_task_value("alpha",77) + ":" + shadow_task_value("alpha",128))
+garbcollect()
+
+f = open()
+for ( n=0; n<24; n++ )
+	put(f,shadow_fifo_value(n))
+garbcollect()
+fifo_failures = 0
+for ( n=0; n<24; n++ ) {
+	v = get(f)
+	if ( v != shadow_fifo_value(n) )
+		fifo_failures++
+}
+close(f)
+check("fifo-shadow-values",fifo_failures,0)
+garbcollect()
+
+reuse_table = []
+for ( n=0; n<220; n++ )
+	reuse_table[n] = shadow_reuse_value(n)
+delete reuse_table
+garbcollect()
+rescued = []
+for ( n=0; n<220; n=n+17 )
+	rescued[shadow_reuse_value(n)] = shadow_reuse_value(219-n)
+garbcollect()
+reuse_failures = 0
+for ( n=0; n<220; n=n+17 ) {
+	k = shadow_reuse_value(n)
+	if ( rescued[k] != shadow_reuse_value(219-n) )
+		reuse_failures++
+}
+check("quarantine-reuse",reuse_failures,0)

@@ -937,6 +937,7 @@ funcdp(Symbolp s, BLTINCODE f)
 	// keyerrfile("CP 4 = %lld\n", (intptr_t)cp);
 	cp = put_symcode(s,cp);
 	// keyerrfile("CP 5 = %lld\n", (intptr_t)cp);
+	strregistercode(d.u.codep,(unsigned long)sz,STRCODE_FUNCTION);
 	return d;
 }
 
@@ -1509,6 +1510,10 @@ htlists(void)
 #define STR_MAGIC 0x4b535452U	/* "KSTR" */
 #define STRF_INTERNED 0x0001
 #define STRF_IMMORTAL 0x0002
+#define STRF_QUARANTINED 0x0004
+
+#define STRGC_SAMPLE_LIMIT 8
+#define STRGC_DATUM_SCAN_LIMIT 1000000L
 
 typedef struct Strhdr {
 	unsigned int magic;
@@ -1526,6 +1531,31 @@ static unsigned long Str_lookups = 0;
 static unsigned long Str_hits = 0;
 static unsigned long Str_misses = 0;
 static unsigned long Str_moves = 0;
+static unsigned short Str_mark_generation = 1;
+static unsigned long Str_quarantine_lookups = 0;
+static unsigned long Str_quarantine_marks = 0;
+
+typedef struct Strcode {
+	Codep cp;
+	unsigned long len;
+	int kind;
+	unsigned short mark;
+	struct Strcode *next;
+} Strcode;
+
+static Strcode *Strcodes = NULL;
+
+static void strmark_datum(Datum d);
+static void strmark_symbol(Symbolp s);
+static void strmark_htable(Htablep ht);
+static void strmark_phrase(Phrasep ph);
+static void strmark_note(Noteptr n);
+static void strmark_fifo(Fifo *f);
+static void strmark_task(Ktaskp t);
+static void strmark_object(Kobjectp o);
+static void strmark_window(Kwind *w);
+static void strmark_dnodes(Dnode *dn);
+static void strmark_codeptr(Codep cp,int preferred_kind);
 
 /* Strnode pool allocator */
 #define ALLOCSN 128
@@ -1608,6 +1638,16 @@ strhash(char *s, int tablesize)
 	return t % tablesize;
 }
 
+static void
+strnote_lookup(Strnodep h)
+{
+	if ( h != NULL && h->hdr != NULL
+	  && (h->hdr->flags & STRF_QUARANTINED) != 0 ) {
+		h->hdr->flags &= ~STRF_QUARANTINED;
+		Str_quarantine_lookups++;
+	}
+}
+
 Symstr
 uniqstr(char *s)
 {
@@ -1635,6 +1675,7 @@ uniqstr(char *s)
 		/* quick test for first node in list, most common case */
 		if ( strcmp(toph->str,s) == 0  ) {
 			Str_hits++;
+			strnote_lookup(toph);
 			return(toph->str);
 		}
 
@@ -1657,6 +1698,7 @@ uniqstr(char *s)
 			prev->next = h->next;
 			Str_hits++;
 			Str_moves++;
+			strnote_lookup(h);
 		}
 	}
 	/* Whether we've just allocated a new node, or whether we've */
@@ -1666,6 +1708,60 @@ uniqstr(char *s)
 	h->next = toph;
 	table[v] = h;
 	return(h->str);
+}
+
+void
+strregistercode(Codep cp,unsigned long len,int kind)
+{
+	Strcode *sc;
+
+	if ( cp == NULL || len == 0 )
+		return;
+	sc = (Strcode *) kmalloc(sizeof(Strcode),"strregistercode");
+	sc->cp = cp;
+	sc->len = len;
+	sc->kind = kind;
+	sc->mark = 0;
+	sc->next = Strcodes;
+	Strcodes = sc;
+}
+
+void
+strunregistercode(Codep cp)
+{
+	Strcode *sc, *prev;
+
+	prev = NULL;
+	for ( sc=Strcodes; sc!=NULL; sc=sc->next ) {
+		if ( sc->cp == cp )
+			break;
+		prev = sc;
+	}
+	if ( sc == NULL )
+		return;
+	if ( prev == NULL )
+		Strcodes = sc->next;
+	else
+		prev->next = sc->next;
+	kfree(sc);
+}
+
+static Strcode *
+strcode_containing(Codep cp)
+{
+	Strcode *sc;
+	intptr_t p, start, end;
+
+	if ( cp == NULL )
+		return NULL;
+	p = (intptr_t)cp;
+	for ( sc=Strcodes; sc!=NULL; sc=sc->next ) {
+		start = (intptr_t)sc->cp;
+		end = start + (intptr_t)sc->len;
+		if ( p >= start && p < end )
+			return sc;
+	}
+	return NULL;
 }
 
 static void
@@ -1707,6 +1803,8 @@ strstatsprint(void)
 		Strtab->count,Strtab->size,used,maxchain);
 	eprint("string table: payload_bytes=%lu allocated_bytes=%lu lookups=%lu hits=%lu misses=%lu moves=%lu\n",
 		Str_payload_bytes,Str_alloc_bytes,Str_lookups,Str_hits,Str_misses,Str_moves);
+	eprint("string table: mark_generation=%u quarantine_lookup_rescues=%lu quarantine_mark_rescues=%lu\n",
+		(unsigned int)Str_mark_generation,Str_quarantine_lookups,Str_quarantine_marks);
 	dummyusage(chains);
 }
 
@@ -1763,31 +1861,731 @@ strtabcheck(void)
 	return errors == 0;
 }
 
+static Strnodep
+strnode_for_ptr(Symstr s)
+{
+	int i;
+	Strnodep h;
+
+	if ( s == NULL || Strtab == NULL )
+		return NULL;
+	for ( i=0; i<Strtab->size; i++ ) {
+		for ( h=Strtab->buckets[i]; h!=NULL; h=h->next ) {
+			if ( h->str == s )
+				return h;
+		}
+	}
+	return NULL;
+}
+
+void
+markstr(Symstr s)
+{
+	Strnodep h;
+
+	h = strnode_for_ptr(s);
+	if ( h == NULL || h->hdr == NULL )
+		return;
+	if ( h->hdr->mark == Str_mark_generation )
+		return;
+	h->hdr->mark = Str_mark_generation;
+	if ( (h->hdr->flags & STRF_QUARANTINED) != 0 ) {
+		h->hdr->flags &= ~STRF_QUARANTINED;
+		Str_quarantine_marks++;
+	}
+}
+
+static void
+strclear_htable_marks(Htablep ht)
+{
+	for ( ; ht!=NULL; ht=ht->h_next )
+		ht->h_state &= ~HT_STRGC_MARKED;
+}
+
+static void
+strclear_code_marks(void)
+{
+	Strcode *sc;
+
+	for ( sc=Strcodes; sc!=NULL; sc=sc->next )
+		sc->mark = 0;
+}
+
+static void
+strclear_string_marks(void)
+{
+	int i;
+	Strnodep h;
+
+	if ( Strtab == NULL )
+		return;
+	for ( i=0; i<Strtab->size; i++ ) {
+		for ( h=Strtab->buckets[i]; h!=NULL; h=h->next ) {
+			if ( h->hdr != NULL )
+				h->hdr->mark = 0;
+		}
+	}
+}
+
+static void
+strnext_generation(void)
+{
+	Str_mark_generation++;
+	if ( Str_mark_generation == 0 ) {
+		Str_mark_generation = 1;
+		strclear_string_marks();
+		strclear_code_marks();
+	}
+	strclear_htable_marks(Topht);
+	strclear_htable_marks(Htobechecked);
+	strclear_htable_marks(Freeht);
+}
+
+static int
+strgc_skip(Unchar **pp,Unchar *end,int n)
+{
+	if ( *pp == NULL || *pp + n > end )
+		return 0;
+	*pp += n;
+	return 1;
+}
+
+static int
+strgc_skip_num(Unchar **pp,Unchar *end)
+{
+	int b, c;
+	Unchar *p;
+
+	p = *pp;
+	if ( p == NULL || p >= end )
+		return 0;
+	b = *p++;
+	if ( (b & 0xc0) == 0 || (b & 0x80) == 0 ) {
+		*pp = p;
+		return 1;
+	}
+	do {
+		if ( p >= end )
+			return 0;
+		c = *p++;
+	} while ( c & 0x80 );
+	*pp = p;
+	return 1;
+}
+
+static int
+strgc_read_str(Unchar **pp,Unchar *end,Symstr *sp)
+{
+	union str_union u;
+	Unchar *p;
+
+	p = *pp;
+	if ( p == NULL || p + Codesize[IC_STR] > end )
+		return 0;
+	u.bytes[0] = *p++;
+	u.bytes[1] = *p++;
+	u.bytes[2] = *p++;
+	u.bytes[3] = *p++;
+	u.bytes[4] = *p++;
+	u.bytes[5] = *p++;
+	u.bytes[6] = *p++;
+	u.bytes[7] = *p++;
+	*pp = p;
+	*sp = u.str;
+	return 1;
+}
+
+static int
+strgc_read_sym(Unchar **pp,Unchar *end,Symbolp *symp)
+{
+	union sym_union u;
+	Unchar *p;
+
+	p = *pp;
+	if ( p == NULL || p + Codesize[IC_SYM] > end )
+		return 0;
+	u.bytes[0] = *p++;
+	u.bytes[1] = *p++;
+	u.bytes[2] = *p++;
+	u.bytes[3] = *p++;
+	u.bytes[4] = *p++;
+	u.bytes[5] = *p++;
+	u.bytes[6] = *p++;
+	u.bytes[7] = *p++;
+	*pp = p;
+	*symp = u.sym;
+	return 1;
+}
+
+static int
+strgc_read_phr(Unchar **pp,Unchar *end,Phrasep *php)
+{
+	union phr_union u;
+	Unchar *p;
+
+	p = *pp;
+	if ( p == NULL || p + Codesize[IC_PHR] > end )
+		return 0;
+	u.bytes[0] = *p++;
+	u.bytes[1] = *p++;
+	u.bytes[2] = *p++;
+	u.bytes[3] = *p++;
+	u.bytes[4] = *p++;
+	u.bytes[5] = *p++;
+	u.bytes[6] = *p++;
+	u.bytes[7] = *p++;
+	*pp = p;
+	*php = u.phr;
+	return 1;
+}
+
+static int
+strgc_read_ip(Unchar **pp,Unchar *end,Codep *ipp)
+{
+	union ip_union u;
+	Unchar *p;
+
+	p = *pp;
+	if ( p == NULL || p + Codesize[IC_INST] > end )
+		return 0;
+	u.bytes[0] = *p++;
+	u.bytes[1] = *p++;
+	u.bytes[2] = *p++;
+	u.bytes[3] = *p++;
+	u.bytes[4] = *p++;
+	u.bytes[5] = *p++;
+	u.bytes[6] = *p++;
+	u.bytes[7] = *p++;
+	*pp = p;
+	*ipp = u.ip;
+	return 1;
+}
+
+static void
+strmark_inststream(Unchar *p,Unchar *end)
+{
+	int op;
+	Symstr s;
+	Symbolp sym;
+	Phrasep ph;
+	Codep ip;
+
+	while ( p != NULL && p < end ) {
+		op = *p++;
+		switch ( op ) {
+		case I_STOP:
+			return;
+		case I_DBLPUSH:
+			if ( ! strgc_skip(&p,end,Codesize[IC_DBL]) )
+				return;
+			break;
+		case I_STRINGPUSH:
+		case I_FILENAME:
+			if ( ! strgc_read_str(&p,end,&s) )
+				return;
+			markstr(s);
+			break;
+		case I_PHRASEPUSH:
+			if ( ! strgc_read_phr(&p,end,&ph) )
+				return;
+			strmark_phrase(ph);
+			break;
+		case I_DEFINED:
+		case I_TASK:
+		case I_UNDEFINE:
+		case I_READONLYIT:
+		case I_ONCHANGEIT:
+		case I_LVAREVAL:
+		case I_GVAREVAL:
+		case I_VARPUSH:
+		case I_OBJVARPUSH:
+		case I_CALLFUNC:
+		case I_OBJCALLFUNC:
+			if ( ! strgc_read_sym(&p,end,&sym) )
+				return;
+			strmark_symbol(sym);
+			break;
+		case I_FORIN1:
+			if ( ! strgc_read_sym(&p,end,&sym) )
+				return;
+			strmark_symbol(sym);
+			if ( ! strgc_read_ip(&p,end,&ip) )
+				return;
+			strmark_codeptr(ip,STRCODE_STREAM);
+			break;
+		case I_AND1:
+		case I_OR1:
+		case I_SELECT2:
+		case I_SELECT3:
+		case I_GOTO:
+		case I_TCONDEVAL:
+		case I_DOSWEEPCONT:
+			if ( ! strgc_read_ip(&p,end,&ip) )
+				return;
+			strmark_codeptr(ip,STRCODE_STREAM);
+			break;
+		case I_TFCONDEVAL:
+			if ( ! strgc_read_ip(&p,end,&ip) )
+				return;
+			strmark_codeptr(ip,STRCODE_STREAM);
+			if ( ! strgc_read_ip(&p,end,&ip) )
+				return;
+			strmark_codeptr(ip,STRCODE_STREAM);
+			break;
+		case I_DOT:
+		case I_MODASSIGN:
+		case I_VARASSIGN:
+		case I_ARRAY:
+		case I_LINENUM:
+		case I_PRINT:
+		case I_CONSTANT:
+		case I_DOTDOTARG:
+		case I_VARG:
+		case I_CONSTOBJEVAL:
+			if ( ! strgc_skip_num(&p,end) )
+				return;
+			break;
+		case I_DOTASSIGN:
+		case I_MODDOTASSIGN:
+			if ( ! strgc_skip_num(&p,end) )
+				return;
+			if ( ! strgc_skip_num(&p,end) )
+				return;
+			break;
+		default:
+			if ( op < 0 || op > I_XY4 )
+				return;
+			break;
+		}
+	}
+}
+
+static void
+strmark_codeblock(Strcode *sc)
+{
+	Unchar *p, *end;
+	Symbolp sym;
+
+	if ( sc == NULL || sc->cp == NULL || sc->mark == Str_mark_generation )
+		return;
+	sc->mark = Str_mark_generation;
+	p = sc->cp;
+	end = sc->cp + sc->len;
+	if ( sc->kind == STRCODE_FUNCTION ) {
+		if ( p >= end )
+			return;
+		p++;
+		if ( ! strgc_skip_num(&p,end) )
+			return;
+		if ( ! strgc_read_sym(&p,end,&sym) )
+			return;
+		strmark_symbol(sym);
+		if ( BLTINOF(sc->cp) != 0 )
+			return;
+		if ( ! strgc_skip_num(&p,end) )
+			return;
+	}
+	strmark_inststream(p,end);
+}
+
+static void
+strmark_codeptr(Codep cp,int preferred_kind)
+{
+	Strcode *sc;
+
+	dummyusage(preferred_kind);
+	sc = strcode_containing(cp);
+	if ( sc != NULL )
+		strmark_codeblock(sc);
+}
+
+static void
+strmark_note(Noteptr n)
+{
+#ifdef NTATTRIB
+	if ( n != NULL && attribof(n) != NULL )
+		markstr(attribof(n));
+#else
+	dummyusage(n);
+#endif
+}
+
+static void
+strmark_phrase(Phrasep ph)
+{
+	Noteptr nt;
+
+	if ( ph == NULL )
+		return;
+	for ( nt=firstnote(ph); nt!=NULL; nt=nextnote(nt) )
+		strmark_note(nt);
+}
+
+static void
+strmark_symbol(Symbolp s)
+{
+	if ( s == NULL )
+		return;
+	strmark_datum(s->name);
+	strmark_datum(s->sd);
+	if ( s->onchange != NULL )
+		strmark_codeptr(s->onchange,STRCODE_FUNCTION);
+}
+
+static void
+strmark_htable(Htablep ht)
+{
+	Hnodepp pp;
+	Hnodep h;
+	int hsize;
+
+	if ( ht == NULL || (ht->h_state & HT_STRGC_MARKED) != 0 )
+		return;
+	ht->h_state |= HT_STRGC_MARKED;
+	pp = ht->nodetable;
+	hsize = ht->size;
+	while ( hsize-- > 0 ) {
+		for ( h=(*pp++); h!=NULL; h=h->next ) {
+			strmark_datum(h->key);
+			strmark_datum(h->val);
+		}
+	}
+}
+
+static void
+strmark_dnodes(Dnode *dn)
+{
+	for ( ; dn!=NULL; dn=dn->next )
+		strmark_datum(dn->d);
+}
+
+static void
+strmark_fifo(Fifo *f)
+{
+	Fifodata *fd;
+	long guard;
+
+	if ( f == NULL )
+		return;
+	guard = 0;
+	for ( fd=f->tail; fd!=NULL && guard++ <= f->size+1; fd=fd->next )
+		strmark_datum(fd->d);
+}
+
+static void
+strmark_object(Kobjectp o)
+{
+	if ( o == NULL )
+		return;
+	strmark_htable(o->symbols);
+}
+
+static void
+strmark_menu(Kmenu *km)
+{
+	Kitem *ki;
+
+	if ( km == NULL )
+		return;
+	for ( ki=km->items; ki!=NULL; ki=ki->next ) {
+		markstr(ki->name);
+		strmark_dnodes(ki->args);
+		if ( ki->nested != NULL )
+			strmark_menu(ki->nested);
+	}
+}
+
+static void
+strmark_window(Kwind *w)
+{
+	int n;
+
+	if ( w == NULL )
+		return;
+	markstr(w->trk);
+	if ( w->pph != NULL )
+		strmark_phrase(*(w->pph));
+	if ( w->bufflines != NULL ) {
+		for ( n=0; n<w->numlines; n++ )
+			markstr(w->bufflines[n]);
+	}
+	markstr(w->currline);
+	strmark_menu(&(w->km));
+}
+
+static void
+strmark_task(Ktaskp t)
+{
+	Datum *dp;
+
+	if ( t == NULL )
+		return;
+	strmark_codeptr(t->first,STRCODE_STREAM);
+	strmark_codeptr(t->pc,STRCODE_STREAM);
+	if ( t->stack != NULL && t->stackp != NULL
+	  && t->stackp >= t->stack && t->stackp <= t->stackend ) {
+		for ( dp=t->stack; dp<t->stackp; dp++ )
+			strmark_datum(*dp);
+	}
+	strmark_codeptr(t->onexit,STRCODE_FUNCTION);
+	strmark_dnodes(t->onexitargs);
+	strmark_codeptr(t->ontaskerror,STRCODE_FUNCTION);
+	strmark_dnodes(t->ontaskerrorargs);
+	markstr(t->ontaskerrormsg);
+	markstr(t->filename);
+	markstr(t->method);
+	strmark_fifo(t->fifo);
+	strmark_object(t->obj);
+	strmark_object(t->realobj);
+}
+
+static void
+strmark_datum(Datum d)
+{
+	Datum *dp;
+	long guard;
+
+	switch ( d.type ) {
+	case D_STR:
+		markstr(d.u.str);
+		break;
+	case D_SYM:
+		strmark_symbol(d.u.sym);
+		break;
+	case D_PHR:
+		strmark_phrase(d.u.phr);
+		break;
+	case D_ARR:
+		strmark_htable(d.u.arr);
+		break;
+	case D_CODEP:
+		strmark_codeptr(d.u.codep,STRCODE_STREAM);
+		break;
+	case D_DATUM:
+		dp = d.u.datum;
+		for ( guard=0; dp!=NULL && !isnoval(*dp)
+		  && guard<STRGC_DATUM_SCAN_LIMIT; guard++,dp++ )
+			strmark_datum(*dp);
+		break;
+	case D_NOTE:
+		strmark_note(d.u.note);
+		break;
+	case D_FIFO:
+		strmark_fifo(d.u.fifo);
+		break;
+	case D_TASK:
+		strmark_task(d.u.task);
+		break;
+	case D_WIND:
+		strmark_window(d.u.wind);
+		break;
+	case D_OBJ:
+		strmark_object(d.u.obj);
+		break;
+	default:
+		break;
+	}
+}
+
+static void
+strmark_global_strings(void)
+{
+	int n;
+
+	strmark_datum(Zeroval);
+	strmark_datum(Noval);
+	strmark_datum(Nullval);
+	strmark_datum(Str_x0);
+	strmark_datum(Str_y0);
+	strmark_datum(Str_x1);
+	strmark_datum(Str_y1);
+	strmark_datum(Str_x);
+	strmark_datum(Str_y);
+	strmark_datum(Str_button);
+	strmark_datum(Str_type);
+	strmark_datum(Str_mouse);
+	strmark_datum(Str_down);
+	strmark_datum(Str_up);
+	strmark_datum(Str_drag);
+	strmark_datum(Str_move);
+	strmark_datum(Str_lowest);
+	strmark_datum(Str_highest);
+	strmark_datum(Str_earliest);
+	strmark_datum(Str_latest);
+	strmark_datum(Str_modifier);
+	strmark_datum(Str_default);
+	strmark_datum(Str_w);
+	strmark_datum(Str_r);
+	strmark_datum(Str_init);
+	strmark_datum(Str_get);
+	strmark_datum(Str_set);
+	strmark_datum(Str_newline);
+	strmark_datum(Str_red);
+	strmark_datum(Str_green);
+	strmark_datum(Str_blue);
+	strmark_datum(Str_grey);
+	strmark_datum(Str_surface);
+	strmark_datum(Str_finger);
+	strmark_datum(Str_hand);
+	strmark_datum(Str_xvel);
+	strmark_datum(Str_yvel);
+	strmark_datum(Str_width);
+	strmark_datum(Str_height);
+	strmark_datum(Str_proximity);
+	strmark_datum(Str_orientation);
+	strmark_datum(Str_eccentricity);
+#ifdef MDEP_OSC_SUPPORT
+	strmark_datum(Str_elements);
+	strmark_datum(Str_seconds);
+	strmark_datum(Str_fraction);
+#endif
+	markstr(Infile);
+	if ( Keypath != NULL )
+		markstr(*Keypath);
+	if ( Musicpath != NULL )
+		markstr(*Musicpath);
+	if ( Keyroot != NULL )
+		markstr(*Keyroot);
+	if ( Initconfig != NULL )
+		markstr(*Initconfig);
+	if ( Keypagepersistent != NULL )
+		markstr(*Keypagepersistent);
+	if ( Printsep != NULL )
+		markstr(*Printsep);
+	if ( Printend != NULL )
+		markstr(*Printend);
+	if ( Pathsep != NULL )
+		markstr(*Pathsep);
+	if ( Dirseparator != NULL )
+		markstr(*Dirseparator);
+	if ( Devmidi != NULL )
+		markstr(*Devmidi);
+	if ( Machine != NULL )
+		markstr(*Machine);
+	for ( n=0; n<MIDI_IN_DEVICES; n++ )
+		markstr(Midiinputs[n].name);
+	for ( n=0; n<MIDI_OUT_DEVICES; n++ )
+		markstr(Midioutputs[n].name);
+}
+
+static void
+strmark_roots(void)
+{
+	Htablep ht;
+	Phrasep ph;
+	Ktaskp tp;
+	Kobjectp o;
+	Kwind *w;
+	Sched *sch;
+	Lknode *lk;
+	int n;
+
+	for ( ht=Topht; ht!=NULL; ht=ht->h_next )
+		strmark_htable(ht);
+	for ( ph=Topph; ph!=NULL; ph=ph->p_next )
+		strmark_phrase(ph);
+	for ( tp=Running; tp!=NULL; tp=tp->nextrun )
+		strmark_task(tp);
+	strmark_task(T);
+	for ( o=Topobj; o!=NULL; o=o->onext )
+		strmark_object(o);
+	for ( w=Topwind; w!=NULL; w=w->next )
+		strmark_window(w);
+	for ( sch=Topsched; sch!=NULL; sch=sch->next ) {
+		strmark_phrase(sch->phr);
+		strmark_note(sch->note);
+		strmark_task(sch->task);
+	}
+	for ( lk=Toplk; lk!=NULL; lk=lk->next ) {
+		markstr(lk->name);
+		strmark_task(lk->owner);
+	}
+	for ( n=0; n<NFKEYS; n++ )
+		strmark_codeptr(Fkeyfunc[n],STRCODE_FUNCTION);
+	strmark_codeptr(Ipop,STRCODE_STREAM);
+	strmark_codeptr(Idosweep,STRCODE_STREAM);
+	strmark_codeptr(Ireboot,STRCODE_STREAM);
+	strmark_global_strings();
+}
+
+static void
+strgc_sample(Symstr s)
+{
+	int c, n;
+
+	eprint("  \"");
+	for ( n=0; s!=NULL && (c=s[n])!='\0' && n<60; n++ ) {
+		if ( c == '\n' )
+			eprint("\\n");
+		else if ( c == '\r' )
+			eprint("\\r");
+		else if ( c == '\t' )
+			eprint("\\t");
+		else if ( c == '"' )
+			eprint("\\\"");
+		else if ( c == '\\' )
+			eprint("\\\\");
+		else
+			eprint("%c",c);
+	}
+	if ( s != NULL && s[n] != '\0' )
+		eprint("...");
+	eprint("\"\n");
+}
+
 int
 strgcdryrun(int verbose)
 {
 	int i;
-	unsigned long wouldfree, wouldbytes;
+	unsigned long marked, markedbytes;
+	unsigned long unmarked, unmarkedbytes;
+	unsigned long quarantined, newlyquarantined;
+	unsigned long samplecount;
 	Strnodep h;
 	int ok;
 
-	wouldfree = 0;
-	wouldbytes = 0;
+	marked = 0;
+	markedbytes = 0;
+	unmarked = 0;
+	unmarkedbytes = 0;
+	quarantined = 0;
+	newlyquarantined = 0;
+	samplecount = 0;
+	strnext_generation();
+	strmark_roots();
 	if ( Strtab != NULL ) {
 		for ( i=0; i<Strtab->size; i++ ) {
 			for ( h=Strtab->buckets[i]; h!=NULL; h=h->next ) {
-				if ( h->hdr != NULL
-				  && (h->hdr->flags & STRF_IMMORTAL) == 0 ) {
-					wouldfree++;
-					wouldbytes += h->hdr->len + 1;
+				if ( h->hdr == NULL )
+					continue;
+				if ( h->hdr->mark == Str_mark_generation ) {
+					marked++;
+					markedbytes += h->hdr->len + 1;
+					continue;
+				}
+				unmarked++;
+				unmarkedbytes += h->hdr->len + 1;
+				if ( (h->hdr->flags & STRF_QUARANTINED) != 0 )
+					quarantined++;
+				else {
+					h->hdr->flags |= STRF_QUARANTINED;
+					newlyquarantined++;
+				}
+				if ( verbose && samplecount < STRGC_SAMPLE_LIMIT ) {
+					if ( samplecount == 0 )
+						eprint("string gc shadow samples:\n");
+					strgc_sample(h->str);
+					samplecount++;
 				}
 			}
 		}
 	}
 	ok = strtabcheck();
 	if ( ! ok || verbose ) {
-		eprint("string gc dry run: would_free=%lu payload_bytes=%lu actual_free=0\n",
-			wouldfree,wouldbytes);
+		eprint("string gc shadow: marked=%lu marked_bytes=%lu unmarked=%lu unmarked_bytes=%lu actual_free=0 generation=%u\n",
+			marked,markedbytes,unmarked,unmarkedbytes,(unsigned int)Str_mark_generation);
+		eprint("string gc quarantine: already=%lu newly=%lu lookup_rescues=%lu mark_rescues=%lu\n",
+			quarantined,newlyquarantined,Str_quarantine_lookups,Str_quarantine_marks);
 		if ( verbose )
 			strstatsprint();
 	}

@@ -1153,6 +1153,7 @@ freeiseg(Instnodep in)
 void
 freecode(Codep cp)
 {
+	strunregistercode(cp);
 	kfree(cp);
 }
 

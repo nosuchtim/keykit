@@ -31,6 +31,23 @@ function bytecode_literal() {
 	return("bytecode-literal-survives-garbcollect")
 }
 
+function soak_fifo_value(c,n) {
+	return("fifo-soak:" + sprintf("%04d",c%10000) + ":" + sprintf("%03d",n) +
+		":" + bytecode_literal())
+}
+
+function soak_task_value(c,n) {
+	return("task-soak:" + sprintf("%04d",c%10000) + ":" + sprintf("%03d",n))
+}
+
+function soak_task(c) {
+	local_table = []
+	for ( n=0; n<48; n++ )
+		local_table[soak_task_value(c,n)] = soak_task_value(c,47-n)
+	garbcollect()
+	Soak_task_result = local_table[soak_task_value(c,17)]
+}
+
 function check_parts(k,c,n) {
 	parts = split(k,":")
 	if ( sizeof(parts) != 4 )
@@ -117,6 +134,25 @@ function run_cycle(c) {
 	garbcollect()
 	if ( bytecode_literal() != "bytecode-literal-survives-garbcollect" )
 		failures++
+
+	f = open()
+	for ( n=0; n<10; n++ )
+		put(f,soak_fifo_value(c,n))
+	garbcollect()
+	for ( n=0; n<10; n++ ) {
+		if ( get(f) != soak_fifo_value(c,n) )
+			failures++
+	}
+	close(f)
+
+	if ( (c % 5) == 0 ) {
+		Soak_task_result = ""
+		tid = task soak_task(c)
+		wait(tid)
+		if ( Soak_task_result != soak_task_value(c,30) )
+			failures++
+		garbcollect()
+	}
 
 	return(failures)
 }
