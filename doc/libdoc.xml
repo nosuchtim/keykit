@@ -740,6 +740,10 @@ Convert a phrase to be in step time, ie. all notes with the same
 spacing and duration.  Overlapped notes (no matter how small the
 overlap) are played at the same time.
 <blankline/>
+<listitem name="stringtest([milliseconds [,verbose]])  " bold="yes" />
+Runs an on-demand stress test of string construction, lookup,
+substrings, split fields, phrase attributes, and garbage collection.
+<blankline/>
 <listitem name="strip(ph)  " bold="yes" />
 Strip off any leading and trailing rests from a phrase
 <blankline/>
