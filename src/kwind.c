@@ -739,8 +739,8 @@ newkitem(char *name)
 	Kitem *ki;
 
 	ki = (Kitem * ) kmalloc(sizeof(Kitem),"newkitem");
+	memset(ki,0,sizeof(Kitem));
 	ki->name = name;
-	ki->next = NULL;
 	return ki;
 }
 
