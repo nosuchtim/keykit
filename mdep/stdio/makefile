@@ -1,5 +1,5 @@
 CC = gcc
-CFLAGS = -Wall -Wextra -O
+CFLAGS = -std=gnu89 -Wall -Wextra -O
 STATIC = -static
 
 PROTO = -p
