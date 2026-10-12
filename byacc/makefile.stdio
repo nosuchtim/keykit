@@ -2,7 +2,7 @@ DEST	      = .
 
 HDRS	      = defs.h
 
-CFLAGS	      = -O -Wno-implicit-int -Wno-builtin-declaration-mismatch -Wno-implicit-function-declaration
+CFLAGS	      = -O -std=gnu89 -Wno-implicit-int -Wno-builtin-declaration-mismatch -Wno-implicit-function-declaration
 
 LDFLAGS	      =
 

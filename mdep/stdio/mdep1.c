@@ -1,4 +1,4 @@
-#ifndef __FreeBSD__
+#if !(defined(__FreeBSD__) || defined(__linux__))
 #include <termio.h>
 #endif
 #include <fcntl.h>

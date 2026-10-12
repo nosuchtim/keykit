@@ -257,7 +257,7 @@ distribution_nt : updateversion
 	rm -fr dist/key
 
 updateversion :
-	python updateversion.py
+	$(shell command -v python3 || echo python) updateversion.py
 
 flip_all:
 	$(RMCR) src/*.c src/*.h src/makefile
