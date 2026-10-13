@@ -1,10 +1,10 @@
-#if !(defined(__FreeBSD__) || defined(__linux__))
+#if !(defined(__FreeBSD__) || defined(__linux__) || defined(__APPLE__))
 #include <termio.h>
 #endif
 #include <fcntl.h>
 #include <sys/stat.h>
 #include <sys/types.h>
-#ifdef linux
+#if defined(linux) || defined(__APPLE__)
 #include <sys/time.h>
 #include <time.h>
 #include <unistd.h>
@@ -149,7 +149,7 @@ mdep_lsdir(char *dir, char *exp, void (*callback)(char*,int))
 	return 0;
 }
 
-#if !(defined(__FreeBSD__) || defined(linux))
+#if !(defined(__FreeBSD__) || defined(linux) || defined(__APPLE__))
 char *
 strerror(int e)
 {

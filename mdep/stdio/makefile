@@ -1,6 +1,7 @@
 CC = gcc
 CFLAGS = -std=gnu89 -Wall -Wextra -O
-STATIC = -static
+# macOS cannot link fully static programs
+STATIC = $(if $(filter Darwin,$(shell uname -s)),,-static)
 
 PROTO = -p
 BIN=../bin

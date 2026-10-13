@@ -11,7 +11,7 @@
 #include <stdarg.h>
 #include <unistd.h>
 #include <string.h>
-#ifdef __FreeBSD__
+#if defined(__FreeBSD__) || defined(__APPLE__)
 # include <limits.h>
 #else
 # include <values.h>
@@ -19,7 +19,7 @@
 #include <setjmp.h>
 #include <errno.h>
 
-#if !(defined(__FreeBSD__) || defined(linux))
+#if !(defined(__FreeBSD__) || defined(linux) || defined(__APPLE__))
 extern int sys_nerr;
 extern char *sys_errlist[];
 #endif

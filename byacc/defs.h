@@ -278,8 +278,10 @@ extern int errno;
 
 /* system functions */
 
+#ifndef __APPLE__
 extern void free();
 extern char *calloc();
 extern char *malloc();
 extern char *realloc();
 extern char *strcpy();
+#endif
