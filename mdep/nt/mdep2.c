@@ -1047,19 +1047,12 @@ static char *
 keyroot(void)
 {
 	static char *root = NULL;
-	char *cmd, *p, *pfile;
-	char buff[BUFSIZ];
+	char *p;
+	char buff[32768];
+	DWORD length;
 
 	if ( root )
 		return root;
-
-	cmd = GetCommandLine();
-	if ( (p=strchr(cmd,' ')) != NULL )
-		*p = '\0';
-	if ( (p=strrchr(cmd,'/')) != NULL )
-		cmd = p+1;
-	if ( (p=strrchr(cmd,'\\')) != NULL )
-		cmd = p+1;
 
 	/* KEYROOT, if set, now overrides the exe path, */
 	/* so the lib and bin directories can be in different places. */
@@ -1069,34 +1062,38 @@ keyroot(void)
 		/* If (and only if) KEYROOT is set and used, we chdir to it */
 		root = uniqstr(p);
 		_chdir(root);
+		return root;
+	}
 
-	} else if ( SearchPath(NULL,cmd,".exe",BUFSIZ,buff,&pfile) == 0 ) {
-
-		/* If we can't get it by looking for the exe, */
-		/* last last resort is ".." */
-
-		if ( exists("../lib/keyrc.k") )
-			root = uniqstr("..");
-		else if ( exists("c:\\key\\lib\\keyrc.k") )
-			root = uniqstr("c:\\key");
-		else {
-			eprint("KEYROOT not set!  Last resort - trying '..'");
-			root = uniqstr("..");
+	/* Use the running module, regardless of quotes/spaces in its command line,
+	 * its name, PATH, or the working directory. Its parent is bin or src. */
+	length = GetModuleFileNameA(NULL, buff, sizeof(buff));
+	if (length > 0 && length < sizeof(buff)) {
+		p = strrchr(buff, '\\');
+		if (p) {
+			*p = '\0';
+			p = strrchr(buff, '\\');
+			if (p) {
+				if (p == buff + 2 && buff[1] == ':')
+					p[1] = '\0'; /* Preserve the slash in a drive root. */
+				else
+					*p = '\0';
+				root = uniqstr(buff);
+				return root;
+			}
 		}
 	}
+
+	/* A fallback diagnostic must not block startup on a modal GUI dialog. */
+	if (exists("lib/keyrc.k"))
+		root = uniqstr(".");
+	else if (exists("../lib/keyrc.k"))
+		root = uniqstr("..");
+	else if (exists("c:\\key\\lib\\keyrc.k"))
+		root = uniqstr("c:\\key");
 	else {
-		cmd = buff;
-		/* Take off file.exe */
-		if ( (p=strrchr(cmd,'/')) != NULL )
-			*p = '\0';
-		else if ( (p=strrchr(cmd,'\\')) != NULL )
-			*p = '\0';
-		/* Take off parent directory (i.e. src or bin) */
-		if ( (p=strrchr(cmd,'/')) != NULL )
-			*p = '\0';
-		else if ( (p=strrchr(cmd,'\\')) != NULL )
-			*p = '\0';
-		root = uniqstr(cmd);
+		OutputDebugStringA("KeyKit: unable to locate KEYROOT; trying '..'.\n");
+		root = uniqstr("..");
 	}
 	return root;
 }

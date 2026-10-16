@@ -245,28 +245,37 @@ function lookforandopen(iotype,port,verbose) {
 function lookforport(iotype,port) {
 	if ( typeof(port) == "string" ) {
 		arr = midi(iotype,"list")
-		if ( substr(port,1,1) == "^" ) {
-			matchexpr = port + ".*"
-		} else {
-			matchexpr = ".*" + port + ".*";
-		}
-		found = -1
-		old = Arraysort
-		Arraysort = 1
-		for ( i in arr ) {
-			if ( arr[i] ~~ matchexpr ) {
-				found = i
-				break
-			}
-		}
-		Arraysort = old
-		if ( found < 0 ) {
-			return(-1)
-		}
-		port = found
+		return(matchportname(arr,port))
 	}
 	return(port)
-} 
+}
+
+function matchportname(arr,port) {
+	old = Arraysort
+	Arraysort = 1
+	# A literal device name takes precedence over partial/regular expressions.
+	# In particular, brackets in duplicate labels must be matched literally.
+	for ( i in arr ) {
+		if ( arr[i] == port ) {
+			Arraysort = old
+			return(i)
+		}
+	}
+	if ( substr(port,1,1) == "^" ) {
+		matchexpr = port + ".*"
+	} else {
+		matchexpr = ".*" + port + ".*"
+	}
+	found = -1
+	for ( i in arr ) {
+		if ( arr[i] ~~ matchexpr ) {
+			found = i
+			break
+		}
+	}
+	Arraysort = old
+	return(found)
+}
 
 #name	bpm
 #usage	bpm(beatsperminute)

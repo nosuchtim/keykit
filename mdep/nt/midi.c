@@ -13,8 +13,9 @@
 #include "key.h"
 #include "d_mdep2.h"
 
-#define __WINDOWS_MM__
-#include "../rtmidi/cpp/rtmidi_c.h"
+#include "../rtmidi/keykit_backend.h"
+#include "../rtmidi/keykit_port_names.h"
+#include "../rtmidi/keykit_loopbacks.h"
 
 int udp_send(PORTHANDLE mp, char* msg, int msgsize);
 
@@ -32,11 +33,13 @@ HWND     hwndNotify;
 static int Nmidiin = 0;
 static RtMidiInPtr rtmidiin[MIDI_IN_DEVICES];
 static char* RtmidiInputNames[MIDI_IN_DEVICES];
+static unsigned int RtmidiInputIndices[MIDI_IN_DEVICES];
 static int midiInUserData[MIDI_IN_DEVICES];
 
 static int Nmidiout = 0;
 static RtMidiOutPtr rtmidiout[MIDI_OUT_DEVICES];
 static char* RtmidiOutputNames[MIDI_OUT_DEVICES];
+static unsigned int RtmidiOutputIndices[MIDI_OUT_DEVICES];
 
 static unsigned char* bytes = NULL;
 static int sofar;
@@ -57,7 +60,6 @@ static char* midibuff_next = midibuff;
 static char* midibuff_end = midibuff + MIDIBUFF_SIZE;
 */
 
-static void midiouterror(int r, char* s);
 static void midiinerror(int r, char* s);
 
 int
@@ -155,19 +157,18 @@ mdep_putnmidi(int n, char *cp, Midiport * pport)
 				break;
 			}
 
-			rtmidi_out_send_message(rtmidiout[windevno], p, expecting);
+			if (rtmidi_out_send_message(rtmidiout[windevno], p, expecting) != 0 || !rtmidiout[windevno]->ok) {
+				eprint("MIDI output error: %s\n", rtmidiout[windevno]->msg);
+				return;
+			}
 			sofar += expecting;
 
 		} else {
 			// BUT otherwise, we send exactly what we've been given.
-			rtmidi_out_send_message(rtmidiout[windevno], p, n);
+			if (rtmidi_out_send_message(rtmidiout[windevno], p, n) != 0 || !rtmidiout[windevno]->ok)
+				eprint("MIDI output error: %s\n", rtmidiout[windevno]->msg);
 			break;
 		}
-	}
-
-	if (rtmidiout[windevno]->ok != true) {
-		midiouterror(1, (char *)(rtmidiout[windevno]->msg));
-		return;
 	}
 }
 
@@ -177,7 +178,7 @@ openmidiin(int windevno)
 	midiBuff[windevno].readSoFar = midiBuff[windevno].buff;
 	midiBuff[windevno].nextToWrite = midiBuff[windevno].buff;
 	midiBuff[windevno].end = midiBuff[windevno].buff + MIDIBUFF_SIZE;
-	rtmidi_open_port(rtmidiin[windevno], windevno, RtmidiInputNames[windevno]);
+	rtmidi_open_port(rtmidiin[windevno], RtmidiInputIndices[windevno], RtmidiInputNames[windevno]);
 	return (rtmidiin[windevno]->ok == true) ? 0 : -1;
 }
 
@@ -203,10 +204,17 @@ mdep_endmidi(void)
 {
 	int devno;
 
-	for ( devno=0; devno<Nmidiin; devno++ )
-		closemidiin(devno);
-	for ( devno=0; devno<Nmidiout; devno++ )
-		closemidiout(devno);
+	for (devno = 0; devno < Nmidiin; devno++) {
+		if (rtmidiin[devno]->ptr) closemidiin(devno);
+		rtmidi_in_free(rtmidiin[devno]);
+		rtmidiin[devno] = NULL;
+	}
+	for (devno = 0; devno < Nmidiout; devno++) {
+		if (rtmidiout[devno]->ptr) closemidiout(devno);
+		rtmidi_out_free(rtmidiout[devno]);
+		rtmidiout[devno] = NULL;
+	}
+	Nmidiin = Nmidiout = 0;
 }
 
 void
@@ -231,73 +239,130 @@ mdep_push_midi_byte(unsigned char byte) {
 
 }
 
+static int
+midiprobes(enum RtMidiApi api, RtMidiInPtr *input, RtMidiOutPtr *output)
+{
+	*input = rtmidi_in_create(api, "keykit", 1000);
+	*output = rtmidi_out_create(api, "keykit");
+	if (!(*input)->ok || !(*output)->ok) {
+		eprint("Can't initialize %s: %s\n", rtmidi_api_display_name(api),
+			!(*input)->ok ? (*input)->msg : (*output)->msg);
+		return -1;
+	}
+	if (rtmidi_in_get_current_api(*input) != api || rtmidi_out_get_current_api(*output) != api) {
+		eprint("RtMidi did not initialize the requested %s backend.\n", rtmidi_api_display_name(api));
+		return -1;
+	}
+	return 0;
+}
+
 int
 mdep_initmidi(Midiport *inputs, Midiport *outputs)
 {
-	int r, i;
-
-	// The first RtMidiIn and RtMidiOut instance is just to get the number of inputs and outputs.
+	char message[1024];
+	enum RtMidiApi api = keykit_midi_api(message, sizeof(message));
 	RtMidiInPtr rtin;
 	RtMidiOutPtr rtout;
-	rtin = rtmidi_in_create(RTMIDI_API_WINDOWS_MM, "keykit",1000);
-	rtout = rtmidi_out_create(RTMIDI_API_WINDOWS_MM, "keykit");
-	Nmidiout = rtmidi_get_port_count(rtout);
-	Nmidiin = rtmidi_get_port_count(rtin);
-
-	// We then create a separate RtMidiIn/Out for each port.  This is necessary
-	// in order to receive and send things to all the ports simultaneously.
-	// I.e. Each instance of RtMidiIn/Out can only handle a single connection.
-
-	*Devmidi = uniqstr("winmm");
-
-	int windevno;
-	for (windevno = 0; windevno < Nmidiin; windevno++) {
-		rtmidiin[windevno] = rtmidi_in_create(RTMIDI_API_WINDOWS_MM, "keykit", 1000);
-		midiInUserData[windevno] = windevno;
-		rtmidi_in_set_callback(rtmidiin[windevno], mdep_rtmidi_callback, &midiInUserData[windevno]);
-	}
-	for (windevno = 0; windevno < Nmidiout; windevno++) {
-		rtmidiout[windevno] = rtmidi_out_create(RTMIDI_API_WINDOWS_MM, "keykit");
+	KeykitMidiPortList *inputports = NULL, *outputports = NULL;
+	int i, countin, countout;
+	if (*message)
+		eprint("%s\n", message);
+	if (keykit_ensure_midi_loopbacks(api, message, sizeof(message)) != 0) {
+		/* Loopback setup is optional; keep existing MIDI usable without a popup. */
+		OutputDebugStringA(message);
+		OutputDebugStringA("\n");
+		fprintf(stderr, "%s\n", message);
 	}
 
-	char bufOut[1024];
-	int bufLen = sizeof(bufOut);
-
-	for (i=0; i<Nmidiout; i++ ) {
-		int ret = rtmidi_get_port_name(rtmidiout[i], i, bufOut, &bufLen);
-		if ( ret < 0 ) {
-			char msg[1024];
-			sprintf(msg, "Can't get name for output port %d", i);
-			mdep_popup(msg);
-		}
-		char *name = strsave(bufOut);
-		RtmidiOutputNames[i] = name;
-		outputs[i].name = name;
-		outputs[i].private1 = i;
+	mdep_endmidi();
+	for (i = 0; i < MIDI_IN_DEVICES; i++) {
+		inputs[i].name = NULL;
+		inputs[i].private1 = MIDI_NOSUCH_DEV;
 	}
-
-	for ( ; i<Nmidiout; i++ ) {
+	for (i = 0; i < MIDI_OUT_DEVICES; i++) {
 		outputs[i].name = NULL;
 		outputs[i].private1 = MIDI_NOSUCH_DEV;
 	}
 
-	/* Get the number of MIDI input devices.  Then get the capabilities of
-	 * each device.
-	 */
-	for (i=0; i<Nmidiin; i++) {
-		MIDIINCAPS midiInCaps;
-		r = midiInGetDevCaps(i, (LPMIDIINCAPS) &midiInCaps,
-                                sizeof(MIDIINCAPS));
-		if(r) {
-			midiinerror(r,"Error in midiInGetDevCaps: ");
-			Nmidiin = i;		/* and admit no more devices */
-			break;
+	if (midiprobes(api, &rtin, &rtout) != 0) {
+		rtmidi_in_free(rtin);
+		rtmidi_out_free(rtout);
+		if (api != RTMIDI_API_WINDOWS_MIDI_SERVICES)
+			return -1;
+		eprint("Windows MIDI Services initialization failed; using WinMM.\n");
+		api = RTMIDI_API_WINDOWS_MM;
+		if (midiprobes(api, &rtin, &rtout) != 0) {
+			rtmidi_in_free(rtin);
+			rtmidi_out_free(rtout);
+			return -1;
 		}
-		inputs[i].name = uniqstr(midiInCaps.szPname);
-		inputs[i].private1 = i;
-		RtmidiInputNames[i] = inputs[i].name;
 	}
+
+	*Devmidi = uniqstr(api == RTMIDI_API_WINDOWS_MIDI_SERVICES ? "wms" : "winmm");
+	countin = (int)rtmidi_get_port_count(rtin);
+	if (!rtin->ok) goto failed;
+	countout = (int)rtmidi_get_port_count(rtout);
+	if (!rtout->ok) goto failed;
+	/* Filter before applying KeyKit's limit, retaining native open indices. */
+	inputports = keykit_midi_port_list(rtin, countin, 1);
+	outputports = keykit_midi_port_list(rtout, countout, 0);
+	if (!inputports || !outputports) goto failed;
+	countin = (int)inputports->count;
+	countout = (int)outputports->count;
+	if (countin > MIDI_IN_DEVICES) {
+		eprint("Limiting MIDI inputs to %d ports.\n", MIDI_IN_DEVICES);
+		countin = MIDI_IN_DEVICES;
+	}
+	if (countout > MIDI_OUT_DEVICES) {
+		eprint("Limiting MIDI outputs to %d ports.\n", MIDI_OUT_DEVICES);
+		countout = MIDI_OUT_DEVICES;
+	}
+
+	for (i = 0; i < countin; i++) {
+		char *name = uniqstr(inputports->names[i]);
+		rtmidiin[i] = rtmidi_in_create(api, "keykit", 1000);
+		Nmidiin++;
+		if (!rtmidiin[i]->ok) goto failed;
+		midiInUserData[i] = i;
+		rtmidi_in_set_callback(rtmidiin[i], mdep_rtmidi_callback, &midiInUserData[i]);
+		if (!rtmidiin[i]->ok) goto failed;
+		inputs[i].name = name;
+		inputs[i].private1 = i;
+		RtmidiInputNames[i] = name;
+		RtmidiInputIndices[i] = inputports->native_indices[i];
+	}
+	for (i = 0; i < countout; i++) {
+		char *name = uniqstr(outputports->names[i]);
+		rtmidiout[i] = rtmidi_out_create(api, "keykit");
+		Nmidiout++;
+		if (!rtmidiout[i]->ok) goto failed;
+		outputs[i].name = name;
+		outputs[i].private1 = i;
+		RtmidiOutputNames[i] = name;
+		RtmidiOutputIndices[i] = outputports->native_indices[i];
+	}
+	keykit_free_midi_port_list(inputports);
+	keykit_free_midi_port_list(outputports);
+	rtmidi_in_free(rtin);
+	rtmidi_out_free(rtout);
 	return 0;
+
+failed:
+	eprint("Can't enumerate MIDI ports using %s.\n", rtmidi_api_display_name(api));
+	keykit_free_midi_port_list(inputports);
+	keykit_free_midi_port_list(outputports);
+	rtmidi_in_free(rtin);
+	rtmidi_out_free(rtout);
+	mdep_endmidi();
+	for (i = 0; i < MIDI_IN_DEVICES; i++) {
+		inputs[i].name = NULL;
+		inputs[i].private1 = MIDI_NOSUCH_DEV;
+	}
+	for (i = 0; i < MIDI_OUT_DEVICES; i++) {
+		outputs[i].name = NULL;
+		outputs[i].private1 = MIDI_NOSUCH_DEV;
+	}
+	return -1;
 }
 
 static void
@@ -309,20 +374,6 @@ midiinerror(int r, char *s)
 	strcpy(ebuff,s);
 	lng = (int)strlen(ebuff);
 	midiInGetErrorText(r, ebuff+lng, EBUFFSIZE-lng);
-	lng = (int)strlen(ebuff);
-	strcpy(ebuff+lng,"\r\n");
-	tprint(ebuff); // mdep_popup(ebuff);
-}
-
-static void
-midiouterror(int r, char *s)
-{
-	char ebuff[EBUFFSIZE+2];
-	int lng;
-
-	strcpy(ebuff,s);
-	lng = (int)strlen(ebuff);
-	midiOutGetErrorText(r, ebuff+lng, EBUFFSIZE-lng);
 	lng = (int)strlen(ebuff);
 	strcpy(ebuff+lng,"\r\n");
 	tprint(ebuff); // mdep_popup(ebuff);
@@ -944,12 +995,10 @@ openmidiout(int windevno)
 	int r = 0;
 
 	char *outputName = RtmidiOutputNames[windevno];
-	rtmidi_open_port(rtmidiout[windevno], windevno, outputName);
+	rtmidi_open_port(rtmidiout[windevno], RtmidiOutputIndices[windevno], outputName);
 	if (rtmidiout[windevno]->ok != true) {
-		char msg[256];
-		sprintf(msg, "Error in nmidiOutOpen of '%s' : ", outputName);
+		eprint("Error opening MIDI output '%s': %s\n", outputName, rtmidiout[windevno]->msg);
 		r = 1;
-		midiouterror(r, msg);
 	}
 	return r;
 }

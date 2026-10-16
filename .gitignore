@@ -6,6 +6,9 @@ src/keygo/x64
 bin/keylib.exe
 bin/lowkey.exe
 bin/key.exe
+bin/key-midi-names.exe
+bin/Windows.Devices.Midi2.dll
+bin/Windows.Devices.Midi2.pri
 byacc/byacc.exe
 *.swp
 bin/last.kp
@@ -49,6 +52,7 @@ src/lowkey
 src/mdep.h
 src/mdep[12].c
 src/midi.c
+rtmidi/build/
 
 
 # Compiled Object files

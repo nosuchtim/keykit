@@ -2,7 +2,21 @@ KeyKit - Musical Fun with Windows, Tasks, and Objects
 
 by Tim Thompson (me@timthompson.com)
 
-For use on Windows, just unzip the dist/key_nt.zip and execute the bin/key.exe you find inside.
+For use on Windows, unzip [dist/key88_win.zip](dist/key88_win.zip) and execute
+the bin/key.exe you find inside.
+
+KeyKit 8.8 keeps WinMM as the default Windows MIDI backend and adds optional
+Windows MIDI Services (WMS) support. Set `KEYKIT_MIDI_API=wms` before launching
+to request WMS; unavailable WMS falls back to WinMM. WMS startup creates or
+reuses three shared KeyKit loopback pairs for routing between applications.
+See [README.windows](README.windows) for setup, runtime requirements, loopback
+usage, and migration of saved MIDI port names, and
+[rtmidi/README.keykit.md](rtmidi/README.keykit.md) for build and test details.
+The Windows package does not include Microsoft's preview WMS runtime.
+
+Linux continues to use its direct ALSA sequencer backend. The shared MIDI
+port lookup now prefers exact names before partial/regular-expression matches;
+see [README.linux](README.linux) for the effect on saved selections.
 
 Other platforms that should work: dist/key_raspbian.zip (Raspberry Pi/ARM) and dist/key_linux.zip (Linux/Intel).
 

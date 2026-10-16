@@ -6,6 +6,8 @@ repos:
     rev: v6.0.0
     hooks:
       - id: check-added-large-files
+        # Versioned Windows release archives are intentionally checked in.
+        exclude: ^dist/key[0-9]+_win\.zip$
       - id: check-case-conflict
       - id: check-json
       - id: check-merge-conflict

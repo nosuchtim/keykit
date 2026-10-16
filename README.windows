@@ -5,11 +5,10 @@ Compiling and Running KeyKit on Windows
 
 To compile the windows version, you'll need these prerequisites:
 
-    0) Windows 10
-    1) Microsoft Visual Studio 2019 (the most recent version that put things
-       in c:\Program Files (x86)\Microsoft Visual Studio\2019 )
+    0) Windows 10 or later (WinMM); Windows 11 25H2 or later for WMS
+    1) Microsoft Visual Studio 2022 or newer
        Note: When installing, select "Desktop development with C++"
-       and also add the C++/CLI support for v142 tools (14.25)
+       with CMake 3.24 or newer and Windows SDK 10.0.22000 or newer
     2) Git (in c:\program files\Git, for a few unix utilities)
 
 --------------------------------
@@ -19,6 +18,100 @@ To compile the executables from the command-line, execute:
 	makewindows.bat
 
 This will compile and put binaries in the bin directory.
+The x64 build includes RtMidi 6.1.0 with WinMM and Windows MIDI Services.
+On SDKs without WMS headers, the first build downloads approximately 103 MB
+of Microsoft preview metadata and generates the headers. It installs no runtime.
+See rtmidi/README.keykit.md for details, offline metadata options, and tests.
+The legacy Win32 Visual Studio configuration builds WinMM only; WMS is
+included in the x64 build.
+
+--------------------------------
+
+KEYROOT is optional. KeyKit derives it from the running executable's location
+(the parent of its bin or src directory), independently of PATH and the working
+directory, including executable paths containing spaces. An explicit KEYROOT
+still overrides this location. If discovery fails, the fallback diagnostic goes
+to the Windows debug output without opening a blocking popup.
+
+--------------------------------
+
+MIDI backend selection (set before launching KeyKit):
+
+    WinMM is the default. No environment variable is required.
+
+    PowerShell, to request Windows MIDI Services:
+        $env:KEYKIT_MIDI_API = "wms"
+        .\bin\key.exe
+
+    Command Prompt:
+        set KEYKIT_MIDI_API=wms
+        bin\key.exe
+
+    Set KEYKIT_MIDI_API=winmm, or remove the variable, to return to WinMM.
+    Values are case insensitive. Invalid values or unavailable WMS report a
+    diagnostic and fall back to WinMM. Devmidi reports "winmm" or "wms".
+
+KeyKit continues to send and receive MIDI 1.0 messages through either backend;
+selecting WMS does not add a MIDI 2.0/UMP interface to the KeyKit language.
+
+WMS requires the Windows.Devices.Midi2 API and a running MIDI service on a
+supported Windows system. As of October 2026 this API is a Microsoft preview;
+see rtmidi/README.keykit.md for setup and runtime requirements. The standard
+KeyKit distribution does not include the preview runtime DLLs.
+
+With KEYKIT_MIDI_API=wms, KeyKit ensures three shared WMS loopback pairs exist:
+
+    KeyKit Loopback 1
+    KeyKit Loopback 2
+    KeyKit Loopback 3
+
+Select the same name for output in one KeyKit instance and input in another,
+just as with loopMIDI. This view works with WinMM and WMS. Other Windows
+applications see "KeyKit Loopback 1 output" and "KeyKit Loopback 1 input":
+send to output and receive from input. KeyKit hides the reverse sides and
+shows the common name above. The native endpoints remain bidirectional;
+their names indicate the intended use. These are
+Windows MIDI Services loopbacks and do not require the loopMIDI driver.
+
+Existing pairs are reused, including across simultaneous KeyKit startups.
+KeyKit renames its previous default A/B names in place, preserving endpoint
+identities and muted state. Custom names are preserved. It does not remove pairs
+when it exits, so other instances can keep using them. The pairs last until
+removed or the MIDI service restarts; the next WMS startup recreates missing
+pairs. WinMM startup does not create pairs. If the WMS loopback transport is
+unavailable, startup logs a diagnostic without a popup and keeps other MIDI
+ports usable.
+
+--------------------------------
+
+MIDI port names:
+
+Inputs and outputs now use the driver's names, so the same loopMIDI endpoint
+has the same name in both directions. RtMidi's old output index suffix is
+disabled. For the usual loopMIDI setup, update saved output selections as follows:
+
+    Previous output name        New output and input name
+    loopMIDI Port 1              loopMIDI Port
+    loopMIDI Port 1 2            loopMIDI Port 1
+    loopMIDI Port 2 3            loopMIDI Port 2
+
+These old suffixes were WinMM enumeration indices, not loopMIDI port numbers.
+They applied to every WinMM output; the synth at output index 0 shifted the
+loopMIDI output indices relative to the input indices. The numeric port values
+reported by midi("input","list") and midi("output","list") remain separate
+input/output indices. This change affects their displayed names, not routing.
+
+If a driver supplies identical names for multiple ports in the same direction,
+KeyKit adds explicit labels such as "Keyboard [duplicate 1]" and
+"Keyboard [duplicate 2]". These labels distinguish occurrences in that direction;
+they do not identify matching hardware across directions or device reorderings.
+Unique driver names (including their original digits) are preserved verbatim.
+
+inport() and outport() prefer an exact name before trying the existing partial
+or regular-expression matching. For example, "loopMIDI Port 1" selects that
+literal name even if "loopMIDI Port 10" appears earlier in the device list.
+Update old names in keylocal.k or saved configurations; ambiguous old names
+cannot be used as aliases because some are now real driver names.
 
 --------------------------------
 

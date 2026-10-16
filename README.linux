@@ -32,6 +32,19 @@ KeyKit is a client of the ALSA "sequencer" (it's really a
 MIDI routing system) which allows KeyKit to have as many
 input and output connections as you may desire.
 
+KeyKit 8.8 keeps this direct ALSA backend and its existing build dependencies.
+The Windows MIDI Services support and RtMidi CMake build described in
+README.windows and rtmidi/README.keykit.md apply only to Windows.
+KEYKIT_MIDI_API and the automatic KeyKit WMS loopbacks do not apply on Linux.
+
+The shared inport() and outport() lookup now tries an exact literal port name
+before the existing partial/regular-expression matching. If a saved selection
+is also a complete port name, it now selects that port instead of an earlier
+partial match. For example, "Port 1" selects "Port 1" even if "Port 10" comes
+first. Selections without an exact match retain the previous behavior, and
+numeric port selections are unchanged. This lookup change does not rename
+ALSA ports or change the connections managed by aconnect/qjackctl.
+
 You control the connections between KeyKit and hardware ports
 and/or soft synths or other applications using other utility
 applications such as aconnect or qjackctl.

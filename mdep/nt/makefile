@@ -22,7 +22,7 @@ OTHER =
 
 # Reverse the order of these statements to toggle debug info
 DEBUGCC = /D _DEBUG /D _CRT_SECURE_NO_WARNINGS /W3 /MDd
-DEBUGCC = $(cdebug) /nologo $(OTHER)
+DEBUGCC = $(cdebug) /nologo /MD $(OTHER)
 
 # Reverse the order of these statements to toggle debug info
 DEBUGLINK = /STACK:4194304 /MAP $(linkdebug) /nologo /FIXED:NO /NODEFAULTLIB:library
@@ -36,7 +36,9 @@ WINSOCK = wsock32.lib
 KEYOBJ = yacc.obj main.obj util.obj misc.obj phrase.obj sym.obj keyto.obj \
 	code.obj code2.obj grid.obj view.obj menu.obj task.obj fifo.obj \
 	mfin.obj real.obj mdep1.obj mdep2.obj kwind.obj fsm.obj bltin.obj \
-	meth.obj regex.obj midi.obj clock.obj rtmidi.obj rtmidi_c.obj
+	meth.obj regex.obj midi.obj clock.obj
+
+RTMIDILIB = ..\rtmidi\build\x64\Release\rtmidi.lib
 
 KEYFILES = main util misc phrase sym keyto yacc \
 	code code2 grid view menu task fifo \
@@ -50,7 +52,7 @@ ALLDECS = d_code.h d_code2.h d_fsm.h d_grid.h d_keyto.h d_main.h d_mdep1.h \
 
 # libs = $(LIBC) kernel32.lib user32.lib gdi32.lib winmm.lib comdlg32.lib $(WINSOCK) ole32.lib $(FWTRACK) setupapi.lib quartz.lib msacm32.lib oleaut32.lib advapi32.lib strmiids.lib
 #
-libs = $(LIBC) kernel32.lib user32.lib gdi32.lib winmm.lib comdlg32.lib $(WINSOCK) ole32.lib $(FWTRACK) setupapi.lib quartz.lib msacm32.lib oleaut32.lib advapi32.lib strmiids.lib
+libs = $(LIBC) kernel32.lib user32.lib gdi32.lib winmm.lib comdlg32.lib $(WINSOCK) ole32.lib $(FWTRACK) setupapi.lib quartz.lib msacm32.lib oleaut32.lib advapi32.lib strmiids.lib windowsapp.lib runtimeobject.lib $(RTMIDILIB)
 
 all : key.exe keylib.exe
 
@@ -73,10 +75,10 @@ keypc : key.exe
 	cp key.exe k:\key\bin\key.exe
 	cp keylib.exe k:\key\bin\keylib.exe
 
-key.exe : protoflp.exe $(ALLDECS) $(KEYOBJ) key.res
+key.exe : rtmidilib protoflp.exe $(ALLDECS) $(KEYOBJ) key.res
 	$(LINK) $(DEBUGLINK) $(guiflags) -map:key.map -out:key.exe /subsystem:windows /libpath:. $(VCPATHS) $(KEYOBJ) key.res $(libs)
 
-keygo.dll : protoflp.exe $(ALLDECS) $(KEYOBJ) key.res
+keygo.dll : rtmidilib protoflp.exe $(ALLDECS) $(KEYOBJ) key.res
 	$(LINK) $(DEBUGLINK) $(guiflags) /libpath:. $(VCPATHS) /NXCOMPAT /PDB:"keygo.pdb" /DYNAMICBASE "winmm.lib" "wsock32.lib" "kernel32.lib" "user32.lib" "gdi32.lib" "winspool.lib" "comdlg32.lib" "advapi32.lib" "shell32.lib" "ole32.lib" "oleaut32.lib" "uuid.lib" "odbc32.lib" "odbccp32.lib" /IMPLIB:"keygo.lib" /DEBUG /DLL /MACHINE:X64 /INCREMENTAL /SUBSYSTEM:WINDOWS /LTCGOUT:"keygo.iobj" /ERRORREPORT:PROMPT /ILK:"keygo.ilk" /NOLOGO /TLBID:1 /map:keygo.map -out:keygo.dll $(KEYOBJ) key.res $(libs)
 
 key.res: key.rc
@@ -91,11 +93,8 @@ keylib.exe : keylib.obj mdep1.obj misc.obj
 tjt.exe : tjt.obj 
 	$(LINK) $(conflags) $(VCPATHS) -out:tjt.exe tjt.obj $(conlibs)
 
-rtmidi.obj: ../rtmidi/cpp/rtmidi.cpp
-	$(CC) -c $(DEBUGCC) $(cflags) -I. -EHsc $(cvars) ../rtmidi/cpp/rtmidi.cpp
-
-rtmidi_c.obj: ../rtmidi/cpp/rtmidi_c.cpp
-	$(CC) -c $(DEBUGCC) $(cflags) -I. -EHsc $(cvars) ../rtmidi/cpp/rtmidi_c.cpp
+rtmidilib:
+	powershell -NoProfile -ExecutionPolicy Bypass -File ..\rtmidi\build-windows.ps1
 
 .c.obj:
 	$(CC) -c $(DEBUGCC) $(cflags) -I. $(cvars) $*.c

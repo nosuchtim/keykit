@@ -247,6 +247,9 @@ distribution_nt : updateversion
 	mkdir dist/nt/key/lib
 	mkdir dist/nt/key/music
 	mkdir dist/nt/key/doc
+	mkdir dist/nt/key/rtmidi
+	cp README.windows README.linux dist/nt/key
+	cp rtmidi/README.keykit.md rtmidi/WINDOWS.upstream.md rtmidi/LICENSE dist/nt/key/rtmidi
 	cp bin/key.exe bin/lowkey.exe bin/keylib.exe dist/nt/key/bin
 	cp doc/*.html dist/nt/key/doc
 	rm -f lib/last.kp
