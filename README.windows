@@ -56,8 +56,11 @@ selecting WMS does not add a MIDI 2.0/UMP interface to the KeyKit language.
 
 WMS requires the Windows.Devices.Midi2 API and a running MIDI service on a
 supported Windows system. As of October 2026 this API is a Microsoft preview;
-see rtmidi/README.keykit.md for setup and runtime requirements. The standard
-KeyKit distribution does not include the preview runtime DLLs.
+the standard x64 distribution bundles the API DLL and PRI, so users do not need
+to install the SDK. This bundled edition requires Windows 11 25H2 or later.
+For Windows 10 or older Windows 11 releases, use the _win_winmm.zip archive, which
+excludes the preview API. WinMM remains the default in both editions. See
+rtmidi/README.keykit.md and rtmidi/WINDOWS-MIDI-SERVICES-RUNTIME.txt for details.
 
 With KEYKIT_MIDI_API=wms, KeyKit ensures three shared WMS loopback pairs exist:
 

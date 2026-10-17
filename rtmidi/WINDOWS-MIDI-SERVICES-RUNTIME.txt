@@ -1,0 +1,19 @@
+Windows MIDI Services preview API bundled with KeyKit
+
+Package: Windows.Devices.Midi2 0.99.92-preview.11, Microsoft, x64
+Files: bin/Windows.Devices.Midi2.dll and bin/Windows.Devices.Midi2.pri
+These files must stay together. The full SDK is not required to run KeyKit.
+
+This bundled edition requires Windows 11 25H2 or later and an enabled Windows
+MIDI service. It uses a preview API. It does not install the service, drivers,
+tools, or optional transports. WinMM remains KeyKit's default MIDI backend.
+
+Microsoft's preview distribution agreement and release information:
+https://github.com/microsoft/MIDI/releases/tag/inbox-preview-11
+Maintainers must keep the preview current, notify users of its preview status,
+and remove the bundled API when releasing against the Windows-provided API.
+See that agreement for the complete conditions and update/support obligations.
+The package declares an MIT license; see LICENSE.windows-midi-services.
+
+Source package SHA-256:
+13afc6e6da2adac309ab8c174352f46f1c0ebe2d79e65475bd6274defb73df74

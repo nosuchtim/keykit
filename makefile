@@ -248,14 +248,14 @@ distribution_nt : updateversion
 	mkdir dist/nt/key/music
 	mkdir dist/nt/key/doc
 	mkdir dist/nt/key/rtmidi
-	cp README.windows README.linux dist/nt/key
+	cp README.windows README.linux VERSION LICENSE.txt dist/nt/key
 	cp rtmidi/README.keykit.md rtmidi/WINDOWS.upstream.md rtmidi/LICENSE dist/nt/key/rtmidi
 	cp bin/key.exe bin/lowkey.exe bin/keylib.exe dist/nt/key/bin
 	cp doc/*.html dist/nt/key/doc
 	rm -f lib/last.kp
 	cp lib/* dist/nt/key/lib
 	cp music/* dist/nt/key/music
-	cd dist/nt && powershell "$$global:ProgressPreference = 'SilentlyContinue' ; $$v = (Get-Content ../../VERSION).Trim() -replace '\.', '' ; compress-archive -literalpath key -destinationpath ../key$${v}_win.zip -Force"
+	powershell -NoProfile -ExecutionPolicy Bypass -File rtmidi/package-windows-distribution.ps1 -PackageRoot dist/nt/key -OutputDirectory dist
 	rm -fr dist/nt
 	rm -fr dist/key
 

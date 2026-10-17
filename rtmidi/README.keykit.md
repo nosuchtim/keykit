@@ -122,8 +122,13 @@ when set, then SDK-provided API headers. Otherwise it downloads Microsoft's
 SHA-256-verified `Windows.Devices.Midi2.0.99.92-preview.11.nupkg` to the ignored
 `build/` directory and generates the C++/WinRT projection from its metadata.
 The first download is approximately 103 MB. The package is cached for later
-builds. The build does not install the preview API or MIDI service, or bundle
-preview DLLs into KeyKit's distribution.
+builds. Compiling does not install the preview API or MIDI service.
+`package-windows-distribution.ps1`, called by `distribution_nt`, extracts the
+x64 DLL and PRI directly from the SHA-256-verified package for distribution.
+It creates a bundled Windows 11 25H2+ archive and a runtime-free `_win_winmm.zip`
+archive for older Windows, each with a SHA-256 sidecar. No SDK installation is
+needed by users of the bundled edition. The installer, tools, transports,
+debug symbols and build-time metadata are not included.
 
 ## Running Windows MIDI Services
 
@@ -132,13 +137,14 @@ API available and the MIDI service running in its full mode. Machines without
 the API or service continue to use WinMM. Upgrading RtMidi alone does not
 activate WMS.
 
-As of October 2026, Microsoft's API is a preview. To test it before Windows
-supplies the API, follow Microsoft's preview setup instructions and place
-`Windows.Devices.Midi2.dll` and `Windows.Devices.Midi2.pri` from the package's
-`runtimes/win-x64/native` directory next to `key.exe` on a supported system.
-These files are deliberately not copied automatically. Read Microsoft's
-preview distribution terms before shipping them, and remove app-local preview
-files when migrating to the Windows-supplied API.
+As of October 2026, Microsoft's API is a preview. The bundled distribution
+includes `Windows.Devices.Midi2.dll` and `Windows.Devices.Midi2.pri` next to
+`key.exe`. Keep both files there. Windows still needs its MIDI service enabled;
+bundling the API does not install that service. Microsoft's go-live agreement
+restricts this bundled edition to Windows 11 25H2 or later and requires preview
+disclosure and ongoing maintenance. See `WINDOWS-MIDI-SERVICES-RUNTIME.txt` for
+provenance and the agreement link. Remove app-local preview files when releasing
+against the Windows-provided API. WinMM remains the default in both editions.
 
 See [RtMidi's Windows guide](WINDOWS.upstream.md) and
 [Microsoft's preview release](https://github.com/microsoft/MIDI/releases/tag/inbox-preview-11)
